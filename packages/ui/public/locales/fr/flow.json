@@ -1,0 +1,22 @@
+{
+    "Flow": "Flow",
+    "AddTab": "Ajouter un Flow",
+    "ShowOnlyOutputs": "Afficher uniquement les résultats",
+    "Prompt": "Prompt",
+    "ClickToShowOutput": "Cliquez pour afficher la sortie",
+    "RoleInitPrompt": "Prompt d'initialisation du rôle :",
+    "EnterURL": "Entrer l'URL",
+    "Input": "Entrée",
+    "DALLE": "DALL-E",
+    "ClickToShowImageOutput": "Cliquez pour afficher la sortie d'image",
+    "JsonView": "Vue JSON",
+    "Upload": "Importer",
+    "Download": "Télécharger",
+    "Text": "Texte",
+    "URL": "URL",
+    "YoutubeVideo": "Vidéo Youtube",
+    "Models": "Modèles",
+    "GPT": "GPT",
+    "GPTPrompt": "Prompt GPT",
+    "ImageGeneration": "Génération d'image"
+}

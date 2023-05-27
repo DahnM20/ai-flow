@@ -1,0 +1,22 @@
+{
+    "Flow": "Flow",
+    "AddTab": "Add Tab",
+    "ShowOnlyOutputs": "Show Only Outputs",
+    "Prompt": "Prompt",
+    "ClickToShowOutput": "Click to show output",
+    "RoleInitPrompt": "Role init prompt",
+    "EnterURL": "Enter URL",
+    "Input": "Input",
+    "DALLE": "DALL-E",
+    "ClickToShowImageOutput": "Click to show image output",
+    "JsonView": "JSON View",
+    "Upload": "Upload",
+    "Download": "Download",
+    "Text": "Text",
+    "URL": "URL",
+    "YoutubeVideo": "Youtube Video",
+    "Models": "Models",
+    "GPT": "GPT",
+    "GPTPrompt": "GPT Prompt",
+    "ImageGeneration": "Image Generation"
+}

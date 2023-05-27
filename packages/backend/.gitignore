@@ -1,0 +1,16 @@
+# Fichiers générés par l'environnement de développement
+__pycache__/
+*.py[cod]
+
+# Fichiers générés par l'IDE
+.idea/
+.vscode/
+
+# Fichiers de logs
+*.log
+
+# Fichiers d'environnement
+.env
+
+# Fichiers spécifiques à Poetry
+poetry.lock

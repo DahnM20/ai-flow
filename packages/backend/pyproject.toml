@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "gpt-abstract-back"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "app"}]
+
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-dotenv = "^1.0.0"
+openai = "^0.27.4"
+flask = "^2.2.3"
+flask-socketio = "^5.3.3"
+flask-cors = "^3.0.10"
+unstructured = "^0.6.3"
+langchain = "^0.0.160"
+python-magic = "^0.4.14"
+pytesseract = "^0.3.10"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
