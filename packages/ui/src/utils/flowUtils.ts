@@ -55,7 +55,7 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
       inputFound = nodes.find((node: any) => node.id === inputId)?.data.name || '';
     }
 
-    const { a, nodeType, output, input, ...nodeDataForConfig } = node.data;
+    const { a, nodeType, output, input, config, ...nodeDataForConfig } = node.data;
     if (withCoordinates) {
       return {
         input: inputFound,

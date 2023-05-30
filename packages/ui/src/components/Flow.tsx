@@ -34,6 +34,8 @@ import UserMessagePopup, { MessageType, UserMessage } from './popups/userMessage
 import { SocketContext } from './providers/SocketProvider';
 import { initialEdges, initialNodes } from './samples/initialFlow';
 import DataSplitterNode from './nodes/dataSplitterNode/DataSplitterNode';
+import { getConfigViaProcessorType } from '../nodesConfiguration/nodeConfig';
+import GenericNode from './nodes/genericNode/GenericNode';
 
 
 
@@ -57,7 +59,7 @@ function Flow(props: FlowProps) {
     fileDropNode: FileDropNode,
     urlNode: URLNode,
     inputNode: InputNode,
-    promptNode: PromptNode,
+    promptNode: GenericNode,
     llmNode: LLMNode,
     dallENode: DallENode,
     dataSplitterNode: DataSplitterNode,
@@ -187,7 +189,8 @@ function Flow(props: FlowProps) {
           type,
           data: {
             name: id,
-            processorType
+            processorType,
+            config: getConfigViaProcessorType(processorType),
           },
           position,
         };

@@ -1,0 +1,112 @@
+import React, { useState, useEffect, useContext } from 'react';
+import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
+import { FaRobot, FaUserCircle } from 'react-icons/fa';
+import { NodeResizer } from '@reactflow/node-resizer';
+import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText } from '../../shared/Node.styles';
+import useHandleShowOutput from '../../../hooks/useHandleShowOutput';
+import { useRefreshOnAppearanceChange } from '../../../hooks/useRefreshOnAppearanceChange';
+import { generateIdForHandle } from '../../../utils/flowUtils';
+import { ICON_MAP } from '../../shared/NodeIcons';
+import { Field } from '../../../nodesConfiguration/nodeConfig';
+import MarkdownOutput from '../../tools/markdownOutput/MarkdownOutput';
+import { NodeContext } from '../../providers/NodeProvider';
+import NodePlayButton from '../../tools/NodePlayButton';
+
+const iconMap: any = {
+    "FaRobot": <FaRobot />,
+    "FaUserCircle": <FaUserCircle />
+}
+
+const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
+
+    const { hasParent, showOnlyOutput } = useContext(NodeContext);
+
+    const updateNodeInternals = useUpdateNodeInternals();
+
+    const [collapsed, setCollapsed] = useState<boolean>(true);
+    const [showLogs, setShowLogs] = useState<boolean>(false);
+    const [nodeData, setNodeData] = useState<any>(data);
+    const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+    useEffect(() => {
+        setNodeId(`${data.id}-${Date.now()}`);
+        setIsPlaying(false);
+        updateNodeInternals(id);
+    }, [data.output_data]);
+
+    useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed]);
+    useHandleShowOutput({
+        id: id,
+        setCollapsed: setCollapsed,
+        updateNodeInternals: updateNodeInternals
+    });
+
+    const handleNodeDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setNodeData({
+            ...nodeData,
+            [event.target.name]: event.target.value,
+        });
+        data[event.target.name] = event.target.value;
+        updateNodeInternals(id);
+    };
+
+    const toggleCollapsed = () => {
+        setCollapsed(!collapsed);
+    };
+
+    const handlePlayClick = () => {
+        setIsPlaying(true);
+    };
+
+    const formFields = data.config.fields.map((field: Field) => {
+        switch (field.type) {
+            case 'input':
+                return (
+                    <>
+                        <NodeLabel>{field.label}:</NodeLabel>
+                        <input name={field.name} className="nodrag" value={nodeData[field.name]} onChange={handleNodeDataChange} />
+                    </>
+                );
+            case 'textarea':
+                return (
+                    <>
+                        <NodeLabel>{field.label}:</NodeLabel>
+                        <NodeTextarea name={field.name} className="nodrag" value={nodeData[field.name]} onChange={handleNodeDataChange} />
+                    </>
+                );
+            // Ajoutez plus de types de champs si nécessaire...
+        }
+    });
+
+    const NodeIconComponent = ICON_MAP[data.config.icon];
+
+    return (
+        <NodeContainer key={nodeId}>
+            <NodeResizer color="#ff0071" isVisible={selected} minWidth={200} minHeight={30} />
+            <NodeHeader onDoubleClick={toggleCollapsed}>
+                <Handle className="handle" type="target" id={generateIdForHandle(0)} position={Position.Top} style={{ background: '#72c8fa', width: '10px', height: '10px' }} />
+                <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
+                <NodeTitle>{data.config.label}</NodeTitle>
+                <Handle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} style={{ background: 'rgb(224, 166, 79)', width: '10px', height: '10px', borderRadius: '0' }} />
+                <NodePlayButton isPlaying={isPlaying} onClick={handlePlayClick} nodeName={data.name} />
+            </NodeHeader>
+            <NodeBand />
+            {collapsed && (
+                <NodeContent>
+                    <NodeForm>
+                        {formFields}
+                    </NodeForm>
+                </NodeContent>
+            )}
+            <NodeLogs
+                showLogs={showLogs}
+                onClick={() => setShowLogs(!showLogs)}
+            >
+                {!showLogs ? <NodeLogsText>Click to show output</NodeLogsText> : <MarkdownOutput data={data.output_data} />}
+            </NodeLogs>
+        </NodeContainer>
+    );
+});
+
+export default GenericNode;

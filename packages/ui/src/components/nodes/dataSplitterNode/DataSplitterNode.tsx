@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import styled from 'styled-components';
+import ReactTooltip, { Tooltip } from 'react-tooltip';
 import { NodeContext } from '../../providers/NodeProvider';
 import NodePlayButton from '../../tools/NodePlayButton';
 import { generateIdForHandle } from '../../../utils/flowUtils';
@@ -23,7 +24,7 @@ interface DataSplitterNodeProps extends NodeProps {
 
 const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id, selected }) => {
 
-  const { hasParent, showOnlyOutput} = useContext(NodeContext);
+  const { hasParent, showOnlyOutput } = useContext(NodeContext);
 
   const updateNodeInternals = useUpdateNodeInternals();
 
@@ -71,11 +72,11 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
   return (
     <DataSplitterNodeContainer selected={selected} nbOutput={nbOutput} key={nodeId}>
       <NodeTitle>Splitter</NodeTitle>
-      <NodePlayButton isPlaying={isPlaying} nodeName={data.name} onClick={handlePlayClick}/>
+      <NodePlayButton isPlaying={isPlaying} nodeName={data.name} onClick={handlePlayClick} />
       <SplitCharSelect value={splitChar} onChange={handleSplitCharChange}>
-        <option value="\n">Saut de ligne</option>
-        <option value=";">Point virgule</option>
-        <option value=",">Virgule</option>
+        <option value="\n">\n</option>
+        <option value=";">;</option>
+        <option value=",">,</option>
         <option value="custom">Personnalisé...</option>
       </SplitCharSelect>
       {isCustomSplit && (
@@ -89,20 +90,23 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
       <Handle className="handle" type="target" position={Position.Left} style={{ background: '#72c8fa', width: '10px', height: '10px' }} />
       <div className="output-strip-node-outputs">
         {Array.from(Array(nbOutput)).map((_, index) => (
-          <Handle
-            key={generateIdForHandle(index)}
-            type="source"
-            id={generateIdForHandle(index)}
-            position={Position.Right}
-            style={{
-              background: 'rgb(224, 166, 79)',
-              top: `${nbOutput === 1 ? 50 : (index / (nbOutput - 1)) * 80 + 10}%`, // calculate the top position based on the index
-              width: '10px',
-              height: '10px',
-              borderRadius: '0',
-            }}
-          />
+            <Handle
+              key={generateIdForHandle(index)}
+              data-tooltip-id={`${nodeId}-tooltip`}
+              data-tooltip-content={data.output_data ? data.output_data[index] : ''}
+              type="source"
+              id={generateIdForHandle(index)}
+              position={Position.Right}
+              style={{
+                background: data?.output_data ? (data.output_data[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
+                top: `${nbOutput === 1 ? 50 : (index / (nbOutput - 1)) * 80 + 10}%`, // calculate the top position based on the index
+                width: '10px',
+                height: '10px',
+                borderRadius: '0',
+              }}
+            />
         ))}
+        <Tooltip id={`${nodeId}-tooltip`} style={{zIndex: 100}}/>
       </div>
     </DataSplitterNodeContainer>
   );
@@ -113,7 +117,7 @@ const DataSplitterNodeContainer = styled.div<{ selected: boolean, nbOutput: numb
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background-color: ${props => props.selected ? '#72c8fa' : '#f5f5f5'};
+  background-color: ${({ theme }) => theme.bg};
   padding: 10px;
   border: 2px solid ${props => props.selected ? '#72c8fa' : '#ddd'};
   border-radius: 10px;
@@ -134,7 +138,7 @@ const ForceNbOutputInput = styled.input`
 
 const SplitCharSelect = styled.select`
   margin-top: 10px;
-  width: 100%;
+  width: 50%;
   border: none;
   border-radius: 5px;
   padding: 5px;
@@ -145,7 +149,7 @@ const SplitCharSelect = styled.select`
 
 const CustomSplitCharInput = styled.input`
   margin-top: 10px;
-  width: 100%;
+  width: 50%;
   border: none;
   border-radius: 5px;
   padding: 5px;

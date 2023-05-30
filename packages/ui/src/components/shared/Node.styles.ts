@@ -7,6 +7,7 @@ import ReactFlow, {
 
 import { createGlobalStyle } from 'styled-components';
 import { darken } from "polished";
+import { FiCopy } from "react-icons/fi";
 
 export const GlobalStyle = createGlobalStyle`
   body {
@@ -188,4 +189,17 @@ export const ControlsStyled = styled(Controls)`
       fill: currentColor;
     }
   }
+`;
+
+export const CopyButton = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CopyIcon = styled(FiCopy)`
+  color: #000000;
 `;

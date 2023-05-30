@@ -7,6 +7,7 @@ import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, 
 import { useRefreshOnAppearanceChange } from '../../../hooks/useRefreshOnAppearanceChange';
 import { useTranslation } from 'react-i18next';
 import { generateIdForHandle } from '../../../utils/flowUtils';
+import NodeOutput from '../../shared/NodeOutput';
 
 interface InputNodeData {
   inputText: string;
@@ -69,14 +70,7 @@ const InputNode: React.FC<NodeProps> = ({ data, id, selected }) => {
           </NodeForm>
         </NodeContent>
       )}
-      <NodeLogs
-        showLogs={showLogs}
-        onClick={() => setShowLogs(!showLogs)}
-      > {!showLogs
-          ? <NodeLogsText>{t('ClickToShowImageOutput')}</NodeLogsText>
-          : <MarkdownOutput data={data.output_data} />
-        }
-      </NodeLogs>
+      <NodeOutput output_data={data.output_data} />
     </NodeContainer>
   );
 };
