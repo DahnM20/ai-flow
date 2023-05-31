@@ -14,4 +14,5 @@ export const promptNodeConfig: NodeConfig = {
   icon: 'FaUserCircle',
   fields: promptNodeFields,
   outputType: 'text',
+  hasInputHandle: true,
 };

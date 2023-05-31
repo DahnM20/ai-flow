@@ -6,6 +6,7 @@ import { NodeContext } from '../../providers/NodeProvider';
 import NodePlayButton from '../../tools/NodePlayButton';
 import { generateIdForHandle } from '../../../utils/flowUtils';
 import { NodeTitle } from '../../shared/Node.styles';
+import { darken } from 'polished';
 
 interface DataSplitterNodeData {
   splitChar: string;
@@ -31,16 +32,15 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
 
   const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [nbOutput, setNbOutput] = useState<number>(!!data.nbOutput ? data.nbOutput : 0);
-  const [splitChar, setSplitChar] = useState<string>("\n");
-  const [customSplitChar, setCustomSplitChar] = useState<string>("");
   const [isCustomSplit, setIsCustomSplit] = useState<boolean>(false);
 
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     setNodeId(`${data.id}-${Date.now()}`);
     setIsPlaying(false);
-    setNbOutput(data.output_data ? data.output_data.length : 0);
+    const nbOutput = data.output_data ? data.output_data.length : 0;
+    data.nbOutput = nbOutput;
     updateNodeInternals(id);
   }, [data.output_data]);
 
@@ -48,71 +48,87 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
     setIsPlaying(true);
   };
 
+
+  const handleCollapseClick = () => {
+    setCollapsed(!collapsed);
+  };
+
+
   const handleSplitCharChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (event.target.value === "custom") {
       setIsCustomSplit(true);
     } else {
       setIsCustomSplit(false);
-      setSplitChar(event.target.value);
       data.splitChar = event.target.value;
+      updateNodeInternals(id);
     }
   };
 
   const handleCustomSplitCharChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomSplitChar(event.target.value);
-    setSplitChar(event.target.value);
     data.splitChar = event.target.value;
+    updateNodeInternals(id);
   };
 
   const handleForceNbOutputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNbOutput(Number(event.target.value));
+    data.nbOutput = Number(event.target.value);
+    updateNodeInternals(id);
   };
+
+  const getNbOutput = () => {
+    return !!data.nbOutput ? data.nbOutput : 0;
+  }
 
 
   return (
-    <DataSplitterNodeContainer selected={selected} nbOutput={nbOutput} key={nodeId}>
-      <NodeTitle>Splitter</NodeTitle>
+    <DataSplitterNodeContainer selected={selected} nbOutput={getNbOutput()} collapsed={collapsed} key={nodeId} onDoubleClick={handleCollapseClick}>
+      {!collapsed 
+        && <NodeTitle>Splitter</NodeTitle>
+      }
       <NodePlayButton isPlaying={isPlaying} nodeName={data.name} onClick={handlePlayClick} />
-      <SplitCharSelect value={splitChar} onChange={handleSplitCharChange}>
-        <option value="\n">\n</option>
-        <option value=";">;</option>
-        <option value=",">,</option>
-        <option value="custom">Personnalisé...</option>
-      </SplitCharSelect>
-      {isCustomSplit && (
-        <CustomSplitCharInput value={customSplitChar} onChange={handleCustomSplitCharChange} placeholder="Entrez caractère" />
+      {!collapsed && (
+        <>
+          <SplitCharSelect value={data.splitChar} onChange={handleSplitCharChange}>
+            <option value="\n">\n</option>
+            <option value=";">;</option>
+            <option value=",">,</option>
+            <option value="custom">Personnalisé...</option>
+          </SplitCharSelect>
+          {isCustomSplit && (
+            <CustomSplitCharInput value={data.splitChar} onChange={handleCustomSplitCharChange} placeholder="Entrez caractère" />
+          )}
+          <ForceNbOutputInput
+            id="nbOutput"
+            value={getNbOutput()}
+            onChange={handleForceNbOutputChange}
+          />
+        </>
       )}
-      <ForceNbOutputInput
-        id="forceNbOutput"
-        value={nbOutput}
-        onChange={handleForceNbOutputChange}
-      />
       <Handle className="handle" type="target" position={Position.Left} style={{ background: '#72c8fa', width: '10px', height: '10px' }} />
       <div className="output-strip-node-outputs">
-        {Array.from(Array(nbOutput)).map((_, index) => (
-            <Handle
-              key={generateIdForHandle(index)}
-              data-tooltip-id={`${nodeId}-tooltip`}
-              data-tooltip-content={data.output_data ? data.output_data[index] : ''}
-              type="source"
-              id={generateIdForHandle(index)}
-              position={Position.Right}
-              style={{
-                background: data?.output_data ? (data.output_data[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
-                top: `${nbOutput === 1 ? 50 : (index / (nbOutput - 1)) * 80 + 10}%`, // calculate the top position based on the index
-                width: '10px',
-                height: '10px',
-                borderRadius: '0',
-              }}
-            />
+        {Array.from(Array(getNbOutput())).map((_, index) => (
+          <Handle
+            key={generateIdForHandle(index)}
+            data-tooltip-id={`${nodeId}-tooltip`}
+            data-tooltip-content={data.output_data ? data.output_data[index] : ''}
+            type="source"
+            id={generateIdForHandle(index)}
+            position={Position.Right}
+            style={{
+              background: data?.output_data ? (data.output_data[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
+              top: `${getNbOutput() === 1 ? 50 : (index / (getNbOutput() - 1)) * 80 + 10}%`,
+              width: '10px',
+              height: '10px',
+              borderRadius: '0',
+            }}
+          />
         ))}
-        <Tooltip id={`${nodeId}-tooltip`} style={{zIndex: 100}}/>
+        <Tooltip id={`${nodeId}-tooltip`} style={{ zIndex: 100 }} />
       </div>
     </DataSplitterNodeContainer>
   );
 });
 
-const DataSplitterNodeContainer = styled.div<{ selected: boolean, nbOutput: number }>`
+const DataSplitterNodeContainer = styled.div<{ selected: boolean, nbOutput: number, collapsed: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -121,20 +137,23 @@ const DataSplitterNodeContainer = styled.div<{ selected: boolean, nbOutput: numb
   padding: 10px;
   border: 2px solid ${props => props.selected ? '#72c8fa' : '#ddd'};
   border-radius: 10px;
-  box-shadow: ${props => props.selected ? '0px 0px 15px rgba(114, 200, 250, 0.6)' : '5px 5px 10px rgba(0, 0, 0, 0.2)'};
+  box-shadow: ${props => props.selected ? '0px 0px 5px rgba(114, 200, 250, 0.6)' : 'rgba(0, 0, 0, 0.05) 2px 1px 1px'};
+  min-height: 250px;
   height: ${props => props.nbOutput * 30 + 100}px;
-  width: 150px;
+  width: ${props => props.collapsed ? 'auto' : '150px'};
   transition: all 0.3s ease-in-out;
 `;
 
 const ForceNbOutputInput = styled.input`
   margin-top: 10px;
-  width: 100%;
+  width: 50%;
   padding: 4px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  font-size: 0.9em;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.nodeInputBg};
+  padding: 5px;
+  border-radius: 5px;
 `;
-
 
 const SplitCharSelect = styled.select`
   margin-top: 10px;
@@ -143,8 +162,9 @@ const SplitCharSelect = styled.select`
   border-radius: 5px;
   padding: 5px;
   font-size: 0.9em;
-  color: #333;
-  background-color: #e8e8e8;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.nodeBg};
+  box-shadow: ${({ theme }) => theme.boxShadow};
 `;
 
 const CustomSplitCharInput = styled.input`
@@ -154,8 +174,25 @@ const CustomSplitCharInput = styled.input`
   border-radius: 5px;
   padding: 5px;
   font-size: 0.9em;
-  color: #333;
-  background-color: #e8e8e8;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.nodeInputBg};
+`;
+
+const Button = styled.button`
+  width: 70px;
+  padding: 2px;
+  margin-top: 5px;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.nodeBg};
+  border: none;
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => darken(0.1, theme.nodeBg)};
+  }
 `;
 
 export default DataSplitterNode;

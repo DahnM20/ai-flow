@@ -203,3 +203,19 @@ export const CopyButton = styled.button`
 export const CopyIcon = styled(FiCopy)`
   color: #000000;
 `;
+
+export const NodeInput = styled.input`
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.nodeInputBg};
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+
+  ::placeholder {
+    color: ${({ theme }) => theme.nodeInputBg};
+  }
+`;

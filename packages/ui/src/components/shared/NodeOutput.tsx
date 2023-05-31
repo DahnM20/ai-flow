@@ -11,7 +11,7 @@ const NodeOutput: React.FC<NodeOutputProps> = ({ output_data }) => {
   const [showLogs, setShowLogs] = useState(false);
 
   const handleCopy = () => {
-    copyToClipboard(output_data); // Convert to string if it's not
+    copyToClipboard(output_data);
   };
 
   return (

@@ -1,6 +1,7 @@
 import { Node, Edge } from "reactflow";
 import { NodeData, NodeType, NodeTypeMapping, ProcessorType } from "../types/node";
 import { nodeTypeMapping, processorTypeMapping, reverseMapping } from "./mappings";
+import { getConfigViaProcessorType } from "../nodesConfiguration/nodeConfig";
 
 const handlePrefix = 'handle';
 const handleSeparator = '-';
@@ -87,7 +88,8 @@ export function convertJsonToFlow(json: any) {
       type: getNodeTypeViaProcessorType(nodeData.processorType),
       position: { x, y },
       data: {
-        ...nodeData
+        ...nodeData,
+        config: getConfigViaProcessorType(nodeData.processorType),
       },
     });
   });
@@ -97,6 +99,7 @@ export function convertJsonToFlow(json: any) {
     if (node.input) {
       edges.push({
         id: `${node.input}-to-${node.name}`,
+        sourceHandle: !!node.inputKey ? generateIdForHandle(node.inputKey) : undefined,
         source: node.input,
         target: node.name,
         type: 'smoothstep',

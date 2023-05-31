@@ -10,8 +10,8 @@ import {
   addEdge,
   Connection,
   ReactFlowInstance,
+  NodeProps,
 } from 'reactflow';
-import ProcessorNode from './nodes/processorNode/ProcessorNode';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
 import RightButton from './tools/configurationButton/ConfigurationButton';
@@ -20,12 +20,7 @@ import { FiHelpCircle } from 'react-icons/fi';
 import PlayButton from './tools/playButton/playButton';
 import HelpPopup from './popups/helpPopup/HelpPopup';
 import { convertFlowToJson, getNodeType, getProcessorTypeViaNodeType, nodesTopologicalSort } from '../utils/flowUtils';
-import OutputStripNode from './nodes/outputStripNode/OutputStripNode';
 import FileDropNode from './nodes/fileDropNode/fileDropNode';
-import URLNode from './nodes/urlNode/URLNode';
-import InputNode from './nodes/inputNode/InputNode';
-import PromptNode from './nodes/promptNode/PromptNode';
-import LLMNode from './nodes/llmNode/LLMNode';
 import DallENode from './nodes/dallENode/DallENode';
 import DnDSidebar from './bars/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
@@ -53,17 +48,25 @@ function Flow(props: FlowProps) {
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
   const { socket } = useContext(SocketContext);
 
-  const nodeTypes = useMemo(() => ({
-    processorNode: ProcessorNode,
-    outputStripNode: OutputStripNode,
+  
+  const allNodeTypes = ['processorNode', 'fileDropNode', 'urlNode', 'dallENode', 'dataSplitterNode', 'inputNode', 'promptNode'] as const;
+  type NodeType = typeof allNodeTypes[number];
+
+  const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> = {
     fileDropNode: FileDropNode,
-    urlNode: URLNode,
-    inputNode: InputNode,
-    promptNode: GenericNode,
-    llmNode: LLMNode,
     dallENode: DallENode,
     dataSplitterNode: DataSplitterNode,
-  }), []);
+  };
+
+  const nodeTypes = useMemo(() => {
+    const completeNodeTypes: Record<NodeType, React.FC<NodeProps>> = {} as Record<NodeType, React.FC<NodeProps>>;
+  
+    allNodeTypes.forEach(type => {
+      completeNodeTypes[type] = specificNodeTypes[type] || GenericNode;
+    });
+  
+    return completeNodeTypes;
+  }, []);
 
   const [nodes, setNodes] = useState<Node[]>(!!props.nodes ? props.nodes : initialNodes);
   const [edges, setEdges] = useState<Edge[]>(!!props.edges ? props.edges : initialEdges);
@@ -79,7 +82,7 @@ function Flow(props: FlowProps) {
   }
 
   useEffect(() => {
-    if(!!socket){
+    if (!!socket) {
       socket.on('progress', onProgress);
       socket.on('error', onError)
       socket.on('run_end', onRunEnd)
@@ -87,7 +90,7 @@ function Flow(props: FlowProps) {
     }
 
     return () => {
-      if(!!socket){
+      if (!!socket) {
         socket.off('progress', onProgress);
         socket.off('error', onError)
         socket.off('run_end', onRunEnd)
@@ -121,7 +124,7 @@ function Flow(props: FlowProps) {
   }
 
   const onError = (data: any) => {
-    setCurrentUserMessage({content: data.error, type: MessageType.Error});
+    setCurrentUserMessage({ content: data.error, type: MessageType.Error });
     setIsRunning(false);
     setIsPopupOpen(true);
   }
@@ -130,7 +133,7 @@ function Flow(props: FlowProps) {
     setIsRunning(false);
   }
 
-  const onCurrentNodeRunning  = (data: any) => {
+  const onCurrentNodeRunning = (data: any) => {
     setCurrentNodeRunning(data.instance_name);
   }
 
@@ -256,7 +259,7 @@ function Flow(props: FlowProps) {
           >
             {/* <Background /> */}
             <MiniMapStyled style={{ right: '4vw' }} />
-            <ControlsStyled style={{ left: '9vw' }}/>
+            <ControlsStyled style={{ left: '9vw' }} />
           </ReactFlowStyled>
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />
