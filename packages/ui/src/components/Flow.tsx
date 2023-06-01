@@ -19,7 +19,7 @@ import ConfigPopup from './popups/configPopup/ConfigPopup';
 import { FiHelpCircle } from 'react-icons/fi';
 import PlayButton from './tools/playButton/playButton';
 import HelpPopup from './popups/helpPopup/HelpPopup';
-import { convertFlowToJson, getNodeType, getProcessorTypeViaNodeType, nodesTopologicalSort } from '../utils/flowUtils';
+import { convertFlowToJson, nodesTopologicalSort } from '../utils/flowUtils';
 import FileDropNode from './nodes/fileDropNode/fileDropNode';
 import DallENode from './nodes/dallENode/DallENode';
 import DnDSidebar from './bars/DnDSidebar';
@@ -29,8 +29,9 @@ import UserMessagePopup, { MessageType, UserMessage } from './popups/userMessage
 import { SocketContext } from './providers/SocketProvider';
 import { initialEdges, initialNodes } from './samples/initialFlow';
 import DataSplitterNode from './nodes/dataSplitterNode/DataSplitterNode';
-import { getConfigViaProcessorType } from '../nodesConfiguration/nodeConfig';
+import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
 import GenericNode from './nodes/genericNode/GenericNode';
+import { NodeType, allNodeTypes, getAllNodeTypesComponentMapping, specificNodeTypes } from '../utils/mappings';
 
 
 
@@ -48,25 +49,7 @@ function Flow(props: FlowProps) {
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
   const { socket } = useContext(SocketContext);
 
-  
-  const allNodeTypes = ['processorNode', 'fileDropNode', 'urlNode', 'dallENode', 'dataSplitterNode', 'inputNode', 'promptNode'] as const;
-  type NodeType = typeof allNodeTypes[number];
-
-  const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> = {
-    fileDropNode: FileDropNode,
-    dallENode: DallENode,
-    dataSplitterNode: DataSplitterNode,
-  };
-
-  const nodeTypes = useMemo(() => {
-    const completeNodeTypes: Record<NodeType, React.FC<NodeProps>> = {} as Record<NodeType, React.FC<NodeProps>>;
-  
-    allNodeTypes.forEach(type => {
-      completeNodeTypes[type] = specificNodeTypes[type] || GenericNode;
-    });
-  
-    return completeNodeTypes;
-  }, []);
+  const nodeTypes = useMemo(() => getAllNodeTypesComponentMapping(), []);
 
   const [nodes, setNodes] = useState<Node[]>(!!props.nodes ? props.nodes : initialNodes);
   const [edges, setEdges] = useState<Edge[]>(!!props.edges ? props.edges : initialEdges);
@@ -185,15 +168,14 @@ function Flow(props: FlowProps) {
           y: event.clientY - reactFlowBounds.top,
         });
 
-        const processorType = getProcessorTypeViaNodeType(type);
-        const id = createUniqNodeId(processorType);
+        const id = createUniqNodeId(type);
         const newNode: Node = {
           id,
           type,
           data: {
             name: id,
-            processorType,
-            config: getConfigViaProcessorType(processorType),
+            processorType : type,
+            config: getConfigViaType(type),
           },
           position,
         };

@@ -1,33 +1,44 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { NodeType } from '../../utils/mappings';
+
+type DnDNode = {
+  label: string;
+  type: NodeType;
+};
+
+type NodeSection = {
+  section: string;
+  nodes: DnDNode[];
+};
 
 const DnDSidebar = () => {
   const { t } = useTranslation('flow');
 
-  const nodeTypes = [
+  const nodeTypes: NodeSection[] = [
     {
       section: t('Input'),
       nodes: [
-        { label: t('Text'), type: 'inputNode' },
-        { label: t('URL'), type: 'urlNode' },
-        { label: t('YoutubeVideo'), type: 'youtube' },
+        { label: t('Text'), type: 'input' },
+        { label: t('URL'), type: 'url_input' },
+        { label: t('YoutubeVideo'), type: 'youtube-transcript' },
       ],
     },
     {
       section: t('Models'),
       nodes: [
-        { label: t('GPT'), type: 'processorNode' },
-        { label: t('GPTPrompt'), type: 'promptNode' }
+        { label: t('GPT'), type: 'gpt' },
+        { label: t('GPTPrompt'), type: 'gpt-prompt' },
+        { label: t('NoContextPrompt'), type: 'gpt-no-context-prompt' }
       ],
     },
     {
       section: t('ImageGeneration'),
-      nodes: [{ label: 'DALL-E', type: 'dallENode' }],
+      nodes: [{ label: 'DALL-E', type: 'dalle-prompt' }],
     },
     {
       section: t('Tools'),
-      nodes: [{ label: t('DataSplitter'), type: 'dataSplitterNode' }],
+      nodes: [{ label: t('DataSplitter'), type: 'data-splitter' }],
     },
   ];
 

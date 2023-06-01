@@ -1,18 +1,10 @@
 import { Node, Edge } from "reactflow";
-import { NodeData, NodeType, NodeTypeMapping, ProcessorType } from "../types/node";
-import { nodeTypeMapping, processorTypeMapping, reverseMapping } from "./mappings";
-import { getConfigViaProcessorType } from "../nodesConfiguration/nodeConfig";
+import { getConfigViaType } from "../nodesConfiguration/nodeConfig";
 
 const handlePrefix = 'handle';
 const handleSeparator = '-';
 
 export const generateIdForHandle = (key: number) => `${handlePrefix}${handleSeparator}${key}`;
-
-export const getNodeType = (data: NodeData) => nodeTypeMapping[data.nodeType as keyof NodeTypeMapping] || 'processorNode';
-
-export const getNodeTypeViaProcessorType = (processorType: ProcessorType) => processorTypeMapping[processorType] || 'processorNode';
-
-export const getProcessorTypeViaNodeType = (nodeType: string) => reverseMapping[nodeType] || 'gpt';
 
 export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   const visited = new Set<string>();
@@ -85,11 +77,11 @@ export function convertJsonToFlow(json: any) {
     const { x, y, ...nodeData } = node;
     nodes.push({
       id: node.name,
-      type: getNodeTypeViaProcessorType(nodeData.processorType),
+      type: nodeData.processorType,
       position: { x, y },
       data: {
         ...nodeData,
-        config: getConfigViaProcessorType(nodeData.processorType),
+        config: getConfigViaType(nodeData.processorType),
       },
     });
   });

@@ -1,45 +1,37 @@
-import { NodeTypeMapping, ProcessorNodeTypeMapping, ProcessorTypeMapping, ProcessorTypeOption } from "../types/node";
+import { NodeProps } from "reactflow";
+import DallENode from "../components/nodes/dallENode/DallENode";
+import DataSplitterNode from "../components/nodes/dataSplitterNode/DataSplitterNode";
+import FileDropNode from "../components/nodes/fileDropNode/fileDropNode";
+import GenericNode from "../components/nodes/genericNode/GenericNode";
 
-export const processorNodeTypeMapping: ProcessorNodeTypeMapping = [
-    { node: 'input', processorType: 'input' },
-    { node: 'url_input', processorType: 'url_input' },
-    { node: 'output', processorType: 'output' },
-    { node: 'gpt', processorType: 'gpt' },
-    { node: 'output-strip', processorType: 'output' },
-    { node: 'file', processorType: 'input' },
-    { node: 'prompt', processorType: 'prompt' },
-    { node: 'gpt-prompt', processorType: 'gpt-prompt' },
-    { node: 'llm', processorType: 'llm' },
-    { node: 'dalle-prompt', processorType: 'dalle-prompt' },
-    { node: 'data-splitter', processorType: 'data-splitter' },
-];
+/**
+ * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
+ */
+export const allNodeTypes = ['gpt', 'file', 'url_input', 'dalle-prompt', 'data-splitter', 'input', 'gpt-prompt','youtube-transcript', 'gpt-no-context-prompt'] as const;
+export type NodeType = typeof allNodeTypes[number];
 
-export const nodeTypeMapping: NodeTypeMapping = {
-    gpt: 'processorNode',
-    'output-strip': 'outputStripNode',
-    input: 'inputNode',
-    prompt: 'promptNode',
-    'gpt-prompt': 'promptNode',
-    file: 'fileDropNode',
-    url_input: 'urlNode',
-    output: 'outputNode',
-    llm: 'llmNode',
-    'dalle-prompt': 'dallENode',
-    'data-splitter': 'dataSplitterNode',
+
+/**
+ * Nodes types that uses specific components, instead of the generic one. 
+ */
+export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> = {
+    "file": FileDropNode,
+    "dalle-prompt": DallENode,
+    "data-splitter": DataSplitterNode,
 };
 
-export const reverseMapping: Record<string, string> = Object.fromEntries(
-    Object.entries(nodeTypeMapping).map(([key, value]) => [value, key])
-);
 
-export const processorTypeMapping: ProcessorTypeMapping = {
-    gpt: 'processorNode',
-    input: 'inputNode',
-    prompt: 'promptNode',
-    'gpt-prompt': 'promptNode',
-    url_input: 'urlNode',
-    output: 'outputNode',
-    llm: 'llmNode',
-    'dalle-prompt': 'dallENode',
-    'data-splitter': 'dataSplitterNode',
-};
+/**
+ * Generate the mapping used by ReactFlow. 
+ * 
+ * @returns The complete mapping of all node types to their respective components.
+ */
+export const getAllNodeTypesComponentMapping = () => {
+    const completeNodeTypes: Record<NodeType, React.FC<NodeProps>> = {} as Record<NodeType, React.FC<NodeProps>>;
+    
+    allNodeTypes.forEach(type => {
+      completeNodeTypes[type] = specificNodeTypes[type] || GenericNode;
+    });
+  
+    return completeNodeTypes;
+}

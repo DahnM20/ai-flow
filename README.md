@@ -33,6 +33,9 @@ Before getting started, make sure you have the following dependencies installed 
 ### Backend Dependencies
 1. Go to the UI directory: `cd packages/backend`
 2. Install Python dependencies: `poetry install`
+### For Windows only
+3. Launch poetry shell : `poetry shell`
+4. Install the windows requirements in the poetry shell : `pip install -r requirements_windows.txt`
 
 ## Usage
 

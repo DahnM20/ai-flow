@@ -1,5 +1,7 @@
+import { NodeType } from "../utils/mappings";
 import { basicProcessorNodeConfig } from "./basicProcessorNode";
 import inputTextNodeConfig from "./inputTextNode";
+import { noContextPromptNodeConfig } from "./noContextPrompt";
 import { promptNodeConfig } from "./promptNode";
 import { urlNodeConfig } from "./urlNode";
 
@@ -23,15 +25,16 @@ export interface NodeConfig {
     hasInputHandle?: boolean;
 }
 
-const nodeConfigs: { [key: string]: NodeConfig } = {
+const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'gpt-prompt': promptNodeConfig,
     'input': inputTextNodeConfig,
     'gpt': basicProcessorNodeConfig,
     'url_input': urlNodeConfig,
+    'gpt-no-context-prompt': noContextPromptNodeConfig
     // add other configs here...
 }
 
 
-export const getConfigViaProcessorType = (processorType: string): NodeConfig | undefined => {
-    return nodeConfigs[processorType];
+export const getConfigViaType = (type: NodeType): NodeConfig | undefined => {
+    return nodeConfigs[type];
 }
