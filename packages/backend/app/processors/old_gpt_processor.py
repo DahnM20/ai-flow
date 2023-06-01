@@ -14,7 +14,7 @@ class OldGPTProcessor(Processor):
         
     def createInitialContent(self):
         if hasattr(self, 'input_processor') and self.input_processor is not None:
-            input_processor_output = self.input_processor.get_output(0)
+            input_processor_output = self.input_processor.get_output(self.input_key)
             print("input_processor_output ")
             print(input_processor_output)
             contextSuffix =  " Pour répondre, tu intégreras les données suivantes : " +  input_processor_output if input_processor_output  else ""

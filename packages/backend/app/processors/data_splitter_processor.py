@@ -1,12 +1,23 @@
 from .processor import Processor
 
+ESCAPE_CHARACTERS = {
+    "\\n": "\n",
+    "\\t": "\t",
+    # Vous pouvez ajouter ici autant de caractères d'échappement que vous le souhaitez
+    # "\\v": "\v",
+    # "\\b": "\b",
+    # etc.
+}
+
 class DataSplitterProcessor(Processor):
     processor_type = "data-splitter"
     
     def __init__(self, config):
         super().__init__(config)
         self.nb_output = 0
-        self.separator = config.get("splitChar", ",")
+        separator_config = config.get("splitChar", ",")
+        self.separator = ESCAPE_CHARACTERS.get(separator_config, separator_config)
+        print("Spliiter : " + self.separator)
 
     def process(self):
         self.data_to_split = self.input_processor.get_output(0)
