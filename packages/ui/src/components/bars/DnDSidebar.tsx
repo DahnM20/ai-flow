@@ -1,10 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { NodeType } from '../../utils/mappings';
+import { Tooltip } from 'react-tooltip';
+import { FaInfoCircle } from 'react-icons/fa';
 
 type DnDNode = {
   label: string;
   type: NodeType;
+  helpMessage?: string;
 };
 
 type NodeSection = {
@@ -17,28 +20,28 @@ const DnDSidebar = () => {
 
   const nodeTypes: NodeSection[] = [
     {
-      section: t('Input'),
+      section: 'Input',
       nodes: [
-        { label: t('Text'), type: 'input' },
-        { label: t('URL'), type: 'url_input' },
-        { label: t('YoutubeVideo'), type: 'youtube-transcript' },
+        { label: 'Text', type: 'input', helpMessage: 'inputHelp' },
+        { label: 'URL', type: 'url_input', helpMessage: 'urlInputHelp' },
+        { label: 'YoutubeVideo', type: 'youtube-transcript', helpMessage: 'youtubeTranscriptHelp' },
       ],
     },
     {
-      section: t('Models'),
+      section: 'Models',
       nodes: [
-        { label: t('GPT'), type: 'gpt' },
-        { label: t('GPTPrompt'), type: 'gpt-prompt' },
-        { label: t('NoContextPrompt'), type: 'gpt-no-context-prompt' }
+        { label: 'GPT', type: 'gpt', helpMessage: 'gptHelp' },
+        { label: 'GPTPrompt', type: 'gpt-prompt', helpMessage: 'gptPromptHelp' },
+        { label: 'NoContextPrompt', type: 'gpt-no-context-prompt', helpMessage: 'noContextPromptHelp' }
       ],
     },
     {
-      section: t('ImageGeneration'),
-      nodes: [{ label: 'DALL-E', type: 'dalle-prompt' }],
+      section: 'ImageGeneration',
+      nodes: [{ label: 'DALL-E', type: 'dalle-prompt', helpMessage: 'dallePromptHelp' }],
     },
     {
-      section: t('Tools'),
-      nodes: [{ label: t('DataSplitter'), type: 'data-splitter' }],
+      section: 'Tools',
+      nodes: [{ label: t('DataSplitter'), type: 'data-splitter', helpMessage: 'dataSplitterHelp' }],
     },
   ];
 
@@ -48,22 +51,32 @@ const DnDSidebar = () => {
   };
 
   return (
-    <DnDSidebarContainer>
-      {nodeTypes.map((section, index) => (
-        <Section key={index}>
-          <SectionTitle>{section.section}</SectionTitle>
-          {section.nodes.map((node, nodeIndex) => (
-            <Node
-              key={nodeIndex}
-              onDragStart={(event) => onDragStart(event, node.type)}
-              draggable
-            >
-              {node.label}
-            </Node>
-          ))}
-        </Section>
-      ))}
-    </DnDSidebarContainer>
+    <>
+      <DnDSidebarContainer>
+        {nodeTypes.map((section, index) => (
+          <Section key={index}>
+            <SectionTitle>{t(section.section)}</SectionTitle>
+            {section.nodes.map((node, nodeIndex) => (
+              <Node
+                key={nodeIndex}
+                onDragStart={(event) => onDragStart(event, node.type)}
+                draggable
+              >
+                {t(node.label)}
+                {
+                  node.helpMessage &&
+                  <StyledInfoIcon
+                    data-tooltip-id={`dnd-tooltip`}
+                    data-tooltip-content={t(node.helpMessage)}
+                  />
+                }
+              </Node>
+            ))}
+          </Section>
+        ))}
+      </DnDSidebarContainer>
+      <Tooltip id={`dnd-tooltip`} style={{ zIndex: 100 }} />
+    </>
   );
 };
 
@@ -72,7 +85,7 @@ const DnDSidebarContainer = styled.div`
   left: 0;
   top: 0;
   height: 100%;
-  width: 9vw;
+  width: 9.5vw;
   background: ${({ theme }) => theme.sidebarBg};
   z-index: 1;
   overflow-y: auto;
@@ -106,7 +119,7 @@ const Node = styled.div`
   cursor: grab;
   background-color: ${({ theme }) => theme.bg};
   color: ${({ theme }) => theme.text};
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
 
   &:hover {
@@ -114,6 +127,12 @@ const Node = styled.div`
   }
 
   background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) right / 10% no-repeat, ${({ theme }) => theme.bg};
+`;
+
+const StyledInfoIcon = styled(FaInfoCircle)`
+  margin-left: 5px;   // ajoute une marge à gauche pour éloigner l'icône du label
+  color: #888;  // change la couleur de l'icône
+  font-size: 0.8em;  // change la taille de l'icône
 `;
 
 export default DnDSidebar;

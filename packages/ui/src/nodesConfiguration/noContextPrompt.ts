@@ -11,7 +11,7 @@ export const noContextPromptNodeConfig: NodeConfig = {
             options: [
                 {
                     label: 'GPT3.5',
-                    value: 'gpt-3.5'
+                    value: 'gpt-3.5-turbo'
                 },
                 {
                     label: 'GPT4',
