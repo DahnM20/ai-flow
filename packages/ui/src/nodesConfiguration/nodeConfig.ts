@@ -27,7 +27,7 @@ export interface NodeConfig {
 
 const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'gpt-prompt': promptNodeConfig,
-    'input': inputTextNodeConfig,
+    'input-text': inputTextNodeConfig,
     'gpt': basicProcessorNodeConfig,
     'url_input': urlNodeConfig,
     'gpt-no-context-prompt': noContextPromptNodeConfig

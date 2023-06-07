@@ -10,7 +10,6 @@ import {
   addEdge,
   Connection,
   ReactFlowInstance,
-  NodeProps,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
@@ -20,17 +19,13 @@ import { FiHelpCircle } from 'react-icons/fi';
 import PlayButton from './tools/playButton/playButton';
 import HelpPopup from './popups/helpPopup/HelpPopup';
 import { convertFlowToJson, nodesTopologicalSort } from '../utils/flowUtils';
-import FileDropNode from './nodes/fileDropNode/fileDropNode';
-import DallENode from './nodes/dallENode/DallENode';
 import DnDSidebar from './bars/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
 import { ControlsStyled, MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/userMessagePopup/UserMessagePopup';
 import { SocketContext } from './providers/SocketProvider';
 import { initialEdges, initialNodes } from './samples/initialFlow';
-import DataSplitterNode from './nodes/dataSplitterNode/DataSplitterNode';
 import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
-import GenericNode from './nodes/genericNode/GenericNode';
 import { NodeType, allNodeTypes, getAllNodeTypesComponentMapping, specificNodeTypes } from '../utils/mappings';
 
 
@@ -47,7 +42,7 @@ function Flow(props: FlowProps) {
 
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
-  const { socket } = useContext(SocketContext);
+  const { socket, config } = useContext(SocketContext);
 
   const nodeTypes = useMemo(() => getAllNodeTypesComponentMapping(), []);
 
@@ -96,7 +91,7 @@ function Flow(props: FlowProps) {
       setNodes((currentState) => {
         return [...currentState.map((node) => {
           if (node.data.name == nodeToUpdate) {
-            node.data = { ...node.data, output_data: output };
+            node.data = { ...node.data, output_data: output, lastRun: new Date() };
           }
 
           return node;
@@ -174,7 +169,7 @@ function Flow(props: FlowProps) {
           type,
           data: {
             name: id,
-            processorType : type,
+            processorType: type,
             config: getConfigViaType(type),
           },
           position,
@@ -219,7 +214,12 @@ function Flow(props: FlowProps) {
   const handlePlay = () => {
     const nodesSorted = nodesTopologicalSort(nodes, edges);
     const flowFile = convertFlowToJson(nodesSorted, edges, true);
-    socket?.emit('process_file', { json_file: JSON.stringify(flowFile) });
+    socket?.emit('process_file',
+      {
+        json_file: JSON.stringify(flowFile),
+        openai_api_key: config?.openai_api_key,
+        leonardo_api_key: config?.leonardo_api_key,
+      });
     setIsRunning(true);
   }
 
@@ -249,7 +249,7 @@ function Flow(props: FlowProps) {
         <RightButton onClick={() => setIsConfigOpen(true)} />
         <RightButton onClick={() => setIsHelpOpen(true)} color='#6576f8' bottom='80px' icon={<FiHelpCircle />} />
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
-        <ConfigPopup apiKey={''} isOpen={isConfigOpen} onClose={handleConfigClose} />
+        <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
         <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
         <PlayButton onClick={handlePlay} isRunning={isRunning} />
       </div>

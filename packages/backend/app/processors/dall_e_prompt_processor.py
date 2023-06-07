@@ -9,6 +9,7 @@ class DallEPromptProcessor(Processor):
         super().__init__(config)
         self.prompt = config.get("prompt")
         self.size = config.get("size", "256x256")  # Default size is "256x256"
+        self.api_key = self.get_api_key('session_openai_api_key')
 
     def process(self):
         self.prompt = self.input_processor.get_output(self.input_key) if self.prompt is None or len(self.prompt) == 0 else self.prompt
@@ -16,6 +17,7 @@ class DallEPromptProcessor(Processor):
             prompt=self.prompt,
             n=1,
             size=self.size,
+            api_key=self.api_key,
         )
         self.set_output(response["data"][0]["url"])
         

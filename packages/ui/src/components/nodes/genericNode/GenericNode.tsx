@@ -29,7 +29,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         setNodeId(`${data.id}-${Date.now()}`);
         setIsPlaying(false);
         updateNodeInternals(id);
-    }, [data.output_data]);
+    }, [data.lastRun]);
 
     useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed]);
     useHandleShowOutput({

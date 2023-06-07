@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Union
+from flask import g
 
 class BadKeyInputIndex(Exception):
     """Exception raised for index out of bounds in the output list."""
@@ -55,3 +56,11 @@ class Processor(ABC):
         
     def __str__(self):
         return f"Processor(name={self.name}, type={self.processor_type}, x={self.x}, y={self.y})"
+    
+    def get_api_key(self, key_name):
+        api_key = g.get(key_name)
+        
+        if api_key is None : 
+            raise Exception(f"No {key_name} Provided")
+
+        return api_key

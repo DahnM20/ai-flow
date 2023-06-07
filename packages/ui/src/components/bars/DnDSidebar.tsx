@@ -22,7 +22,7 @@ const DnDSidebar = () => {
     {
       section: 'Input',
       nodes: [
-        { label: 'Text', type: 'input', helpMessage: 'inputHelp' },
+        { label: 'Text', type: 'input-text', helpMessage: 'inputHelp' },
         { label: 'URL', type: 'url_input', helpMessage: 'urlInputHelp' },
         { label: 'YoutubeVideo', type: 'youtube-transcript', helpMessage: 'youtubeTranscriptHelp' },
       ],

@@ -1,12 +1,15 @@
+from functools import wraps
 import logging
 import json
 from flask import Flask
 from flask import request
+from flask import g
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from ..processors_utils.processor_launcher import load_processors,load_processors_for_node, launchProcessors, launch_processors_for_node
 from ..processors_utils.processor_store import ProcessorStoreFactory
 import traceback
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -15,14 +18,32 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 factory = ProcessorStoreFactory('local')
 store = factory.create_store()
 
+def populate_session_global_object(data):
+    use_env = os.getenv('USE_ENV_API_KEYS')
+    logging.info("use_env: %s", use_env)
+    if use_env == 'true':
+        g.session_openai_api_key = os.getenv('OPENAI_API_KEY')
+        g.session_leonardo_api_key = os.getenv('LEONARDO_API_KEY')
+        logging.info("g.session_openai_api_key: %s", g.session_openai_api_key)
+        exit()
+    else:
+        if 'openai_api_key' in data:
+            g.session_openai_api_key = data['openai_api_key']
+        else:
+            raise Exception("No OpenAI API Key provided.")
+        if 'leonardo_api_key' in data:
+            g.session_leonardo_api_key = data['leonardo_api_key']
+
+
 @socketio.on('connect')
 def handle_connect():
     logging.info('Client connected')
-
+    
 @socketio.on('process_file')
 def handle_process_file(data):
     try:
         logging.info("Received process_config event with data: %s", data)
+        populate_session_global_object(data)
         flow_data = json.loads(data.get('json_file'))
 
         if flow_data:
@@ -46,6 +67,7 @@ def handle_process_file(data):
 def handle_process_file(data):
     try:
         logging.info("Received run_node event with data: %s", data)
+        populate_session_global_object(data)
         flow_data = json.loads(data.get('json_file'))
         node_name = data.get('node_name')
         stored_processors = store.get(request.sid)

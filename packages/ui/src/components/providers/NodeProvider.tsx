@@ -13,24 +13,30 @@ interface NodeContextType {
 }
 
 
-export const NodeContext = createContext<NodeContextType>({ 
+export const NodeContext = createContext<NodeContextType>({
     runNode: () => { },
-    hasParent: () =>  (false),
-    getEdgeIndex: () =>  (undefined),
+    hasParent: () => (false),
+    getEdgeIndex: () => (undefined),
     showOnlyOutput: false,
     isRunning: false,
     currentNodeRunning: '',
 });
 
-export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning,currentNodeRunning, children }: { nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; children: ReactNode }) => {
+export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, children }: { nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; children: ReactNode }) => {
 
-    const { socket } = useContext(SocketContext);
-    
+    const { socket, config } = useContext(SocketContext);
+
     const runNode = (name: string) => {
         console.log('runNode ' + name)
         const nodesSorted = nodesTopologicalSort(nodes, edges);
         const flowFile = convertFlowToJson(nodesSorted, edges, true);
-        socket?.emit('run_node', { json_file: JSON.stringify(flowFile), node_name: name });
+        socket?.emit('run_node',
+            {
+                json_file: JSON.stringify(flowFile),
+                node_name: name,
+                openai_api_key: config?.openai_api_key,
+                leonardo_api_key: config?.leonardo_api_key,
+            });
         console.log(nodes)
     };
 

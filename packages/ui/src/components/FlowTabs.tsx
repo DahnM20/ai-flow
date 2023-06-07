@@ -4,7 +4,6 @@ import Flow from './Flow';
 import { FiSun, FiMoon } from 'react-icons/fi';
 import { Node, Edge } from 'reactflow';
 import { ThemeContext, ThemeProvider } from './providers/ThemeProvider';
-import socket from '../socket';
 import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
 
@@ -37,14 +36,6 @@ const FlowManager = () => {
       setRefresh(true);
     }
   }, []);
-
-  useEffect(() => {
-    socket.connect();
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
 
   useEffect(() => {
     if (flowTabs.tabs.length >= 1 && flowTabs.tabs[0].nodes.length !== 0)

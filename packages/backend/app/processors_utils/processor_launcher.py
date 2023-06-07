@@ -1,11 +1,19 @@
 import json
 import os
-import openai
+#import openai
 from flask_socketio import emit
 from .processor_factory import ProcessorFactory
 
-openai.api_key = os.getenv("OPEN_AI_KEY")
+#openai.api_key = os.getenv("OPEN_AI_KEY")
 
+def get_processors_for_session(session_id):
+    # Get the list of processor keys for this session
+    processor_keys = store.get(f"{session_id}_processor_keys")
+    
+    # Retrieve each processor using its key
+    processors = [store.get(key) for key in processor_keys]
+
+    return processors
 
 def load_config_data(fileName):
     # Lecture du fichier de configuration
@@ -39,13 +47,13 @@ def load_processors(config_data):
     return processors
 
 
-def load_new_processors_and_stored_ones(config_data, stored_processors):
+def load_new_processors_and_stored_ones(config_data, stored_processors, node_name):
     factory = ProcessorFactory()
     factory.load_processors()
 
     processors = {}
     for config in config_data:
-        if stored_processors is None or config["name"] not in stored_processors:
+        if stored_processors is None or config["name"] not in stored_processors or config["name"] == node_name:
             processor = factory.create_processor(config)
             processors[config["name"]] = processor
         else:
@@ -57,7 +65,7 @@ def load_processors_for_node(config_data, stored_processors, node_name):
     factory = ProcessorFactory()
     factory.load_processors()
 
-    processors = load_new_processors_and_stored_ones(config_data, stored_processors)
+    processors = load_new_processors_and_stored_ones(config_data, stored_processors, node_name)
 
     # Établissement des liens entre les processeurs
     link_processors(processors)

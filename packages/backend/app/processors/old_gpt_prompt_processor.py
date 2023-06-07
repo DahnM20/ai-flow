@@ -7,6 +7,7 @@ class OldGPTPromptProcessor(Processor):
     def __init__(self, config):
         super().__init__(config)
         self.prompt = config["inputText"]
+        self.api_key = self.get_api_key('session_openai_api_key')
     
     def updateContext(self, data):
         pass
@@ -20,7 +21,7 @@ class OldGPTPromptProcessor(Processor):
 
         # Générer les prompts à partir des messages
         chat_completion = openai.ChatCompletion.create(
-            model=self.input_processor.model, messages=init_context
+            model=self.input_processor.model, messages=init_context, api_key=self.api_key,
         )
 
         assistant_message = chat_completion.choices[0].message

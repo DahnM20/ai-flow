@@ -1,7 +1,7 @@
 from .processor import Processor
 
 class InputProcessor(Processor):
-    processor_type = "input"
+    processor_type = "input-text"
      
     def __init__(self, config):
         super().__init__(config)
