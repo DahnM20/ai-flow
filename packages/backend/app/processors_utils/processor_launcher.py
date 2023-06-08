@@ -1,19 +1,11 @@
 import json
 import os
-#import openai
+from flask import request
 from flask_socketio import emit
+from .processor_store_singleton import ProcessorStoreSingleton
 from .processor_factory import ProcessorFactory
 
-#openai.api_key = os.getenv("OPEN_AI_KEY")
-
-def get_processors_for_session(session_id):
-    # Get the list of processor keys for this session
-    processor_keys = store.get(f"{session_id}_processor_keys")
-    
-    # Retrieve each processor using its key
-    processors = [store.get(key) for key in processor_keys]
-
-    return processors
+store = ProcessorStoreSingleton().store
 
 def load_config_data(fileName):
     # Lecture du fichier de configuration
@@ -48,16 +40,19 @@ def load_processors(config_data):
 
 
 def load_new_processors_and_stored_ones(config_data, stored_processors, node_name):
+    session_id = request.sid
     factory = ProcessorFactory()
     factory.load_processors()
 
+    print("Stored processors: ",stored_processors)
     processors = {}
     for config in config_data:
-        if stored_processors is None or config["name"] not in stored_processors or config["name"] == node_name:
+        processor_key = f"{session_id}_{config['name']}"
+        if stored_processors is None or processor_key not in stored_processors or config["name"] == node_name:
             processor = factory.create_processor(config)
             processors[config["name"]] = processor
         else:
-            processors[config["name"]] = stored_processors[config["name"]]
+            processors[config["name"]] = stored_processors[processor_key]
     return processors
 
 
@@ -73,6 +68,7 @@ def load_processors_for_node(config_data, stored_processors, node_name):
 
 
 def launchProcessors(processors, ws=False):
+    session_id = request.sid
     for processor in processors.values():
         if ws:
             emit("current_node_running", {"instance_name": processor.name})
@@ -80,18 +76,30 @@ def launchProcessors(processors, ws=False):
         output = processor.process()
         print(processor.name, "-", processor.processor_type, ": ", output)
         
+        # Store processor for future runs
+        processor_key = f"{session_id}_{processor.name}"
+        store.set(processor_key, processor)
+         
+        
         if ws:
             emit("progress", {"instance_name": processor.name, "output": output})
 
 
 def launch_processors_for_node(processors, node_name=None, ws=False):
+    session_id = request.sid
     for processor in processors.values():
+        processor_key = f"{session_id}_{processor.name}"
+        
         if processor.get_output() is None or processor.name == node_name:
             if ws:
                 emit("current_node_running", {"instance_name": processor.name})
                 
             output = processor.process()
             print(processor.name, "-", processor.processor_type, ": ", output)
+            
+            # Store processor for future runs
+            processor_key = f"{session_id}_{processor.name}"
+            store.set(processor_key, processor)
             
             if ws:
                 emit("progress", {"instance_name": processor.name, "output": output})

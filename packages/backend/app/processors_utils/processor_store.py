@@ -4,6 +4,9 @@ class ProcessorStore:
 
     def set(self, key, value):
         raise NotImplementedError()
+    
+    def keys():
+        raise NotImplementedError()
 
 class LocalProcessorStore(ProcessorStore):
     def __init__(self):
@@ -14,6 +17,9 @@ class LocalProcessorStore(ProcessorStore):
 
     def set(self, key, value):
         self.store[key] = value
+    
+    def keys(self):
+        return self.store.keys()
 
 class RedisProcessorStore(ProcessorStore):
     def __init__(self):
@@ -25,6 +31,9 @@ class RedisProcessorStore(ProcessorStore):
 
     def set(self, key, value):
         self.store.set(key, pickle.dumps(value))
+    
+    def keys(self):
+        return self.store.keys()
 
 class ProcessorStoreFactory:
     def __init__(self, mode):
