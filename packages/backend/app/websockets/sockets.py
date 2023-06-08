@@ -20,12 +20,10 @@ store = factory.create_store()
 
 def populate_session_global_object(data):
     use_env = os.getenv('USE_ENV_API_KEYS')
-    logging.info("use_env: %s", use_env)
+    logging.debug("use_env: %s", use_env)
     if use_env == 'true':
         g.session_openai_api_key = os.getenv('OPENAI_API_KEY')
         g.session_leonardo_api_key = os.getenv('LEONARDO_API_KEY')
-        logging.info("g.session_openai_api_key: %s", g.session_openai_api_key)
-        exit()
     else:
         if 'openai_api_key' in data:
             g.session_openai_api_key = data['openai_api_key']

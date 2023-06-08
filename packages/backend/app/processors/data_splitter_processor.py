@@ -17,7 +17,6 @@ class DataSplitterProcessor(Processor):
         self.nb_output = 0
         separator_config = config.get("splitChar", ",")
         self.separator = ESCAPE_CHARACTERS.get(separator_config, separator_config)
-        print("Spliiter : " + self.separator)
 
     def process(self):
         self.data_to_split = self.input_processor.get_output(0)

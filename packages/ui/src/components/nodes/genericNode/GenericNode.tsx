@@ -31,10 +31,13 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         updateNodeInternals(id);
     }, [data.lastRun]);
 
-    useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed]);
+    useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
+    
     useHandleShowOutput({
+        showOnlyOutput,
         id: id,
         setCollapsed: setCollapsed,
+        setShowLogs: setShowLogs,
         updateNodeInternals: updateNodeInternals
     });
 
@@ -114,7 +117,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
                 <NodeTitle>{data.config.nodeName}</NodeTitle>
                 <Handle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} style={{ background: 'rgb(224, 166, 79)', width: '10px', height: '10px', borderRadius: '0' }} />
-                <NodePlayButton isPlaying={isPlaying} onClick={handlePlayClick} nodeName={data.name} />
+                <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />
             </NodeHeader>
             <NodeBand />
             {collapsed && (

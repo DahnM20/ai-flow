@@ -10,4 +10,4 @@ __pycache__/
 *.log
 
 # Fichiers d'env
-.env
+*.env

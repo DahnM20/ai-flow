@@ -1,16 +1,17 @@
 import React, { useContext } from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { FaPlay, FaSpinner, FaStop } from 'react-icons/fa';
+import { FaCheck, FaPlay, FaSpinner, FaStop } from 'react-icons/fa';
 import { NodeContext } from '../providers/NodeProvider';
 
 
 interface NodePlayButtonProps {
   isPlaying?: boolean;
+  hasRun?: boolean;
   onClick?: () => void;
   nodeName: string;
 }
 
-const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, onClick, nodeName }) => {
+const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onClick, nodeName }) => {
 
   const { runNode, isRunning, currentNodeRunning } = useContext(NodeContext);
 
@@ -32,8 +33,8 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, onClick, nod
         isPlaying || (isRunning && currentNodeRunning === nodeName)
           ? <LoadingIcon />
           : (isRunning
-            ? <NodeStopButtonIcon />
-            : <NodePlayButtonIcon />
+            ? hasRun ? <GreenCheckIcon/> : <NodeStopButtonIcon />
+            : hasRun ? <GreenCheckIcon/> : <NodePlayButtonIcon />
           )
       }
     </NodePlayButtonContainer>
@@ -70,6 +71,12 @@ const NodeStopButtonIcon = styled(FaStop)`
   transition: transform 0.3s ease-in-out;
   font-size: 16px;
 `;
+
+const GreenCheckIcon = styled(FaCheck)`
+  transition: transform 0.3s ease-in-out;
+  font-size: 16px;
+`;
+
 
 const LoadingIcon = styled(FaSpinner)`
   animation:  ${spin} 1s linear infinite;

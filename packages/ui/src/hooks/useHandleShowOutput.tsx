@@ -19,7 +19,7 @@ const useHandleShowOutput = ({
     if (showOnlyOutput !== undefined) {
       setCollapsed(showOnlyOutput);
       if(setShowLogs !== undefined){
-        setShowLogs(showOnlyOutput);
+        setShowLogs(!showOnlyOutput);
       }
       updateNodeInternals(id);
     }

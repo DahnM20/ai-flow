@@ -5,7 +5,7 @@ interface PlayButtonProps {
   onClick: () => void;
   isRunning: boolean;
 }
-const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isRunning }) => {
+const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isRunning}) => {
   return (
     <Button onClick={onClick}>
       { isRunning ? <Spinner /> : <FaPlay />}
