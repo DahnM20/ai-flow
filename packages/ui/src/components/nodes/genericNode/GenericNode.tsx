@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { NodeResizer } from '@reactflow/node-resizer';
 import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput } from '../../shared/Node.styles';
@@ -11,6 +11,9 @@ import MarkdownOutput from '../../tools/markdownOutput/MarkdownOutput';
 import { NodeContext } from '../../providers/NodeProvider';
 import NodePlayButton from '../../tools/NodePlayButton';
 import { useTranslation } from 'react-i18next';
+import { FiCopy } from 'react-icons/fi';
+import styled from 'styled-components';
+import { copyToClipboard } from '../../../utils/navigatorUtils';
 
 const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
     const { t } = useTranslation('flow');
@@ -25,11 +28,23 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
     useEffect(() => {
         setNodeId(`${data.id}-${Date.now()}`);
         setIsPlaying(false);
         updateNodeInternals(id);
     }, [data.lastRun]);
+
+    useEffect(() => {
+        if (textareaRef.current) {
+          const newWidth = textareaRef.current.offsetWidth;
+          const newHeight = textareaRef.current.offsetHeight;
+          if (newWidth !== nodeData.width || newHeight !== nodeData.height) {
+            updateNodeInternals(id);
+          }
+        }
+      }, [nodeData, id]);
 
     useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
     
@@ -81,7 +96,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 return (
                     <>
                         <NodeLabel>{t(field.label)}</NodeLabel>
-                        <NodeTextarea name={field.name} className="nodrag" value={nodeData[field.name]} onChange={handleNodeDataChange} />
+                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" value={nodeData[field.name]} onChange={handleNodeDataChange}/>
                     </>
                 );
             case 'option':
@@ -108,7 +123,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     return (
         <NodeContainer key={nodeId}>
-            <NodeResizer color="#ff0071" isVisible={selected} minWidth={200} minHeight={30} />
+            {/* <NodeResizer color="#ff0071" isVisible={selected} minWidth={200} minHeight={30} maxWidth={700} onResizeEnd={handleResizeField}/> */}
             <NodeHeader onDoubleClick={toggleCollapsed}>
                 {
                     data.config.hasInputHandle &&
@@ -131,6 +146,10 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 showLogs={showLogs}
                 onClick={() => setShowLogs(!showLogs)}
             >
+                {showLogs && <StyledCopyIcon className="copy-icon" onClick={(event) => {
+                    event.stopPropagation();
+                    copyToClipboard(data.output_data);
+                }} />}
                 {!showLogs ? <NodeLogsText>Click to show output</NodeLogsText> : <MarkdownOutput data={data.output_data} />}
             </NodeLogs>
         </NodeContainer>
@@ -138,3 +157,10 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 });
 
 export default GenericNode;
+
+const StyledCopyIcon = styled(FiCopy)`
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  z-index: 1;
+  `;

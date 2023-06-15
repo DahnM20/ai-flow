@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import FlowManager from './components/FlowTabs';
+import FlowTabs from './components/FlowTabs';
 import { ThemeProvider } from './components/providers/ThemeProvider';
 import { GlobalStyle } from './components/shared/Node.styles';
 import { SocketProvider } from './components/providers/SocketProvider';
@@ -18,7 +18,7 @@ root.render(
     <SocketProvider>
       <ThemeProvider>
         <Suspense fallback={<Fallback/>}>
-          <FlowManager />
+          <FlowTabs />
         </Suspense>
       </ThemeProvider>
     </SocketProvider>

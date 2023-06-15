@@ -17,7 +17,7 @@ class OldGPTProcessor(Processor):
             input_processor_output = self.input_processor.get_output(self.input_key)
             print("input_processor_output ")
             print(input_processor_output)
-            contextSuffix =  " Pour répondre, tu intégreras les données suivantes : " +  input_processor_output if input_processor_output  else ""
+            contextSuffix =  " To answer my next request, you will use the following data : " +  input_processor_output if input_processor_output  else ""
         else:
             contextSuffix = ""
             
@@ -35,7 +35,7 @@ class OldGPTProcessor(Processor):
             }
         )
         self.messages.append(
-            {"role": "assistant", "content": "J'ai bien compris ma mission."}
+            {"role": "assistant", "content": "Very well."}
         )
         self.set_output(self.messages)
         return self.messages

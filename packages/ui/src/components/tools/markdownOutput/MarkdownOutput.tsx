@@ -8,10 +8,12 @@ interface MarkdownOutputProps {
 
 const MarkdownOutput: React.FC<MarkdownOutputProps> = ({ data }) => {
     if(!data) return <p> </p>
+    
+    const stringifiedData = typeof data === 'string' ? data : JSON.stringify(data);
 
-    const html = marked(data);
+    const html = marked(stringifiedData);
     const sanitizedHtml = DOMPurify.sanitize(html);
-    return <pre dangerouslySetInnerHTML={{ __html: sanitizedHtml }} style={{ whiteSpace: 'pre-wrap' }}/>;
+    return <pre dangerouslySetInnerHTML={{ __html: sanitizedHtml }} style={{ whiteSpace: 'pre-wrap', paddingTop: '10px'  }}/>;
 };
 
 export default MarkdownOutput;

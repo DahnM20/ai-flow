@@ -40,7 +40,9 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
     setNodeId(`${data.id}-${Date.now()}`);
     setIsPlaying(false);
     const nbOutput = data.output_data ? data.output_data.length : 0;
-    data.nbOutput = nbOutput;
+    if(nbOutput > data.nbOutput) {
+      data.nbOutput = nbOutput;
+    }
     updateNodeInternals(id);
   }, [data.output_data]);
 

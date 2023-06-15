@@ -16,7 +16,7 @@ interface FlowManagerState {
   tabs: FlowTab[];
 }
 
-const FlowManager = () => {
+const FlowTabs = () => {
   const { t } = useTranslation('flow');
   
   const [flowTabs, setFlowTabs] = useState<FlowManagerState>({ tabs: [{ nodes: [], edges: [] }] });
@@ -157,4 +157,4 @@ const ShowOutputButton = styled.button`
 `;
 
 
-export default FlowManager;
+export default FlowTabs;
