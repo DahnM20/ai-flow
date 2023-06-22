@@ -130,7 +130,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                     <Handle className="handle" type="target" id={generateIdForHandle(0)} position={Position.Top} style={{ background: '#72c8fa', width: '10px', height: '10px' }} />
                 }
                 <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
-                <NodeTitle>{data.config.nodeName}</NodeTitle>
+                <NodeTitle>{t(data.config.nodeName)}</NodeTitle>
                 <Handle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} style={{ background: 'rgb(224, 166, 79)', width: '10px', height: '10px', borderRadius: '0' }} />
                 <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />
             </NodeHeader>
@@ -146,7 +146,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 showLogs={showLogs}
                 onClick={() => setShowLogs(!showLogs)}
             >
-                {showLogs && <StyledCopyIcon className="copy-icon" onClick={(event) => {
+                {showLogs && !!data.output_data && <StyledCopyIcon className="copy-icon" onClick={(event) => {
                     event.stopPropagation();
                     copyToClipboard(data.output_data);
                 }} />}

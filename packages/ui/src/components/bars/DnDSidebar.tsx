@@ -24,7 +24,7 @@ const DnDSidebar = () => {
       nodes: [
         { label: 'Text', type: 'input-text', helpMessage: 'inputHelp' },
         { label: 'URL', type: 'url_input', helpMessage: 'urlInputHelp' },
-        { label: 'YoutubeVideo', type: 'youtube-transcript', helpMessage: 'youtubeTranscriptHelp' },
+        // { label: 'YoutubeVideo', type: 'youtube-transcript', helpMessage: 'youtubeTranscriptHelp' },
       ],
     },
     {
@@ -41,7 +41,7 @@ const DnDSidebar = () => {
     },
     {
       section: 'Tools',
-      nodes: [{ label: t('DataSplitter'), type: 'data-splitter', helpMessage: 'dataSplitterHelp' }],
+      nodes: [{ label: 'DataSplitter', type: 'data-splitter', helpMessage: 'dataSplitterHelp' }],
     },
   ];
 

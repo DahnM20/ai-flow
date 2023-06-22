@@ -68,10 +68,10 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
             <Label htmlFor="api-key">OpenAI API Key:</Label>
             <Input type="text" id="api-key" value={apiKeyOpenAI} onChange={onApiKeyOpenAIChange} />
           </Field>
-          <Field>
+          {/* <Field>
             <Label htmlFor="api-key-leonardo">Leonardo API Key (Optionnal):</Label>
             <Input type="text" id="api-key-leonardo" value={apiKeyLeonardo} onChange={onApiKeyLeonardoChange} />
-          </Field>
+          </Field> */}
           <Actions>
             <Button onClick={onClose}>Close</Button>
             <Button validate onClick={handleValidate}>Valider</Button>
@@ -79,12 +79,12 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
           <Footer>
             <MessageContainer>
               <Message>If you like this project, you can add a star on:</Message>
-              <Icon href="https://github.com/YOUR-REPO-HERE" target="_blank" rel="noopener noreferrer"><FaGithub /></Icon>
+              <Icon href="https://github.com/DahnM20/ai-flow" target="_blank" rel="noopener noreferrer"><FaGithub /></Icon>
             </MessageContainer>
             <Message>Consider supporting the future of the project on:</Message>
             <Icons>
-              <Icon href="https://twitter.com/YOUR-ACCOUNT-HERE" target="_blank" rel="noopener noreferrer"><FaTwitter /></Icon>
-              <Icon href="https://ko-fi.com/YOUR-ACCOUNT-HERE" target="_blank" rel="noopener noreferrer"><FaCoffee /></Icon>
+              <Icon href="https://twitter.com/DahnM20" target="_blank" rel="noopener noreferrer"><FaTwitter /></Icon>
+              {/* <Icon href="https://ko-fi.com/YOUR-ACCOUNT-HERE" target="_blank" rel="noopener noreferrer"><FaCoffee /></Icon> */}
             </Icons>
           </Footer>
         </Content>

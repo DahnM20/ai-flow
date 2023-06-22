@@ -109,7 +109,6 @@ export const NodeLogsText = styled.p`
 `;
 
 export const NodeLogs = styled.div<{ showLogs: boolean }>`
-  position: relative;
   border-radius: 0 0 8px 8px;
   font-size: 0.85em;
   padding: 10px;

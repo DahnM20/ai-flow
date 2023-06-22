@@ -18,6 +18,8 @@
     "Models": "Modèles",
     "GPT": "GPT",
     "GPTPrompt": "Prompt GPT",
+    "NoContextPrompt" : "Prompt GPT sans contexte",
+    "DataSplitter": "Séparateur de données",
     "ImageGeneration": "Génération d'image",
     "inputHelp": "Ce noeud sert à saisir du texte.",
     "urlInputHelp": "Saisissez une URL valide et le noeud récupérera les données de cette URL si javascript n'est pas nécessaire pour charger la page.",
