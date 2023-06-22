@@ -32,6 +32,10 @@ def populate_session_global_object(data):
             g.session_leonardo_api_key = data['leonardo_api_key']
 
 
+@app.route('/healthcheck', methods=['GET'])
+def healthcheck():
+    return 'ok', 200
+
 @socketio.on('connect')
 def handle_connect():
     logging.info('Client connected')
