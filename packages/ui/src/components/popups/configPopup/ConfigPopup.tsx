@@ -2,6 +2,7 @@ import { FaGithub, FaTwitter, FaCoffee } from 'react-icons/fa';
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { SocketContext, WSConfiguration } from '../../providers/SocketProvider';
+import { useTranslation } from 'react-i18next';
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -14,6 +15,8 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
   onClose,
   onValidate,
 }) => {
+
+  const { t } = useTranslation('config');
 
   const { config, connectSocket } = useContext(SocketContext);
 
@@ -49,7 +52,11 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
       openai_api_key: apiKeyOpenAI,
       leonardo_api_key: apiKeyLeonardo,
     };
-    if(!!connectSocket) connectSocket(config);
+
+    if(!!connectSocket){
+      connectSocket(config);
+    }
+    
     onClose();
   }
 
@@ -59,29 +66,29 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
       <Popup isOpen={isOpen}>
         <Content>
           <Header>
-            <Title>Configuration</Title>
+            <Title>{t('configurationTitle')}</Title>
           </Header>
-          <SoftMessage>We do not use or store your API keys.</SoftMessage>
-          <SoftMessage>This project is open source, and you can verify this.</SoftMessage>
-          <SoftMessage> Remember, you can revoke your keys at any time and generate new ones.</SoftMessage>
+          <SoftMessage>{t('apiKeyDisclaimer')}</SoftMessage>
+          <SoftMessage>{t('openSourceDisclaimer')}</SoftMessage>
+          <SoftMessage>{t('apiKeyRevokeReminder')}</SoftMessage>
           <Field>
-            <Label htmlFor="api-key">OpenAI API Key:</Label>
-            <Input type="text" id="api-key" value={apiKeyOpenAI} onChange={onApiKeyOpenAIChange} />
+            <Label htmlFor="api-key">{t('openAIKeyFieldLabel')}</Label>
+            <Input type={"text"} id="api-key" value={apiKeyOpenAI} onChange={onApiKeyOpenAIChange} />
           </Field>
           {/* <Field>
             <Label htmlFor="api-key-leonardo">Leonardo API Key (Optionnal):</Label>
             <Input type="text" id="api-key-leonardo" value={apiKeyLeonardo} onChange={onApiKeyLeonardoChange} />
           </Field> */}
           <Actions>
-            <Button onClick={onClose}>Close</Button>
-            <Button validate onClick={handleValidate}>Valider</Button>
+            <Button onClick={onClose}>{t('closeButtonLabel')}</Button>
+            <Button validate onClick={handleValidate}>{t('validateButtonLabel')}</Button>
           </Actions>
           <Footer>
             <MessageContainer>
-              <Message>If you like this project, you can add a star on:</Message>
+              <Message>{t('likeProjectPrompt')}</Message>
               <Icon href="https://github.com/DahnM20/ai-flow" target="_blank" rel="noopener noreferrer"><FaGithub /></Icon>
             </MessageContainer>
-            <Message>Consider supporting the future of the project on:</Message>
+            <Message>{t('supportProjectPrompt')}</Message>
             <Icons>
               <Icon href="https://twitter.com/DahnM20" target="_blank" rel="noopener noreferrer"><FaTwitter /></Icon>
               {/* <Icon href="https://ko-fi.com/YOUR-ACCOUNT-HERE" target="_blank" rel="noopener noreferrer"><FaCoffee /></Icon> */}
@@ -166,6 +173,7 @@ const Input = styled.input`
   border: none;
   font-size: 16px;
   width: 100%;
+  background-color: #80808012;
 `;
 
 const Field = styled.div`

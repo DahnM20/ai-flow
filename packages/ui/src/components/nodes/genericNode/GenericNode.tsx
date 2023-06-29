@@ -38,16 +38,16 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     useEffect(() => {
         if (textareaRef.current) {
-          const newWidth = textareaRef.current.offsetWidth;
-          const newHeight = textareaRef.current.offsetHeight;
-          if (newWidth !== nodeData.width || newHeight !== nodeData.height) {
-            updateNodeInternals(id);
-          }
+            const newWidth = textareaRef.current.offsetWidth;
+            const newHeight = textareaRef.current.offsetHeight;
+            if (newWidth !== nodeData.width || newHeight !== nodeData.height) {
+                updateNodeInternals(id);
+            }
         }
-      }, [nodeData, id]);
+    }, [nodeData, id]);
 
     useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
-    
+
     useHandleShowOutput({
         showOnlyOutput,
         id: id,
@@ -83,6 +83,16 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         updateNodeInternals(id);
     };
 
+
+    function setDefaultOption(field: Field) {
+        if (field.options) {
+            const defaultOption = field.options.find(option => option.default);
+            if (defaultOption) {
+                nodeData[field.name] = defaultOption.value;
+            }
+        }
+    }
+
     const formFields = data.config.fields.map((field: Field) => {
         switch (field.type) {
             case 'input':
@@ -96,10 +106,13 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 return (
                     <>
                         <NodeLabel>{t(field.label)}</NodeLabel>
-                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" value={nodeData[field.name]} onChange={handleNodeDataChange}/>
+                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" value={nodeData[field.name]} onChange={handleNodeDataChange} />
                     </>
                 );
             case 'option':
+                if(!nodeData[field.name]) {
+                    setDefaultOption(field);
+                }
                 return (
                     <>
                         <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
@@ -164,3 +177,4 @@ const StyledCopyIcon = styled(FiCopy)`
   cursor: pointer;
   z-index: 1;
   `;
+

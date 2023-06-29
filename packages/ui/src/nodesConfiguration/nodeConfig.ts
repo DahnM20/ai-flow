@@ -8,6 +8,7 @@ import { urlNodeConfig } from "./urlNode";
 export interface Option {
     label: string;
     value: string;
+    default?: boolean;
 }
 
 export interface Field {

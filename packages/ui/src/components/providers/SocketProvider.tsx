@@ -9,6 +9,7 @@ export type WSConfiguration = {
 interface ISocketContext {
     socket: Socket | null;
     config: WSConfiguration | null;
+    verifyConfiguration: (() => boolean);
     connectSocket: ((configuration: WSConfiguration) => void) | null;
 }
 
@@ -22,7 +23,12 @@ const USE_HTTPS = process.env.REACT_APP_USE_HTTPS || 'false';
 
 const protocol = USE_HTTPS.toLowerCase() === 'true' ? 'https' : 'http';
 
-export const SocketContext = createContext<ISocketContext>({ socket: null, config: null,connectSocket: null });
+export const SocketContext = createContext<ISocketContext>({ 
+    socket: null, 
+    config: null, 
+    verifyConfiguration: () => { return false }, 
+    connectSocket: null 
+});
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
     const [socket, setSocket] = useState<Socket | null>(null);
@@ -63,8 +69,20 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         setSocket(newSocket);
     }
 
+    function verifyConfiguration(): boolean {
+        if (!config) {
+            return false;
+        }
+
+        if (config.openai_api_key) {
+            return true;
+        }
+
+        return false;
+    }
+
     return (
-        <SocketContext.Provider value={{ socket, config, connectSocket }}>
+        <SocketContext.Provider value={{ socket, config, verifyConfiguration, connectSocket }}>
             {children}
         </SocketContext.Provider>
     );

@@ -27,8 +27,8 @@ import { SocketContext } from './providers/SocketProvider';
 import { initialEdges, initialNodes } from './samples/initialFlow';
 import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
 import { NodeType, allNodeTypes, getAllNodeTypesComponentMapping, specificNodeTypes } from '../utils/mappings';
-
-
+import { useTranslation } from 'react-i18next';
+import { toastInfoMessage } from '../utils/toastUtils';
 
 export interface FlowProps {
   nodes?: Node[];
@@ -37,12 +37,13 @@ export interface FlowProps {
   showOnlyOutput?: boolean;
 }
 
-
 function Flow(props: FlowProps) {
+
+  const { t } = useTranslation('flow');
 
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
-  const { socket, config } = useContext(SocketContext);
+  const { socket, verifyConfiguration, config } = useContext(SocketContext);
 
   const nodeTypes = useMemo(() => getAllNodeTypesComponentMapping(), []);
 
@@ -75,7 +76,7 @@ function Flow(props: FlowProps) {
         socket.off('current_node_running', onCurrentNodeRunning)
       }
     }
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (props.onFlowChange) {
@@ -212,6 +213,11 @@ function Flow(props: FlowProps) {
   }
 
   const handlePlay = () => {
+    if (!verifyConfiguration()) {
+      toastInfoMessage(t('ApiKeyRequiredMessage'));
+      return;
+    }
+
     const nodesSorted = nodesTopologicalSort(nodes, edges);
     const flowFile = convertFlowToJson(nodesSorted, edges, true);
     socket?.emit('process_file',

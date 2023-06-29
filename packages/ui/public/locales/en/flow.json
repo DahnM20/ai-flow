@@ -2,6 +2,7 @@
     "Flow": "Flow",
     "AddTab": "Add Tab",
     "ShowOnlyOutputs": "Show Only Outputs",
+    "ApiKeyRequiredMessage": "Please provide your API Key in the configuration settings to run your flow successfully.",
     "Prompt": "Prompt",
     "ClickToShowOutput": "Click to show output",
     "RoleInitPrompt": "Role init prompt",

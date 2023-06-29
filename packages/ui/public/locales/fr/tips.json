@@ -1,0 +1,12 @@
+{
+    "tips": [
+        "Vous pouvez supprimer des nœuds avec la touche Retour arrière.",
+        "Vous pouvez replier et déplier certains nœuds en double-cliquant sur leurs en-têtes.",
+        "Un nœud peut n'avoir qu'une seule entrée.",
+        "Pour chacun de vos nœuds, gardez à l'esprit que les modèles GPT ont un nombre limité de jetons pour stocker la conversation, les entrées qui sont trop grandes peuvent entraîner des erreurs.",
+        "Le logiciel est encore à ses débuts, il peut y avoir des bugs.",
+        "Votre flux est disponible au format JSON dans la barre latérale indiquée par la marque noire sur le côté droit de votre écran, vous pouvez l'enregistrer et le télécharger à partir de là.",
+        "Les données ne sont envoyées qu'aux API avec lesquelles vous interagissez (actuellement seulement OpenAI). Le reste se passe localement sur votre machine.",
+        "Nous ne stockons/utilisons aucune de vos données."
+    ]
+}

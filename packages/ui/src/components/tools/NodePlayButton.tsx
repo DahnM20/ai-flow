@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { FaCheck, FaPlay, FaSpinner, FaStop } from 'react-icons/fa';
 import { NodeContext } from '../providers/NodeProvider';
@@ -12,38 +12,47 @@ interface NodePlayButtonProps {
 }
 
 const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onClick, nodeName }) => {
-
   const { runNode, isRunning, currentNodeRunning } = useContext(NodeContext);
+  const [isHovered, setHovered] = useState(false);
 
-  function handleClick() {
-    if (isPlaying || isRunning) return;
-
-    if (onClick) {
-      onClick();
+  const handleClick = () => {
+    if (!isPlaying && !isRunning) {
+      if(runNode(nodeName) && onClick) {
+        onClick();
+      }
     }
-    runNode(nodeName);
   }
+
+  const handleMouseEnter = () => setHovered(true);
+  const handleMouseLeave = () => setHovered(false);
+  
+  const isCurrentNodeRunning = isRunning && currentNodeRunning === nodeName;
+  const isDisabled = isCurrentNodeRunning && !isHovered;
+
+  const IconComponent = getIconComponent(isPlaying, isCurrentNodeRunning, hasRun, isHovered);
 
   return (
     <NodePlayButtonContainer
-      onClick={() => handleClick()}
-      disabled={isRunning && currentNodeRunning !== nodeName}
+      onClick={handleClick}
+      disabled={isDisabled}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {
-        isPlaying || (isRunning && currentNodeRunning === nodeName)
-          ? <LoadingIcon />
-          : (isRunning
-            ? hasRun ? <GreenCheckIcon/> : <NodeStopButtonIcon />
-            : hasRun ? <GreenCheckIcon/> : <NodePlayButtonIcon />
-          )
-      }
+      <IconComponent />
     </NodePlayButtonContainer>
   );
 };
 
 
+function getIconComponent(isPlaying: boolean | undefined, isCurrentNodeRunning: boolean, hasRun: boolean | undefined, isHovered: boolean) {
+  if (isPlaying || isCurrentNodeRunning) return LoadingIcon;
 
-// Animation de rotation
+  if (hasRun && !isHovered) return CheckIcon;
+
+  return isCurrentNodeRunning ? NodeStopButtonIcon : NodePlayButtonIcon;
+}
+
+
 const spin = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -72,7 +81,7 @@ const NodeStopButtonIcon = styled(FaStop)`
   font-size: 16px;
 `;
 
-const GreenCheckIcon = styled(FaCheck)`
+const CheckIcon = styled(FaCheck)`
   transition: transform 0.3s ease-in-out;
   font-size: 16px;
 `;

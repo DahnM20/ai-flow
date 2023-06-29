@@ -2,9 +2,11 @@ import React, { ReactNode, createContext, useContext, useState } from 'react';
 import { Node, Edge } from 'reactflow';
 import { nodesTopologicalSort, convertFlowToJson } from '../../utils/flowUtils';
 import { SocketContext } from './SocketProvider';
+import { toastInfoMessage } from '../../utils/toastUtils';
+import { useTranslation } from 'react-i18next';
 
 interface NodeContextType {
-    runNode: (nodeName: string) => void;
+    runNode: (nodeName: string) => boolean;
     hasParent: (id: string) => boolean;
     getEdgeIndex: (id: string) => Edge | undefined;
     showOnlyOutput?: boolean;
@@ -14,7 +16,7 @@ interface NodeContextType {
 
 
 export const NodeContext = createContext<NodeContextType>({
-    runNode: () => { },
+    runNode: () => (false),
     hasParent: () => (false),
     getEdgeIndex: () => (undefined),
     showOnlyOutput: false,
@@ -24,9 +26,16 @@ export const NodeContext = createContext<NodeContextType>({
 
 export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, children }: { nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; children: ReactNode }) => {
 
-    const { socket, config } = useContext(SocketContext);
+    const { t } = useTranslation('flow');
+    const { socket, config, verifyConfiguration } = useContext(SocketContext);
 
     const runNode = (name: string) => {
+
+        if(!verifyConfiguration()){
+            toastInfoMessage(t('ApiKeyRequiredMessage'));
+            return false;
+        }
+
         console.log('runNode ' + name)
         const nodesSorted = nodesTopologicalSort(nodes, edges);
         const flowFile = convertFlowToJson(nodesSorted, edges, true);
@@ -38,6 +47,8 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
                 leonardo_api_key: config?.leonardo_api_key,
             });
         console.log(nodes)
+        
+        return true;
     };
 
     const hasParent = (id: string) => {

@@ -8,7 +8,7 @@ export const theme = {
     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
     primary: '#ff0072',
     sidebarBg: 'rgb(242 242 245 / 67%)',
-    tabBarBg: 'rgb(242 242 245)',
+    tabBarBg: 'rgb(233 233 237)',
     nodeBg: '#f2f2f5',
     outputBg: '#f2f2f5',
     nodeInputBg: '#f2f2f5',

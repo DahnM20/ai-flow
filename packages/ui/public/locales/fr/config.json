@@ -1,0 +1,12 @@
+{
+    "configurationTitle": "Configuration",
+    "apiKeyDisclaimer": "Nous n'utilisons ni ne stockons vos clés API.",
+    "openSourceDisclaimer": "Ce projet est open source, et vous pouvez le vérifier.",
+    "apiKeyRevokeReminder": "N'oubliez pas, vous pouvez révoquer vos clés à tout moment et en générer de nouvelles.",
+    "openAIKeyFieldLabel": "Clé API OpenAI:",
+    "closeButtonLabel": "Fermer",
+    "validateButtonLabel": "Valider",
+    "likeProjectPrompt": "Si vous aimez ce projet, vous pouvez ajouter une étoile sur:",
+    "supportProjectPrompt": "Envisagez de soutenir l'avenir du projet sur:",
+    "leonardoKeyFieldLabel": "Clé API Leonardo (Facultatif):"
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaWindowClose } from 'react-icons/fa';
 import { FiDelete } from 'react-icons/fi';
-import { tips } from '../../../utils/tips';
+import { useTranslation } from 'react-i18next';
 
 interface HelpPopupProps {
     isOpen: boolean;
@@ -10,6 +10,10 @@ interface HelpPopupProps {
 }
 
 const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
+    const { t } = useTranslation("tips");
+
+    const tips: string[] = t('tips', { returnObjects: true });
+
     if (!isOpen) return null;
 
     return (
@@ -80,6 +84,7 @@ const PopupContent = styled.div`
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
+  width:60%;
 `;
 
 const PopupTip = styled.li` // TODO
