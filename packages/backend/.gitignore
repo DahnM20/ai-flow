@@ -11,3 +11,8 @@ __pycache__/
 
 # Fichiers d'env
 *.env
+
+# Fichiers de build
+build
+dist
+server.spec
