@@ -4,7 +4,7 @@ import Flow from './Flow';
 import { FiSun, FiMoon } from 'react-icons/fi';
 import { Node, Edge } from 'reactflow';
 import { ThemeContext, ThemeProvider } from './providers/ThemeProvider';
-import { darken } from 'polished';
+import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 
 interface FlowTab {
@@ -74,7 +74,7 @@ const FlowTabs = () => {
           <AddTabButton onClick={addFlowTab}>{t('AddTab')}</AddTabButton>
           <RightControls>
             <ShowOutputButton onClick={handleToggleOutput}>
-              {t('ShowOnlyOutputs')}
+              {t(showOnlyOutput ? 'ShowOnlyOutputs' : 'ShowOnlyParams')}
             </ShowOutputButton>
             <ToggleThemeButton onClick={toggleTheme}>
               {dark ? <FiMoon/> : <FiSun/>}
@@ -111,18 +111,34 @@ const TabsContainer = styled.div`
   z-index: 10;
   font-family: Roboto;
   border-bottom: solid;
-  border-color: ${({ theme }) => theme.nodeBg};
+  border-color: rgb(53 52 52 / 30%);
 `;
 
 const TabButton = styled.button<{ active: boolean }>`
+  position: relative;
   margin-right: 10px;
   padding: ${buttonPaddingValue};
-  border: none;
-  background-color: ${(props) => (props.active ? props.theme.nodeBg : props.theme.nodeInput)};
-  color: ${(props) => (props.active ? props.theme.accentText : props.theme.text)};
+  background-color: ${(props) => (props.theme.nodeInput)};
+  color: ${(props) => (props.active ? props.theme.text : props.theme.accentText)};
   cursor: pointer;
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
   transform: ${(props) => (props.active ? 'scale(1.15)' : 'scale(1)')};
+
+  &::after {
+    content: "";
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 0;
+    left: 15%;
+    right: 15%;
+    height: 3px;
+    background: ${(props) => props.theme.accent};
+    transform: ${(props) => (props.active ? 'scaleX(1)' : 'scaleX(0)')};
+    transition: transform 0.3s ease-in-out;
+    z-index: 11;
+  }
 `;
 
 const AddTabButton = styled.button`
@@ -132,6 +148,12 @@ const AddTabButton = styled.button`
   color: ${({ theme }) => theme.text};
   cursor: pointer;
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  border-radius: 3%;
+
+  :hover {
+    background-color: ${({ theme }) => lighten(0.2, theme.nodeBg)};
+  }
+  
 `;
 
 const RightControls = styled.div`
@@ -144,8 +166,12 @@ const ToggleThemeButton = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.accentText};
   margin-right: 10px;
+
+  :hover {
+    color:${({ theme }) => theme.text};
+  }
 `;
 
 const ShowOutputButton = styled.button`
@@ -154,6 +180,10 @@ const ShowOutputButton = styled.button`
   background-color: ${({ theme }) => theme.accent};
   color: ${({ theme }) => theme.accentText};
   cursor: pointer;
+
+  :hover {
+    color:${({ theme }) => theme.text};
+  }
 `;
 
 

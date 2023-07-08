@@ -14,7 +14,8 @@ export interface Option {
 export interface Field {
     name: string;
     type: 'input' | 'textarea' | 'select' | 'option';
-    label: string;
+    label?: string;
+    placeholder?: string;
     options?: Option[];
 }
 

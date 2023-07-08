@@ -3,6 +3,7 @@ import ReactFlow, {
   MiniMap,
   Controls,
   Panel,
+  Handle,
 } from 'reactflow';
 
 import { createGlobalStyle } from 'styled-components';
@@ -30,11 +31,10 @@ export const NodeHeader = styled.div`
 `;
 
 export const NodeBand = styled.div`
-  padding: 5px;
+  padding: 2px;
   overflow: hidden;
   transition: height 0.2s ease-out background 0.3s ease;
   background: ${({ theme }) => theme.accent};
-  cursor: pointer;
 `;
 
 export const NodeWrapper = styled.div`
@@ -44,14 +44,14 @@ export const NodeWrapper = styled.div`
   box-shadow: ${({ theme }) => theme.boxShadow};
   border-radius: 8px;
   transition: all 0.3s ease;
+  margin-left: 10px;
 `;
 
 export const NodeTitle = styled.div`
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 1.1em;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  margin-left: 10px;
   color: ${({ theme }) => theme.text};
 `;
 
@@ -73,22 +73,26 @@ export const NodeLabel = styled.label`
 `;
 
 export const NodeTextarea = styled.textarea`
-  padding: 8px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 12px;
   font-size: 14px;
   background-color: ${({ theme }) => theme.nodeInputBg};
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.1);
   color: ${({ theme }) => theme.text};
   resize: vertical;
-  min-height: 80px;
+  min-height: 85px;
   max-height: 300px;
   transition: all 0.3s ease;
 `;
 
 export const NodeIcon = styled.div`
-  width: 20px;
-  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  height: 100%;
   color: ${({ theme }) => theme.text};
+  font-size: 1.5em;
 `;
 
 export const NodeContainer = styled.div`
@@ -110,9 +114,11 @@ export const NodeLogsText = styled.p`
 
 export const NodeLogs = styled.div<{ showLogs: boolean }>`
   border-radius: 0 0 8px 8px;
-  font-size: 0.85em;
-  padding: 10px;
+  font-size: 0.9em;
+  line-height: 20px;
+  padding: 10px 16px;
   overflow: hidden;
+  word-break: break-word;
   transition: height 0.2s ease-out background 0.3s ease;
   background: ${({ theme }) => theme.outputBg};
   color: ${({ theme }) => theme.accentText};
@@ -132,34 +138,43 @@ export const NodeLogs = styled.div<{ showLogs: boolean }>`
 
 export const OptionSelector = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-around;
   align-items: center;
   width: 200px;
   border: 2px solid ${({ theme }) => theme.accent};
   border-radius: 4px;
   overflow: hidden;
   background-color: ${({ theme }) => theme.bg};
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.1);
+  padding: 3px;
+  gap: 5px;
 `;
 
 export const OptionButton = styled.button<{ selected: boolean }>`
   flex-grow: 1;
   padding: 10px;
-  background-color: ${({ selected, theme }) => selected ? theme.nodeInputBg : theme.bg};
-  color: ${({ selected, theme }) => selected ? theme.accentText : theme.text};
+  background: ${({ selected, theme }) => selected ? theme.optionButtonBgSelected : null};
+  color: ${({ selected, theme }) => selected ? theme.optionButtonColorSelected : theme.optionButtonColor};
   border: none;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
   font-weight: bold; 
 
   &:hover {
-    background-color: ${({ selected, theme }) => selected ? theme.nodeInputBg : darken(0.1, theme.bg)};
-    color: ${({ theme }) => theme.accentText};
+    background-color: ${({ selected, theme }) => selected ? theme.optionButtonBg : darken(0.1, theme.optionButtonBg)};
+    color: ${({ theme }) => theme.optionButtonColorSelected};
   }
 `;
 
 export const ReactFlowStyled = styled(ReactFlow)`
   background-color: ${(props) => props.theme.bg};
+
+  .react-flow__attribution {
+    background: transparent;
+  }
 `;
 
 export const MiniMapStyled = styled(MiniMap)`
@@ -201,7 +216,11 @@ export const CopyButton = styled.button`
 `;
 
 export const CopyIcon = styled(FiCopy)`
-  color: #000000;
+  color: ${(props) => props.theme.controlsColor};
+
+  :hover{
+    color: #000000;;
+  }
 `;
 
 export const NodeInput = styled.input`
@@ -211,11 +230,37 @@ export const NodeInput = styled.input`
   font-size: 14px;
   color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.nodeInputBg};
-  padding: 5px;
+  padding: 10px 16px;
   border-radius: 5px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+`;
 
-  ::placeholder {
-    color: ${({ theme }) => theme.nodeInputBg};
+export const InputHandle = styled(Handle)`
+  background: #72c8fa;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border:none;
+  box-shadow: 0 0 10px 2px rgba(114, 200, 250, 0.3);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    background: #89d0fc;
+    box-shadow: 0 0 15px 7px rgba(114, 200, 250, 0.5);
+  }
+`;
+
+export const OutputHandle = styled(Handle)`
+  background: rgb(224, 166, 79);
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 0 10px 2px rgba(224, 166, 79, 0.3);
+  border-radius: 0;
+  border:none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    background: rgb(234, 176, 89);
+    box-shadow: 0 0 15px 7px rgba(224, 166, 79, 0.5);
   }
 `;

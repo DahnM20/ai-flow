@@ -5,7 +5,8 @@ const promptNodeFields: Field[] = [
   {
     name: 'inputText',
     type: 'textarea',
-    label: 'Prompt'
+    //label: 'Prompt',
+    placeholder: 'PromptPlaceholder',
   },
 ];
 

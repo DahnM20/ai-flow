@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { NodeResizer } from '@reactflow/node-resizer';
-import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput } from '../../shared/Node.styles';
+import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle } from '../../shared/Node.styles';
 import useHandleShowOutput from '../../../hooks/useHandleShowOutput';
 import { useRefreshOnAppearanceChange } from '../../../hooks/useRefreshOnAppearanceChange';
 import { generateIdForHandle } from '../../../utils/flowUtils';
@@ -98,15 +98,21 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             case 'input':
                 return (
                     <>
-                        <NodeLabel>{t(field.label)}</NodeLabel>
-                        <NodeInput name={field.name} className="nodrag" value={nodeData[field.name]} onChange={handleNodeDataChange} />
+                        {
+                            field.label &&
+                            <NodeLabel>{t(field.label)}</NodeLabel>
+                        }
+                        <NodeInput name={field.name} className="nodrag" value={nodeData[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                     </>
                 );
             case 'textarea':
                 return (
                     <>
-                        <NodeLabel>{t(field.label)}</NodeLabel>
-                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" value={nodeData[field.name]} onChange={handleNodeDataChange} />
+                        {
+                            field.label &&
+                            <NodeLabel>{t(field.label)}</NodeLabel>
+                        }
+                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" value={nodeData[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                     </>
                 );
             case 'option':
@@ -140,11 +146,11 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             <NodeHeader onDoubleClick={toggleCollapsed}>
                 {
                     data.config.hasInputHandle &&
-                    <Handle className="handle" type="target" id={generateIdForHandle(0)} position={Position.Top} style={{ background: '#72c8fa', width: '10px', height: '10px' }} />
+                    <InputHandle className="handle" type="target" id={generateIdForHandle(0)} position={Position.Top}/>
                 }
                 <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
                 <NodeTitle>{t(data.config.nodeName)}</NodeTitle>
-                <Handle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} style={{ background: 'rgb(224, 166, 79)', width: '10px', height: '10px', borderRadius: '0' }} />
+                <OutputHandle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} />
                 <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />
             </NodeHeader>
             <NodeBand />

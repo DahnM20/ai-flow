@@ -5,7 +5,7 @@ import ReactTooltip, { Tooltip } from 'react-tooltip';
 import { NodeContext } from '../../providers/NodeProvider';
 import NodePlayButton from '../../tools/NodePlayButton';
 import { generateIdForHandle } from '../../../utils/flowUtils';
-import { NodeTitle } from '../../shared/Node.styles';
+import { InputHandle, NodeTitle, OutputHandle } from '../../shared/Node.styles';
 import { darken } from 'polished';
 
 interface DataSplitterNodeData {
@@ -105,10 +105,10 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
           />
         </>
       )}
-      <Handle className="handle" type="target" position={Position.Left} style={{ background: '#72c8fa', width: '10px', height: '10px' }} />
+      <InputHandle className="handle" type="target" position={Position.Left} />
       <div className="output-strip-node-outputs">
         {Array.from(Array(getNbOutput())).map((_, index) => (
-          <Handle
+          <OutputHandle
             key={generateIdForHandle(index)}
             data-tooltip-id={`${nodeId}-tooltip`}
             data-tooltip-content={data.output_data ? data.output_data[index] : ''}
@@ -117,10 +117,7 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
             position={Position.Right}
             style={{
               background: data?.output_data ? (data.output_data[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
-              top: `${getNbOutput() === 1 ? 50 : (index / (getNbOutput() - 1)) * 80 + 10}%`,
-              width: '10px',
-              height: '10px',
-              borderRadius: '0',
+              top: `${getNbOutput() === 1 ? 50 : (index / (getNbOutput() - 1)) * 80 + 10}%`
             }}
           />
         ))}

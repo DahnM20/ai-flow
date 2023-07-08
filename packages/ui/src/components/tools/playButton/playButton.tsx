@@ -21,11 +21,11 @@ const Button = styled.button`
   left: calc(50% - 25px);
   width: 50px;
   height: 50px;
-  background-color: #6576f8;
+  background: linear-gradient(29deg, rgba(2,0,36,1) 0%, rgb(50 103 216 / 82%) 0%, rgb(91 236 243 / 86%) 100%);
   color: white;
   border: none;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 1.4em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,7 +36,7 @@ const Button = styled.button`
   &:hover {
     background-color: #3b4bb8;
     transform: scale(1.1); // Ajout d'une animation de zoom lors du survol
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4); // Augmentation de l'ombre portée lors du survol
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.4); // Augmentation de l'ombre portée lors du survol
   }
 
   &:hover::after {

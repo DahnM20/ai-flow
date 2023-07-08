@@ -13,7 +13,7 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({ data }) => {
 
     const html = marked(stringifiedData);
     const sanitizedHtml = DOMPurify.sanitize(html);
-    return <pre dangerouslySetInnerHTML={{ __html: sanitizedHtml }} style={{ whiteSpace: 'pre-wrap', paddingTop: '10px'  }}/>;
+    return <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} style={{ whiteSpace: 'pre-wrap', paddingTop: '10px'  }}/>;
 };
 
 export default MarkdownOutput;

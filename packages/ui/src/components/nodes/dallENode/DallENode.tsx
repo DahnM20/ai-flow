@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { FaDownload, FaImage } from 'react-icons/fa';
 import { NodeResizer } from '@reactflow/node-resizer';
-import { NodeBand, NodeContainer, NodeContent, NodeForm, NodeHeader, NodeIcon, NodeLabel, NodeLogs, NodeLogsText, NodeTextarea, NodeTitle } from '../../shared/Node.styles';
+import { InputHandle, NodeBand, NodeContainer, NodeContent, NodeForm, NodeHeader, NodeIcon, NodeLabel, NodeLogs, NodeLogsText, NodeTextarea, NodeTitle, OutputHandle } from '../../shared/Node.styles';
 import styled from 'styled-components';
 import NodePlayButton from '../../tools/NodePlayButton';
 import { NodeContext } from '../../providers/NodeProvider';
@@ -75,12 +75,11 @@ const DallENode: React.FC<NodeProps> = ({ data, id, selected }) => {
 
   return (
     <NodeContainer key={nodeId}>
-      <NodeResizer color="#ff0071" isVisible={selected} minWidth={200} minHeight={30} />
       <NodeHeader onDoubleClick={toggleCollapsed}>
-        <Handle className="handle" type="target" position={Position.Top} style={{ background: '#72c8fa', width: '10px', height: '10px' }} />
+        <InputHandle className="handle" type="target" position={Position.Top}/>
         <NodeIcon><FaImage /></NodeIcon>
         <NodeTitle>DALL-E</NodeTitle>
-        <Handle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} style={{ background: 'rgb(224, 166, 79)', width: '10px', height: '10px', borderRadius: '0' }} />
+        <OutputHandle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} />
         <NodePlayButton isPlaying={isPlaying} onClick={handlePlayClick} nodeName={data.name}/>
       </NodeHeader>
       <NodeBand/>

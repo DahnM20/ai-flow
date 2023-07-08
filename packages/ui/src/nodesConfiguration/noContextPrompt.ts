@@ -23,7 +23,8 @@ export const noContextPromptNodeConfig: NodeConfig = {
         {
             name: 'inputText',
             type: 'textarea',
-            label: 'Prompt'
+            //label: 'Prompt',
+            placeholder: 'PromptPlaceholder',
         },
 
     ],

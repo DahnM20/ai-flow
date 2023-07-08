@@ -7,7 +7,7 @@ export const urlNodeConfig: NodeConfig = {
     {
       name: 'url',
       type: 'input',
-      label: '',
+      placeholder: "URLPlaceholder",
     },
   ],
   outputType: 'text',

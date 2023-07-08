@@ -22,7 +22,7 @@ export const basicProcessorNodeConfig: NodeConfig = {
         },
         {
             name: 'initData',
-            label: 'RoleInitPrompt',
+            placeholder: 'RoleInitPrompt',
             type: 'textarea',
         },
 

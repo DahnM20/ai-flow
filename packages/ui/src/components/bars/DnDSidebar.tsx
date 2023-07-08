@@ -108,7 +108,7 @@ const SectionTitle = styled.h2`
 `;
 
 const Node = styled.div`
-  height: 45px;
+  height: 40px;
   padding: 6px 10px;
   box-shadow: ${({ theme }) => theme.boxShadow};
   border-radius: 4px;
@@ -126,7 +126,7 @@ const Node = styled.div`
     background-color: ${({ theme }) => theme.nodeBg};
   }
 
-  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) right / 10% no-repeat, ${({ theme }) => theme.bg};
+  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) right / 5% no-repeat, ${({ theme }) => theme.bg};
 `;
 
 const StyledInfoIcon = styled(FaInfoCircle)`

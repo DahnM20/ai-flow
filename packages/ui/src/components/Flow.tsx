@@ -47,8 +47,8 @@ function Flow(props: FlowProps) {
 
   const nodeTypes = useMemo(() => getAllNodeTypesComponentMapping(), []);
 
-  const [nodes, setNodes] = useState<Node[]>(!!props.nodes ? props.nodes : initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(!!props.edges ? props.edges : initialEdges);
+  const [nodes, setNodes] = useState<Node[]>(props.nodes ? props.nodes : initialNodes);
+  const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : initialEdges);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
   const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
