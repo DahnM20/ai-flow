@@ -2,7 +2,9 @@
 
 **AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of **ChatGPT**. This unique tool paves the way to creating interactive networks of different AI models, fostering a multi-perspective response to various prompts.
 
-Imagine setting up a workflow where:
+![Gif simple flow](assets/gif-scenario-1.gif)
+
+Imagine setting up a simple workflow where:
 
 - One node generates a story,
 - Two others critique the output.
@@ -10,6 +12,8 @@ Imagine setting up a workflow where:
 This flow logic can then be applied to different inputs, yielding varied results for similar subject matter. 
 
 **AI Flow is particularly useful for content creation.** By enabling different GPT models to adopt different roles, AI Flow orchestrates the creation and evaluation of digital content, from social media threads to blog articles. 
+
+![image-scenario-2](assets/image-scenario-2.png)
 
 Our primary goal with AI Flow is to democratize access to AI interactions, enabling anyone to create and manage their own AI networks right from their personal computer. In addition, we value your autonomy and control over costs. With AI Flow, you utilize your own OpenAI keys, giving you full authority over your budget. Importantly, the software runs locally on your machine, assuring you of privacy and control over your data and operations.
 
