@@ -15,7 +15,7 @@ class OldGPTPromptProcessor(Processor):
     def process(self):
         init_context = self.input_processor.get_output()
         user_message = {"role": "user", "content": self.prompt}
-        print('init_context    ' + str(init_context))
+        
         init_context.append(user_message)
         self.input_processor.updateContext(user_message)
 

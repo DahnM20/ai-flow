@@ -27,6 +27,7 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
 store = ProcessorStoreSingleton().store
 
 if os.getenv('SERVE_STATIC_FILES') == 'true':
+    logging.info("Visual interface will be available at http://localhost:5000")
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def serve(path):
@@ -60,7 +61,7 @@ def handle_connect():
 @socketio.on('process_file')
 def handle_process_file(data):
     try:
-        logging.info("Received process_config event with data: %s", data)
+        logging.debug("Received process_config event with data: %s", data)
         populate_session_global_object(data)
         flow_data = json.loads(data.get('json_file'))
 
@@ -68,7 +69,7 @@ def handle_process_file(data):
             processors = load_processors(flow_data)
             output = launchProcessors(processors, ws=True)
 
-            logging.info("Emitting processing_result event with output: %s", output)
+            logging.debug("Emitting processing_result event with output: %s", output)
             emit('run_end', {'output': output})
         else:
             logging.warning("Invalid input or missing configuration file")
@@ -81,7 +82,7 @@ def handle_process_file(data):
 @socketio.on('run_node')
 def handle_process_file(data):
     try:
-        logging.info("Received run_node event with data: %s", data)
+        logging.debug("Received run_node event with data: %s", data)
         populate_session_global_object(data)
         flow_data = json.loads(data.get('json_file'))
         node_name = data.get('node_name')
@@ -96,7 +97,7 @@ def handle_process_file(data):
         if flow_data and node_name:
             processors = load_processors_for_node(flow_data, stored_processors, node_name)
             output = launch_processors_for_node(processors, node_name, ws=True)
-            logging.info("Emitting processing_result event with output: %s", output)
+            logging.debug("Emitting processing_result event with output: %s", output)
             emit('run_end', {'output': output})
         else:
             logging.warning("Invalid input or missing parameters")

@@ -1,5 +1,6 @@
 import json
 import os
+import logging
 from flask import request
 from flask_socketio import emit
 from .processor_store_singleton import ProcessorStoreSingleton
@@ -44,7 +45,7 @@ def load_new_processors_and_stored_ones(config_data, stored_processors, node_nam
     factory = ProcessorFactory()
     factory.load_processors()
 
-    print("Stored processors: ",stored_processors)
+    logging.debug("Stored processors: ",stored_processors)
     processors = {}
     for config in config_data:
         processor_key = f"{session_id}_{config['name']}"
@@ -74,7 +75,7 @@ def launchProcessors(processors, ws=False):
             emit("current_node_running", {"instance_name": processor.name})
         
         output = processor.process()
-        print(processor.name, "-", processor.processor_type, ": ", output)
+        logging.debug(processor.name, "-", processor.processor_type, ": ", output)
         
         # Store processor for future runs
         processor_key = f"{session_id}_{processor.name}"
@@ -95,7 +96,7 @@ def launch_processors_for_node(processors, node_name=None, ws=False):
                 emit("current_node_running", {"instance_name": processor.name})
                 
             output = processor.process()
-            print(processor.name, "-", processor.processor_type, ": ", output)
+            logging.debug(processor.name, "-", processor.processor_type, ": ", output)
             
             # Store processor for future runs
             processor_key = f"{session_id}_{processor.name}"

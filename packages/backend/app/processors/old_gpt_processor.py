@@ -16,8 +16,7 @@ class OldGPTProcessor(Processor):
     def createInitialContent(self):
         if hasattr(self, "input_processor") and self.input_processor is not None:
             input_processor_output = self.input_processor.get_output(self.input_key)
-            print("input_processor_output ")
-            print(input_processor_output)
+            
             contextSuffix = (
                 " To answer my next request, you will use the following data : "
                 + input_processor_output

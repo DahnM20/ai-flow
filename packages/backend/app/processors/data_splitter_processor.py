@@ -3,10 +3,6 @@ from .processor import Processor
 ESCAPE_CHARACTERS = {
     "\\n": "\n",
     "\\t": "\t",
-    # Vous pouvez ajouter ici autant de caractères d'échappement que vous le souhaitez
-    # "\\v": "\v",
-    # "\\b": "\b",
-    # etc.
 }
 
 class DataSplitterProcessor(Processor):
