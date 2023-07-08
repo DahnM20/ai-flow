@@ -2,6 +2,12 @@ FROM node:14 as build
 
 WORKDIR /app
 
+ARG REACT_APP_WS_HOST
+ARG REACT_APP_WS_PORT
+
+ENV REACT_APP_WS_HOST=$REACT_APP_WS_HOST
+ENV REACT_APP_WS_PORT=$REACT_APP_WS_PORT
+
 COPY package.json package-lock.json /app/
 
 RUN npm ci
