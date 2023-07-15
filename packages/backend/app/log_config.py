@@ -26,7 +26,4 @@ def setup_logger(name):
 
 root_logger = setup_logger('root')
 root_logger.setLevel(logging.INFO)
-    
-geventwebsocket_logger = setup_logger('geventwebsocket')
-geventwebsocket_logger.setLevel(logging.ERROR)
      

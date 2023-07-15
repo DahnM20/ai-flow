@@ -2,7 +2,7 @@ from functools import wraps
 import logging
 import json
 import sys
-from engineio.async_drivers import gevent
+import eventlet
 from flask import Flask,send_from_directory
 from flask import request
 from flask import g
@@ -22,7 +22,7 @@ else:
 
 app = Flask(__name__, static_folder=build_dir)
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
 store = ProcessorStoreSingleton().store
 
