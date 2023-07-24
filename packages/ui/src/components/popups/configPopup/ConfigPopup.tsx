@@ -118,7 +118,7 @@ const Popup = styled.div<{ isOpen: boolean }>`
 
 const Content = styled.div`
     position: relative;
-    width: 400px;
+    width: 500px;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;

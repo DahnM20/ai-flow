@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Flow from './Flow';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { FiSun, FiMoon, FiChevronRight } from 'react-icons/fi';
 import { Node, Edge } from 'reactflow';
 import { ThemeContext, ThemeProvider } from './providers/ThemeProvider';
 import { darken, lighten } from 'polished';
@@ -81,6 +81,7 @@ const FlowTabs = () => {
             </ToggleThemeButton>
           </RightControls>
         </TabsContainer>
+        {/* <FeedbackIcon>Feedback ?</FeedbackIcon> */}
         <Flow
           key={`flow-${currentTab}-${refresh}`}
           nodes={flowTabs.tabs[currentTab].nodes}
@@ -92,7 +93,21 @@ const FlowTabs = () => {
   );
 };
 
-
+const FeedbackIcon = styled.div`
+  color: #ffffff;
+  background-color: red;
+  font-size:  0.9em;
+  position: fixed;
+  left: 90%;
+  top: 8%;
+  width: 5%;
+  padding: 10px;
+  transform: translateY(-50%);
+  z-index: 9;
+  border-radius: 10%;
+  overflow: hidden;
+  white-space: nowrap;
+`;
 
 const FlowManagerContainer = styled.div`
   display: flex;

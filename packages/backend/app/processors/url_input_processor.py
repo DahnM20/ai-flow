@@ -1,5 +1,6 @@
 from .processor import Processor
 from langchain.document_loaders.url import UnstructuredURLLoader
+from langchain.document_loaders import PlaywrightURLLoader
 
 class URLInputProcessor(Processor):
     processor_type = "url_input"
@@ -13,7 +14,8 @@ class URLInputProcessor(Processor):
     
     def process(self):
         urls = [self.url]
-        loader = UnstructuredURLLoader(urls)
+        #loader = UnstructuredURLLoader(urls)
+        loader = PlaywrightURLLoader(urls=urls, remove_selectors=["header", "footer"])
 
         documents = loader.load()
         content = ' '.join(doc.page_content for doc in documents)

@@ -26,6 +26,9 @@ gevent = "^22.10.2"
 gevent-websocket = "^0.10.1"
 colorlog = "^6.7.0"
 eventlet = "^0.33.3"
+playwright = "^1.36.0"
+youtube-transcript-api = "^0.6.1"
+pytube = "^15.0.0"
 
 
 

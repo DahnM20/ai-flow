@@ -21,6 +21,7 @@ RUN pip install --upgrade poetry
 RUN poetry update
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-interaction
+RUN python -m playwright install
 
 EXPOSE 5000
 

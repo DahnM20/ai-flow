@@ -6,10 +6,11 @@ interface RightButtonProps {
   onClick: () => void;
   color?: string;
   icon?: React.ReactNode;
+  text?: string;
   bottom?: string;
 }
 
-const RightButton: React.FC<RightButtonProps> = ({ onClick, color = '#808080', icon = <FiSettings />,  bottom = '30px' }) => {
+const RightIconButton: React.FC<RightButtonProps> = ({ onClick, color = '#808080', icon = <FiSettings />,  bottom = '30px' }) => {
   return (
     <StyledRightButton color={color} bottom={bottom} onClick={onClick}>
       <StyledIcon>{icon}</StyledIcon>
@@ -47,4 +48,4 @@ const StyledIcon = styled.div`
   }
 `;
 
-export default RightButton;
+export default RightIconButton;

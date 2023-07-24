@@ -165,11 +165,11 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 showLogs={showLogs}
                 onClick={() => setShowLogs(!showLogs)}
             >
-                {showLogs && !!data.output_data && <StyledCopyIcon className="copy-icon" onClick={(event) => {
+                {showLogs && data.output_data && <StyledCopyIcon className="copy-icon" onClick={(event) => {
                     event.stopPropagation();
                     copyToClipboard(data.output_data);
                 }} />}
-                {!showLogs ? <NodeLogsText>Click to show output</NodeLogsText> : <MarkdownOutput data={data.output_data} />}
+                {!showLogs && data.output_data ? <NodeLogsText>{t('ClickToShowOutput')}</NodeLogsText> : <MarkdownOutput data={data.output_data} />}
             </NodeLogs>
         </NodeContainer>
     );

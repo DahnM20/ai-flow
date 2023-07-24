@@ -107,7 +107,6 @@ export const NodeContainer = styled.div`
 
 export const NodeLogsText = styled.p`
   font-size: 1em;
-  padding: 10px;
   margin: 0;
   color: ${({ theme }) => theme.text};
 `;
@@ -124,15 +123,7 @@ export const NodeLogs = styled.div<{ showLogs: boolean }>`
   color: ${({ theme }) => theme.accentText};
   cursor: pointer;
   max-width: 700px;
-
-  ${({ showLogs }) =>
-    showLogs
-      ? css`
-          height: fit-content;
-        `
-      : css`
-          height: 0;
-        `};
+  height: fit-content;
 `;
 
 

@@ -13,7 +13,7 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
-import RightButton from './tools/configurationButton/ConfigurationButton';
+import RightIconButton from './tools/configurationButton/ConfigurationButton';
 import ConfigPopup from './popups/configPopup/ConfigPopup';
 import { FiHelpCircle } from 'react-icons/fi';
 import PlayButton from './tools/playButton/playButton';
@@ -252,8 +252,8 @@ function Flow(props: FlowProps) {
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />
         <DnDSidebar />
-        <RightButton onClick={() => setIsConfigOpen(true)} />
-        <RightButton onClick={() => setIsHelpOpen(true)} color='#6576f8' bottom='80px' icon={<FiHelpCircle />} />
+        <RightIconButton onClick={() => setIsConfigOpen(true)} />
+        <RightIconButton onClick={() => setIsHelpOpen(true)} color='#6576f8' bottom='80px' icon={<FiHelpCircle />} />
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
         <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
         <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />

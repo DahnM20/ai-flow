@@ -7,7 +7,7 @@ import GenericNode from "../components/nodes/genericNode/GenericNode";
 /**
  * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
  */
-export const allNodeTypes = ['gpt', 'file', 'url_input', 'dalle-prompt', 'data-splitter', 'input-text', 'gpt-prompt','youtube-transcript', 'gpt-no-context-prompt'] as const;
+export const allNodeTypes = ['gpt', 'file', 'url_input', 'dalle-prompt', 'data-splitter', 'input-text', 'gpt-prompt','youtube_transcript_input', 'gpt-no-context-prompt'] as const;
 export type NodeType = typeof allNodeTypes[number];
 
 

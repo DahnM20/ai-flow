@@ -1,49 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { NodeType } from '../../utils/mappings';
 import { Tooltip } from 'react-tooltip';
 import { FaInfoCircle } from 'react-icons/fa';
+import { nodeSectionMapping } from '../../nodesConfiguration/nodeConfig';
 
-type DnDNode = {
-  label: string;
-  type: NodeType;
-  helpMessage?: string;
-};
-
-type NodeSection = {
-  section: string;
-  nodes: DnDNode[];
-};
 
 const DnDSidebar = () => {
   const { t } = useTranslation('flow');
-
-  const nodeTypes: NodeSection[] = [
-    {
-      section: 'Input',
-      nodes: [
-        { label: 'Text', type: 'input-text', helpMessage: 'inputHelp' },
-        { label: 'URL', type: 'url_input', helpMessage: 'urlInputHelp' },
-        // { label: 'YoutubeVideo', type: 'youtube-transcript', helpMessage: 'youtubeTranscriptHelp' },
-      ],
-    },
-    {
-      section: 'Models',
-      nodes: [
-        { label: 'GPT', type: 'gpt', helpMessage: 'gptHelp' },
-        { label: 'GPTPrompt', type: 'gpt-prompt', helpMessage: 'gptPromptHelp' },
-        { label: 'NoContextPrompt', type: 'gpt-no-context-prompt', helpMessage: 'noContextPromptHelp' }
-      ],
-    },
-    {
-      section: 'ImageGeneration',
-      nodes: [{ label: 'DALL-E', type: 'dalle-prompt', helpMessage: 'dallePromptHelp' }],
-    },
-    {
-      section: 'Tools',
-      nodes: [{ label: 'DataSplitter', type: 'data-splitter', helpMessage: 'dataSplitterHelp' }],
-    },
-  ];
 
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -53,7 +16,7 @@ const DnDSidebar = () => {
   return (
     <>
       <DnDSidebarContainer>
-        {nodeTypes.map((section, index) => (
+        {nodeSectionMapping.map((section, index) => (
           <Section key={index}>
             <SectionTitle>{t(section.section)}</SectionTitle>
             {section.nodes.map((node, nodeIndex) => (
