@@ -14,11 +14,12 @@ import { useTranslation } from 'react-i18next';
 import { FiCopy } from 'react-icons/fi';
 import styled from 'styled-components';
 import { copyToClipboard } from '../../../utils/navigatorUtils';
+import { useIsPlaying } from '../../../hooks/useIsPlaying';
 
 const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
     const { t } = useTranslation('flow');
 
-    const { hasParent, showOnlyOutput } = useContext(NodeContext);
+    const { hasParent, showOnlyOutput, isRunning } = useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
 
@@ -26,7 +27,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const [showLogs, setShowLogs] = useState<boolean>(false);
     const [nodeData, setNodeData] = useState<any>(data);
     const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [isPlaying, setIsPlaying] = useIsPlaying();
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 

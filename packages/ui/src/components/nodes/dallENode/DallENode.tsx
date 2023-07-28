@@ -9,6 +9,7 @@ import { NodeContext } from '../../providers/NodeProvider';
 import useHandleShowOutput from '../../../hooks/useHandleShowOutput';
 import { useRefreshOnAppearanceChange } from '../../../hooks/useRefreshOnAppearanceChange';
 import { generateIdForHandle } from '../../../utils/flowUtils';
+import { useIsPlaying } from '../../../hooks/useIsPlaying';
 
 interface DallENodeData {
   name: string;
@@ -35,8 +36,8 @@ const DallENode: React.FC<NodeProps> = ({ data, id, selected }) => {
     output_data: data.output_data || '',
   });
   const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
+  const [isPlaying, setIsPlaying] = useIsPlaying();
+  
   useEffect(() => {
     setNodeId(`${data.id}-${Date.now()}`);
     setIsPlaying(false);

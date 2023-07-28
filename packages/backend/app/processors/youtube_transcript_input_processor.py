@@ -8,6 +8,7 @@ class YoutubeTranscriptInputProcessor(Processor):
     def __init__(self, config):
         super().__init__(config)
         self.url = config["url"]
+        self.language = config["language"]
 
     def updateContext(self, data):
         pass
@@ -16,7 +17,7 @@ class YoutubeTranscriptInputProcessor(Processor):
         loader = YoutubeLoader.from_youtube_url(
             self.url,
             add_video_info=True,
-            language="fr",
+            language=self.language,
         )
 
         documents = loader.load()

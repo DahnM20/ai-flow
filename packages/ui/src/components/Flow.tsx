@@ -55,6 +55,7 @@ function Flow(props: FlowProps) {
   const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
+  const [errorCount, setErrorCount] = useState<number>(0);
 
   const onInit = (reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(reactFlowInstance);
@@ -105,6 +106,7 @@ function Flow(props: FlowProps) {
   const onError = (data: any) => {
     setCurrentUserMessage({ content: data.error, type: MessageType.Error });
     setIsRunning(false);
+    setErrorCount(prevErrorCount => prevErrorCount + 1);
     setIsPopupOpen(true);
   }
 
@@ -230,7 +232,7 @@ function Flow(props: FlowProps) {
   }
 
   return (
-    <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput} isRunning={isRunning} currentNodeRunning={currentNodeRunning}>
+    <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput} isRunning={isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount}>
       <div style={{ height: '100%' }} onClick={handleNodesClick}>
         <div className="reactflow-wrapper" style={{ height: '100%' }} ref={reactFlowWrapper}>
           <ReactFlowStyled

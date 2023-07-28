@@ -12,6 +12,7 @@ interface NodeContextType {
     showOnlyOutput?: boolean;
     isRunning: boolean;
     currentNodeRunning: string;
+    errorCount: number;
 }
 
 
@@ -22,9 +23,10 @@ export const NodeContext = createContext<NodeContextType>({
     showOnlyOutput: false,
     isRunning: false,
     currentNodeRunning: '',
+    errorCount: 0,
 });
 
-export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, children }: { nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; children: ReactNode }) => {
+export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, errorCount, children }: { nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; errorCount: number; children: ReactNode }) => {
 
     const { t } = useTranslation('flow');
     const { socket, config, verifyConfiguration } = useContext(SocketContext);
@@ -60,7 +62,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
     }
 
     return (
-        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning }}>
+        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, }}>
             {children}
         </NodeContext.Provider>
     );

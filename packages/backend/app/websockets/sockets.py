@@ -103,7 +103,7 @@ def handle_process_file(data):
             logging.warning("Invalid input or missing parameters")
             emit('error', {'error': 'Invalid input or missing parameters'})
     except Exception as e:
-        emit('error', {'error': {node_name} - str(e)})
+        emit('error', {'error': str({node_name}) + " - " + str(e), 'node_name': node_name})
         logging.error(f"An error occurred: {node_name} - {str(e)}")
 
 @socketio.on('disconnect')

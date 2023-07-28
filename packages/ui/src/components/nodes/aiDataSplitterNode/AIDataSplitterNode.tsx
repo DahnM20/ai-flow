@@ -1,16 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
+import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import styled from 'styled-components';
-import ReactTooltip, { Tooltip } from 'react-tooltip';
+import { Tooltip } from 'react-tooltip';
 import { NodeContext } from '../../providers/NodeProvider';
 import NodePlayButton from '../../tools/NodePlayButton';
 import { generateIdForHandle } from '../../../utils/flowUtils';
 import { InputHandle, NodeTitle, OutputHandle } from '../../shared/Node.styles';
-import { darken } from 'polished';
 import { useIsPlaying } from '../../../hooks/useIsPlaying';
 
-interface DataSplitterNodeData {
-  splitChar: string;
+interface AIDataSplitterNodeData {
   id: string;
   name: string;
   processorType: string;
@@ -20,11 +18,11 @@ interface DataSplitterNodeData {
   output_data?: string[];
 }
 
-interface DataSplitterNodeProps extends NodeProps {
-  data: DataSplitterNodeData;
+interface AIDataSplitterNodeProps extends NodeProps {
+  data: AIDataSplitterNodeData;
 }
 
-const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id, selected }) => {
+const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data, id, selected }) => {
 
   const { hasParent, showOnlyOutput } = useContext(NodeContext);
 
@@ -33,7 +31,6 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
 
   const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
   const [isPlaying, setIsPlaying] = useIsPlaying();
-  const [isCustomSplit, setIsCustomSplit] = useState<boolean>(false);
 
   const [collapsed, setCollapsed] = useState(false);
 
@@ -41,7 +38,7 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
     setNodeId(`${data.id}-${Date.now()}`);
     setIsPlaying(false);
     const nbOutput = data.output_data ? data.output_data.length : 0;
-    if(nbOutput > data.nbOutput) {
+    if (nbOutput > getNbOutput()) {
       data.nbOutput = nbOutput;
     }
     updateNodeInternals(id);
@@ -56,24 +53,13 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
     setCollapsed(!collapsed);
   };
 
-
-  const handleSplitCharChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (event.target.value === "custom") {
-      setIsCustomSplit(true);
-    } else {
-      setIsCustomSplit(false);
-      data.splitChar = event.target.value;
-      updateNodeInternals(id);
-    }
-  };
-
-  const handleCustomSplitCharChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    data.splitChar = event.target.value;
-    updateNodeInternals(id);
-  };
-
   const handleForceNbOutputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    data.nbOutput = Number(event.target.value);
+    const forcedNbOutput = Number(event.target.value);
+    
+    if(!forcedNbOutput) return;
+    if(forcedNbOutput && data.output_data && forcedNbOutput < data.output_data.length) return;
+
+    data.nbOutput = forcedNbOutput;
     updateNodeInternals(id);
   };
 
@@ -84,27 +70,16 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
 
   return (
     <DataSplitterNodeContainer selected={selected} nbOutput={getNbOutput()} collapsed={collapsed} key={nodeId} onDoubleClick={handleCollapseClick}>
-      {!collapsed 
-        && <NodeTitle>Splitter</NodeTitle>
+      {!collapsed
+        && <NodeTitle>AI Splitter</NodeTitle>
       }
       <NodePlayButton isPlaying={isPlaying} nodeName={data.name} onClick={handlePlayClick} />
       {!collapsed && (
-        <>
-          <SplitCharSelect value={data.splitChar} onChange={handleSplitCharChange}>
-            <option value="\n">\n</option>
-            <option value=";">;</option>
-            <option value=",">,</option>
-            <option value="custom">Personnalisé...</option>
-          </SplitCharSelect>
-          {isCustomSplit && (
-            <CustomSplitCharInput value={data.splitChar} onChange={handleCustomSplitCharChange} placeholder="Entrez caractère" />
-          )}
-          <ForceNbOutputInput
-            id="nbOutput"
-            value={getNbOutput()}
-            onChange={handleForceNbOutputChange}
-          />
-        </>
+        <ForceNbOutputInput
+          id="nbOutput"
+          value={getNbOutput()}
+          onChange={handleForceNbOutputChange}
+        />
       )}
       <InputHandle className="handle" type="target" position={Position.Left} />
       <div className="output-strip-node-outputs">
@@ -155,44 +130,4 @@ const ForceNbOutputInput = styled.input`
   border-radius: 5px;
 `;
 
-const SplitCharSelect = styled.select`
-  margin-top: 10px;
-  width: 50%;
-  border: none;
-  border-radius: 5px;
-  padding: 5px;
-  font-size: 0.9em;
-  color: ${({ theme }) => theme.text};
-  background-color: ${({ theme }) => theme.nodeBg};
-  box-shadow: ${({ theme }) => theme.boxShadow};
-`;
-
-const CustomSplitCharInput = styled.input`
-  margin-top: 10px;
-  width: 50%;
-  border: none;
-  border-radius: 5px;
-  padding: 5px;
-  font-size: 0.9em;
-  color: ${({ theme }) => theme.text};
-  background-color: ${({ theme }) => theme.nodeInputBg};
-`;
-
-const Button = styled.button`
-  width: 70px;
-  padding: 2px;
-  margin-top: 5px;
-  font-size: 0.8em;
-  color: ${({ theme }) => theme.text};
-  background-color: ${({ theme }) => theme.nodeBg};
-  border: none;
-  border-radius: 3px;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => darken(0.1, theme.nodeBg)};
-  }
-`;
-
-export default DataSplitterNode;
+export default AIDataSplitterNode;

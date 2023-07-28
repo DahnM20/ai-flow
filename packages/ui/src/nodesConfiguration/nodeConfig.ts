@@ -74,7 +74,8 @@ export const nodeSectionMapping: NodeSection[] = [
     },
     {
         section: 'Tools',
-        nodes: [{ label: 'DataSplitter', type: 'data-splitter', helpMessage: 'dataSplitterHelp' }],
+        nodes: [{ label: 'DataSplitter', type: 'data-splitter', helpMessage: 'dataSplitterHelp' },
+                { label: 'DataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp' }],
     },
     {
         section: 'AdvancedSection',
