@@ -24,23 +24,24 @@ interface AIDataSplitterNodeProps extends NodeProps {
 
 const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data, id, selected }) => {
 
-  const { hasParent, showOnlyOutput } = useContext(NodeContext);
-
   const updateNodeInternals = useUpdateNodeInternals();
-
 
   const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
   const [isPlaying, setIsPlaying] = useIsPlaying();
-
   const [collapsed, setCollapsed] = useState(false);
+
+  const { onUpdateNodeData } = useContext(NodeContext);
 
   useEffect(() => {
     setNodeId(`${data.id}-${Date.now()}`);
-    setIsPlaying(false);
-    const nbOutput = data.output_data ? data.output_data.length : 0;
-    if (nbOutput > getNbOutput()) {
-      data.nbOutput = nbOutput;
+    const newNbOutput = data.output_data ? data.output_data.length : 0;
+    if (!data.nbOutput || newNbOutput > data.nbOutput) {
+      onUpdateNodeData(id, {
+        ...data,
+        nbOutput: newNbOutput,
+      });
     }
+    setIsPlaying(false);
     updateNodeInternals(id);
   }, [data.output_data]);
 
@@ -55,21 +56,17 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
 
   const handleForceNbOutputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const forcedNbOutput = Number(event.target.value);
-    
-    if(!forcedNbOutput) return;
-    if(forcedNbOutput && data.output_data && forcedNbOutput < data.output_data.length) return;
 
-    data.nbOutput = forcedNbOutput;
+    onUpdateNodeData(id, {
+      ...data,
+      nbOutput: forcedNbOutput,
+    });
+
     updateNodeInternals(id);
   };
 
-  const getNbOutput = () => {
-    return !!data.nbOutput ? data.nbOutput : 0;
-  }
-
-
   return (
-    <DataSplitterNodeContainer selected={selected} nbOutput={getNbOutput()} collapsed={collapsed} key={nodeId} onDoubleClick={handleCollapseClick}>
+    <DataSplitterNodeContainer selected={selected} nbOutput={data.nbOutput} collapsed={collapsed} key={nodeId} onDoubleClick={handleCollapseClick}>
       {!collapsed
         && <NodeTitle>AI Splitter</NodeTitle>
       }
@@ -77,13 +74,13 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
       {!collapsed && (
         <ForceNbOutputInput
           id="nbOutput"
-          value={getNbOutput()}
+          value={data.nbOutput}
           onChange={handleForceNbOutputChange}
         />
       )}
       <InputHandle className="handle" type="target" position={Position.Left} />
       <div className="output-strip-node-outputs">
-        {Array.from(Array(getNbOutput())).map((_, index) => (
+        {data.nbOutput && Array.from(Array(data.nbOutput)).map((_, index) => (
           <OutputHandle
             key={generateIdForHandle(index)}
             data-tooltip-id={`${nodeId}-tooltip`}
@@ -93,7 +90,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
             position={Position.Right}
             style={{
               background: data?.output_data ? (data.output_data[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
-              top: `${getNbOutput() === 1 ? 50 : (index / (getNbOutput() - 1)) * 80 + 10}%`
+              top: `${data.nbOutput === 1 ? 50 : (index / (data.nbOutput - 1)) * 80 + 10}%`
             }}
           />
         ))}

@@ -231,8 +231,19 @@ function Flow(props: FlowProps) {
     setIsRunning(true);
   }
 
+
+  const handleUpdateNodeData = (nodeId: string, data: any) => {
+    const updatedNodes = nodes.map((node) => {
+          if (node.id === nodeId) {
+            return { ...node, data };
+          }
+          return node;
+    });
+    setNodes(updatedNodes);
+  }
+
   return (
-    <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput} isRunning={isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount}>
+    <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput} isRunning={isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount} onUpdateNodeData={handleUpdateNodeData}>
       <div style={{ height: '100%' }} onClick={handleNodesClick}>
         <div className="reactflow-wrapper" style={{ height: '100%' }} ref={reactFlowWrapper}>
           <ReactFlowStyled

@@ -19,13 +19,12 @@ import { useIsPlaying } from '../../../hooks/useIsPlaying';
 const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
     const { t } = useTranslation('flow');
 
-    const { hasParent, showOnlyOutput, isRunning } = useContext(NodeContext);
+    const { hasParent, showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
 
     const [collapsed, setCollapsed] = useState<boolean>(true);
     const [showLogs, setShowLogs] = useState<boolean>(false);
-    const [nodeData, setNodeData] = useState<any>(data);
     const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
@@ -41,11 +40,11 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         if (textareaRef.current) {
             const newWidth = textareaRef.current.offsetWidth;
             const newHeight = textareaRef.current.offsetHeight;
-            if (newWidth !== nodeData.width || newHeight !== nodeData.height) {
+            if (newWidth !== data.width || newHeight !== data.height) {
                 updateNodeInternals(id);
             }
         }
-    }, [nodeData, id]);
+    }, [data, id]);
 
     useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
 
@@ -58,11 +57,10 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     });
 
     const handleNodeDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setNodeData({
-            ...nodeData,
+        onUpdateNodeData(id, {
+            ...data,
             [event.target.name]: event.target.value,
         });
-        data[event.target.name] = event.target.value;
         updateNodeInternals(id);
     };
 
@@ -75,12 +73,10 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     };
 
     const handleOptionChange = (name: string, value: string) => {
-        setNodeData({
-            ...nodeData,
+        onUpdateNodeData(id,{
+            ...data,
             [name]: value,
         });
-
-        data[name] = value;
         updateNodeInternals(id);
     };
 
@@ -89,7 +85,10 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         if (field.options) {
             const defaultOption = field.options.find(option => option.default);
             if (defaultOption) {
-                nodeData[field.name] = defaultOption.value;
+                onUpdateNodeData(id,{
+                    ...data,
+                    [field.name]:  defaultOption.value,
+                });
             }
         }
     }
@@ -103,7 +102,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                             field.label &&
                             <NodeLabel>{t(field.label)}</NodeLabel>
                         }
-                        <NodeInput name={field.name} className="nodrag" value={nodeData[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                        <NodeInput name={field.name} className="nodrag" value={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                     </>
                 );
             case 'textarea':
@@ -113,11 +112,11 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                             field.label &&
                             <NodeLabel>{t(field.label)}</NodeLabel>
                         }
-                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" value={nodeData[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" value={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                     </>
                 );
             case 'option':
-                if(!nodeData[field.name]) {
+                if(!data[field.name]) {
                     setDefaultOption(field);
                 }
                 return (
@@ -126,7 +125,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                             <OptionSelector>
                                 {field.options?.map(option => (
                                     <OptionButton
-                                        selected={nodeData[field.name] === option.value}
+                                        selected={data[field.name] === option.value}
                                         onClick={() => handleOptionChange(field.name, option.value)}
                                     >
                                         {t(option.label)}

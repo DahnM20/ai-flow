@@ -11,33 +11,17 @@ import { useRefreshOnAppearanceChange } from '../../../hooks/useRefreshOnAppeara
 import { generateIdForHandle } from '../../../utils/flowUtils';
 import { useIsPlaying } from '../../../hooks/useIsPlaying';
 
-interface DallENodeData {
-  name: string;
-  processorType: string;
-  prompt: string;
-  input: string;
-  output_data?: string;
-  onDelete?: (id: string) => void;
-}
-
 const DallENode: React.FC<NodeProps> = ({ data, id, selected }) => {
 
-  const { hasParent, showOnlyOutput} = useContext(NodeContext);
+  const { hasParent, showOnlyOutput, onUpdateNodeData } = useContext(NodeContext);
 
   const updateNodeInternals = useUpdateNodeInternals();
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [showLogs, setShowLogs] = useState<boolean>(false);
-  const [nodeData, setNodeData] = useState<DallENodeData>({
-    name: data.name || '',
-    processorType: data.processorType || '',
-    input: data.input || '',
-    prompt: data.prompt,
-    output_data: data.output_data || '',
-  });
   const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
   const [isPlaying, setIsPlaying] = useIsPlaying();
-  
+
   useEffect(() => {
     setNodeId(`${data.id}-${Date.now()}`);
     setIsPlaying(false);
@@ -46,13 +30,12 @@ const DallENode: React.FC<NodeProps> = ({ data, id, selected }) => {
 
   useRefreshOnAppearanceChange(updateNodeInternals, id, [showLogs, collapsed]);
   useHandleShowOutput({ showOnlyOutput, setCollapsed, setShowLogs, updateNodeInternals, id });
-  
+
   const handleNodeDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setNodeData({
-      ...nodeData,
+    onUpdateNodeData(id, {
+      ...data,
       [event.target.name]: event.target.value,
     });
-    data[event.target.name] = event.target.value;
     updateNodeInternals(id);
   };
 
@@ -64,7 +47,7 @@ const DallENode: React.FC<NodeProps> = ({ data, id, selected }) => {
     const link = document.createElement('a');
     link.href = data.output_data;
     link.download = data.name + '-output-generated.jpg';
-    link.target = '_blank'; // Ajout de l'attribut target
+    link.target = '_blank';
     link.click();
   };
 
@@ -77,21 +60,21 @@ const DallENode: React.FC<NodeProps> = ({ data, id, selected }) => {
   return (
     <NodeContainer key={nodeId}>
       <NodeHeader onDoubleClick={toggleCollapsed}>
-        <InputHandle className="handle" type="target" position={Position.Top}/>
+        <InputHandle className="handle" type="target" position={Position.Top} />
         <NodeIcon><FaImage /></NodeIcon>
         <NodeTitle>DALL-E</NodeTitle>
         <OutputHandle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} />
-        <NodePlayButton isPlaying={isPlaying} onClick={handlePlayClick} nodeName={data.name}/>
+        <NodePlayButton isPlaying={isPlaying} onClick={handlePlayClick} nodeName={data.name} />
       </NodeHeader>
-      <NodeBand/>
-      {!hideNodeContent &&  (
+      <NodeBand />
+      {!hideNodeContent && (
         <NodeContent>
           <NodeForm>
             <NodeLabel>Prompt:</NodeLabel>
             <NodeTextarea
               name="prompt"
               className="nodrag"
-              value={nodeData.prompt}
+              value={data.prompt}
               onChange={handleNodeDataChange}
             />
           </NodeForm>

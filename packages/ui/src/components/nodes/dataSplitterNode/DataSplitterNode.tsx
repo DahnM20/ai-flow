@@ -26,7 +26,7 @@ interface DataSplitterNodeProps extends NodeProps {
 
 const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id, selected }) => {
 
-  const { hasParent, showOnlyOutput } = useContext(NodeContext);
+  const { onUpdateNodeData } = useContext(NodeContext);
 
   const updateNodeInternals = useUpdateNodeInternals();
 
@@ -34,19 +34,21 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
   const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
   const [isPlaying, setIsPlaying] = useIsPlaying();
   const [isCustomSplit, setIsCustomSplit] = useState<boolean>(false);
-
   const [collapsed, setCollapsed] = useState(false);
+
 
   useEffect(() => {
     setNodeId(`${data.id}-${Date.now()}`);
-    setIsPlaying(false);
-    const nbOutput = data.output_data ? data.output_data.length : 0;
-    if(nbOutput > data.nbOutput) {
-      data.nbOutput = nbOutput;
+    const newNbOutput = data.output_data ? data.output_data.length : 0;
+    if (!data.nbOutput || newNbOutput > data.nbOutput) {
+      onUpdateNodeData(id, {
+        ...data,
+        nbOutput: newNbOutput,
+      });
     }
+    setIsPlaying(false);
     updateNodeInternals(id);
   }, [data.output_data]);
-
   const handlePlayClick = () => {
     setIsPlaying(true);
   };
@@ -62,18 +64,30 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
       setIsCustomSplit(true);
     } else {
       setIsCustomSplit(false);
-      data.splitChar = event.target.value;
+
+      onUpdateNodeData(id, {
+        ...data,
+        splitChar: event.target.value,
+      });
+
       updateNodeInternals(id);
     }
   };
 
   const handleCustomSplitCharChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    data.splitChar = event.target.value;
+    onUpdateNodeData(id, {
+      ...data,
+      splitChar: event.target.value,
+    });
+
     updateNodeInternals(id);
   };
 
   const handleForceNbOutputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    data.nbOutput = Number(event.target.value);
+    onUpdateNodeData(id, {
+      ...data,
+      nbOutput: event.target.value,
+    });
     updateNodeInternals(id);
   };
 
@@ -84,7 +98,7 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
 
   return (
     <DataSplitterNodeContainer selected={selected} nbOutput={getNbOutput()} collapsed={collapsed} key={nodeId} onDoubleClick={handleCollapseClick}>
-      {!collapsed 
+      {!collapsed
         && <NodeTitle>Splitter</NodeTitle>
       }
       <NodePlayButton isPlaying={isPlaying} nodeName={data.name} onClick={handlePlayClick} />

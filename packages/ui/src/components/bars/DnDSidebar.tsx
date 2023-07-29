@@ -93,9 +93,9 @@ const Node = styled.div`
 `;
 
 const StyledInfoIcon = styled(FaInfoCircle)`
-  margin-left: 5px;   // ajoute une marge à gauche pour éloigner l'icône du label
-  color: #888;  // change la couleur de l'icône
-  font-size: 0.8em;  // change la taille de l'icône
+  margin-left: 5px;
+  color: #888;
+  font-size: 0.8em;
 `;
 
 export default DnDSidebar;

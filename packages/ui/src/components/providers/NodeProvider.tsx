@@ -13,6 +13,7 @@ interface NodeContextType {
     isRunning: boolean;
     currentNodeRunning: string;
     errorCount: number;
+    onUpdateNodeData: (nodeId:string, data:any) => void;
 }
 
 
@@ -24,9 +25,10 @@ export const NodeContext = createContext<NodeContextType>({
     isRunning: false,
     currentNodeRunning: '',
     errorCount: 0,
+    onUpdateNodeData: () => (undefined),
 });
 
-export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, errorCount, children }: { nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; errorCount: number; children: ReactNode }) => {
+export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, children }: { nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; errorCount: number; onUpdateNodeData: (nodeId:string, data:any) => void;children: ReactNode }) => {
 
     const { t } = useTranslation('flow');
     const { socket, config, verifyConfiguration } = useContext(SocketContext);
@@ -62,7 +64,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
     }
 
     return (
-        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, }}>
+        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData}}>
             {children}
         </NodeContext.Provider>
     );
