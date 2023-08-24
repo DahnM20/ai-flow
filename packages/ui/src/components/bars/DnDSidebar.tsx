@@ -72,26 +72,27 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 16px;
+  font-size: 1.1em;
   font-weight: 600;
   margin-bottom: 8px;
   color: ${({ theme }) => theme.accentText};
 `;
 
 const Node = styled.div`
-  height: 40px;
-  padding: 6px 10px;
+  height: 10%;
+  padding: 10px 10px;
   box-shadow: ${({ theme }) => theme.boxShadow};
   border-radius: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: grab;
   background-color: ${({ theme }) => theme.bg};
   color: ${({ theme }) => theme.text};
-  font-size: 13px;
+  font-size: 1em;
   font-weight: 500;
+  text-align: center;
 
   &:hover {
     background-color: ${({ theme }) => theme.nodeBg};
@@ -101,7 +102,7 @@ const Node = styled.div`
 `;
 
 const StyledInfoIcon = styled(FaInfoCircle)`
-  margin-left: 5px;
+  margin-left: 4px;
   color: #888;
   font-size: 0.8em;
 `;

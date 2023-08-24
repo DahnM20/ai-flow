@@ -99,6 +99,8 @@ export const NodeContainer = styled.div`
   position: relative;
   min-width: 400px;
   resize: both;
+  
+  background: linear-gradient(rgb(35, 35, 35), rgb(24 20 57 / 8%));
   background-color: ${({ theme }) => theme.bg};
   box-shadow: ${({ theme }) => theme.boxShadow};
   border-radius: 8px;
