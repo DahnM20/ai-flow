@@ -55,12 +55,12 @@ class AIDataSplitterProcessor(Processor):
 1st example:
 
 Input: "The main idea is that dogs are very popular pets, and many people enjoy walking them in parks. Another important concept is that dogs need a lot of exercise to stay healthy."
-Output: "Dogs are very popular pets;many people enjoy walking them in parks;dogs need a lot of exercise to stay healthy."
+Output: Dogs are very popular pets;many people enjoy walking them in parks;dogs need a lot of exercise to stay healthy.
 
 2nd example:
 
 Input:"1) A picture of a woman 2) A video with a bird 3) Air conditioner"
-Output: "A picture of a woman;A video with a bird;Air conditioner"
+Output: A picture of a woman;A video with a bird;Air conditioner
 
 3rd example:
 
@@ -68,14 +68,14 @@ Input:"Here are two ideas :
 - Dogs are better than cats
 - Birds are beautiful"
 
-Output: "Dogs are better than cats;Birds are beautiful"
+Output: Dogs are better than cats;Birds are beautiful
 
 4th example: 
 "Crée une interprétation artistique numérique de la ville de New York la nuit sous la pluie, mettant l'accent sur les reflets lumineux sur les surfaces mouillées."
 "Imagine et dessine un nouveau type de fleur qui n'existe pas encore dans la nature. Assure-toi qu'elle a une allure exotique et utilise des couleurs vives et uniques que l'on ne trouve pas couramment chez les fleurs."
 "Conçois une image représentant une scène du futur, avec des villes futuristes, des technologies avancées et des formes de vie artificielles coexistant avec des formes de vie naturelles."
 
-Output: "Crée une interprétation artistique numérique de la ville de New York la nuit sous la pluie, mettant l'accent sur les reflets lumineux sur les surfaces mouillées.;Imagine et dessine un nouveau type de fleur qui n'existe pas encore dans la nature. Assure-toi qu'elle a une allure exotique et utilise des couleurs vives et uniques que l'on ne trouve pas couramment chez les fleurs.;Conçois une image représentant une scène du futur, avec des villes futuristes, des technologies avancées et des formes de vie artificielles coexistant avec des formes de vie naturelles."
+Output: Crée une interprétation artistique numérique de la ville de New York la nuit sous la pluie, mettant l'accent sur les reflets lumineux sur les surfaces mouillées.;Imagine et dessine un nouveau type de fleur qui n'existe pas encore dans la nature. Assure-toi qu'elle a une allure exotique et utilise des couleurs vives et uniques que l'on ne trouve pas couramment chez les fleurs.;Conçois une image représentant une scène du futur, avec des villes futuristes, des technologies avancées et des formes de vie artificielles coexistant avec des formes de vie naturelles.
 
 Now, be ready to do it with my next message""",
                     },

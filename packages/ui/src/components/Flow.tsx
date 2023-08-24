@@ -234,10 +234,10 @@ function Flow(props: FlowProps) {
 
   const handleUpdateNodeData = (nodeId: string, data: any) => {
     const updatedNodes = nodes.map((node) => {
-          if (node.id === nodeId) {
-            return { ...node, data };
-          }
-          return node;
+      if (node.id === nodeId) {
+        return { ...node, data };
+      }
+      return node;
     });
     setNodes(updatedNodes);
   }
@@ -260,7 +260,7 @@ function Flow(props: FlowProps) {
           >
             {/* <Background /> */}
             <MiniMapStyled style={{ right: '4vw' }} />
-            <ControlsStyled style={{ left: '9vw' }} />
+            {/* <ControlsStyled style={{ left: '9vw' }} /> */}
           </ReactFlowStyled>
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />

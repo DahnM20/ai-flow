@@ -3,10 +3,12 @@ import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
 import { FaInfoCircle } from 'react-icons/fa';
 import { nodeSectionMapping } from '../../nodesConfiguration/nodeConfig';
+import { useState } from 'react';
 
 
 const DnDSidebar = () => {
   const { t } = useTranslation('flow');
+  const [isOpen, setOpen] = useState(true);
 
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -15,7 +17,7 @@ const DnDSidebar = () => {
 
   return (
     <>
-      <DnDSidebarContainer>
+      <DnDSidebarContainer isOpen={isOpen} onClick={() => setOpen(!isOpen)}>
         {nodeSectionMapping.map((section, index) => (
           <Section key={index}>
             <SectionTitle>{t(section.section)}</SectionTitle>
@@ -24,6 +26,7 @@ const DnDSidebar = () => {
                 key={nodeIndex}
                 onDragStart={(event) => onDragStart(event, node.type)}
                 draggable
+                onClick={(e) => e.stopPropagation()}
               >
                 {t(node.label)}
                 {
@@ -43,19 +46,24 @@ const DnDSidebar = () => {
   );
 };
 
-const DnDSidebarContainer = styled.div`
+const DnDSidebarContainer = styled.div<{ isOpen: boolean }>`
   position: fixed;
   left: 0;
   top: 0;
   height: 100%;
-  width: 9.5vw;
+  width: 11%;
   background: ${({ theme }) => theme.sidebarBg};
   z-index: 1;
   overflow-y: auto;
   padding: 75px 10px;
 
+  transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-95%)')};
+  transition: transform 0.3s ease-in-out;
+
   @media screen and (max-width: 768px) {
-    width: 100%;
+    width: 30%;
+    font-size: 0.9em;
+    padding: 50px 5px;
   }
 `;
 
