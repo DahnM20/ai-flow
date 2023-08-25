@@ -1,5 +1,6 @@
 import { NodeType } from "../utils/mappings";
 import { basicProcessorNodeConfig } from "./basicProcessorNode";
+import dallENodeConfig from "./dallENode";
 import inputTextNodeConfig from "./inputTextNode";
 import { noContextPromptNodeConfig } from "./noContextPrompt";
 import { promptNodeConfig } from "./promptNode";
@@ -26,7 +27,8 @@ export interface NodeConfig {
     nodeName: string;
     icon: string;
     fields: Field[];
-    outputType: 'text' | 'image';
+    hideFieldsIfParent?: boolean;
+    outputType: 'text' | 'imageUrl';
     hasInputHandle?: boolean;
     section?: SectionType;
 }
@@ -39,6 +41,7 @@ const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'url_input': urlNodeConfig,
     'gpt-no-context-prompt': noContextPromptNodeConfig,
     'youtube_transcript_input': youtubeTranscriptNodeConfig,
+    'dalle-prompt': dallENodeConfig,
     // add other configs here...
 }
 

@@ -15,6 +15,7 @@ import { FiCopy } from 'react-icons/fi';
 import styled from 'styled-components';
 import { copyToClipboard } from '../../../utils/navigatorUtils';
 import { useIsPlaying } from '../../../hooks/useIsPlaying';
+import ImageUrlOutput from '../../tools/imageUrlOutput/ImageUrlOutput';
 
 const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
     const { t } = useTranslation('flow');
@@ -73,7 +74,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     };
 
     const handleOptionChange = (name: string, value: string) => {
-        onUpdateNodeData(id,{
+        onUpdateNodeData(id, {
             ...data,
             [name]: value,
         });
@@ -85,9 +86,9 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         if (field.options) {
             const defaultOption = field.options.find(option => option.default);
             if (defaultOption) {
-                onUpdateNodeData(id,{
+                onUpdateNodeData(id, {
                     ...data,
-                    [field.name]:  defaultOption.value,
+                    [field.name]: defaultOption.value,
                 });
             }
         }
@@ -116,7 +117,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                     </>
                 );
             case 'option':
-                if(!data[field.name]) {
+                if (!data[field.name]) {
                     setDefaultOption(field);
                 }
                 return (
@@ -138,6 +139,27 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         }
     });
 
+    const outputIsImage = data.config.outputType === 'imageUrl';
+
+    const hideNodeParams = (hasParent(id) && data.config.hideFieldsIfParent) || collapsed;
+
+    const getOutputComponent = () => {
+        if (!data.output_data) return <></>
+
+        if (outputIsImage) {
+            return <ImageUrlOutput url={data.output_data} name={data.name} />
+        }
+        else {
+            return <MarkdownOutput data={data.output_data} />
+        }
+
+    }
+
+    const handleCopyToClipboard = (event: any) => {
+        event.stopPropagation();
+        copyToClipboard(data.output_data);
+    }
+
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
     return (
@@ -146,7 +168,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             <NodeHeader onDoubleClick={toggleCollapsed}>
                 {
                     data.config.hasInputHandle &&
-                    <InputHandle className="handle" type="target" id={generateIdForHandle(0)} position={Position.Top}/>
+                    <InputHandle className="handle" type="target" id={generateIdForHandle(0)} position={Position.Top} />
                 }
                 <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
                 <NodeTitle>{t(data.config.nodeName)}</NodeTitle>
@@ -154,7 +176,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />
             </NodeHeader>
             <NodeBand />
-            {collapsed && (
+            {!hideNodeParams && (
                 <NodeContent>
                     <NodeForm>
                         {formFields}
@@ -165,11 +187,13 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 showLogs={showLogs}
                 onClick={() => setShowLogs(!showLogs)}
             >
-                {showLogs && data.output_data && <StyledCopyIcon className="copy-icon" onClick={(event) => {
-                    event.stopPropagation();
-                    copyToClipboard(data.output_data);
-                }} />}
-                {!showLogs && data.output_data ? <NodeLogsText>{t('ClickToShowOutput')}</NodeLogsText> : <MarkdownOutput data={data.output_data} />}
+                {showLogs && data.output_data && !outputIsImage
+                    && <StyledCopyIcon className="copy-icon" onClick={(event) => {
+                        handleCopyToClipboard(event);
+                    }} />}
+                {!showLogs && data.output_data
+                    ? <NodeLogsText>{t('ClickToShowOutput')}</NodeLogsText>
+                    : getOutputComponent()}
             </NodeLogs>
         </NodeContainer>
     );
