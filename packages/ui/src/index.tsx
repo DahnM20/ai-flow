@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import reportWebVitals from './reportWebVitals';
-import FlowTabs from './components/FlowTabs';
 import { ThemeProvider } from './components/providers/ThemeProvider';
 import { GlobalStyle } from './components/shared/Node.styles';
 import { SocketProvider } from './components/providers/SocketProvider';
 import { Fallback } from './components/tools/Fallback';
 import './i18n';
 import { ToastContainer } from 'react-toastify';
+import App from './components/App';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -20,8 +20,8 @@ root.render(
     <SocketProvider>
       <ThemeProvider>
         <Suspense fallback={<Fallback />}>
-          <ToastContainer/>
-          <FlowTabs />
+          <ToastContainer />
+          <App />
         </Suspense>
       </ThemeProvider>
     </SocketProvider>
