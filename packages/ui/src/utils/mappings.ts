@@ -1,5 +1,4 @@
 import { NodeProps } from "reactflow";
-import DallENode from "../components/nodes/dallENode/DallENode";
 import DataSplitterNode from "../components/nodes/dataSplitterNode/DataSplitterNode";
 import FileDropNode from "../components/nodes/fileDropNode/fileDropNode";
 import GenericNode from "../components/nodes/genericNode/GenericNode";
@@ -17,7 +16,6 @@ export type NodeType = typeof allNodeTypes[number];
  */
 export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> = {
   "file": FileDropNode,
-  //"dalle-prompt": DallENode,
   "data-splitter": DataSplitterNode,
   "ai-data-splitter": AIDataSplitterNode,
 };
