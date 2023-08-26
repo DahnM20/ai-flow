@@ -21,7 +21,7 @@ const Button = styled.button`
   left: calc(50% - 25px);
   width: 50px;
   height: 50px;
-  background: linear-gradient(29deg, rgba(2,0,36,1) 0%, rgb(50 103 216 / 82%) 0%, rgb(91 236 243 / 86%) 100%);
+  background: rgb(92 143 227 / 82%);
   color: white;
   border: none;
   border-radius: 50%;
@@ -31,18 +31,18 @@ const Button = styled.button`
   align-items: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); // Ajout d'une ombre portée
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 
   &:hover {
     background-color: #3b4bb8;
-    transform: scale(1.1); // Ajout d'une animation de zoom lors du survol
-    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.4); // Augmentation de l'ombre portée lors du survol
+    transform: scale(1.1);
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.4);
   }
 
   &:hover::after {
     content: "Run All";
     position: absolute;
-    top: -40px; // Ajustez en fonction de votre design
+    top: -40px;
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap; 
@@ -53,13 +53,11 @@ const Button = styled.button`
   }
 `;
 
-// Animation de rotation
 const spin = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 `;
 
-// Création d'un spinner animé
 const Spinner = styled(FaSpinner)`
   animation: ${spin} 1s linear infinite;
 `;

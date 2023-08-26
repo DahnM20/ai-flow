@@ -45,7 +45,6 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
     };
 
     const handleDownloadClick = () => {
-        // handle download logic
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -119,6 +118,7 @@ const JSONViewButton = styled.button`
 `;
 
 const JSONViewContent = styled.pre`
+    white-space: pre-wrap;
     font-family: monospace;
     padding: 10px;
     background-color : ${({ theme }) => theme.nodeInputBg};

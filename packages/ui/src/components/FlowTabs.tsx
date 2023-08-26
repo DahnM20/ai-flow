@@ -6,6 +6,7 @@ import { Node, Edge } from 'reactflow';
 import { ThemeContext, ThemeProvider } from './providers/ThemeProvider';
 import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
+import { FaEye, FaPlus } from 'react-icons/fa';
 
 interface FlowTab {
   nodes: Node[];
@@ -18,7 +19,7 @@ interface FlowManagerState {
 
 const FlowTabs = () => {
   const { t } = useTranslation('flow');
-  
+
   const [flowTabs, setFlowTabs] = useState<FlowManagerState>({ tabs: [{ nodes: [], edges: [] }] });
   const [currentTab, setCurrentTab] = useState(0);
   const [refresh, setRefresh] = useState(false);
@@ -60,36 +61,38 @@ const FlowTabs = () => {
   };
 
   return (
-      <FlowManagerContainer>
-        <TabsContainer>
-          {flowTabs.tabs.map((tab, index) => (
-            <TabButton
-              key={index}
-              active={index === currentTab}
-              onClick={() => setCurrentTab(index)}
-            >
-              {t('Flow')} {index + 1}
-            </TabButton>
-          ))}
-          <AddTabButton onClick={addFlowTab}>{t('AddTab')}</AddTabButton>
-          <RightControls>
-            <ShowOutputButton onClick={handleToggleOutput}>
-              {t(showOnlyOutput ? 'ShowOnlyOutputs' : 'ShowOnlyParams')}
-            </ShowOutputButton>
-            <ToggleThemeButton onClick={toggleTheme}>
-              {dark ? <FiMoon/> : <FiSun/>}
-            </ToggleThemeButton>
-          </RightControls>
-        </TabsContainer>
-        {/* <FeedbackIcon>Feedback ?</FeedbackIcon> */}
-        <Flow
-          key={`flow-${currentTab}-${refresh}`}
-          nodes={flowTabs.tabs[currentTab].nodes}
-          edges={flowTabs.tabs[currentTab].edges}
-          onFlowChange={handleFlowChange}
-          showOnlyOutput={showOnlyOutput}
-        />
-      </FlowManagerContainer>
+    <FlowManagerContainer>
+      <TabsContainer>
+        {flowTabs.tabs.map((tab, index) => (
+          <TabButton
+            key={index}
+            active={index === currentTab}
+            onClick={() => setCurrentTab(index)}
+          >
+            {t('Flow')} {index + 1}
+          </TabButton>
+        ))}
+        <AddTabButton onClick={addFlowTab}>
+          <FaPlus />
+        </AddTabButton>
+        <RightControls>
+          <ShowOutputButton onClick={handleToggleOutput}>
+            <FaEye />
+          </ShowOutputButton>
+          <ToggleThemeButton onClick={toggleTheme}>
+            {dark ? <FiMoon /> : <FiSun />}
+          </ToggleThemeButton>
+        </RightControls>
+      </TabsContainer>
+      {/* <FeedbackIcon>Feedback ?</FeedbackIcon> */}
+      <Flow
+        key={`flow-${currentTab}-${refresh}`}
+        nodes={flowTabs.tabs[currentTab].nodes}
+        edges={flowTabs.tabs[currentTab].edges}
+        onFlowChange={handleFlowChange}
+        showOnlyOutput={showOnlyOutput}
+      />
+    </FlowManagerContainer>
   );
 };
 
@@ -156,7 +159,7 @@ const TabButton = styled.button<{ active: boolean }>`
   }
 `;
 
-const AddTabButton = styled.button`
+const AddTabButton = styled.div`
   padding: ${buttonPaddingValue};
   border: none;
   background-color: ${({ theme }) => theme.nodeBg};
@@ -189,7 +192,7 @@ const ToggleThemeButton = styled.button`
   }
 `;
 
-const ShowOutputButton = styled.button`
+const ShowOutputButton = styled.div`
   padding: 8px 12px;
   border: none;
   background-color: ${({ theme }) => theme.accent};

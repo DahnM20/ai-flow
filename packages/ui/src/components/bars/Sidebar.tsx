@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiChevronRight } from 'react-icons/fi';
+import { FiChevronsRight, FiChevronsLeft } from 'react-icons/fi';
 import { Edge, Node } from 'reactflow';
 import JSONView from '../side-views/JSONView';
 import styled, { css } from 'styled-components';
@@ -17,7 +17,9 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
   return (
     <>
       <SidebarToggle show={show} onClick={toggleShow}>
-        <ToggleIcon />
+        <ToggleIcon>
+          {show ? <FiChevronsRight /> : <FiChevronsLeft />}
+        </ToggleIcon>
       </SidebarToggle>
       <SidebarContainer show={show}>
         <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} withCoordinates />
@@ -53,7 +55,7 @@ const SidebarToggle = styled.div<{ show: boolean }>`
   transform: translateY(-50%);
   width: 20px;
   height: 80px;
-  background-color: #000000;
+  background-color: #110a0e;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   transition: width 0.2s ease-in-out;
@@ -64,13 +66,16 @@ const SidebarToggle = styled.div<{ show: boolean }>`
   `}
 `;
 
-const ToggleIcon = styled(FiChevronRight)`
-  color: #ffffff;
-  font-size: 20px;
+const ToggleIcon = styled.div`
+  color: #a4a4a4d1;
+  font-size: 1.5em;
   position: absolute;
-  right: -20px;
   top: 50%;
   transform: translateY(-50%);
+
+  :hover{
+    color: #ffffff;
+  }
 `;
 
 export default Sidebar;
