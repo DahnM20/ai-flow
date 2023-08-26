@@ -8,12 +8,12 @@ Imagine setting up a simple workflow where:
 
 - One node generates a poem
 - One node gives a review of the poem
-- One node create a prompt for the cover of the poem
-- One node render the cover
+- One node creates a prompt for the cover of the poem
+- One node makes the cover
 
 ![image-scenario-1-1](assets/scenario-1-1.png)
 
-N.B : There will be more powerful AI than DALL-E to generate images in the near future of the app (Stable Diffusion, MidJourney)
+N.B : There will be AIs more powerful than DALL-E to generate images in the near future of the application (Stable Diffusion, MidJourney)
 
 If we want to change the idea of the poem, we can edit the first node, and keep the same flow. 
 
