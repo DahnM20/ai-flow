@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiDownload, FiUpload } from 'react-icons/fi';
 import { Edge, Node } from 'reactflow';
-import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../../../utils/flowUtils';
+import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../../utils/flowUtils';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,7 @@ interface JSONViewProps {
 const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onChangeFlow }) => {
 
     const { t } = useTranslation('flow');
-    
+
     nodes = nodesTopologicalSort(nodes, edges);
     const data = convertFlowToJson(nodes, edges, withCoordinates);
 

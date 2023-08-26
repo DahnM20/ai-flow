@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FiChevronRight } from 'react-icons/fi';
 import { Edge, Node } from 'reactflow';
-import JSONView from '../tools/jsonview/JSONView';
+import JSONView from '../side-views/JSONView';
 import styled, { css } from 'styled-components';
 
 interface SidebarProps {
@@ -20,7 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
         <ToggleIcon />
       </SidebarToggle>
       <SidebarContainer show={show}>
-        <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} withCoordinates/>
+        <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} withCoordinates />
       </SidebarContainer>
       {!show && <div className="sidebar-overlay" onClick={toggleShow} />}
     </>

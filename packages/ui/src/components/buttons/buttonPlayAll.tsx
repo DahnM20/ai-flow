@@ -1,19 +1,19 @@
 import styled, { keyframes } from 'styled-components';
 import { FaPlay, FaSpinner } from 'react-icons/fa';
 
-interface PlayButtonProps {
+interface ButtonPlayAllProps {
   onClick: () => void;
   isRunning: boolean;
 }
-const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isRunning}) => {
+const ButtonPlayAll: React.FC<ButtonPlayAllProps> = ({ onClick, isRunning }) => {
   return (
     <Button onClick={onClick}>
-      { isRunning ? <Spinner /> : <FaPlay />}
+      {isRunning ? <Spinner /> : <FaPlay />}
     </Button>
   );
 };
 
-export default PlayButton;
+export default ButtonPlayAll;
 
 const Button = styled.button`
   position: fixed;

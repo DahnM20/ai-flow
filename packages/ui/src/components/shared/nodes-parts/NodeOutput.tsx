@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { copyToClipboard } from '../../utils/navigatorUtils';
-import MarkdownOutput from '../tools/markdownOutput/MarkdownOutput';
-import { CopyButton, CopyIcon, NodeLogs, NodeLogsText } from './Node.styles';
+import { copyToClipboard } from '../../../utils/navigatorUtils';
+import MarkdownOutput from './MarkdownOutput';
+import { CopyButton, CopyIcon, NodeLogs, NodeLogsText } from '../Node.styles';
 
 interface NodeOutputProps {
-    output_data: string;
+  output_data: string;
 }
 
 const NodeOutput: React.FC<NodeOutputProps> = ({ output_data }) => {

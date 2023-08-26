@@ -13,13 +13,13 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
-import RightIconButton from './tools/configurationButton/ConfigurationButton';
+import RightIconButton from './buttons/configurationButton/ConfigurationButton';
 import ConfigPopup from './popups/configPopup/ConfigPopup';
 import { FiHelpCircle } from 'react-icons/fi';
-import PlayButton from './tools/playButton/playButton';
+import ButtonPlayAll from './buttons/buttonPlayAll';
 import HelpPopup from './popups/helpPopup/HelpPopup';
 import { convertFlowToJson, nodesTopologicalSort } from '../utils/flowUtils';
-import DnDSidebar from './bars/DnDSidebar';
+import DnDSidebar from './side-views/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
 import { ControlsStyled, MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/userMessagePopup/UserMessagePopup';
@@ -270,7 +270,7 @@ function Flow(props: FlowProps) {
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
         <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
         <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
-        <PlayButton onClick={handlePlay} isRunning={isRunning} />
+        <ButtonPlayAll onClick={handlePlay} isRunning={isRunning} />
       </div>
     </NodeProvider>
   );

@@ -7,15 +7,15 @@ import { useRefreshOnAppearanceChange } from '../../../hooks/useRefreshOnAppeara
 import { generateIdForHandle } from '../../../utils/flowUtils';
 import { ICON_MAP } from '../../shared/NodeIcons';
 import { Field } from '../../../nodesConfiguration/nodeConfig';
-import MarkdownOutput from '../../tools/markdownOutput/MarkdownOutput';
+import MarkdownOutput from '../../shared/nodes-parts/MarkdownOutput';
 import { NodeContext } from '../../providers/NodeProvider';
-import NodePlayButton from '../../tools/NodePlayButton';
+import NodePlayButton from '../../shared/nodes-parts/NodePlayButton';
 import { useTranslation } from 'react-i18next';
 import { FiCopy } from 'react-icons/fi';
 import styled from 'styled-components';
 import { copyToClipboard } from '../../../utils/navigatorUtils';
 import { useIsPlaying } from '../../../hooks/useIsPlaying';
-import ImageUrlOutput from '../../tools/imageUrlOutput/ImageUrlOutput';
+import ImageUrlOutput from '../../shared/nodes-parts/ImageUrlOutput';
 
 const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
     const { t } = useTranslation('flow');
