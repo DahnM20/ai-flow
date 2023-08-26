@@ -139,7 +139,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         }
     });
 
-    const outputIsImage = data.config.outputType === 'imageUrl';
+    const outputIsImage = data.config.outputType === 'imageUrl' && data.output_data;
 
     const hideNodeParams = (hasParent(id) && data.config.hideFieldsIfParent) || collapsed;
 
@@ -185,6 +185,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             )}
             <NodeLogs
                 showLogs={showLogs}
+                noPadding={outputIsImage && showLogs}
                 onClick={() => setShowLogs(!showLogs)}
             >
                 {showLogs && data.output_data && !outputIsImage

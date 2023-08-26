@@ -113,11 +113,11 @@ export const NodeLogsText = styled.p`
   color: ${({ theme }) => theme.text};
 `;
 
-export const NodeLogs = styled.div<{ showLogs: boolean }>`
+export const NodeLogs = styled.div<{ showLogs: boolean, noPadding?: boolean }>`
   border-radius: 0 0 8px 8px;
   font-size: 0.9em;
   line-height: 20px;
-  padding: 10px 16px;
+  padding: ${({ noPadding }) => noPadding ? '0px' : '10px 16px'};
   overflow: hidden;
   word-break: break-word;
   transition: height 0.2s ease-out background 0.3s ease;
