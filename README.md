@@ -6,14 +6,23 @@
 
 Imagine setting up a simple workflow where:
 
-- One node generates a story,
-- Two others critique the output.
+- One node generates a poem
+- One node gives a review of the poem
+- One node create a prompt for the cover of the poem
+- One node render the cover
+
+![image-scenario-1-1](assets/scenario-1-1.png)
+
+N.B : There will be more powerful AI than DALL-E to generate images in the near future of the app (Stable Diffusion, MidJourney)
+
+If we want to change the idea of the poem, we can edit the first node, and keep the same flow. 
+
+![image-scenario-1-2](assets/scenario-1-2.png)
 
 This flow logic can then be applied to different inputs, yielding varied results for similar subject matter. 
 
 **AI Flow is particularly useful for content creation.** By enabling different GPT models to adopt different roles, AI Flow orchestrates the creation and evaluation of digital content, from social media threads to blog articles. 
 
-![image-scenario-2](assets/image-scenario-2.png)
 
 Our primary goal with AI Flow is to democratize access to AI interactions, enabling anyone to create and manage their own AI networks right from their personal computer. In addition, we value your autonomy and control over costs. With AI Flow, you utilize your own OpenAI keys, giving you full authority over your budget. Importantly, the software runs locally on your machine, assuring you of privacy and control over your data and operations.
 
@@ -28,6 +37,17 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 - 🗂️ AI models can be conveniently managed and organized
 - 💾 Workflows can be exported or imported for sharing or backup purposes
 
+## Other basic use cases
+
+#### Summarize web pages & youtube transcript
+
+![image-summary](assets/summary.png)
+
+#### Split input with AI 
+
+![image-summary](assets/split-input.png)
+
+> By combining those features we can create different flows.
 ## Installation (without Docker)
 
 ### Prerequisites
