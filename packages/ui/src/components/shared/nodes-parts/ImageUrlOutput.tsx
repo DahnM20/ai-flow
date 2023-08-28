@@ -3,26 +3,26 @@ import { FaDownload } from 'react-icons/fa';
 import styled from 'styled-components';
 
 interface ImageUrlOutputProps {
-    url: string;
-    name: string;
+  url: string;
+  name: string;
 }
 
 const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
 
-    const handleDownloadClick = () => {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = name + '-output-generated.jpg';
-        link.target = '_blank';
-        link.click();
-    };
+  const handleDownloadClick = () => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = name + '-output-generated.jpg';
+    link.target = '_blank';
+    link.click();
+  };
 
-    return <OutputImageContainer>
-        <OutputImage src={url} alt="Output Image" />
-        <DownloadButton onClick={handleDownloadClick}>
-            <FaDownload />
-        </DownloadButton>
-    </OutputImageContainer>
+  return <OutputImageContainer>
+    <OutputImage src={url} alt="Output Image" />
+    <DownloadButton onClick={handleDownloadClick}>
+      <FaDownload />
+    </DownloadButton>
+  </OutputImageContainer>
 };
 
 const OutputImageContainer = styled.div`
@@ -33,7 +33,6 @@ const OutputImageContainer = styled.div`
 const OutputImage = styled.img`
   display: block;
   width: 100%;
-  max-width: 400px;
   height: auto;
   border-radius: 8px;
 `;

@@ -63,15 +63,17 @@ const FlowTabs = () => {
   return (
     <FlowManagerContainer>
       <TabsContainer>
-        {flowTabs.tabs.map((tab, index) => (
-          <TabButton
-            key={index}
-            active={index === currentTab}
-            onClick={() => setCurrentTab(index)}
-          >
-            {t('Flow')} {index + 1}
-          </TabButton>
-        ))}
+        <Tabs>
+          {flowTabs.tabs.map((tab, index) => (
+            <TabButton
+              key={index}
+              active={index === currentTab}
+              onClick={() => setCurrentTab(index)}
+            >
+              {t('Flow')} {index + 1}
+            </TabButton>
+          ))}
+        </Tabs>
         <AddTabButton onClick={addFlowTab}>
           <FaPlus />
         </AddTabButton>
@@ -130,6 +132,13 @@ const TabsContainer = styled.div`
   font-family: Roboto;
   border-bottom: solid;
   border-color: rgb(53 52 52 / 30%);
+`;
+
+const Tabs = styled.div`
+  white-space: nowrap;
+  overflow-y: hidden;
+  overflow-x: auto;
+  padding-bottom: 3px;
 `;
 
 const TabButton = styled.button<{ active: boolean }>`

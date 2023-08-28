@@ -51,7 +51,7 @@ const DnDSidebarContainer = styled.div<{ isOpen: boolean }>`
   left: 0;
   top: 0;
   height: 100%;
-  width: 11%;
+  width: 12%;
   background: ${({ theme }) => theme.sidebarBg};
   z-index: 1;
   overflow-y: ${({ isOpen }) => (isOpen ? 'auto' : 'hidden')};

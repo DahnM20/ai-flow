@@ -97,8 +97,7 @@ export const NodeIcon = styled.div`
 
 export const NodeContainer = styled.div`
   position: relative;
-  min-width: 400px;
-  resize: both;
+  width: 450px;
   
   background: ${({ theme }) => theme.nodeGradientBg};
   background-color: ${({ theme }) => theme.bg};
@@ -124,8 +123,10 @@ export const NodeLogs = styled.div<{ showLogs: boolean, noPadding?: boolean }>`
   background: ${({ theme }) => theme.outputBg};
   color: ${({ theme }) => theme.accentText};
   cursor: pointer;
-  max-width: 700px;
-  height: fit-content;
+  max-height: 700px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 `;
 
 
@@ -180,6 +181,10 @@ export const MiniMapStyled = styled(MiniMap)`
   .react-flow__minimap-node {
     fill: ${(props) => props.theme.nodeBg};
     stroke: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
   }
 `;
 

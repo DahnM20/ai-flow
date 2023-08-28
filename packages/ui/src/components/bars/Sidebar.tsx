@@ -64,6 +64,10 @@ const SidebarToggle = styled.div<{ show: boolean }>`
   ${({ show }) => show && css`
     width: 31.5%;
   `}
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const ToggleIcon = styled.div`
