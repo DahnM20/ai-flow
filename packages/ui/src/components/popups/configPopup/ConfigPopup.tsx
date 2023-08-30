@@ -21,16 +21,16 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
   const { config, connectSocket } = useContext(SocketContext);
 
   const [apiKeyOpenAI, setApiKeyOpenAI] = useState('');
-  const [apiKeyLeonardo, setApiKeyLeonardo] = useState('');
+  const [apiKeyStabilityAI, setApiKeyStabilityAI] = useState('');
 
   useEffect(() => {
     const storedOpenAIKey = config?.openai_api_key
-    const storedLeonardoKey = config?.leonardo_api_key
+    const storedStabilityAIKey = config?.stabilityai_api_key
     if (storedOpenAIKey) {
       setApiKeyOpenAI(storedOpenAIKey);
     }
-    if (storedLeonardoKey) {
-      setApiKeyLeonardo(storedLeonardoKey);
+    if (storedStabilityAIKey) {
+      setApiKeyStabilityAI(storedStabilityAIKey);
     }
   }, []);
 
@@ -39,24 +39,24 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
     setApiKeyOpenAI(newKey);
   };
 
-  const onApiKeyLeonardoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onStabilityAIAPIKeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newKey = event.target.value;
-    setApiKeyLeonardo(newKey);
+    setApiKeyStabilityAI(newKey);
   };
 
   const handleValidate = () => {
     window.localStorage.setItem('openai_api_key', apiKeyOpenAI);
-    window.localStorage.setItem('leonardo_api_key', apiKeyLeonardo);
+    window.localStorage.setItem('stabilityai_api_key', apiKeyStabilityAI);
 
     const config: WSConfiguration = {
       openai_api_key: apiKeyOpenAI,
-      leonardo_api_key: apiKeyLeonardo,
+      stabilityai_api_key: apiKeyStabilityAI,
     };
 
-    if(!!connectSocket){
+    if (!!connectSocket) {
       connectSocket(config);
     }
-    
+
     onClose();
   }
 
@@ -75,10 +75,10 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
             <Label htmlFor="api-key">{t('openAIKeyFieldLabel')}</Label>
             <Input type={"text"} id="api-key" value={apiKeyOpenAI} onChange={onApiKeyOpenAIChange} />
           </Field>
-          {/* <Field>
-            <Label htmlFor="api-key-leonardo">Leonardo API Key (Optionnal):</Label>
-            <Input type="text" id="api-key-leonardo" value={apiKeyLeonardo} onChange={onApiKeyLeonardoChange} />
-          </Field> */}
+          <Field>
+            <Label htmlFor="api-key-stabilityai">Stability AI API Key (Optionnal):</Label>
+            <Input type="text" id="api-key-stabilityai" value={apiKeyStabilityAI} onChange={onStabilityAIAPIKeyChange} />
+          </Field>
           <Actions>
             <Button onClick={onClose}>{t('closeButtonLabel')}</Button>
             <Button validate onClick={handleValidate}>{t('validateButtonLabel')}</Button>

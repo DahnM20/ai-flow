@@ -226,7 +226,7 @@ function Flow(props: FlowProps) {
       {
         json_file: JSON.stringify(flowFile),
         openai_api_key: config?.openai_api_key,
-        leonardo_api_key: config?.leonardo_api_key,
+        stabilityai_api_key: config?.stabilityai_api_key,
       });
     setIsRunning(true);
   }
@@ -242,8 +242,15 @@ function Flow(props: FlowProps) {
     setNodes(updatedNodes);
   }
 
+  const handleUpdateNodes = (updatedNodes: Node[], updatesEdges: Edge[]) => {
+    setNodes(updatedNodes);
+    setEdges(updatesEdges);
+  }
+
   return (
-    <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput} isRunning={isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount} onUpdateNodeData={handleUpdateNodeData}>
+    <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput}
+      isRunning={isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount}
+      onUpdateNodeData={handleUpdateNodeData} onUpdateNodes={handleUpdateNodes}>
       <div style={{ height: '100%' }} onClick={handleNodesClick}>
         <div className="reactflow-wrapper" style={{ height: '100%' }} ref={reactFlowWrapper}>
           <ReactFlowStyled

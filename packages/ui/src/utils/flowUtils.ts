@@ -38,7 +38,7 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
 
     const keySplitted = inputEdge?.sourceHandle?.split(handleSeparator)[1]
     const inputKey = !keySplitted || isNaN(+keySplitted) ? undefined : +keySplitted;
-    
+
     //const outputId = edges.find((edge: any) => edge.source === id)?.target || '';
 
     let inputFound;
@@ -49,6 +49,9 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
     }
 
     const { a, nodeType, output, input, config, ...nodeDataForConfig } = node.data;
+
+    nodeDataForConfig.output_data = !!nodeDataForConfig?.output_data && nodeDataForConfig.output_data[0].length < 1000 ? nodeDataForConfig.output_data : "...";
+
     if (withCoordinates) {
       return {
         input: inputFound,

@@ -3,7 +3,7 @@ import { io, Socket } from "socket.io-client";
 
 export type WSConfiguration = {
     openai_api_key?: string;
-    leonardo_api_key?: string;
+    stabilityai_api_key?: string;
 }
 
 interface ISocketContext {
@@ -23,11 +23,11 @@ const USE_HTTPS = process.env.REACT_APP_USE_HTTPS || 'false';
 
 const protocol = USE_HTTPS.toLowerCase() === 'true' ? 'https' : 'http';
 
-export const SocketContext = createContext<ISocketContext>({ 
-    socket: null, 
-    config: null, 
-    verifyConfiguration: () => { return false }, 
-    connectSocket: null 
+export const SocketContext = createContext<ISocketContext>({
+    socket: null,
+    config: null,
+    verifyConfiguration: () => { return false },
+    connectSocket: null
 });
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
@@ -40,11 +40,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         }
 
         const storedOpenAIKey = window.localStorage.getItem('openai_api_key');
-        const storedLeonardoKey = window.localStorage.getItem('leonardo_api_key');
+        const storedStabilityAiKey = window.localStorage.getItem('stabilityai_api_key');
 
         setConfig({
             openai_api_key: !!storedOpenAIKey ? storedOpenAIKey : undefined,
-            leonardo_api_key: !!storedLeonardoKey ? storedLeonardoKey : undefined,
+            stabilityai_api_key: !!storedStabilityAiKey ? storedStabilityAiKey : undefined,
         })
 
         const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);

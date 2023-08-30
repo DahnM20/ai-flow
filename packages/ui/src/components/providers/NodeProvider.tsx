@@ -13,7 +13,8 @@ interface NodeContextType {
     isRunning: boolean;
     currentNodeRunning: string;
     errorCount: number;
-    onUpdateNodeData: (nodeId:string, data:any) => void;
+    onUpdateNodeData: (nodeId: string, data: any) => void;
+    onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void;
 }
 
 
@@ -26,16 +27,22 @@ export const NodeContext = createContext<NodeContextType>({
     currentNodeRunning: '',
     errorCount: 0,
     onUpdateNodeData: () => (undefined),
+    onUpdateNodes: () => (undefined),
 });
 
-export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, children }: { nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; errorCount: number; onUpdateNodeData: (nodeId:string, data:any) => void;children: ReactNode }) => {
+export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes, children }
+    : {
+        nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; errorCount: number;
+        onUpdateNodeData: (nodeId: string, data: any) => void;
+        onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void; children: ReactNode
+    }) => {
 
     const { t } = useTranslation('flow');
     const { socket, config, verifyConfiguration } = useContext(SocketContext);
 
     const runNode = (name: string) => {
 
-        if(!verifyConfiguration()){
+        if (!verifyConfiguration()) {
             toastInfoMessage(t('ApiKeyRequiredMessage'));
             return false;
         }
@@ -48,10 +55,10 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
                 json_file: JSON.stringify(flowFile),
                 node_name: name,
                 openai_api_key: config?.openai_api_key,
-                leonardo_api_key: config?.leonardo_api_key,
+                stabilityai_api_key: config?.stabilityai_api_key,
             });
         console.log(nodes)
-        
+
         return true;
     };
 
@@ -64,7 +71,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
     }
 
     return (
-        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData}}>
+        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes }}>
             {children}
         </NodeContext.Provider>
     );
