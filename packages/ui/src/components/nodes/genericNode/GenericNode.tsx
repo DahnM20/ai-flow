@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, memo } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { NodeResizer } from '@reactflow/node-resizer';
 import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle } from '../../shared/Node.styles';
@@ -16,6 +16,13 @@ import styled from 'styled-components';
 import { copyToClipboard } from '../../../utils/navigatorUtils';
 import { useIsPlaying } from '../../../hooks/useIsPlaying';
 import ImageUrlOutput from '../../shared/nodes-parts/ImageUrlOutput';
+import ImageBase64Output from '../../shared/nodes-parts/ImageBase64Output';
+
+interface GenericNodeProps {
+    data: any;
+    id: string;
+    selected: boolean;
+}
 
 const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
     const { t } = useTranslation('flow');
@@ -139,20 +146,21 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         }
     });
 
-    const outputIsImage = data.config.outputType === 'imageUrl' && data.output_data;
+    const outputIsImage = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64') && data.output_data;
 
     const hideNodeParams = (hasParent(id) && data.config.hideFieldsIfParent) || collapsed;
 
     const getOutputComponent = () => {
         if (!data.output_data) return <></>
 
-        if (outputIsImage) {
-            return <ImageUrlOutput url={data.output_data} name={data.name} />
+        switch (data.config.outputType) {
+            case 'imageUrl':
+                return <ImageUrlOutput url={data.output_data} name={data.name} />
+            case 'imageBase64':
+                return <ImageBase64Output data={data.output_data} name={data.name} lastRun={data.lastRun} />
+            default:
+                return <MarkdownOutput data={data.output_data} />
         }
-        else {
-            return <MarkdownOutput data={data.output_data} />
-        }
-
     }
 
     const handleCopyToClipboard = (event: any) => {
