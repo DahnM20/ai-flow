@@ -9,11 +9,9 @@ Imagine setting up a simple workflow where:
 - One node generates a poem
 - One node gives a review of the poem
 - One node creates a prompt for the cover of the poem
-- One node makes the cover
+- One node makes the cover with Stable Diffusion
 
 ![image-scenario-1-1](assets/scenario-1-1.png)
-
-N.B : There will be AIs more powerful than DALL-E to generate images in the near future of the application (Stable Diffusion, MidJourney)
 
 If we want to change the idea of the poem, we can edit the first node, and keep the same flow. 
 
