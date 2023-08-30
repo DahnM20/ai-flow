@@ -1,9 +1,11 @@
-import React from 'react';
-import { FiDownload, FiUpload } from 'react-icons/fi';
+import React, { useContext, memo } from 'react';
+import { FiCrosshair, FiDelete, FiDownload, FiUpload } from 'react-icons/fi';
 import { Edge, Node } from 'reactflow';
 import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../../utils/flowUtils';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { NodeContext } from '../providers/NodeProvider';
+import { FaExclamationTriangle } from 'react-icons/fa';
 
 interface JSONViewProps {
     nodes: Node[];
@@ -15,6 +17,7 @@ interface JSONViewProps {
 const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onChangeFlow }) => {
 
     const { t } = useTranslation('flow');
+    const { onUpdateNodes } = useContext(NodeContext);
 
     nodes = nodesTopologicalSort(nodes, edges);
     const data = convertFlowToJson(nodes, edges, withCoordinates);
@@ -55,21 +58,41 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
         link.remove();
     };
 
+    const handleDeleteOutput = () => {
+        const nodeUpdated = nodes.map(node => {
+            node.data.output_data = undefined;
+            return node;
+        });
+        onUpdateNodes(nodeUpdated, edges);
+    }
+
+    const handleDeleteAll = () => {
+        onUpdateNodes([], []);
+    }
+
     return (
         <JSONViewContainer>
             <JSONViewHeader>
                 <JSONViewTitle>{t('JsonView')}</JSONViewTitle>
-                <JSONViewButtons>
-                    <JSONViewButton onClick={handleUploadClick}>
-                        <FiUpload className="json-view-icon" />
-                        {t('Upload')}
-                    </JSONViewButton>
-                    <JSONViewButton onClick={handleDownloadClick}>
-                        <FiDownload className="json-view-icon" />
-                        {t('Download')}
-                    </JSONViewButton>
-                </JSONViewButtons>
             </JSONViewHeader>
+            <JSONViewButtons>
+                <JSONViewButton onClick={handleUploadClick}>
+                    <FiUpload className="json-view-icon" />
+                    {t('Upload')}
+                </JSONViewButton>
+                <JSONViewButton onClick={handleDownloadClick}>
+                    <FiDownload className="json-view-icon" />
+                    {t('Download')}
+                </JSONViewButton>
+                <JSONViewButton onClick={handleDeleteOutput} dangerous>
+                    <FiCrosshair className="json-view-icon" />
+                    {t('Delete Output')}
+                </JSONViewButton>
+                <JSONViewButton onClick={handleDeleteAll} dangerous>
+                    <FaExclamationTriangle className="json-view-icon" />
+                    {t('Delete All')}
+                </JSONViewButton>
+            </JSONViewButtons>
             <JSONViewContent>{JSON.stringify(data, null, 2)}</JSONViewContent>
         </JSONViewContainer>
     );
@@ -98,14 +121,14 @@ const JSONViewButtons = styled.div`
     gap: 10px;
 `;
 
-const JSONViewButton = styled.button`
+const JSONViewButton = styled.button<{ dangerous?: boolean }>`
     display: flex;
     align-items: center;
     gap: 5px;
     padding: 5px 10px;
-    background-color: #27ae60;
+    background-color: ${props => props.dangerous ? '#ae2727' : '#27ae60'};
     color: white;
-    font-size: 16px;
+    font-size: 0.8em;
     font-weight: bold;
     border: none;
     border-radius: 5px;
@@ -113,7 +136,7 @@ const JSONViewButton = styled.button`
     transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: #219653;
+        background-color: ${props => props.dangerous ? '#962121' : '#219653'};
     }
 `;
 
@@ -124,4 +147,8 @@ const JSONViewContent = styled.pre`
     background-color : ${({ theme }) => theme.nodeInputBg};
 `;
 
-export default JSONView;
+function arePropsEqual(prevProps: JSONViewProps, nextProps: JSONViewProps) {
+    return prevProps.nodes === nextProps.nodes && prevProps.edges === nextProps.edges && prevProps.withCoordinates === nextProps.withCoordinates;
+}
+
+export default memo(JSONView, arePropsEqual);
