@@ -110,7 +110,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                             field.label &&
                             <NodeLabel>{t(field.label)}</NodeLabel>
                         }
-                        <NodeInput name={field.name} className="nodrag" value={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                        <NodeInput name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                     </>
                 );
             case 'textarea':
@@ -120,7 +120,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                             field.label &&
                             <NodeLabel>{t(field.label)}</NodeLabel>
                         }
-                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" value={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                     </>
                 );
             case 'option':
