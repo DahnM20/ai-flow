@@ -4,6 +4,7 @@ import dallENodeConfig from "./dallENode";
 import inputTextNodeConfig from "./inputTextNode";
 import { noContextPromptNodeConfig } from "./noContextPrompt";
 import { promptNodeConfig } from "./promptNode";
+import stableDiffusionStabilityAiNodeConfig from "./stableDiffusionStabilityAiNode";
 import { urlNodeConfig } from "./urlNode";
 import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
 
@@ -28,7 +29,7 @@ export interface NodeConfig {
     icon: string;
     fields: Field[];
     hideFieldsIfParent?: boolean;
-    outputType: 'text' | 'imageUrl';
+    outputType: 'text' | 'imageUrl' | 'imageBase64';
     hasInputHandle?: boolean;
     section?: SectionType;
 }
@@ -42,6 +43,7 @@ const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'gpt-no-context-prompt': noContextPromptNodeConfig,
     'youtube_transcript_input': youtubeTranscriptNodeConfig,
     'dalle-prompt': dallENodeConfig,
+    'stable-diffusion-stabilityai-prompt': stableDiffusionStabilityAiNodeConfig,
     // add other configs here...
 }
 
@@ -73,7 +75,10 @@ export const nodeSectionMapping: NodeSection[] = [
     },
     {
         section: 'ImageGeneration',
-        nodes: [{ label: 'DALL-E', type: 'dalle-prompt', helpMessage: 'dallePromptHelp' }],
+        nodes: [
+            { label: 'DALL-E', type: 'dalle-prompt', helpMessage: 'dallePromptHelp' },
+            { label: 'Stable Diffusion', type: 'stable-diffusion-stabilityai-prompt', helpMessage: 'dallePromptHelp' }
+        ],
     },
     {
         section: 'Tools',
