@@ -1,9 +1,8 @@
 from functools import wraps
+from app.flask.app import app
 import logging
 import json
-import sys
 import eventlet
-from flask import Flask, send_from_directory
 from flask import request
 from flask import g
 from flask_cors import CORS
@@ -18,29 +17,10 @@ from ..processors_utils.processor_launcher import (
 import traceback
 import os
 
-if getattr(sys, "frozen", False):
-    base_path = sys._MEIPASS
-    build_dir = os.path.join(base_path, "build")
-else:
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    build_dir = os.path.join(base_path, "..", "..", "..", "ui", "build")
-
-app = Flask(__name__, static_folder=build_dir)
-CORS(app)
+eventlet.monkey_patch(all=False, socket=True)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 store = ProcessorStoreSingleton().store
-
-if os.getenv("SERVE_STATIC_FILES") == "true":
-    logging.info("Visual interface will be available at http://localhost:5000")
-
-    @app.route("/", defaults={"path": ""})
-    @app.route("/<path:path>")
-    def serve(path):
-        if path != "" and os.path.exists(app.static_folder + "/" + path):
-            return send_from_directory(app.static_folder, path)
-        else:
-            return send_from_directory(app.static_folder, "index.html")
 
 
 def populate_session_global_object(data):
@@ -56,11 +36,6 @@ def populate_session_global_object(data):
             raise Exception("No OpenAI API Key provided.")
         if "stabilityai_api_key" in data:
             g.session_stabilityai_api_key = data["stabilityai_api_key"]
-
-
-@app.route("/healthcheck", methods=["GET"])
-def healthcheck():
-    return "ok", 200
 
 
 @socketio.on("connect")
