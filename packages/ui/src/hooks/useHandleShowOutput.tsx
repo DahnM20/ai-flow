@@ -18,8 +18,8 @@ const useHandleShowOutput = ({
   useEffect(() => {
     if (showOnlyOutput !== undefined) {
       setCollapsed(showOnlyOutput);
-      if(setShowLogs !== undefined){
-        setShowLogs(!showOnlyOutput);
+      if (setShowLogs !== undefined) {
+        setShowLogs(showOnlyOutput);
       }
       updateNodeInternals(id);
     }
