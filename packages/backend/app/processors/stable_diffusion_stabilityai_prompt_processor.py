@@ -1,4 +1,6 @@
+import base64
 from .processor import Processor
+from datetime import datetime
 import requests
 import os
 
@@ -9,8 +11,8 @@ class StableDiffusionStabilityAIPromptProcessor(Processor):
     def __init__(self, config):
         super().__init__(config)
         self.prompt = config.get("prompt")
-        self.height = int(config.get("height", "256"))
-        self.width = int(config.get("width", "256"))
+        self.height = int(config.get("height", "1024"))
+        self.width = int(config.get("width", "1024"))
         self.style_preset = config.get("style_preset", "")
         self.samples = 1
         self.engine_id = "stable-diffusion-xl-1024-v1-0"
@@ -53,8 +55,16 @@ class StableDiffusionStabilityAIPromptProcessor(Processor):
 
         data = response.json()
         first_image = data["artifacts"][0]["base64"]
+        image_data = base64.b64decode(first_image)
 
-        self.set_output(first_image)
+        storage = self.get_storage()
+
+        timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")
+        filename = f"{self.name}-{timestamp_str}.png"
+        secure_name = storage.save(filename, image_data)
+        url = storage.get_url(secure_name)
+
+        self.set_output(url)
 
         return self._output
 

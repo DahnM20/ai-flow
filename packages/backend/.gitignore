@@ -16,3 +16,6 @@ __pycache__/
 build
 dist
 server.spec
+
+# Local storage
+local_storage/

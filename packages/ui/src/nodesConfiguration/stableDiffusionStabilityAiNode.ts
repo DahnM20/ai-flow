@@ -23,7 +23,7 @@ const stableDiffusionStabilityAiNodeConfig: NodeConfig = {
             placeholder: 'width',
         },
     ],
-    outputType: "imageBase64",
+    outputType: "imageUrl",
 };
 
 export default stableDiffusionStabilityAiNodeConfig;
