@@ -6,7 +6,9 @@ CURRENT_ENV = os.environ.get("ENV")
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BACKEND_DIR = os.path.dirname(CURRENT_DIR)
-LOCAL_STORAGE_DIR = os.path.join(BACKEND_DIR, os.getenv("LOCAL_STORAGE_FOLDER_NAME"))
+LOCAL_STORAGE_DIR = os.path.join(
+    BACKEND_DIR, os.getenv("LOCAL_STORAGE_FOLDER_NAME", "local_storage")
+)
 
 
 def is_local_environment():

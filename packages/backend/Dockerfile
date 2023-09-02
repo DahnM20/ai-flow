@@ -6,10 +6,13 @@ ENV PORT=5000
 
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libpq-dev
-
-RUN apt-get update && apt-get install -y python3-dev libssl-dev
-RUN apt-get update && apt-get install -y libmagic-dev
+    libpq-dev \
+    python3-dev \
+    libssl-dev \
+    libffi-dev \
+    libmagic-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -18,10 +21,12 @@ COPY app /app/app/
 COPY server.py README.md /app/
 
 RUN pip install --upgrade poetry
-RUN poetry update
+#RUN poetry update
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-interaction
-RUN python -m playwright install
+RUN pip install playwright
+RUN python -m playwright install chromium
+RUN playwright install-deps
 
 EXPOSE 5000
 
