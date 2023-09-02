@@ -46,6 +46,8 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 ![image-summary](assets/split-input.png)
 
 > By combining those features we can create different flows.
+
+![image-summary](assets/flow-ideas.png)
 ## Installation (without Docker)
 
 ### Prerequisites
