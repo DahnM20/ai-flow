@@ -22,6 +22,7 @@ export interface Field {
     label?: string;
     placeholder?: string;
     options?: Option[];
+    hideIfParent?: boolean;
 }
 
 export interface NodeConfig {

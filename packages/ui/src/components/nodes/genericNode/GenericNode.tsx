@@ -101,50 +101,52 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         }
     }
 
-    const formFields = data.config.fields.map((field: Field) => {
-        switch (field.type) {
-            case 'input':
-                return (
-                    <>
-                        {
-                            field.label &&
-                            <NodeLabel>{t(field.label)}</NodeLabel>
-                        }
-                        <NodeInput name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
-                    </>
-                );
-            case 'textarea':
-                return (
-                    <>
-                        {
-                            field.label &&
-                            <NodeLabel>{t(field.label)}</NodeLabel>
-                        }
-                        <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
-                    </>
-                );
-            case 'option':
-                if (!data[field.name]) {
-                    setDefaultOption(field);
-                }
-                return (
-                    <>
-                        <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-                            <OptionSelector>
-                                {field.options?.map(option => (
-                                    <OptionButton
-                                        selected={data[field.name] === option.value}
-                                        onClick={() => handleOptionChange(field.name, option.value)}
-                                    >
-                                        {t(option.label)}
-                                    </OptionButton>
-                                ))}
-                            </OptionSelector>
-                        </div>
-                    </>
-                );
-        }
-    });
+    const formFields = data.config.fields
+        .filter((field: Field) => hasParent(id) && field.hideIfParent != null ? !field.hideIfParent : true)
+        .map((field: Field) => {
+            switch (field.type) {
+                case 'input':
+                    return (
+                        <>
+                            {
+                                field.label &&
+                                <NodeLabel>{t(field.label)}</NodeLabel>
+                            }
+                            <NodeInput name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                        </>
+                    );
+                case 'textarea':
+                    return (
+                        <>
+                            {
+                                field.label &&
+                                <NodeLabel>{t(field.label)}</NodeLabel>
+                            }
+                            <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                        </>
+                    );
+                case 'option':
+                    if (!data[field.name]) {
+                        setDefaultOption(field);
+                    }
+                    return (
+                        <>
+                            <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+                                <OptionSelector>
+                                    {field.options?.map(option => (
+                                        <OptionButton
+                                            selected={data[field.name] === option.value}
+                                            onClick={() => handleOptionChange(field.name, option.value)}
+                                        >
+                                            {t(option.label)}
+                                        </OptionButton>
+                                    ))}
+                                </OptionSelector>
+                            </div>
+                        </>
+                    );
+            }
+        });
 
     const outputIsImage = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64') && data.output_data;
 
