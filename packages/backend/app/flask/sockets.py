@@ -5,7 +5,6 @@ import json
 import eventlet
 from flask import request
 from flask import g
-from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from ..processors_utils.processor_store_singleton import ProcessorStoreSingleton
 from ..processors_utils.processor_launcher import (
