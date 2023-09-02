@@ -20,7 +20,10 @@ class LocalStorageStrategy(StorageStrategy):
         filepath = os.path.join(self.LOCAL_DIR, secure_name)
         with open(filepath, "wb") as f:
             f.write(data)
+
+        print(filepath)
         return secure_name
 
     def get_url(self, filename):
-        return f"http://127.0.0.1:5000/image/{filename}"
+        port = os.getenv("PORT")
+        return f"http://localhost:{port}/image/{filename}"
