@@ -24,6 +24,7 @@ interface GenericNodeProps {
     selected: boolean;
 }
 
+
 const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
     const { t } = useTranslation('flow');
 
@@ -172,6 +173,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
+    console.log('render node ', id)
     return (
         <NodeContainer key={nodeId}>
             {/* <NodeResizer color="#ff0071" isVisible={selected} minWidth={200} minHeight={30} maxWidth={700} onResizeEnd={handleResizeField}/> */}
@@ -208,7 +210,29 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             </NodeLogs>
         </NodeContainer>
     );
-});
+}, propsAreEqual);
+
+
+function propsAreEqual(prevProps: GenericNodeProps, nextProps: GenericNodeProps) {
+    if (prevProps.selected !== nextProps.selected || prevProps.id !== nextProps.id) {
+        return false;
+    }
+
+    for (let key in prevProps.data) {
+        if (key !== 'x' && key !== 'y' && prevProps.data[key] !== nextProps.data[key]) {
+            return false;
+        }
+    }
+
+    for (let key in nextProps.data) {
+        if (key !== 'x' && key !== 'y' && nextProps.data[key] !== prevProps.data[key]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 export default GenericNode;
 

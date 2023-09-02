@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { marked } from "marked";
 import * as DOMPurify from 'dompurify';
 
@@ -17,4 +17,5 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({ data }) => {
     return <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} style={{ paddingTop: '10px' }} />;
 };
 
-export default MarkdownOutput;
+
+export default memo(MarkdownOutput);

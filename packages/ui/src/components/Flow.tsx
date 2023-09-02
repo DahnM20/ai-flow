@@ -276,7 +276,7 @@ function Flow(props: FlowProps) {
         <RightIconButton onClick={() => setIsHelpOpen(true)} color='#6576f8' bottom='80px' icon={<FiHelpCircle />} />
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
         <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
-        <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
+        {isHelpOpen && <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />}
         <ButtonPlayAll onClick={handlePlay} isRunning={isRunning} />
       </div>
     </NodeProvider>

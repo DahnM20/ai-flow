@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
 import { FaInfoCircle } from 'react-icons/fa';
 import { nodeSectionMapping } from '../../nodesConfiguration/nodeConfig';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
 
 const DnDSidebar = () => {
@@ -107,4 +107,4 @@ const StyledInfoIcon = styled(FaInfoCircle)`
   font-size: 0.8em;
 `;
 
-export default DnDSidebar;
+export default memo(DnDSidebar);

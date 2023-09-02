@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { FiSettings } from 'react-icons/fi';
 import styled from 'styled-components';
 
@@ -10,7 +10,7 @@ interface RightButtonProps {
   bottom?: string;
 }
 
-const RightIconButton: React.FC<RightButtonProps> = ({ onClick, color = '#808080', icon = <FiSettings />,  bottom = '30px' }) => {
+const RightIconButton: React.FC<RightButtonProps> = ({ onClick, color = '#808080', icon = <FiSettings />, bottom = '30px' }) => {
   return (
     <StyledRightButton color={color} bottom={bottom} onClick={onClick}>
       <StyledIcon>{icon}</StyledIcon>
@@ -48,4 +48,4 @@ const StyledIcon = styled.div`
   }
 `;
 
-export default RightIconButton;
+export default memo(RightIconButton);

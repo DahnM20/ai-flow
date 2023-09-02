@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { FaPlay, FaSpinner } from 'react-icons/fa';
+import { memo } from 'react';
 
 interface ButtonPlayAllProps {
   onClick: () => void;
@@ -13,7 +14,7 @@ const ButtonPlayAll: React.FC<ButtonPlayAllProps> = ({ onClick, isRunning }) => 
   );
 };
 
-export default ButtonPlayAll;
+export default memo(ButtonPlayAll);
 
 const Button = styled.button`
   position: fixed;

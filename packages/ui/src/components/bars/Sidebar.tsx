@@ -22,7 +22,10 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
         </ToggleIcon>
       </SidebarToggle>
       <SidebarContainer show={show}>
-        <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} withCoordinates />
+        {
+          show &&
+          <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} withCoordinates />
+        }
       </SidebarContainer>
       {!show && <div className="sidebar-overlay" onClick={toggleShow} />}
     </>
