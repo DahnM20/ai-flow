@@ -21,4 +21,4 @@ jobs:
         docker-compose up -d
 
     - name: Healthcheck server
-      run: curl -- fail http://localhost:5000/healthcheck
+      run: curl --fail http://localhost:5000/healthcheck
