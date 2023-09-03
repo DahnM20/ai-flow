@@ -11,8 +11,11 @@ class StableDiffusionStabilityAIPromptProcessor(Processor):
     def __init__(self, config):
         super().__init__(config)
         self.prompt = config.get("prompt")
-        self.height = int(config.get("height", "1024"))
-        self.width = int(config.get("width", "1024"))
+
+        size = config.get("size", "1024x1024")
+
+        self.height = int(size.split("x")[0])
+        self.width = int(size.split("x")[1])
         self.style_preset = config.get("style_preset", "")
         self.samples = 1
         self.engine_id = "stable-diffusion-xl-1024-v1-0"

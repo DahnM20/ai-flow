@@ -163,6 +163,23 @@ export const OptionButton = styled.button<{ selected: boolean }>`
   }
 `;
 
+
+export const NodeSelect = styled.select`
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: ${({ theme }) => theme.nodeInputBg};
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  color: ${({ theme }) => theme.text};
+  resize: vertical;
+  transition: all 0.3s ease;
+`;
+
+export const NodeSelectOption = styled.option<{ selected: boolean }>`
+  padding: 10px 16px;
+`;
+
 export const ReactFlowStyled = styled(ReactFlow)`
   background-color: ${(props) => props.theme.bg};
 

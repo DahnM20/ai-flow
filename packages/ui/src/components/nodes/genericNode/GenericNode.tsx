@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef, memo } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { NodeResizer } from '@reactflow/node-resizer';
-import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle } from '../../shared/Node.styles';
+import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle, NodeSelect, NodeSelectOption } from '../../shared/Node.styles';
 import useHandleShowOutput from '../../../hooks/useHandleShowOutput';
 import { useRefreshOnAppearanceChange } from '../../../hooks/useRefreshOnAppearanceChange';
 import { generateIdForHandle } from '../../../utils/flowUtils';
@@ -126,6 +126,21 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                             <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                         </>
                     );
+                case 'select':
+                    if (!data[field.name]) {
+                        setDefaultOption(field);
+                    }
+                    return (
+                        <>
+                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)}>
+                                {field.options?.map(option => (
+                                    <NodeSelectOption selected={data[field.name] === option.value}>
+                                        {t(option.label)}
+                                    </NodeSelectOption>
+                                ))}
+                            </NodeSelect>
+                        </>
+                    )
                 case 'option':
                     if (!data[field.name]) {
                         setDefaultOption(field);
