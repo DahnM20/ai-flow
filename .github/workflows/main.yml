@@ -1,0 +1,25 @@
+name: Docker Compose Build and Healthcheck
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build_and_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build docker images
+      run: docker-compose build
+
+    - name: Start services
+      run: docker-compose up -d
+
+    - name: Healthcheck server
+      run: curl -- fail http://localhost:5000/healthcheck
