@@ -16,6 +16,7 @@ interface AIDataSplitterNodeData {
   input: string;
   input_key: string;
   output_data?: string[];
+  lastRun: string;
 }
 
 interface AIDataSplitterNodeProps extends NodeProps {
@@ -26,14 +27,12 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
 
   const updateNodeInternals = useUpdateNodeInternals();
 
-  const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
   const [isPlaying, setIsPlaying] = useIsPlaying();
   const [collapsed, setCollapsed] = useState(false);
 
   const { onUpdateNodeData } = useContext(NodeContext);
 
   useEffect(() => {
-    setNodeId(`${data.id}-${Date.now()}`);
     const newNbOutput = data.output_data ? data.output_data.length : 0;
     if (!data.nbOutput || newNbOutput > data.nbOutput) {
       onUpdateNodeData(id, {
@@ -42,8 +41,11 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
       });
     }
     setIsPlaying(false);
-    updateNodeInternals(id);
   }, [data.output_data]);
+
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [data.nbOutput])
 
   const handlePlayClick = () => {
     setIsPlaying(true);
@@ -61,12 +63,10 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
       ...data,
       nbOutput: forcedNbOutput,
     });
-
-    updateNodeInternals(id);
   };
 
   return (
-    <DataSplitterNodeContainer selected={selected} nbOutput={data.nbOutput} collapsed={collapsed} key={nodeId} onDoubleClick={handleCollapseClick}>
+    <DataSplitterNodeContainer selected={selected} nbOutput={data.nbOutput} collapsed={collapsed} key={id} onDoubleClick={handleCollapseClick}>
       {!collapsed
         && <NodeTitle>AI Splitter</NodeTitle>
       }
@@ -83,7 +83,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
         {data.nbOutput && Array.from(Array(data.nbOutput)).map((_, index) => (
           <OutputHandle
             key={generateIdForHandle(index)}
-            data-tooltip-id={`${nodeId}-tooltip`}
+            data-tooltip-id={`${id}-tooltip`}
             data-tooltip-content={data.output_data ? data.output_data[index] : ''}
             type="source"
             id={generateIdForHandle(index)}
@@ -94,7 +94,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
             }}
           />
         ))}
-        <Tooltip id={`${nodeId}-tooltip`} style={{ zIndex: 100 }} />
+        <Tooltip id={`${id}-tooltip`} style={{ zIndex: 100 }} />
       </div>
     </DataSplitterNodeContainer>
   );
