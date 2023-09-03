@@ -15,11 +15,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Build docker images
-      run: docker-compose build
-
-    - name: Start services
-      run: docker-compose up -d
+    - name: Move to docker directory and run docker-compose
+      run: |
+        cd docker
+        docker-compose up -d
 
     - name: Healthcheck server
       run: curl -- fail http://localhost:5000/healthcheck
