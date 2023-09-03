@@ -15,18 +15,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Download wait-for-it
-      run: |
-        wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-        chmod +x wait-for-it.sh
-
     - name: Move to docker directory and run docker-compose
       run: |
         cd docker
         docker-compose up -d
 
-    - name: Wait for service to be ready
-      run: ./wait-for-it.sh localhost:5000 --timeout=120 --strict
-
-    - name: Healthcheck server
-      run: curl -v --fail http://localhost:5000/healthcheck
+    - name: Run healthcheck script
+      run: |
+        cd docker
+        chmod +x healthcheck.sh
+        ./healthcheck.sh http://localhost:5000/healthcheck
