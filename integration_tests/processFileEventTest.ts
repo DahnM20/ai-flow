@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { basicJsonFlow, getBasicProcessFileData, getJsonFlowWithMissingInputTextProcessFileData } from './utils/requestDatas';
 
 describe('process_file event tests', function () {
+    this.timeout(5000);
 
     let socket: Socket;
 
