@@ -1,4 +1,4 @@
-name: Docker Compose Build and Healthcheck
+name: Docker Compose Build | Healthcheck | Tests
 
 on:
   push:
@@ -25,3 +25,9 @@ jobs:
         cd docker
         chmod +x healthcheck.sh
         ./healthcheck.sh http://localhost:5000/healthcheck
+
+    - name: Run integration tests
+      run: |
+        cd integration_tests
+        npm i
+        npm run test

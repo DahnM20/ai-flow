@@ -1,0 +1,26 @@
+{
+  "name": "integration_tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "mocha dist/processFileEventTest.js dist/socketConnectionTest.js",
+    "build": "tsc",
+    "pretest": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.0",
+    "chai": "^4.3.8",
+    "mocha": "^10.2.0",
+    "socket.io-client": "^4.7.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.6",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.5.9",
+    "@types/socket.io-client": "^3.0.0",
+    "typescript": "^5.2.2"
+  }
+}
