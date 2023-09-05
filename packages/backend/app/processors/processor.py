@@ -18,8 +18,8 @@ class Processor(ABC):
     def __init__(self, config):
         self.name = config["name"]
         self.processor_type = config["processorType"]
-        self.x = config["x"]
-        self.y = config["y"]
+        self.x = config.get("x")
+        self.y = config.get("y")
         self._output = None
         if config.get("input") is not None and config.get("input") != "":
             self.input = config.get("input")

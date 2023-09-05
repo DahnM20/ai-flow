@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { expect } from 'chai';
-import { basicJsonFlow, getBasicProcessFileData, getJsonFlowWithMissingInputTextProcessFileData } from './utils/requestDatas';
+import { basicJsonFlow, getBasicProcessFileData, getJsonFlowWithMissingInputTextProcessFileData } from '../utils/requestDatas';
 
 describe('process_file event tests', function () {
     this.timeout(5000);

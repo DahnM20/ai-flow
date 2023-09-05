@@ -5,7 +5,7 @@ describe('Socket.IO connection tests', function () {
 
     let socket: Socket;
 
-    before(function (done: Mocha.Done): void {
+    beforeEach(function (done: Mocha.Done): void {
         socket = io('http://localhost:5000');
 
         socket.on('connect', function (): void {
@@ -17,12 +17,18 @@ describe('Socket.IO connection tests', function () {
         });
     });
 
-    after(function (): void {
+    afterEach(function (): void {
         socket.disconnect();
     });
 
-    it('should connect to the server', function (done: Mocha.Done): void {
+    it('should be connected to the server', function (done: Mocha.Done): void {
         expect(socket.connected).to.be.true;
+        done();
+    });
+
+    it('should disconnect', function (done: Mocha.Done): void {
+        socket.disconnect();
+        expect(socket.connected).to.be.false;
         done();
     });
 });

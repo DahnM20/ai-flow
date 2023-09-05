@@ -3,6 +3,12 @@ type ProcessFileData = {
     openai_api_key: string;
 };
 
+type RunNodeData = {
+    json_file: string;
+    openai_api_key: string;
+    node_name: string;
+};
+
 const basicJsonFlow = [
     {
         input: "",
@@ -31,6 +37,14 @@ function getBasicProcessFileData(): ProcessFileData {
     };
 }
 
+function getBasicRunNodeData(): RunNodeData {
+    return {
+        json_file: JSON.stringify(basicJsonFlow),
+        node_name: basicJsonFlow[0].name,
+        openai_api_key: "apiKey",
+    };
+}
+
 function getJsonFlowWithMissingInputTextProcessFileData(): ProcessFileData {
     return {
         json_file: JSON.stringify(jsonFlowWithMissingInputText),
@@ -42,5 +56,6 @@ export {
     basicJsonFlow,
     jsonFlowWithMissingInputText,
     getBasicProcessFileData,
+    getBasicRunNodeData,
     getJsonFlowWithMissingInputTextProcessFileData
 };
