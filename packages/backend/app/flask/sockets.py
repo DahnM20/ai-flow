@@ -18,6 +18,14 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 
 def populate_session_global_object(data):
+    """
+    This function is responsible for initializing global session objects either from the
+    environmental variables or from the data passed as arguments, ensuring that the necessary API
+    keys are available throughout the session for different processes.
+
+    Parameters:
+        data (dict): A dictionary containing potentially necessary keys: "openai_api_key" and "stabilityai_api_key".
+    """
     use_env = os.getenv("USE_ENV_API_KEYS")
     logging.debug("use_env: %s", use_env)
     if use_env == "true":
@@ -39,6 +47,15 @@ def handle_connect():
 
 @socketio.on("process_file")
 def handle_process_file(data):
+    """
+    This event handler is activated when a "process_file" event is received via Socket.IO. It allows to run every node in
+    the file, even if they have been executed before.
+
+    Parameters:
+        data (dict): A dictionary encompassing the event's payload, which comprises the JSON configuration file
+                    ("json_file").
+
+    """
     try:
         logging.debug("Received process_config event with data: %s", data)
         populate_session_global_object(data)
@@ -55,12 +72,22 @@ def handle_process_file(data):
             emit("error", {"error": "Invalid input or missing configuration file"})
     except Exception as e:
         emit("error", {"error": str(e)})
-        traceback.print_exc()
+        # traceback.print_exc()
         logging.error(f"An error occurred: {str(e)}")
 
 
 @socketio.on("run_node")
 def handle_run_node(data):
+    """
+    This event handler is activated when a "run_node" event is received via Socket.IO. It facilitates the processing
+    of the specified node in the data payload, launching only the designated node and preceding nodes if they
+    haven't been executed earlier.
+
+    Parameters:
+        data (dict): A dictionary encompassing the event's payload, which comprises the JSON configuration file
+                    ("json_file") and the name of the node to run ("node_name").
+
+    """
     try:
         logging.debug("Received run_node event with data: %s", data)
         populate_session_global_object(data)

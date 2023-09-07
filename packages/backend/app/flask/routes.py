@@ -11,10 +11,11 @@ from app.env_config import (
 
 @app.route("/healthcheck", methods=["GET"])
 def healthcheck():
-    return "ok", 200
+    return "OK", 200
 
 
 if is_local_environment():
+    logging.info("Environment set to LOCAL")
 
     @app.route("/image/<path:filename>")
     def serve_image(filename):

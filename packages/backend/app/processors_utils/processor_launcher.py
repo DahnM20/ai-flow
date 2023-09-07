@@ -6,7 +6,6 @@ from .processor_factory import ProcessorFactory
 
 
 def load_config_data(fileName):
-    # Lecture du fichier de configuration
     with open(fileName, "r") as file:
         config_data = json.load(file)
     return config_data
@@ -26,32 +25,45 @@ def link_processors(processors):
 
 
 def load_processors(config_data):
-    # Enregistrement des processeurs dans la factory
     factory = ProcessorFactory()
     factory.load_processors()
 
-    # Instanciation des processeurs
     processors = {
         config["name"]: factory.create_processor(config) for config in config_data
     }
 
-    # Établissement des liens entre les processeurs
     link_processors(processors)
     return processors
 
 
 def load_required_processors(config_data, node_name):
+    """
+    Loads the necessary processors based on the given configuration data and node name.
+
+    Parameters:
+        config_data (list): A list of dictionaries containing the configuration data for each processor.
+        node_name (str): The name of the node being processed.
+
+    Returns:
+        dict: A dictionary mapping processor names to their respective instances.
+
+    The function operates as follows:
+        - Iterates over each configuration in config_data.
+        - Creates a new processor instance based on the configuration.
+        - If output_data is not None and differs from node_name, the processor's output is set accordingly.
+        - Stores each processor instance in a dictionary with its name as the key.
+    """
     factory = ProcessorFactory()
     factory.load_processors()
     processors = {}
     for config in config_data:
         config_output = config.get("output_data", None)
         if config_output is None or config["name"] == node_name:
-            print("Empty or current node ", config["name"])
+            logging.debug(f"Empty or current node - {config['name']}")
             processor = factory.create_processor(config)
             processors[config["name"]] = processor
         else:
-            print("non empty ", config["name"])
+            logging.debug(f"Non empty node -  {config['name']}")
             processor = factory.create_processor(config)
             processor.set_output(config_output)
             processors[config["name"]] = processor
