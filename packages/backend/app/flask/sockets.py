@@ -1,25 +1,20 @@
-from functools import wraps
 from app.flask.app import app
 import logging
 import json
 import eventlet
-from flask import request
 from flask import g
 from flask_socketio import SocketIO, emit
-from ..processors_utils.processor_store_singleton import ProcessorStoreSingleton
 from ..processors_utils.processor_launcher import (
     load_processors,
-    load_processors_for_node,
     launchProcessors,
     launch_processors_for_node,
+    load_processors_for_node,
 )
 import traceback
 import os
 
 eventlet.monkey_patch(all=False, socket=True)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
-
-store = ProcessorStoreSingleton().store
 
 
 def populate_session_global_object(data):
@@ -65,24 +60,15 @@ def handle_process_file(data):
 
 
 @socketio.on("run_node")
-def handle_process_file(data):
+def handle_run_node(data):
     try:
         logging.debug("Received run_node event with data: %s", data)
         populate_session_global_object(data)
         flow_data = json.loads(data.get("json_file"))
         node_name = data.get("node_name")
-        stored_processors_keys = store.keys()
-        stored_processors = {}
-
-        if stored_processors_keys:
-            for key in stored_processors_keys:
-                if key.startswith(request.sid):
-                    stored_processors[key] = store.get(key)
 
         if flow_data and node_name:
-            processors = load_processors_for_node(
-                flow_data, stored_processors, node_name
-            )
+            processors = load_processors_for_node(flow_data, node_name)
             output = launch_processors_for_node(processors, node_name, ws=True)
             logging.debug("Emitting processing_result event with output: %s", output)
             emit("run_end", {"output": output})
