@@ -3,6 +3,9 @@ import { FiChevronsRight, FiChevronsLeft } from 'react-icons/fi';
 import { Edge, Node } from 'reactflow';
 import JSONView from '../side-views/JSONView';
 import styled, { css } from 'styled-components';
+import TopologicalView from '../side-views/TopologicalView';
+import { t } from 'i18next';
+import { TabButton } from '../FlowTabs';
 
 interface SidebarProps {
   nodes: Node[];
@@ -12,6 +15,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
   const [show, setShow] = useState(false);
+  const [activeTab, setActiveTab] = useState('json');
   const toggleShow = () => setShow(!show);
 
   return (
@@ -22,8 +26,21 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
         </ToggleIcon>
       </SidebarToggle>
       <SidebarContainer show={show}>
+
+        <HeaderContainer>
+          <TabButton active={activeTab === 'json'} onClick={() => setActiveTab('json')}>
+            <Title>{t('JsonView')}</Title>
+          </TabButton>
+          <TabButton active={activeTab === 'topological'} onClick={() => setActiveTab('topological')}>
+            <Title>{t('TopologicalView')}</Title>
+          </TabButton>
+        </HeaderContainer>
         {
-          show &&
+          show && activeTab === 'topological' &&
+          <TopologicalView nodes={nodes} edges={edges} />
+        }
+        {
+          show && activeTab === 'json' &&
           <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} withCoordinates />
         }
       </SidebarContainer>
@@ -31,6 +48,18 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
     </>
   );
 };
+
+const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 10px;;
+`
+
+const Title = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 10px;
+`;
 
 const SidebarContainer = styled.div<{ show: boolean }>`
   position: fixed;

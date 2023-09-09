@@ -73,9 +73,6 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
 
     return (
         <JSONViewContainer>
-            <JSONViewHeader>
-                <JSONViewTitle>{t('JsonView')}</JSONViewTitle>
-            </JSONViewHeader>
             <JSONViewButtons>
                 <JSONViewButton onClick={handleUploadClick}>
                     <FiUpload className="json-view-icon" />
@@ -101,7 +98,6 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
 };
 
 const JSONViewContainer = styled.div`
-    margin: 20px;
     padding: 20px;
 `;
 

@@ -141,7 +141,7 @@ const Tabs = styled.div`
   padding-bottom: 3px;
 `;
 
-const TabButton = styled.button<{ active: boolean }>`
+export const TabButton = styled.button<{ active: boolean }>`
   position: relative;
   margin-right: 10px;
   padding: ${buttonPaddingValue};

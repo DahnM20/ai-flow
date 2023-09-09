@@ -1,5 +1,6 @@
 import { Node, Edge } from "reactflow";
 import { getConfigViaType } from "../nodesConfiguration/nodeConfig";
+import { NodeData } from "../types/node";
 
 const handlePrefix = 'handle';
 const handleSeparator = '-';
@@ -29,7 +30,7 @@ export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   return sortedNodes;
 }
 
-export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates: boolean) {
+export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates: boolean): NodeData[] {
   return nodes.map((node: Node) => {
     withCoordinates = true
     const { id, ...rest } = node;

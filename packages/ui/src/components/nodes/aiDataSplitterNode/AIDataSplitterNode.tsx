@@ -112,7 +112,7 @@ const DataSplitterNodeContainer = styled.div<{ selected: boolean, nbOutput: numb
   box-shadow: ${props => props.selected ? '0px 0px 5px rgba(114, 200, 250, 0.6)' : 'rgba(0, 0, 0, 0.05) 2px 1px 1px'};
   min-height: 250px;
   height: ${props => props.nbOutput * 30 + 100}px;
-  width: ${props => props.collapsed ? 'auto' : '150px'};
+  width: ${props => props.collapsed ? 'auto' : '120px'};
   transition: all 0.3s ease-in-out;
 `;
 
