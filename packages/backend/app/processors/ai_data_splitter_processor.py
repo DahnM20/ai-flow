@@ -19,7 +19,6 @@ class AIDataSplitterProcessor(Processor):
 
         self.init_context(input_data)
 
-        # Générer les prompts à partir des messages
         chat_completion = openai.ChatCompletion.create(
             model=self.model,
             messages=self.messages,
@@ -30,7 +29,7 @@ class AIDataSplitterProcessor(Processor):
         answer = assistant_message.content
         data_to_split = answer.encode("utf-8").decode("utf8")
 
-        self.set_output(data_to_split.split(';'))
+        self.set_output(data_to_split.split(";"))
         self.nb_output = len(self._output)
         return self._output
 

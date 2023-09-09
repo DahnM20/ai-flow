@@ -24,10 +24,12 @@ if __name__ == "__main__":
         )
 
     if os.getenv("USE_HTTPS", "false").lower() == "true":
+        root_logger.info("Protocol set to HTTPS")
         keyfile_path = os.getenv("KEYFILE_PATH", "default/key/path")
         certfile_path = os.getenv("CERTFILE_PATH", "default/cert/path")
         socketio.run(
             app, host=host, port=port, keyfile=keyfile_path, certfile=certfile_path
         )
     else:
+        root_logger.warning("Protocol set to HTTP")
         socketio.run(app, port=port, host=host)

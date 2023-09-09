@@ -14,12 +14,11 @@ class GPTNoContextPromptProcessor(Processor):
 
     def process(self):
         input_data = None
-        if getattr(self, 'input_processor', None) is not None:
+        if getattr(self, "input_processor", None) is not None:
             input_data = self.input_processor.get_output(self.input_key)
 
         self.init_context(input_data)
 
-        # Générer les prompts à partir des messages
         chat_completion = openai.ChatCompletion.create(
             model=self.model,
             messages=self.messages,
