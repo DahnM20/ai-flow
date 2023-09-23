@@ -164,26 +164,26 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             }
         });
 
-    const outputIsImage = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64') && data.output_data;
+    const outputIsImage = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64') && data.outputData;
 
     const hideNodeParams = (hasParent(id) && data.config.hideFieldsIfParent) || collapsed;
 
     const getOutputComponent = () => {
-        if (!data.output_data) return <></>
+        if (!data.outputData) return <></>
 
         switch (data.config.outputType) {
             case 'imageUrl':
-                return <ImageUrlOutput url={data.output_data} name={data.name} />
+                return <ImageUrlOutput url={data.outputData} name={data.name} />
             case 'imageBase64':
-                return <ImageBase64Output data={data.output_data} name={data.name} lastRun={data.lastRun} />
+                return <ImageBase64Output data={data.outputData} name={data.name} lastRun={data.lastRun} />
             default:
-                return <MarkdownOutput data={data.output_data} />
+                return <MarkdownOutput data={data.outputData} />
         }
     }
 
     const handleCopyToClipboard = (event: any) => {
         event.stopPropagation();
-        copyToClipboard(data.output_data);
+        copyToClipboard(data.outputData);
     }
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
@@ -215,11 +215,11 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 noPadding={outputIsImage && showLogs}
                 onClick={() => setShowLogs(!showLogs)}
             >
-                {showLogs && data.output_data && !outputIsImage
+                {showLogs && data.outputData && !outputIsImage
                     && <StyledCopyIcon className="copy-icon" onClick={(event) => {
                         handleCopyToClipboard(event);
                     }} />}
-                {!showLogs && data.output_data
+                {!showLogs && data.outputData
                     ? <NodeLogsText>{t('ClickToShowOutput')}</NodeLogsText>
                     : getOutputComponent()}
             </NodeLogs>

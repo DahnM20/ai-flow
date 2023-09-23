@@ -1,12 +1,12 @@
 type ProcessFileData = {
-    json_file: string;
-    openai_api_key: string;
+    jsonFile: string;
+    openaiApiKey: string;
 };
 
 type RunNodeData = {
-    json_file: string;
-    openai_api_key: string;
-    node_name: string;
+    jsonFile: string;
+    openaiApiKey: string;
+    nodeName: string;
 };
 
 const basicJsonFlow = [
@@ -32,23 +32,23 @@ const jsonFlowWithMissingInputText = [
 
 function getBasicProcessFileData(): ProcessFileData {
     return {
-        json_file: JSON.stringify(basicJsonFlow),
-        openai_api_key: "apiKey",
+        jsonFile: JSON.stringify(basicJsonFlow),
+        openaiApiKey: "apiKey",
     };
 }
 
 function getBasicRunNodeData(): RunNodeData {
     return {
-        json_file: JSON.stringify(basicJsonFlow),
-        node_name: basicJsonFlow[0].name,
-        openai_api_key: "apiKey",
+        jsonFile: JSON.stringify(basicJsonFlow),
+        nodeName: basicJsonFlow[0].name,
+        openaiApiKey: "apiKey",
     };
 }
 
 function getJsonFlowWithMissingInputTextProcessFileData(): ProcessFileData {
     return {
-        json_file: JSON.stringify(jsonFlowWithMissingInputText),
-        openai_api_key: "apiKey",
+        jsonFile: JSON.stringify(jsonFlowWithMissingInputText),
+        openaiApiKey: "apiKey",
     };
 }
 

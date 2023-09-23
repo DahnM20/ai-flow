@@ -16,7 +16,7 @@ export const initialNodes: Node[] = [
       initData: 'Tu dois me faire un résumé des textes que je t\'enverrai',
       input: 'user-input',
       output: 'gptMarkdown',
-      output_data: '',
+      outputData: '',
       onDelete: () => { }
     },
     position: { x: 100, y: 100 },

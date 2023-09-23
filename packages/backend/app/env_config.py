@@ -1,7 +1,8 @@
 import os
 
 ENV_LOCAL = "LOCAL"
-CURRENT_ENV = os.environ.get("ENV")
+ENV_CLOUD = "CLOUD"
+CURRENT_ENV = os.environ.get("DEPLOYMENT_ENV", ENV_LOCAL)
 
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -9,6 +10,10 @@ BACKEND_DIR = os.path.dirname(CURRENT_DIR)
 LOCAL_STORAGE_DIR = os.path.join(
     BACKEND_DIR, os.getenv("LOCAL_STORAGE_FOLDER_NAME", "local_storage")
 )
+
+
+def is_cloud_env():
+    return CURRENT_ENV == ENV_CLOUD
 
 
 def is_local_environment():

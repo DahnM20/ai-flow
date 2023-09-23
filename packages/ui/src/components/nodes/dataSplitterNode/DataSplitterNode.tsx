@@ -17,7 +17,7 @@ interface DataSplitterNodeData {
   nbOutput: number;
   input: string;
   input_key: string;
-  output_data?: string[];
+  outputData?: string[];
 }
 
 interface DataSplitterNodeProps extends NodeProps {
@@ -39,7 +39,7 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
 
   useEffect(() => {
     setNodeId(`${data.id}-${Date.now()}`);
-    const newNbOutput = data.output_data ? data.output_data.length : 0;
+    const newNbOutput = data.outputData ? data.outputData.length : 0;
     if (!data.nbOutput || newNbOutput > data.nbOutput) {
       onUpdateNodeData(id, {
         ...data,
@@ -48,7 +48,7 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
     }
     setIsPlaying(false);
     updateNodeInternals(id);
-  }, [data.output_data]);
+  }, [data.outputData]);
   const handlePlayClick = () => {
     setIsPlaying(true);
   };
@@ -126,12 +126,12 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id
           <OutputHandle
             key={generateIdForHandle(index)}
             data-tooltip-id={`${nodeId}-tooltip`}
-            data-tooltip-content={data.output_data ? data.output_data[index] : ''}
+            data-tooltip-content={data.outputData ? data.outputData[index] : ''}
             type="source"
             id={generateIdForHandle(index)}
             position={Position.Right}
             style={{
-              background: data?.output_data ? (data.output_data[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
+              background: data?.outputData ? (data.outputData[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
               top: `${getNbOutput() === 1 ? 50 : (index / (getNbOutput() - 1)) * 80 + 10}%`
             }}
           />

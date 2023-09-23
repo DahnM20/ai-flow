@@ -34,13 +34,13 @@ const TopologicalView: React.FC<TopologicalViewProps> = ({ nodes, edges }) => {
 
 
     function getOutputDataComponent(item: NodeData): React.ReactNode {
-        if (!item.output_data) return <></>
+        if (!item.outputData) return <></>
 
         if (item.processorType === "stable-diffusion-stabilityai-prompt" || item.processorType === "dalle-prompt") {
-            return <ImageUrlOutput url={item.output_data[0]} name={item.name} />
+            return <ImageUrlOutput url={item.outputData[0]} name={item.name} />
         } else {
-            if (typeof item.output_data === "string") {
-                return <NodeViewTextData data={item.output_data} />
+            if (typeof item.outputData === "string") {
+                return <NodeViewTextData data={item.outputData} />
             }
         }
     }
@@ -50,7 +50,7 @@ const TopologicalView: React.FC<TopologicalViewProps> = ({ nodes, edges }) => {
         <TopologicalViewContainer>
             {
                 data.map((item, index) => {
-                    if (!item.output_data) return undefined;
+                    if (!item.outputData) return undefined;
                     return <TopologicalViewContent onClick={focusToNode(item)}>
                         <TopologicalViewNodeName>{item.name}</TopologicalViewNodeName>
                         {getOutputDataComponent(item)}
@@ -85,8 +85,8 @@ const NodeViewTextData = styled(MarkdownOutput)`
 `
 
 function arePropsEqual(prevProps: TopologicalViewProps, nextProps: TopologicalViewProps) {
-    const prevNodesOutput = prevProps.nodes.map(node => node.data.output_data);
-    const nextNodesOutput = nextProps.nodes.map(node => node.data.output_data);
+    const prevNodesOutput = prevProps.nodes.map(node => node.data.outputData);
+    const nextNodesOutput = nextProps.nodes.map(node => node.data.outputData);
 
     if (prevNodesOutput.length != nextNodesOutput.length) return false;
 

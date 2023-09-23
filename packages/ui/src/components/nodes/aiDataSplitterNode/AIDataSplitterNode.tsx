@@ -15,7 +15,7 @@ interface AIDataSplitterNodeData {
   nbOutput: number;
   input: string;
   input_key: string;
-  output_data?: string[];
+  outputData?: string[];
   lastRun: string;
 }
 
@@ -33,7 +33,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
   const { onUpdateNodeData } = useContext(NodeContext);
 
   useEffect(() => {
-    const newNbOutput = data.output_data ? data.output_data.length : 0;
+    const newNbOutput = data.outputData ? data.outputData.length : 0;
     if (!data.nbOutput || newNbOutput > data.nbOutput) {
       onUpdateNodeData(id, {
         ...data,
@@ -41,7 +41,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
       });
     }
     setIsPlaying(false);
-  }, [data.output_data]);
+  }, [data.outputData]);
 
   useEffect(() => {
     updateNodeInternals(id);
@@ -84,12 +84,12 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
           <OutputHandle
             key={generateIdForHandle(index)}
             data-tooltip-id={`${id}-tooltip`}
-            data-tooltip-content={data.output_data ? data.output_data[index] : ''}
+            data-tooltip-content={data.outputData ? data.outputData[index] : ''}
             type="source"
             id={generateIdForHandle(index)}
             position={Position.Right}
             style={{
-              background: data?.output_data ? (data.output_data[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
+              background: data?.outputData ? (data.outputData[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
               top: `${data.nbOutput === 1 ? 50 : (index / (data.nbOutput - 1)) * 80 + 10}%`
             }}
           />

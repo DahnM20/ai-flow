@@ -24,8 +24,8 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
   const [apiKeyStabilityAI, setApiKeyStabilityAI] = useState('');
 
   useEffect(() => {
-    const storedOpenAIKey = config?.openai_api_key
-    const storedStabilityAIKey = config?.stabilityai_api_key
+    const storedOpenAIKey = config?.openaiApiKey
+    const storedStabilityAIKey = config?.stabilityaiApiKey
     if (storedOpenAIKey) {
       setApiKeyOpenAI(storedOpenAIKey);
     }
@@ -45,12 +45,12 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
   };
 
   const handleValidate = () => {
-    window.localStorage.setItem('openai_api_key', apiKeyOpenAI);
-    window.localStorage.setItem('stabilityai_api_key', apiKeyStabilityAI);
+    window.localStorage.setItem('openaiApiKey', apiKeyOpenAI);
+    window.localStorage.setItem('stabilityaiApiKey', apiKeyStabilityAI);
 
     const config: WSConfiguration = {
-      openai_api_key: apiKeyOpenAI,
-      stabilityai_api_key: apiKeyStabilityAI,
+      openaiApiKey: apiKeyOpenAI,
+      stabilityaiApiKey: apiKeyStabilityAI,
     };
 
     if (!!connectSocket) {

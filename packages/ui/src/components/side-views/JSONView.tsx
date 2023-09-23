@@ -60,7 +60,7 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
 
     const handleDeleteOutput = () => {
         const nodeUpdated = nodes.map(node => {
-            node.data.output_data = undefined;
+            node.data.outputData = undefined;
             node.data.lastRun = undefined;
             return node;
         });

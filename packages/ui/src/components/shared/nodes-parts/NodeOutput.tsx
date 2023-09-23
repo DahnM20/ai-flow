@@ -4,14 +4,14 @@ import MarkdownOutput from './MarkdownOutput';
 import { CopyButton, CopyIcon, NodeLogs, NodeLogsText } from '../Node.styles';
 
 interface NodeOutputProps {
-  output_data: string;
+  outputData: string;
 }
 
-const NodeOutput: React.FC<NodeOutputProps> = ({ output_data }) => {
+const NodeOutput: React.FC<NodeOutputProps> = ({ outputData }) => {
   const [showLogs, setShowLogs] = useState(false);
 
   const handleCopy = () => {
-    copyToClipboard(output_data);
+    copyToClipboard(outputData);
   };
 
   return (
@@ -22,7 +22,7 @@ const NodeOutput: React.FC<NodeOutputProps> = ({ output_data }) => {
       <CopyButton onClick={handleCopy}>
         <CopyIcon />
       </CopyButton>
-      {!showLogs ? <NodeLogsText>Click to show output</NodeLogsText> : <MarkdownOutput data={output_data} />}
+      {!showLogs ? <NodeLogsText>Click to show output</NodeLogsText> : <MarkdownOutput data={outputData} />}
     </NodeLogs>
   );
 };

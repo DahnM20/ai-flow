@@ -93,7 +93,7 @@ function Flow(props: FlowProps) {
       setNodes((currentState) => {
         return [...currentState.map((node) => {
           if (node.data.name == nodeToUpdate) {
-            node.data = { ...node.data, output_data: output, lastRun: new Date() };
+            node.data = { ...node.data, outputData: output, lastRun: new Date() };
           }
 
           return node;
@@ -224,9 +224,9 @@ function Flow(props: FlowProps) {
     const flowFile = convertFlowToJson(nodesSorted, edges, true);
     socket?.emit('process_file',
       {
-        json_file: JSON.stringify(flowFile),
-        openai_api_key: config?.openai_api_key,
-        stabilityai_api_key: config?.stabilityai_api_key,
+        jsonFile: JSON.stringify(flowFile),
+        openaiApiKey: config?.openaiApiKey,
+        stabilityaiApiKey: config?.stabilityaiApiKey,
       });
     setIsRunning(true);
   }

@@ -7,5 +7,5 @@ export interface NodeData {
     nbOutput: number;
     input: string;
     input_key: string;
-    output_data?: string[] | string;
+    outputData?: string[] | string;
 }

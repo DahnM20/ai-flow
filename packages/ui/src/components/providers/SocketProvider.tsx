@@ -2,8 +2,8 @@ import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { io, Socket } from "socket.io-client";
 
 export type WSConfiguration = {
-    openai_api_key?: string;
-    stabilityai_api_key?: string;
+    openaiApiKey?: string;
+    stabilityaiApiKey?: string;
 }
 
 interface ISocketContext {
@@ -39,12 +39,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             socket.disconnect();
         }
 
-        const storedOpenAIKey = window.localStorage.getItem('openai_api_key');
-        const storedStabilityAiKey = window.localStorage.getItem('stabilityai_api_key');
+        const storedOpenAIKey = window.localStorage.getItem('openaiApiKey');
+        const storedStabilityAiKey = window.localStorage.getItem('stabilityaiApiKey');
 
         setConfig({
-            openai_api_key: !!storedOpenAIKey ? storedOpenAIKey : undefined,
-            stabilityai_api_key: !!storedStabilityAiKey ? storedStabilityAiKey : undefined,
+            openaiApiKey: !!storedOpenAIKey ? storedOpenAIKey : undefined,
+            stabilityaiApiKey: !!storedStabilityAiKey ? storedStabilityAiKey : undefined,
         })
 
         const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);
@@ -74,7 +74,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             return false;
         }
 
-        if (config.openai_api_key) {
+        if (config.openaiApiKey) {
             return true;
         }
 

@@ -47,17 +47,15 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
             return false;
         }
 
-        console.log('runNode ' + name)
         const nodesSorted = nodesTopologicalSort(nodes, edges);
         const flowFile = convertFlowToJson(nodesSorted, edges, true);
         socket?.emit('run_node',
             {
-                json_file: JSON.stringify(flowFile),
-                node_name: name,
-                openai_api_key: config?.openai_api_key,
-                stabilityai_api_key: config?.stabilityai_api_key,
+                jsonFile: JSON.stringify(flowFile),
+                nodeName: name,
+                openaiApiKey: config?.openaiApiKey,
+                stabilityaiApiKey: config?.stabilityaiApiKey,
             });
-        console.log(nodes)
 
         return true;
     };

@@ -50,14 +50,14 @@ def load_required_processors(config_data, node_name):
     The function operates as follows:
         - Iterates over each configuration in config_data.
         - Creates a new processor instance based on the configuration.
-        - If output_data is not None and differs from node_name, the processor's output is set accordingly.
+        - If outputData is not None and differs from node_name, the processor's output is set accordingly.
         - Stores each processor instance in a dictionary with its name as the key.
     """
     factory = ProcessorFactory()
     factory.load_processors()
     processors = {}
     for config in config_data:
-        config_output = config.get("output_data", None)
+        config_output = config.get("outputData", None)
         if config_output is None or config["name"] == node_name:
             logging.debug(f"Empty or current node - {config['name']}")
             processor = factory.create_processor(config)
