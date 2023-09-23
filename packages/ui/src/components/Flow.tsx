@@ -66,6 +66,7 @@ function Flow(props: FlowProps) {
       socket.on('error', onError)
       socket.on('run_end', onRunEnd)
       socket.on('current_node_running', onCurrentNodeRunning)
+      socket.on('disconnect', onDisconnect)
     }
 
     return () => {
@@ -74,6 +75,7 @@ function Flow(props: FlowProps) {
         socket.off('error', onError)
         socket.off('run_end', onRunEnd)
         socket.off('current_node_running', onCurrentNodeRunning)
+        socket.off('disconnect', onDisconnect)
       }
     }
   }, [socket]);
@@ -115,6 +117,12 @@ function Flow(props: FlowProps) {
 
   const onCurrentNodeRunning = (data: any) => {
     setCurrentNodeRunning(data.instanceName);
+  }
+
+  const onDisconnect = (reason: any) => {
+    if (reason === 'transport close') {
+      toastInfoMessage(t('socketConnectionLost'));
+    }
   }
 
   const onNodesChange: OnNodesChange = useCallback(
