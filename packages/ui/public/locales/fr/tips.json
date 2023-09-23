@@ -1,12 +1,17 @@
 {
     "tips": [
-        "Vous pouvez supprimer des nœuds avec la touche Retour arrière.",
-        "Vous pouvez replier et déplier certains nœuds en double-cliquant sur leurs en-têtes.",
-        "Un nœud peut n'avoir qu'une seule entrée.",
-        "Pour chacun de vos nœuds, gardez à l'esprit que les modèles GPT ont un nombre limité de jetons pour stocker la conversation, les entrées qui sont trop grandes peuvent entraîner des erreurs.",
-        "Le logiciel est encore à ses débuts, il peut y avoir des bugs.",
-        "Votre flux est disponible au format JSON dans la barre latérale indiquée par la marque noire sur le côté droit de votre écran, vous pouvez l'enregistrer et le télécharger à partir de là.",
-        "Les données ne sont envoyées qu'aux API avec lesquelles vous interagissez (actuellement seulement OpenAI). Le reste se passe localement sur votre machine.",
-        "Nous ne stockons/utilisons aucune de vos données."
+        "Faites glisser et déposez des nœuds depuis la barre latérale gauche vers le centre de l'application.",
+        "Appuyez sur la touche Retour arrière pour supprimer des nœuds.",
+        "Double-cliquez sur les en-têtes des nœuds pour les réduire ou les développer.",
+        "Cliquez sur la barre latérale gauche pour la masquer.",
+        "Des outils supplémentaires sont disponibles sur la barre latérale droite.",
+        "Chaque nœud ne peut avoir qu'une seule entrée.",
+        "N'oubliez pas que les modèles GPT ont des limites de tokens. Des entrées trop volumineuses peuvent provoquer des erreurs.",
+        "Notre logiciel est en phase initiale de développement. Vous pourriez rencontrer quelques bugs.",
+        "Accédez à votre flux au format JSON via la barre latérale avec l'indicateur noir sur la droite. Sauvegardez et téléchargez votre flux depuis cet endroit.",
+        "Les données sont envoyées uniquement aux API avec lesquelles vous interagissez, comme OpenAI. Toutes les autres opérations sont locales (pour les utilisateurs avec la version locale de l'application).",
+        "Nous ne stockons ni n'utilisons jamais vos données.",
+        "Les images générées par DALL-E ne sont disponibles que quelques heures, pensez à les sauvegarder.",
+        "Si vous utilisez la version cloud, nous conservons vos images Stable Diffusion pendant 12 heures pour que vous puissiez y accéder."
     ]
 }

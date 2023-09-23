@@ -36,5 +36,6 @@
     "gptPromptHelp": "This node allows you to query a GPT model. It shares its context with other nodes connected to the model.",
     "noContextPromptHelp": "This node allows you to query GPT without context, just from input data and a prompt. You don't have to connect it to a GPT Model.",
     "dallePromptHelp": "This node uses the DALL-E model to generate images from a textual description.",
-    "dataSplitterHelp": "This node is used to split data into several parts. You can specify upstream how many parts you want to create. You can also run it individually so that it finds the exact number of outputs to generate."
+    "dataSplitterHelp": "This node is used to split data into several parts. You can specify upstream how many parts you want to create. You can also run it individually so that it finds the exact number of outputs to generate.",
+    "socketConnectionLost": "The connection has been lost. \n\n You can try again later or install the application locally to avoid this kind of issue in the future."
 }

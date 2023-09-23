@@ -36,5 +36,6 @@
     "gptPromptHelp": "Ce noeud permet d'interroger un modèle GPT. Il partage son contexte avec les autres noeuds connectés au modèle.",
     "noContextPromptHelp": "Ce noeud permet d'interroger GPT sans contexte, juste à partir de données d'entrées et d'un prompt. Pas besoin de le connecter à un modèle.",
     "dallePromptHelp": "Ce noeud utilise le modèle DALL-E pour générer des images à partir d'une description textuelle.",
-    "dataSplitterHelp": "Ce noeud sert à diviser les données en plusieurs parties. Vous pouvez spécifier en amont combien de parties vous voulez créer. Vous pouvez également le lancer unitairement pour qu'il trouve le nombre exact de sorties à générer."
+    "dataSplitterHelp": "Ce noeud sert à diviser les données en plusieurs parties. Vous pouvez spécifier en amont combien de parties vous voulez créer. Vous pouvez également le lancer unitairement pour qu'il trouve le nombre exact de sorties à générer.",
+    "socketConnectionLost": "La connexion a été perdue. \n\n Vous pouvez réessayer plus tard ou installer l'application localement pour éviter ce type de problème à l'avenir."
 }

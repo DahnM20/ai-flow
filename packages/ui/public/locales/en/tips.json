@@ -1,12 +1,16 @@
 {
     "tips": [
-        "You can delete nodes with the Backspace key.",
-        "You can collapse and expand certain nodes by double clicking on their headers.",
-        "A node can only have one input.",
-        "For each of your nodes, keep in mind that GPT models have a limited number of tokens to store the conversation, inputs that are too large may result in errors.",
-        "The software is still in its early stages, there may be bugs.",
-        "Your flow is available in JSON format in the sidebar indicated by the black mark on the right side of your screen, you can save and upload it from there.",
-        "Data is only sent to the APIs with which you interact (currently only OpenAI). The rest happens locally on your machine.",
-        "We do not store/use any of your data."
+        "Drag & drop nodes from the left sidebar into the application's center.",
+        "Click on a node, then press the Backspace key to delete it.",
+        "Double-click on node headers to collapse or expand them.",
+        "Click on the left sidebar to hide it.",
+        "Additional tools are available on the right sidebar.",
+        "Each node can have only one input.",
+        "Remember, GPT models have token limits. Overly large inputs might cause errors.",
+        "Our software is in early development. You might encounter some bugs.",
+        "Access your flow in JSON format via the sidebar with the black indicator on the right. Save and upload your flow there.",
+        "Data is sent only to APIs you interact with, such as OpenAI. All other operations are local (for users with the local app version).",
+        "DALL-E images are only available during a few hours, so do not forget to save them.",
+        "If you're using the cloud version, we save your Stable Diffusion images for up to 12 hours for your access."
     ]
 }
