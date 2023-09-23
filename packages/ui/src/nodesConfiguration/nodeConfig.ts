@@ -85,13 +85,6 @@ export const nodeSectionMapping: NodeSection[] = [
         section: 'Tools',
         nodes: [//{ label: 'DataSplitter', type: 'data-splitter', helpMessage: 'dataSplitterHelp' },
             { label: 'DataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp' }],
-    },
-    {
-        section: 'AdvancedSection',
-        nodes: [
-            { label: 'GPT', type: 'gpt', helpMessage: 'gptHelp' },
-            { label: 'GPTPrompt', type: 'gpt-prompt', helpMessage: 'gptPromptHelp' },
-        ]
     }
 ];
 
