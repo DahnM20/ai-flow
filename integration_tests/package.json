@@ -18,8 +18,10 @@
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",
+    "@types/minimist": "^1.2.2",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.5.9",
+    "@types/normalize-package-data": "^2.4.1",
     "@types/socket.io-client": "^3.0.0",
     "typescript": "^5.2.2"
   }

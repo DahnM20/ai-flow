@@ -83,26 +83,26 @@ def load_processors_for_node(config_data, node_name):
 def launchProcessors(processors, ws=False):
     for processor in processors.values():
         if ws:
-            emit("current_node_running", {"instance_name": processor.name})
+            emit("current_node_running", {"instanceName": processor.name})
 
         output = processor.process()
         logging.debug(processor.name, "-", processor.processor_type, ": ", output)
 
         if ws:
-            emit("progress", {"instance_name": processor.name, "output": output})
+            emit("progress", {"instanceName": processor.name, "output": output})
 
 
 def launch_processors_for_node(processors, node_name=None, ws=False):
     for processor in processors.values():
         if processor.get_output() is None or processor.name == node_name:
             if ws:
-                emit("current_node_running", {"instance_name": processor.name})
+                emit("current_node_running", {"instanceName": processor.name})
 
             output = processor.process()
             logging.debug(processor.name, "-", processor.processor_type, ": ", output)
 
             if ws:
-                emit("progress", {"instance_name": processor.name, "output": output})
+                emit("progress", {"instanceName": processor.name, "output": output})
         if processor.name == node_name:
             break
 

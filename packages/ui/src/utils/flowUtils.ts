@@ -67,7 +67,7 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
     }
   });
 }
-export function convertJsonToFlow(json: any) {
+export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
 

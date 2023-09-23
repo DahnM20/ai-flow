@@ -24,7 +24,6 @@ import { NodeProvider } from './providers/NodeProvider';
 import { ControlsStyled, MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/userMessagePopup/UserMessagePopup';
 import { SocketContext } from './providers/SocketProvider';
-import { initialEdges, initialNodes } from './samples/initialFlow';
 import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
 import { NodeType, allNodeTypes, getAllNodeTypesComponentMapping, specificNodeTypes } from '../utils/mappings';
 import { useTranslation } from 'react-i18next';
@@ -47,8 +46,8 @@ function Flow(props: FlowProps) {
 
   const nodeTypes = useMemo(() => getAllNodeTypesComponentMapping(), []);
 
-  const [nodes, setNodes] = useState<Node[]>(props.nodes ? props.nodes : initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : initialEdges);
+  const [nodes, setNodes] = useState<Node[]>(props.nodes ? props.nodes : []);
+  const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
   const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
@@ -86,7 +85,7 @@ function Flow(props: FlowProps) {
   }, [nodes, edges]);
 
   const onProgress = (data: any) => {
-    const nodeToUpdate = data.instance_name as string;
+    const nodeToUpdate = data.instanceName as string;
     const output = data.output;
 
     if (nodeToUpdate && output) {
@@ -115,7 +114,7 @@ function Flow(props: FlowProps) {
   }
 
   const onCurrentNodeRunning = (data: any) => {
-    setCurrentNodeRunning(data.instance_name);
+    setCurrentNodeRunning(data.instanceName);
   }
 
   const onNodesChange: OnNodesChange = useCallback(

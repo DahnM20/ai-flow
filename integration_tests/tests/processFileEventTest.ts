@@ -45,7 +45,7 @@ describe('process_file event tests', function () {
 
         socket.once('progress', (data) => {
             expect(data).to.have.property('output').to.equal(basicJsonFlow[0].inputText);
-            expect(data).to.have.property('instance_name').to.equal(basicJsonFlow[0].name);
+            expect(data).to.have.property('instanceName').to.equal(basicJsonFlow[0].name);
             done();
         });
 
@@ -60,7 +60,7 @@ describe('process_file event tests', function () {
         socket.emit('process_file', processFileData);
 
         socket.once('current_node_running', (data) => {
-            expect(data).to.have.property('instance_name').to.equal(basicJsonFlow[0].name);
+            expect(data).to.have.property('instanceName').to.equal(basicJsonFlow[0].name);
             done();
         });
 
