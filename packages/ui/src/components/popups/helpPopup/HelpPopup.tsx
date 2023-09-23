@@ -1,38 +1,37 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaWindowClose } from 'react-icons/fa';
-import { FiDelete } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 
 interface HelpPopupProps {
-    isOpen: boolean;
-    onClose: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
-    const { t } = useTranslation("tips");
+  const { t } = useTranslation("tips");
 
-    const tips: string[] = t('tips', { returnObjects: true });
+  const tips: string[] = t('tips', { returnObjects: true });
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    return (
-        <PopupContainer>
-            <PopupHeader>
-                <PopupTitle>Help</PopupTitle>
-                <PopupCloseButton onClick={onClose}>
-                    <FaWindowClose />
-                </PopupCloseButton>
-            </PopupHeader>
-            <PopupContent>
-            <PopupTipList>
-                {tips.map((tip, index) => (
-                    <PopupTip key={index}>{tip}</PopupTip>
-                ))}
-                </PopupTipList>
-            </PopupContent>
-        </PopupContainer>
-    );
+  return (
+    <PopupContainer>
+      <PopupHeader>
+        <PopupTitle>Help</PopupTitle>
+        <PopupCloseButton onClick={onClose}>
+          <FaWindowClose />
+        </PopupCloseButton>
+      </PopupHeader>
+      <PopupContent>
+        <PopupTipList>
+          {tips.map((tip, index) => (
+            <PopupTip key={index}>{tip}</PopupTip>
+          ))}
+        </PopupTipList>
+      </PopupContent>
+    </PopupContainer>
+  );
 };
 
 const PopupContainer = styled.div`
@@ -46,11 +45,13 @@ const PopupContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 `;
 
 const PopupHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   align-items: center;
   padding: 10px;
   background-color: #a3a2fc;
@@ -84,7 +85,9 @@ const PopupContent = styled.div`
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  width:60%;
+  max-height: 60%;
+  max-width:80%;
+  overflow: auto;
 `;
 
 const PopupTip = styled.li` // TODO
