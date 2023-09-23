@@ -29,7 +29,7 @@
     "processorType": "stable-diffusion-stabilityai-prompt",
     "size": "1024x1024",
     "outputData": [
-      "http://localhost:5000/image/vd6up8r0mstable-diffusion-stabilityai-prompt-20230921083341776933.png"
+      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/vd6up8r0mstable-diffusion-stabilityai-prompt-20230921083341776933.png"
     ],
     "lastRun": "2023-09-21T06:33:41.781Z",
     "x": -1958.8653206229412,
@@ -42,7 +42,7 @@
     "processorType": "stable-diffusion-stabilityai-prompt",
     "size": "1024x1024",
     "outputData": [
-      "http://localhost:5000/image/45ooyfg7vstable-diffusion-stabilityai-prompt-20230921083237502194.png"
+      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/45ooyfg7vstable-diffusion-stabilityai-prompt-20230921083237502194.png"
     ],
     "lastRun": "2023-09-21T06:32:37.507Z",
     "x": -1420.4700215803477,
