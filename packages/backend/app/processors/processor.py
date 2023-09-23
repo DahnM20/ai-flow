@@ -1,6 +1,9 @@
+import os
 from abc import ABC, abstractmethod
 from typing import List, Union
 from flask import g
+from ..env_config import is_cloud_env
+from ..storage.s3_storage_strategy import S3StorageStrategy
 from ..storage.local_storage_strategy import LocalStorageStrategy
 
 
@@ -72,4 +75,7 @@ class Processor(ABC):
         return api_key
 
     def get_storage(self):
-        return LocalStorageStrategy()
+        if is_cloud_env():
+            return S3StorageStrategy()
+        else:
+            return LocalStorageStrategy()
