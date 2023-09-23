@@ -21,8 +21,7 @@ class LocalStorageStrategy(StorageStrategy):
         with open(filepath, "wb") as f:
             f.write(data)
 
-        print(filepath)
-        return secure_name
+        return self.get_url(secure_name)
 
     def get_url(self, filename):
         port = os.getenv("PORT")

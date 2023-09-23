@@ -64,8 +64,7 @@ class StableDiffusionStabilityAIPromptProcessor(Processor):
 
         timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")
         filename = f"{self.name}-{timestamp_str}.png"
-        secure_name = storage.save(filename, image_data)
-        url = storage.get_url(secure_name)
+        url = storage.save(filename, image_data)
 
         self.set_output(url)
 
