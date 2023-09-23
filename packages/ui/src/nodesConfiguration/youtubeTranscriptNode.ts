@@ -13,22 +13,23 @@ export const youtubeTranscriptNodeConfig: NodeConfig = {
       name: 'language',
       type: 'option',
       options: [
-          {
-              label: 'EN',
-              value: 'en',
-              default: true,
-          },
-          {
-              label: 'FR',
-              value: 'fr'
-          }
-          ,
-          {
-              label: 'ES',
-              value: 'es'
-          }
+        {
+          label: 'EN',
+          value: 'en',
+          default: true,
+        },
+        {
+          label: 'FR',
+          value: 'fr'
+        }
+        ,
+        {
+          label: 'ES',
+          value: 'es'
+        }
       ]
-  }
+    }
   ],
   outputType: 'text',
+  defaultHideOutput: true,
 };

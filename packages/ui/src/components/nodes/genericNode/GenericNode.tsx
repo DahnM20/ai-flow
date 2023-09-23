@@ -17,9 +17,10 @@ import { copyToClipboard } from '../../../utils/navigatorUtils';
 import { useIsPlaying } from '../../../hooks/useIsPlaying';
 import ImageUrlOutput from '../../shared/nodes-parts/ImageUrlOutput';
 import ImageBase64Output from '../../shared/nodes-parts/ImageBase64Output';
+import { GenericNodeData } from '../../../types/node';
 
 interface GenericNodeProps {
-    data: any;
+    data: GenericNodeData;
     id: string;
     selected: boolean;
 }
@@ -33,7 +34,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const updateNodeInternals = useUpdateNodeInternals();
 
     const [collapsed, setCollapsed] = useState<boolean>(true);
-    const [showLogs, setShowLogs] = useState<boolean>(false);
+    const [showLogs, setShowLogs] = useState<boolean>(data.config.defaultHideOutput == null ? true : !data.config.defaultHideOutput);
     const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
@@ -42,6 +43,9 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     useEffect(() => {
         setNodeId(`${data.id}-${Date.now()}`);
         setIsPlaying(false);
+        if (!data.config.defaultHideOutput) {
+            setShowLogs(true);
+        }
         updateNodeInternals(id);
     }, [data.lastRun]);
 
@@ -165,26 +169,33 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             }
         });
 
-    const outputIsImage = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64') && data.outputData;
+    const outputIsImage = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64') && !!data.outputData;
 
     const hideNodeParams = (hasParent(id) && data.config.hideFieldsIfParent) || collapsed;
 
     const getOutputComponent = () => {
-        if (!data.outputData) return <></>
+        if (!data.outputData || !data.lastRun) return <></>
+
+        let output = data.outputData;
+
+        if (typeof (output) !== 'string') {
+            output = output[0];
+        }
 
         switch (data.config.outputType) {
             case 'imageUrl':
-                return <ImageUrlOutput url={data.outputData} name={data.name} />
+                return <ImageUrlOutput url={output} name={data.name} />
             case 'imageBase64':
-                return <ImageBase64Output data={data.outputData} name={data.name} lastRun={data.lastRun} />
+                return <ImageBase64Output data={output} name={data.name} lastRun={data.lastRun} />
             default:
-                return <MarkdownOutput data={data.outputData} />
+                return <MarkdownOutput data={output} />
         }
     }
 
     const handleCopyToClipboard = (event: any) => {
         event.stopPropagation();
-        copyToClipboard(data.outputData);
+        if (data.outputData && typeof (data.outputData) == 'string')
+            copyToClipboard(data.outputData);
     }
 
     const NodeIconComponent = ICON_MAP[data.config.icon];

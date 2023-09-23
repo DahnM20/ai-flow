@@ -11,4 +11,5 @@ export const urlNodeConfig: NodeConfig = {
     },
   ],
   outputType: 'text',
+  defaultHideOutput: true,
 };

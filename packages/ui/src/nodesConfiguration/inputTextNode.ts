@@ -13,6 +13,7 @@ const inputTextNodeConfig: NodeConfig = {
     },
   ],
   outputType: "text",
+  defaultHideOutput: true,
 };
 
 export default inputTextNodeConfig;

@@ -31,6 +31,7 @@ export interface NodeConfig {
     fields: Field[];
     hideFieldsIfParent?: boolean;
     outputType: 'text' | 'imageUrl' | 'imageBase64';
+    defaultHideOutput?: boolean;
     hasInputHandle?: boolean;
     section?: SectionType;
 }

@@ -1,3 +1,4 @@
+import { NodeConfig } from "../nodesConfiguration/nodeConfig";
 import { NodeType } from "../utils/mappings";
 
 export interface NodeData {
@@ -8,4 +9,12 @@ export interface NodeData {
     input: string;
     input_key: string;
     outputData?: string[] | string;
+    lastRun?: string;
+}
+
+export interface GenericNodeData extends NodeData {
+    config: NodeConfig;
+    width: number;
+    height: number;
+    [key: string]: any;
 }
