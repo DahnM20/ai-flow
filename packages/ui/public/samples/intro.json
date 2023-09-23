@@ -1,0 +1,63 @@
+[
+  {
+    "input": "",
+    "name": "g1ei670qc#gpt-no-context-prompt",
+    "processorType": "gpt-no-context-prompt",
+    "gptVersion": "gpt-4",
+    "inputText": "Generate a short poem about a bird and a butterfly",
+    "outputData": "In a world where the sunflowers sway,\nA bird and a butterfly play,\nEach morn at the break of day,\nChasing the whims of the breeze, light and gay.\n\nThe bird, with feathers of fiery gold,\nWings potent, heart brave and bold.\nSoaring high, stories untold,\nIn the canvas of blue, beauty unfold.\n\nThe butterfly, a flitting art,\nWings like petals, a soft heart,\nIts hued canvas, nature's part,\nIn every garden, it leaves a mark.\n\nTwirling, swirling, in a dance so fair,\nIn the nectar's sweetness, they share,\nWhispers in flight, through the sunlit air,\nSymphony of life, beyond any compare.\n\nThe bird sings, the butterfly flutters,\nThrough twilight whispers, the wind utters,\nVerses of unity, that the universe mutters,\nIn the grand play of existence, neither stutters.\n\nIn their dance, emerge lessons untold,\nOf life, colors, adventures bold,\nOf soaring high, of forms manifold,\nIn the tale of the bird and butterfly, we behold.",
+    "lastRun": "2023-09-21T06:29:49.759Z",
+    "x": -911.2707176494437,
+    "y": -251.00226805963663
+  },
+  {
+    "input": "g1ei670qc#gpt-no-context-prompt",
+    "inputKey": 0,
+    "name": "0rhbnaol3#gpt-no-context-prompt",
+    "processorType": "gpt-no-context-prompt",
+    "gptVersion": "gpt-4",
+    "inputText": "Based on the following poem, act as a prompt engineer, generate a prompt for a image generator AI like DALL-E.",
+    "outputData": "\"Generate an image of a vibrant scene at dawn where a bird with fiery gold feathers and a colorful butterfly are playfully interacting amid swaying sunflowers. The bird is soaring in the bright blue sky, and the butterfly is flitting around the garden, leaving noticeable marks. They are sharing in the sweetness of the nectar and almost seem to be whispering to each other through their flutters and songs. This dance of life unfolds in a way that speaks volumes about unity, color, and the grand play of existence.\"",
+    "lastRun": "2023-09-21T06:31:28.919Z",
+    "x": -1421.1347706756055,
+    "y": -249.3422344340221
+  },
+  {
+    "input": "0rhbnaol3#gpt-no-context-prompt",
+    "inputKey": 0,
+    "name": "vd6up8r0m#stable-diffusion-stabilityai-prompt",
+    "processorType": "stable-diffusion-stabilityai-prompt",
+    "size": "1024x1024",
+    "outputData": [
+      "http://localhost:5000/image/vd6up8r0mstable-diffusion-stabilityai-prompt-20230921083341776933.png"
+    ],
+    "lastRun": "2023-09-21T06:33:41.781Z",
+    "x": -1958.8653206229412,
+    "y": -73.26855714327525
+  },
+  {
+    "input": "0rhbnaol3#gpt-no-context-prompt",
+    "inputKey": 0,
+    "name": "45ooyfg7v#stable-diffusion-stabilityai-prompt",
+    "processorType": "stable-diffusion-stabilityai-prompt",
+    "size": "1024x1024",
+    "outputData": [
+      "http://localhost:5000/image/45ooyfg7vstable-diffusion-stabilityai-prompt-20230921083237502194.png"
+    ],
+    "lastRun": "2023-09-21T06:32:37.507Z",
+    "x": -1420.4700215803477,
+    "y": 274.7389686571499
+  },
+  {
+    "input": "g1ei670qc#gpt-no-context-prompt",
+    "inputKey": 0,
+    "name": "ar11n5cd8#gpt-no-context-prompt",
+    "processorType": "gpt-no-context-prompt",
+    "gptVersion": "gpt-4",
+    "inputText": "Act like an experienced writer, what do you think of the following poem? Is it suitable for children ?",
+    "outputData": "As an AI, I do not have personal feelings or thoughts, but I can analyze your poem based on literary criteria.\n\nFrom a technical standpoint, this poem is beautifully written. It uses a clear, regular rhyme scheme that makes the piece feel cohesive and robust. Additionally, the imagery in this poem is vibrant and engaging, allowing the readers to envision the scenes being described vividly. The metaphorical language used (the bird and the butterfly) could be interpreted as characters that children could find appealing.\n\nThematically, this poem is very suitable for children as it teaches about unity, boldness, and the marvels of nature—delivered through a lively narrative about a bird and a butterfly. This piece introduces children to the beauty of poetry, the rhythm of language, and the deeper symbolic meanings that can be conveyed in literature.\n\nOn another note, the use of some complex words and abstract concepts might be challenging for very young children to understand, but it could serve as a great tool for expanding vocabulary and facilitating discussions about interpreting meaning from text.\n\nOverall, this poem seems very suitable to be used in a children's book or to be read to children, with the understanding that some explanation might be needed depending on the child's age and vocabulary level.",
+    "lastRun": "2023-09-21T06:35:45.267Z",
+    "x": -402.5245889149842,
+    "y": -125.67900733369017
+  }
+]

@@ -7,6 +7,7 @@ import { ThemeContext } from './providers/ThemeProvider';
 import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaPlus } from 'react-icons/fa';
+import { convertJsonToFlow } from '../utils/flowUtils';
 
 interface FlowTab {
   nodes: Node[];
@@ -42,6 +43,34 @@ const FlowTabs = () => {
     if (flowTabs.tabs.length >= 1 && flowTabs.tabs[0].nodes.length !== 0)
       localStorage.setItem('flowTabs', JSON.stringify(flowTabs));
   }, [flowTabs]);
+
+  useEffect(() => {
+    const loadIntroFile = async () => {
+      const firstVisit = localStorage.getItem('firstVisit') !== 'false';
+      const savedFlowTabs = localStorage.getItem('flowTabs');
+
+      if (firstVisit && !savedFlowTabs) {
+        try {
+          const response = await fetch('/samples/intro.json');
+          if (!response.ok) {
+            throw new Error('Failed to fetch intro file');
+          }
+          const jsonData = await response.json();
+          const newFlowTab: FlowManagerState = { tabs: [] }
+          newFlowTab.tabs.push(convertJsonToFlow(jsonData))
+
+          setFlowTabs(newFlowTab);
+          setRefresh(true);
+
+          localStorage.setItem('firstVisit', 'false');
+        } catch (error) {
+          console.error("Cannot load sample file :", error);
+        }
+      }
+    };
+
+    loadIntroFile();
+  }, []);
 
   const addFlowTab = () => {
     const newFlowTab = { ...flowTabs }
