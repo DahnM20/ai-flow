@@ -13,7 +13,7 @@ def with_flow_data_validations(*validation_funcs):
                 for validation_func in validation_funcs:
                     validation_func(flow_data)
 
-                return func(*args, **kwargs)
+                return func(data, *args, **kwargs)
             except Exception as e:
                 emit("error", {"error": str(e)})
 
