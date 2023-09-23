@@ -49,8 +49,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
         const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);
 
-        console.log(``)
-        console.log(`Connecting to ${WS_HOST}:${WS_PORT} with ${protocol}`);
+        //console.log(`Connecting to ${WS_HOST}:${WS_PORT} with ${protocol}`);
 
         setSocket(newSocket);
 
@@ -64,7 +63,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
         const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);
 
-        console.log(`Connecting to ${WS_HOST}:${WS_PORT} with ${protocol}`);
+        //console.log(`Connecting to ${WS_HOST}:${WS_PORT} with ${protocol}`);
 
         setSocket(newSocket);
     }

@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Flow from './Flow';
-import { FiSun, FiMoon, FiChevronRight } from 'react-icons/fi';
+import { FiSun, FiMoon } from 'react-icons/fi';
 import { Node, Edge } from 'reactflow';
-import { ThemeContext, ThemeProvider } from './providers/ThemeProvider';
+import { ThemeContext } from './providers/ThemeProvider';
 import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaPlus } from 'react-icons/fa';

@@ -111,9 +111,9 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                         <>
                             {
                                 field.label &&
-                                <NodeLabel>{t(field.label)}</NodeLabel>
+                                <NodeLabel key={`${id}-${field.name}`} >{t(field.label)}</NodeLabel>
                             }
-                            <NodeInput name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                            <NodeInput key={`${id}-${field.name}`} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                         </>
                     );
                 case 'textarea':
@@ -121,9 +121,9 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                         <>
                             {
                                 field.label &&
-                                <NodeLabel>{t(field.label)}</NodeLabel>
+                                <NodeLabel key={`${id}-${field.name}`}>{t(field.label)}</NodeLabel>
                             }
-                            <NodeTextarea ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                            <NodeTextarea key={`${id}-${field.name}`} ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                         </>
                     );
                 case 'select':
@@ -134,7 +134,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                         <>
                             <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)}>
                                 {field.options?.map(option => (
-                                    <NodeSelectOption selected={data[field.name] === option.value}>
+                                    <NodeSelectOption key={`${id}-${option}`} selected={data[field.name] === option.value}>
                                         {t(option.label)}
                                     </NodeSelectOption>
                                 ))}
@@ -151,6 +151,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                                 <OptionSelector>
                                     {field.options?.map(option => (
                                         <OptionButton
+                                            key={`${id}-${option}`}
                                             selected={data[field.name] === option.value}
                                             onClick={() => handleOptionChange(field.name, option.value)}
                                         >
@@ -188,7 +189,6 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
-    console.log('render node ', id)
     return (
         <NodeContainer key={nodeId}>
             {/* <NodeResizer color="#ff0071" isVisible={selected} minWidth={200} minHeight={30} maxWidth={700} onResizeEnd={handleResizeField}/> */}
