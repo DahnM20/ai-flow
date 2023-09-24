@@ -1,8 +1,26 @@
-# AI Flow
+<p align="center">
+  <img src="assets/logo.png" alt="AI-Flow Logo"/>
+</p>
+<p align="center">
+  <em>Open-source tool to seamlessly connect multiple AI models in repeatable flow.</em>
+</p>
+<p align="center">
+    <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English">
+    <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
+    <a href="https://twitter.com/DahnM20"><img src="https://img.shields.io/twitter/follow/AI-Flow?style=social"></a>
+</p>
+
+<p align="center">
+<a href="https://ai-flow.net/">🔗 Website</a>
+</p>
+
+<p align="center">
+<em>While a live demo is available for convenience, for the best experience we recommend running the application directly on your local machine.</em>
+</p>
 
 **AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of **ChatGPT**. This unique tool paves the way to creating interactive networks of different AI models, fostering a multi-perspective response to various prompts.
 
-![Gif simple flow](assets/gif-scenario-1.gif)
 
 Imagine setting up a simple workflow where:
 
@@ -47,7 +65,10 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 > By combining those features we can create different flows.
 
-![image-summary](assets/flow-ideas.png)
+## Installation (Windows executable)
+
+For a quick local setup, grab the .exe from the [repository's releases section](https://github.com/DahnM20/ai-flow/releases).
+
 ## Installation (without Docker)
 
 ### Prerequisites
