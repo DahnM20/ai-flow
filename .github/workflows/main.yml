@@ -28,7 +28,7 @@ jobs:
     
     - name: Run Python unit tests
       run: |
-        docker exec -it ai-flow-backend python -m unittest discover -s tests/unit -p '*test_*.py'
+        docker exec ai-flow-backend python -m unittest discover -s tests/unit -p '*test_*.py'
 
     - name: Run integration tests
       run: |
