@@ -1,4 +1,4 @@
-from .processor import Processor
+from .processor import SimpleProcessor
 
 ESCAPE_CHARACTERS = {
     "\\n": "\n",
@@ -6,7 +6,7 @@ ESCAPE_CHARACTERS = {
 }
 
 
-class DataSplitterProcessor(Processor):
+class DataSplitterProcessor(SimpleProcessor):
     processor_type = "data-splitter"
 
     def __init__(self, config):

@@ -1,9 +1,9 @@
-from .processor import Processor
+from .processor import SimpleProcessor
 from langchain.document_loaders.url import UnstructuredURLLoader
 from langchain.document_loaders import PlaywrightURLLoader
 
 
-class URLInputProcessor(Processor):
+class URLInputProcessor(SimpleProcessor):
     processor_type = "url_input"
 
     def __init__(self, config):

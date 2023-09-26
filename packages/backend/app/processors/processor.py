@@ -72,6 +72,14 @@ class Processor(ABC):
         return self.storage_strategy
 
 
+class SimpleProcessor(Processor):
+    def __init__(self, config):
+        super().__init__(config)
+
+    def get_api_key(self, key_name):
+        pass
+
+
 class APIContextProcessor(Processor):
     def __init__(self, config, api_context_data=None):
         super().__init__(config)
