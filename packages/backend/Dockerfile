@@ -30,6 +30,7 @@ WORKDIR /app
 
 COPY poetry.lock pyproject.toml /app/
 COPY app /app/app/
+COPY tests/ /app/tests/
 COPY server.py README.md /app/
 
 RUN pip install --upgrade poetry

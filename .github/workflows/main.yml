@@ -25,6 +25,10 @@ jobs:
         cd docker
         chmod +x healthcheck.sh
         ./healthcheck.sh http://localhost:5000/healthcheck
+    
+    - name: Run Python unit tests
+      run: |
+        docker exec -it docker-backend-1 python -m unittest discover -s tests/unit -p '*test_*.py'
 
     - name: Run integration tests
       run: |
