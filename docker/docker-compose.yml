@@ -1,6 +1,7 @@
 version: '3.1'
 services:
   backend:
+    container_name: ai-flow-backend
     build:
       context: ../packages/backend/
       dockerfile: Dockerfile
@@ -12,6 +13,7 @@ services:
       - ENV=LOCAL
 
   frontend:
+    container_name: ai-flow-frontend
     build:
       context: ../packages/ui/
       dockerfile: Dockerfile
