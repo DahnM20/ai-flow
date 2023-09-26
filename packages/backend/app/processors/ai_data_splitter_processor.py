@@ -5,8 +5,8 @@ import openai
 class AIDataSplitterProcessor(Processor):
     processor_type = "ai-data-splitter"
 
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, api_context_data):
+        super().__init__(config, api_context_data)
 
         self.nb_output = 0
         self.model = "gpt-4"

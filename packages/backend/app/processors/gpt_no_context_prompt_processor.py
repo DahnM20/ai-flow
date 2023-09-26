@@ -5,8 +5,8 @@ import openai
 class GPTNoContextPromptProcessor(Processor):
     processor_type = "gpt-no-context-prompt"
 
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, api_context_data):
+        super().__init__(config, api_context_data)
 
         self.model = config.get("gptVersion")
         self.prompt = config["inputText"]

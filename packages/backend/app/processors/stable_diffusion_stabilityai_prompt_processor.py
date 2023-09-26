@@ -8,8 +8,8 @@ import os
 class StableDiffusionStabilityAIPromptProcessor(Processor):
     processor_type = "stable-diffusion-stabilityai-prompt"
 
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, api_context_data):
+        super().__init__(config, api_context_data)
         self.prompt = config.get("prompt")
 
         size = config.get("size", "1024x1024")

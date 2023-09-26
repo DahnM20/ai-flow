@@ -1,7 +1,6 @@
 import os
 from abc import ABC, abstractmethod
 from typing import List, Union
-from flask import g
 from ..env_config import is_cloud_env
 from ..storage.s3_storage_strategy import S3StorageStrategy
 from ..storage.local_storage_strategy import LocalStorageStrategy
@@ -18,12 +17,13 @@ class BadKeyInputIndex(Exception):
 class Processor(ABC):
     processor_type = None
 
-    def __init__(self, config):
+    def __init__(self, config, api_context_data):
         self.name = config["name"]
         self.processor_type = config["processorType"]
         self.x = config.get("x")
         self.y = config.get("y")
         self._output = None
+        self.api_context_data = api_context_data
         if config.get("input") is not None and config.get("input") != "":
             self.input = config.get("input")
         self.input_key = config.get("inputKey", 0)
@@ -63,16 +63,16 @@ class Processor(ABC):
     def set_input_processor(self, input_processor):
         self.input_processor = input_processor
 
-    def __str__(self):
-        return f"Processor(name={self.name}, type={self.processor_type}, x={self.x}, y={self.y})"
-
     def get_api_key(self, key_name):
-        api_key = g.get(key_name)
+        api_key = self.api_context_data.get(key_name)
 
         if api_key is None:
             raise Exception(f"No {key_name} Provided")
 
         return api_key
+
+    def __str__(self):
+        return f"Processor(name={self.name}, type={self.processor_type}, x={self.x}, y={self.y})"
 
     def get_storage(self):
         if is_cloud_env():

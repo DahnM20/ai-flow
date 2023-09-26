@@ -1,6 +1,6 @@
 import json
 import logging
-import pprint
+from flask import g
 from flask_socketio import emit
 from .processor_factory import ProcessorFactory
 
@@ -29,7 +29,7 @@ def load_processors(config_data):
     factory.load_processors()
 
     processors = {
-        config["name"]: factory.create_processor(config) for config in config_data
+        config["name"]: factory.create_processor(config, g) for config in config_data
     }
 
     link_processors(processors)
@@ -60,11 +60,11 @@ def load_required_processors(config_data, node_name):
         config_output = config.get("outputData", None)
         if config_output is None or config["name"] == node_name:
             logging.debug(f"Empty or current node - {config['name']}")
-            processor = factory.create_processor(config)
+            processor = factory.create_processor(config, g)
             processors[config["name"]] = processor
         else:
             logging.debug(f"Non empty node -  {config['name']}")
-            processor = factory.create_processor(config)
+            processor = factory.create_processor(config, g)
             processor.set_output(config_output)
             processors[config["name"]] = processor
     return processors
