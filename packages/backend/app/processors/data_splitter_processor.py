@@ -5,9 +5,10 @@ ESCAPE_CHARACTERS = {
     "\\t": "\t",
 }
 
+
 class DataSplitterProcessor(Processor):
     processor_type = "data-splitter"
-    
+
     def __init__(self, config):
         super().__init__(config)
         self.nb_output = 0

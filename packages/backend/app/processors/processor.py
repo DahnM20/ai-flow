@@ -1,9 +1,5 @@
-import os
 from abc import ABC, abstractmethod
 from typing import List, Union
-from ..env_config import is_cloud_env
-from ..storage.s3_storage_strategy import S3StorageStrategy
-from ..storage.local_storage_strategy import LocalStorageStrategy
 
 
 class BadKeyInputIndex(Exception):
@@ -17,13 +13,15 @@ class BadKeyInputIndex(Exception):
 class Processor(ABC):
     processor_type = None
 
-    def __init__(self, config, api_context_data):
+    def __init__(self, config):
         self.name = config["name"]
         self.processor_type = config["processorType"]
         self.x = config.get("x")
         self.y = config.get("y")
         self._output = None
-        self.api_context_data = api_context_data
+        self.api_context_data = None
+        self.input_processor = None
+        self.storage_strategy = None
         if config.get("input") is not None and config.get("input") != "":
             self.input = config.get("input")
         self.input_key = config.get("inputKey", 0)
@@ -36,8 +34,9 @@ class Processor(ABC):
     def updateContext(self, data):
         pass
 
-    # def get_output(self):
-    #     return getattr(self, 'output', None)
+    @abstractmethod
+    def get_api_key(self, key_name):
+        pass
 
     def get_output(self, input_key=None):
         output = getattr(self, "_output", None)
@@ -63,19 +62,28 @@ class Processor(ABC):
     def set_input_processor(self, input_processor):
         self.input_processor = input_processor
 
+    def set_storage_strategy(self, storage_strategy):
+        self.storage_strategy = storage_strategy
+
+    def __str__(self):
+        return f"Processor(name={self.name}, type={self.processor_type}, x={self.x}, y={self.y})"
+
+    def get_storage(self):
+        return self.storage_strategy
+
+
+class APIContextProcessor(Processor):
+    def __init__(self, config, api_context_data=None):
+        super().__init__(config)
+        self.api_context_data = api_context_data
+
     def get_api_key(self, key_name):
+        if self.api_context_data is None:
+            raise Exception(f"No API Context Data Provided")
+
         api_key = self.api_context_data.get(key_name)
 
         if api_key is None:
             raise Exception(f"No {key_name} Provided")
 
         return api_key
-
-    def __str__(self):
-        return f"Processor(name={self.name}, type={self.processor_type}, x={self.x}, y={self.y})"
-
-    def get_storage(self):
-        if is_cloud_env():
-            return S3StorageStrategy()
-        else:
-            return LocalStorageStrategy()

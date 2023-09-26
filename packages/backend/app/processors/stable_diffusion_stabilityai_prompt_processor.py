@@ -1,11 +1,11 @@
 import base64
-from .processor import Processor
+from .processor import APIContextProcessor
 from datetime import datetime
 import requests
 import os
 
 
-class StableDiffusionStabilityAIPromptProcessor(Processor):
+class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
     processor_type = "stable-diffusion-stabilityai-prompt"
 
     def __init__(self, config, api_context_data):

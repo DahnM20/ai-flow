@@ -1,8 +1,8 @@
-from .processor import Processor
+from .processor import APIContextProcessor
 import openai
 
 
-class AIDataSplitterProcessor(Processor):
+class AIDataSplitterProcessor(APIContextProcessor):
     processor_type = "ai-data-splitter"
 
     def __init__(self, config, api_context_data):

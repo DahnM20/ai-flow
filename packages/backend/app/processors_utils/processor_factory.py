@@ -1,5 +1,6 @@
 import importlib
 import pkgutil
+import inspect
 from ..processors.processor import Processor
 
 
@@ -10,12 +11,25 @@ class ProcessorFactory:
     def register_processor(self, processor_type, processor_class):
         self._processors[processor_type] = processor_class
 
-    def create_processor(self, config, api_context_data):
+    def create_processor(self, config, api_context_data=None, storage_strategy=None):
         processor_type = config["processorType"]
         processor_class = self._processors.get(processor_type)
         if not processor_class:
             raise ValueError(f"Processor type '{processor_type}' not supported")
-        return processor_class(config, api_context_data)
+
+        params = inspect.signature(processor_class.__init__).parameters
+        api_context_param = params.get("api_context_data")
+
+        processor = None
+        if api_context_param is not None:
+            processor = processor_class(
+                config=config, api_context_data=api_context_data
+            )
+        else:
+            processor = processor_class(config=config)
+        processor.set_storage_strategy(storage_strategy)
+
+        return processor
 
     def load_processors(self):
         package = importlib.import_module("app.processors")

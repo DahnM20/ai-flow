@@ -1,8 +1,8 @@
-from .processor import Processor
+from .processor import APIContextProcessor
 import openai
 
 
-class GPTNoContextPromptProcessor(Processor):
+class GPTNoContextPromptProcessor(APIContextProcessor):
     processor_type = "gpt-no-context-prompt"
 
     def __init__(self, config, api_context_data):

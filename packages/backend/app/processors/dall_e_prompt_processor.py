@@ -1,9 +1,9 @@
-from .processor import Processor
+from .processor import APIContextProcessor
 
 import openai
 
 
-class DallEPromptProcessor(Processor):
+class DallEPromptProcessor(APIContextProcessor):
     processor_type = "dalle-prompt"
 
     def __init__(self, config, api_context_data):

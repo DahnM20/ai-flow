@@ -4,6 +4,10 @@ from flask import g
 from flask_socketio import emit
 from .processor_factory import ProcessorFactory
 
+from ..env_config import is_cloud_env
+from ..storage.s3_storage_strategy import S3StorageStrategy
+from ..storage.local_storage_strategy import LocalStorageStrategy
+
 
 def load_config_data(fileName):
     with open(fileName, "r") as file:
@@ -27,12 +31,15 @@ def link_processors(processors):
 def load_processors(config_data):
     factory = ProcessorFactory()
     factory.load_processors()
+    storage_strategy = get_storage_strategy()
 
     processors = {
-        config["name"]: factory.create_processor(config, g) for config in config_data
+        config["name"]: factory.create_processor(config, g, storage_strategy)
+        for config in config_data
     }
 
     link_processors(processors)
+    print("list :", processors)
     return processors
 
 
@@ -55,16 +62,17 @@ def load_required_processors(config_data, node_name):
     """
     factory = ProcessorFactory()
     factory.load_processors()
+    storage_strategy = get_storage_strategy()
     processors = {}
     for config in config_data:
         config_output = config.get("outputData", None)
         if config_output is None or config["name"] == node_name:
             logging.debug(f"Empty or current node - {config['name']}")
-            processor = factory.create_processor(config, g)
+            processor = factory.create_processor(config, g, storage_strategy)
             processors[config["name"]] = processor
         else:
             logging.debug(f"Non empty node -  {config['name']}")
-            processor = factory.create_processor(config, g)
+            processor = factory.create_processor(config, g, storage_strategy)
             processor.set_output(config_output)
             processors[config["name"]] = processor
     return processors
@@ -105,6 +113,13 @@ def launch_processors_for_node(processors, node_name=None, ws=False):
                 emit("progress", {"instanceName": processor.name, "output": output})
         if processor.name == node_name:
             break
+
+
+def get_storage_strategy():
+    if is_cloud_env():
+        return S3StorageStrategy()
+    else:
+        return LocalStorageStrategy()
 
 
 if __name__ == "__main__":
