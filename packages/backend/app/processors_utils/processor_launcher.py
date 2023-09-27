@@ -39,7 +39,6 @@ def load_processors(config_data):
     }
 
     link_processors(processors)
-    print("list :", processors)
     return processors
 
 
