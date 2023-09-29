@@ -4,6 +4,7 @@ import openai
 
 class AIDataSplitterProcessor(APIContextProcessor):
     processor_type = "ai-data-splitter"
+    SPLIT_CHAR = ";"
 
     def __init__(self, config, api_context_data):
         super().__init__(config, api_context_data)
@@ -13,9 +14,10 @@ class AIDataSplitterProcessor(APIContextProcessor):
         self.api_key = self.get_api_key("session_openai_api_key")
 
     def process(self):
-        input_data = None
-        if getattr(self, "input_processor", None) is not None:
-            input_data = self.input_processor.get_output(self.input_key)
+        if getattr(self, "input_processor", None) is None:
+            return None
+
+        input_data = self.input_processor.get_output(self.input_key)
 
         self.init_context(input_data)
 
@@ -29,7 +31,7 @@ class AIDataSplitterProcessor(APIContextProcessor):
         answer = assistant_message.content
         data_to_split = answer.encode("utf-8").decode("utf8")
 
-        self.set_output(data_to_split.split(";"))
+        self.set_output(data_to_split.split(AIDataSplitterProcessor.SPLIT_CHAR))
         self.nb_output = len(self._output)
         return self._output
 
