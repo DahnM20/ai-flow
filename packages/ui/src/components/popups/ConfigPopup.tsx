@@ -1,7 +1,7 @@
 import { FaGithub, FaTwitter, FaCoffee } from 'react-icons/fa';
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { SocketContext, WSConfiguration } from '../../providers/SocketProvider';
+import { SocketContext, WSConfiguration } from '../providers/SocketProvider';
 import { useTranslation } from 'react-i18next';
 
 interface ConfigPopupProps {

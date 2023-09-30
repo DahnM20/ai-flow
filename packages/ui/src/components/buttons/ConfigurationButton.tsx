@@ -12,40 +12,15 @@ interface RightButtonProps {
 
 const RightIconButton: React.FC<RightButtonProps> = ({ onClick, color = '#808080', icon = <FiSettings />, bottom = '30px' }) => {
   return (
-    <StyledRightButton color={color} bottom={bottom} onClick={onClick}>
-      <StyledIcon>{icon}</StyledIcon>
+    <StyledRightButton className="fixed right-0 w-11 rounded-l-lg py-1 mx-auto items-center pl-1 hover:bg-slate-700" color={color} bottom={bottom} onClick={onClick}>
+      <div className='text-slate-200 fon align-middle text-xl'>{icon}</div>
     </StyledRightButton>
   );
 };
 
 const StyledRightButton = styled.div<{ color: string, bottom: string }>`
-  position: fixed;
   bottom: ${(props) => props.bottom};
-  right: 0;
-  width: 45px;
-  height: 25px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
   background-color: ${(props) => props.color};
-  padding: 5px;
-  padding-left: 10px;
-  z-index: 1000;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: #313131;
-  }
-`;
-
-const StyledIcon = styled.div`
-  color: #fff;
-  font-size: 20px;
-
-  svg {
-    vertical-align: middle;
-  }
 `;
 
 export default memo(RightIconButton);
