@@ -7,9 +7,10 @@ import { ThemeContext } from './providers/ThemeProvider';
 import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaPlus } from 'react-icons/fa';
-import { convertJsonToFlow } from '../utils/flowUtils';
-import { toastBottomInfoMessage, toastInfoMessage } from '../utils/toastUtils';
-
+import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../utils/flowUtils';
+import { toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
+import ButtonRunAll from './buttons/ButtonRunAll';
+import { SocketContext } from './providers/SocketProvider';
 interface FlowTab {
   nodes: Node[];
   edges: Edge[];
@@ -27,6 +28,8 @@ const FlowTabs = () => {
   const [refresh, setRefresh] = useState(false);
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
   const { dark, toggleTheme } = useContext(ThemeContext);
+  const { socket, verifyConfiguration, config } = useContext(SocketContext);
+  const [isRunning, setIsRunning] = useState(false);
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);
@@ -90,15 +93,48 @@ const FlowTabs = () => {
     setFlowTabs(updatedFlowTabs);
   };
 
+  const handleRunAllCurrentFlow = () => {
+    if (!verifyConfiguration()) {
+      toastInfoMessage(t('ApiKeyRequiredMessage'));
+      return;
+    }
+
+    const nodes = flowTabs.tabs[currentTab].nodes;
+    const edges = flowTabs.tabs[currentTab].edges;
+
+    const nodesSorted = nodesTopologicalSort(nodes, edges);
+    const flowFile = convertFlowToJson(nodesSorted, edges, true);
+    socket?.emit('process_file',
+      {
+        jsonFile: JSON.stringify(flowFile),
+        openaiApiKey: config?.openaiApiKey,
+        stabilityaiApiKey: config?.stabilityaiApiKey,
+      });
+    setIsRunning(true);
+  }
+
+  const handleChangeRun = (runStatus: boolean) => {
+    setIsRunning(runStatus);
+  }
+
+  const handleChangeTab = (index: number) => {
+    if (!isRunning) {
+      setCurrentTab(index);
+    } else {
+      toastFastInfoMessage(t('CannotChangeTabWhileRunning'));
+    }
+  }
+
   return (
     <FlowManagerContainer>
-      <TabsContainer>
+      <TabsContainer className='max-h-12 py-2'>
+        <img src="logo.png" className='ml-5 mr-5 mx-auto max-w-full max-h-full' alt="Logo"></img>
         <Tabs>
           {flowTabs.tabs.map((tab, index) => (
             <TabButton
               key={index}
               active={index === currentTab}
-              onClick={() => setCurrentTab(index)}
+              onClick={() => handleChangeTab(index)}
             >
               {t('Flow')} {index + 1}
             </TabButton>
@@ -108,6 +144,7 @@ const FlowTabs = () => {
           <FaPlus />
         </AddTabButton>
         <RightControls>
+          <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
           <ShowOutputButton onClick={handleToggleOutput}>
             <FaEye />
           </ShowOutputButton>
@@ -116,32 +153,21 @@ const FlowTabs = () => {
           </ToggleThemeButton>
         </RightControls>
       </TabsContainer>
-      {/* <FeedbackIcon>Feedback ?</FeedbackIcon> */}
+      <FeedbackIcon className="fixed right-10 top-12 px-6 bg-slate-500 text-slate-100 z-10 rounded-b-md invisible:sd visible:md">Feedback ?</FeedbackIcon>
       <Flow
         key={`flow-${currentTab}-${refresh}`}
         nodes={flowTabs.tabs[currentTab].nodes}
         edges={flowTabs.tabs[currentTab].edges}
         onFlowChange={handleFlowChange}
         showOnlyOutput={showOnlyOutput}
+        isRunning={isRunning}
+        onRunChange={handleChangeRun}
       />
     </FlowManagerContainer>
   );
 };
 
 const FeedbackIcon = styled.div`
-  color: #ffffff;
-  background-color: red;
-  font-size:  0.9em;
-  position: fixed;
-  left: 90%;
-  top: 8%;
-  width: 5%;
-  padding: 10px;
-  transform: translateY(-50%);
-  z-index: 9;
-  border-radius: 10%;
-  overflow: hidden;
-  white-space: nowrap;
 `;
 
 const FlowManagerContainer = styled.div`
@@ -156,9 +182,8 @@ const TabsContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 10px;
   background: linear-gradient(to right, ${({ theme }) => theme.tabBarBg}, ${({ theme }) => darken(0.01, theme.tabBarBg)});
-  z-index: 10;
+  z-index: 11;
   font-family: Roboto;
   border-bottom: solid;
   border-color: rgb(53 52 52 / 30%);
@@ -169,6 +194,7 @@ const Tabs = styled.div`
   overflow-y: hidden;
   overflow-x: auto;
   padding-bottom: 3px;
+  max-width: 60%;
 `;
 
 export const TabButton = styled.button<{ active: boolean }>`

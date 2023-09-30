@@ -13,16 +13,14 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
-import RightIconButton from './buttons/configurationButton/ConfigurationButton';
-import ConfigPopup from './popups/configPopup/ConfigPopup';
+import RightIconButton from './buttons/ConfigurationButton';
+import ConfigPopup from './popups/ConfigPopup';
 import { FiHelpCircle } from 'react-icons/fi';
-import ButtonPlayAll from './buttons/buttonPlayAll';
-import HelpPopup from './popups/helpPopup/HelpPopup';
-import { convertFlowToJson, nodesTopologicalSort } from '../utils/flowUtils';
+import HelpPopup from './popups/HelpPopup';
 import DnDSidebar from './side-views/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
 import { ControlsStyled, MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
-import UserMessagePopup, { MessageType, UserMessage } from './popups/userMessagePopup/UserMessagePopup';
+import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
 import { SocketContext } from './providers/SocketProvider';
 import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
 import { NodeType, allNodeTypes, getAllNodeTypesComponentMapping, specificNodeTypes } from '../utils/mappings';
@@ -34,6 +32,8 @@ export interface FlowProps {
   edges?: Edge[];
   onFlowChange?: (nodes: Node[], edges: Edge[]) => void;
   showOnlyOutput?: boolean;
+  isRunning: boolean;
+  onRunChange: (isRunning: boolean) => void;
 }
 
 function Flow(props: FlowProps) {
@@ -52,7 +52,6 @@ function Flow(props: FlowProps) {
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
   const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
   const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
   const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
   const [errorCount, setErrorCount] = useState<number>(0);
 
@@ -106,13 +105,13 @@ function Flow(props: FlowProps) {
 
   const onError = (data: any) => {
     setCurrentUserMessage({ content: data.error, type: MessageType.Error });
-    setIsRunning(false);
+    props.onRunChange(false);
     setErrorCount(prevErrorCount => prevErrorCount + 1);
     setIsPopupOpen(true);
   }
 
   const onRunEnd = (data: any) => {
-    setIsRunning(false);
+    props.onRunChange(false);
   }
 
   const onCurrentNodeRunning = (data: any) => {
@@ -221,24 +220,6 @@ function Flow(props: FlowProps) {
     setEdges(edges);
   }
 
-  const handlePlay = () => {
-    if (!verifyConfiguration()) {
-      toastInfoMessage(t('ApiKeyRequiredMessage'));
-      return;
-    }
-
-    const nodesSorted = nodesTopologicalSort(nodes, edges);
-    const flowFile = convertFlowToJson(nodesSorted, edges, true);
-    socket?.emit('process_file',
-      {
-        jsonFile: JSON.stringify(flowFile),
-        openaiApiKey: config?.openaiApiKey,
-        stabilityaiApiKey: config?.stabilityaiApiKey,
-      });
-    setIsRunning(true);
-  }
-
-
   const handleUpdateNodeData = (nodeId: string, data: any) => {
     const updatedNodes = nodes.map((node) => {
       if (node.id === nodeId) {
@@ -256,7 +237,7 @@ function Flow(props: FlowProps) {
 
   return (
     <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput}
-      isRunning={isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount}
+      isRunning={props.isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount}
       onUpdateNodeData={handleUpdateNodeData} onUpdateNodes={handleUpdateNodes}>
       <div style={{ height: '100%' }} onClick={handleNodesClick}>
         <div className="reactflow-wrapper" style={{ height: '100%' }} ref={reactFlowWrapper}>
@@ -284,7 +265,6 @@ function Flow(props: FlowProps) {
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
         <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
         {isHelpOpen && <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />}
-        <ButtonPlayAll onClick={handlePlay} isRunning={isRunning} />
       </div>
     </NodeProvider>
   );

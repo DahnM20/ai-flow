@@ -13,6 +13,19 @@ export function toastInfoMessage(message: string) {
   });
 }
 
+export function toastFastInfoMessage(message: string) {
+  toast.info(message, {
+    position: "top-center",
+    autoClose: 500,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+    progress: undefined,
+    theme: "dark",
+  });
+}
+
 export function toastBottomInfoMessage(message: string) {
   toast.info(message, {
     position: "bottom-left",
