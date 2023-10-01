@@ -18,6 +18,9 @@ import { useIsPlaying } from '../../../hooks/useIsPlaying';
 import ImageUrlOutput from '../../shared/nodes-parts/ImageUrlOutput';
 import ImageBase64Output from '../../shared/nodes-parts/ImageBase64Output';
 import { GenericNodeData } from '../../../types/node';
+import HandleWrapper from '../../handles/HandleWrapper';
+import { toast } from 'react-toastify';
+import { toastFastInfoMessage, toastInfoMessage } from '../../../utils/toastUtils';
 
 interface GenericNodeProps {
     data: GenericNodeData;
@@ -194,23 +197,44 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     const handleCopyToClipboard = (event: any) => {
         event.stopPropagation();
-        if (data.outputData && typeof (data.outputData) == 'string')
+        if (data.outputData && typeof (data.outputData) == 'string') {
             copyToClipboard(data.outputData);
+            toastFastInfoMessage(t('copiedToClipboard'));
+        }
+    }
+
+    const handleChangeHandlePosition = (newPosition: Position, handleId: string) => {
+        onUpdateNodeData(id, {
+            ...data,
+            handles: {
+                ...data.handles,
+                [handleId]: newPosition
+            }
+        });
+        updateNodeInternals(id);
     }
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
     return (
-        <NodeContainer key={nodeId}>
-            {/* <NodeResizer color="#ff0071" isVisible={selected} minWidth={200} minHeight={30} maxWidth={700} onResizeEnd={handleResizeField}/> */}
+        <NodeContainer key={nodeId} >
             <NodeHeader onDoubleClick={toggleCollapsed}>
                 {
                     data.config.hasInputHandle &&
-                    <InputHandle className="handle" type="target" id={generateIdForHandle(0)} position={Position.Top} />
+                    <HandleWrapper id={generateIdForHandle(0)} position={
+                        !!data?.handles && data.handles[generateIdForHandle(0)]
+                            ? data.handles[generateIdForHandle(0)]
+                            : Position.Top}
+                        onChangeHandlePosition={handleChangeHandlePosition} />
                 }
                 <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
                 <NodeTitle>{t(data.config.nodeName)}</NodeTitle>
-                <OutputHandle className="handle-out" type="source" id={generateIdForHandle(0)} position={Position.Bottom} />
+                <HandleWrapper id={generateIdForHandle(1)} position={
+                    !!data?.handles && data.handles[generateIdForHandle(1)]
+                        ? data.handles[generateIdForHandle(1)]
+                        : Position.Bottom}
+                    onChangeHandlePosition={handleChangeHandlePosition}
+                    isOutput />
                 <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />
             </NodeHeader>
             <NodeBand />
@@ -227,7 +251,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 onClick={() => setShowLogs(!showLogs)}
             >
                 {showLogs && data.outputData && !outputIsImage
-                    && <StyledCopyIcon className="copy-icon" onClick={(event) => {
+                    && <StyledCopyIcon className="copy-icon hover:text-white" onClick={(event) => {
                         handleCopyToClipboard(event);
                     }} />}
                 {!showLogs && data.outputData

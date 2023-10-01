@@ -9,7 +9,8 @@ interface ImageUrlOutputProps {
 
 const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
 
-  const handleDownloadClick = () => {
+  const handleDownloadClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
     const link = document.createElement('a');
     link.href = url;
     link.download = name + '-output-generated.jpg';

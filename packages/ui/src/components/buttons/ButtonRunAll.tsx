@@ -9,17 +9,20 @@ interface ButtonRunAllProps {
 const ButtonRunAll: React.FC<ButtonRunAllProps> = ({ onClick, isRunning }) => {
 
     return (
-        <div className={`flex flex-row items-center gap-x-2 text-slate-100 
-                        ${isRunning ? 'bg-sky-500' : 'bg-sky-800'} 
-                        hover:bg-sky-500 
-                        py-1 px-2 rounded-md cursor-pointer`} onClick={onClick}>
+        <div className={`flex flex-row items-center justify-center gap-x-2 
+                ${isRunning
+                ? 'text-slate-200 bg-sky-500'
+                : 'text-sky-500 ring-sky-800 ring-2'} 
+                hover:bg-sky-500 
+                hover:text-slate-200
+                py-1 px-2 rounded-md cursor-pointer`} onClick={onClick}>
             <Button>
-                {isRunning ? <Spinner className='text-xl' /> : <FaPlay />}
+                {isRunning ? <Spinner className='text-xl ' /> : <FaPlay />}
             </Button>
 
             {
                 !isRunning &&
-                <div className='text-slate-200'>
+                <div>
                     RUN ALL
                 </div>
             }

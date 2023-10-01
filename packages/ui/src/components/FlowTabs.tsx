@@ -127,7 +127,7 @@ const FlowTabs = () => {
 
   return (
     <FlowManagerContainer>
-      <TabsContainer className='max-h-12 py-2'>
+      <TabsContainer className='max-h-12 py-2 bg-zinc-900'>
         <img src="logo.png" className='ml-5 mr-5 mx-auto max-w-full max-h-full' alt="Logo"></img>
         <Tabs>
           {flowTabs.tabs.map((tab, index) => (
@@ -148,9 +148,9 @@ const FlowTabs = () => {
           <ShowOutputButton onClick={handleToggleOutput}>
             <FaEye />
           </ShowOutputButton>
-          <ToggleThemeButton onClick={toggleTheme}>
+          {/* <ToggleThemeButton onClick={toggleTheme}>
             {dark ? <FiMoon /> : <FiSun />}
-          </ToggleThemeButton>
+          </ToggleThemeButton> */}
         </RightControls>
       </TabsContainer>
       <FeedbackIcon className="fixed right-10 top-12 px-6 bg-slate-500 text-slate-100 z-10 rounded-b-md invisible:sd visible:md">Feedback ?</FeedbackIcon>
@@ -182,7 +182,7 @@ const TabsContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background: linear-gradient(to right, ${({ theme }) => theme.tabBarBg}, ${({ theme }) => darken(0.01, theme.tabBarBg)});
+  /* background: linear-gradient(to right, ${({ theme }) => theme.tabBarBg}, ${({ theme }) => darken(0.01, theme.tabBarBg)}); */
   z-index: 11;
   font-family: Roboto;
   border-bottom: solid;

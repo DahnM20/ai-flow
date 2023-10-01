@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
-import { FaInfoCircle } from 'react-icons/fa';
+import { FaInfoCircle, FaToolbox } from 'react-icons/fa';
 import { nodeSectionMapping } from '../../nodesConfiguration/nodeConfig';
 import { memo, useState } from 'react';
 
@@ -17,21 +17,33 @@ const DnDSidebar = () => {
 
   return (
     <>
-      <DnDSidebarContainer isOpen={isOpen} onClick={() => setOpen(!isOpen)}>
+      <DnDSidebarContainer isOpen={isOpen} onClick={() => setOpen(!isOpen)} className='bg-zinc-950/50 shadow-md border-r-4 border-r-slate-800/50'>
         {nodeSectionMapping.map((section, index) => (
-          <Section key={index}>
-            <SectionTitle>{t(section.section)}</SectionTitle>
+          <Section key={index} className='flex flex-col gap-y-2 mb-5'>
+            <SectionTitle className="flex flex-row items-center gap-x-2 text-md text-slate-300 ml-1 py-1 border-b-2 border-b-slate-500/20">
+              <FaToolbox />{t(section.section)}
+            </SectionTitle>
             {section.nodes.map((node, nodeIndex) => (
               <Node
                 key={nodeIndex}
                 onDragStart={(event) => onDragStart(event, node.type)}
                 draggable
                 onClick={(e) => e.stopPropagation()}
+                className='flex flex-row w-full gap-x-1 text-md 
+                text-slate-200 
+                justify-center items-center text-center
+                h-auto py-2 rounded-md 
+                hover:ring-2
+                hover:ring-slate-200/50
+                font-medium
+                shadow-md
+                cursor-grab'
               >
                 {t(node.label)}
                 {
                   node.helpMessage &&
                   <StyledInfoIcon
+                    className='text-sm'
                     data-tooltip-id={`dnd-tooltip`}
                     data-tooltip-content={t(node.helpMessage)}
                   />
@@ -52,7 +64,7 @@ const DnDSidebarContainer = styled.div<{ isOpen: boolean }>`
   top: 0;
   height: 100%;
   width: 12%;
-  background: ${({ theme }) => theme.sidebarBg};
+  /* background: ${({ theme }) => theme.sidebarBg}; */
   z-index: 1;
   overflow-y: ${({ isOpen }) => (isOpen ? 'auto' : 'hidden')};
   padding: 75px 10px;
@@ -68,43 +80,20 @@ const DnDSidebarContainer = styled.div<{ isOpen: boolean }>`
 `;
 
 const Section = styled.div`
-  margin-bottom: 16px;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 1.1em;
+  /* font-size: 1.1em;
   font-weight: 600;
   margin-bottom: 8px;
-  color: ${({ theme }) => theme.accentText};
+  color: ${({ theme }) => theme.accentText}; */
 `;
 
 const Node = styled.div`
-  height: 10%;
-  padding: 10px 10px;
-  box-shadow: ${({ theme }) => theme.boxShadow};
-  border-radius: 4px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: grab;
-  background-color: ${({ theme }) => theme.bg};
-  color: ${({ theme }) => theme.text};
-  font-size: 1em;
-  font-weight: 500;
-  text-align: center;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.nodeBg};
-  }
-
-  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) right / 5% no-repeat, ${({ theme }) => theme.bg};
+  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) right / 2% no-repeat, ${({ theme }) => theme.bg};
 `;
 
 const StyledInfoIcon = styled(FaInfoCircle)`
-  margin-left: 4px;
-  color: #888;
-  font-size: 0.8em;
 `;
 
 export default memo(DnDSidebar);
