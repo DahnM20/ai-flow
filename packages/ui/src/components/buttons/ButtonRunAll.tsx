@@ -12,7 +12,7 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({ onClick, isRunning }) => {
         <div className={`flex flex-row items-center justify-center gap-x-2 
                 ${isRunning
                 ? 'text-slate-200 bg-sky-500'
-                : 'text-sky-500 ring-sky-800 ring-2'} 
+                : 'text-sky-500 ring-sky-800 bg-slate-800 ring-2'} 
                 hover:bg-sky-500 
                 hover:text-slate-200
                 py-1 px-2 rounded-md cursor-pointer`} onClick={onClick}>

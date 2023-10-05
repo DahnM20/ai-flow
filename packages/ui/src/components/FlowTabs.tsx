@@ -11,6 +11,7 @@ import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../u
 import { toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
 import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
+
 interface FlowTab {
   nodes: Node[];
   edges: Edge[];
@@ -127,20 +128,21 @@ const FlowTabs = () => {
 
   return (
     <FlowManagerContainer>
-      <TabsContainer className='max-h-12 py-2 bg-zinc-900'>
-        <img src="logo.png" className='ml-5 mr-5 mx-auto max-w-full max-h-full' alt="Logo"></img>
+      <TabsContainer className='flex flex-row items-center justify-center max-h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
+        <img src="logo.png" className='ml-14 mx-auto w-28' alt="Logo"></img>
         <Tabs>
           {flowTabs.tabs.map((tab, index) => (
             <TabButton
               key={index}
               active={index === currentTab}
               onClick={() => handleChangeTab(index)}
+              className={`relative ${index === currentTab ? 'text-slate-50' : 'text-slate-500'} hover:text-slate-50 text-md mr-5 px-2 py-2`}
             >
               {t('Flow')} {index + 1}
             </TabButton>
           ))}
         </Tabs>
-        <AddTabButton onClick={addFlowTab}>
+        <AddTabButton onClick={addFlowTab} className='text-lg text-slate-200 hover:text-slate-50 hover:ring-2 ring-slate-200 rounded-lg py-1 px-1'>
           <FaPlus />
         </AddTabButton>
         <RightControls>
@@ -153,7 +155,7 @@ const FlowTabs = () => {
           </ToggleThemeButton> */}
         </RightControls>
       </TabsContainer>
-      <FeedbackIcon className="fixed right-10 top-12 px-6 bg-slate-500 text-slate-100 z-10 rounded-b-md invisible:sd visible:md">Feedback ?</FeedbackIcon>
+      <FeedbackIcon className="fixed right-10 top-16 px-6 bg-sky-950 text-slate-100 z-10 rounded-b-md invisible:sd visible:md">Feedback ?</FeedbackIcon>
       <Flow
         key={`flow-${currentTab}-${refresh}`}
         nodes={flowTabs.tabs[currentTab].nodes}
@@ -179,14 +181,7 @@ const FlowManagerContainer = styled.div`
 const buttonPaddingValue = "8px 12px";
 
 const TabsContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  /* background: linear-gradient(to right, ${({ theme }) => theme.tabBarBg}, ${({ theme }) => darken(0.01, theme.tabBarBg)}); */
-  z-index: 11;
   font-family: Roboto;
-  border-bottom: solid;
-  border-color: rgb(53 52 52 / 30%);
 `;
 
 const Tabs = styled.div`
@@ -198,12 +193,6 @@ const Tabs = styled.div`
 `;
 
 export const TabButton = styled.button<{ active: boolean }>`
-  position: relative;
-  margin-right: 10px;
-  padding: ${buttonPaddingValue};
-  background-color: ${(props) => (props.theme.nodeInput)};
-  color: ${(props) => (props.active ? props.theme.text : props.theme.accentText)};
-  cursor: pointer;
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
   transform: ${(props) => (props.active ? 'scale(1.15)' : 'scale(1)')};
 
@@ -225,18 +214,6 @@ export const TabButton = styled.button<{ active: boolean }>`
 `;
 
 const AddTabButton = styled.div`
-  padding: ${buttonPaddingValue};
-  border: none;
-  background-color: ${({ theme }) => theme.nodeBg};
-  color: ${({ theme }) => theme.text};
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-  border-radius: 3%;
-
-  :hover {
-    background-color: ${({ theme }) => lighten(0.2, theme.nodeBg)};
-  }
-  
 `;
 
 const RightControls = styled.div`

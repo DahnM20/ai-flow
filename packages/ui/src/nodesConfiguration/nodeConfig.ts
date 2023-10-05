@@ -1,3 +1,4 @@
+import { FaImage, FaToolbox } from "react-icons/fa";
 import { NodeType } from "../utils/mappings";
 import { basicProcessorNodeConfig } from "./basicProcessorNode";
 import dallENodeConfig from "./dallENode";
@@ -7,6 +8,9 @@ import { promptNodeConfig } from "./promptNode";
 import stableDiffusionStabilityAiNodeConfig from "./stableDiffusionStabilityAiNode";
 import { urlNodeConfig } from "./urlNode";
 import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
+import { IconType } from "react-icons/lib";
+import { BsInputCursorText } from "react-icons/bs";
+import { AiOutlineRobot } from "react-icons/ai";
 
 export type SectionType = 'basic' | 'advanced';
 
@@ -51,6 +55,7 @@ const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
 
 export type NodeSection = {
     section: string;
+    icon?: any;
     nodes: DnDNode[];
 };
 
@@ -63,6 +68,7 @@ export type DnDNode = {
 export const nodeSectionMapping: NodeSection[] = [
     {
         section: 'Input',
+        icon: BsInputCursorText,
         nodes: [
             { label: 'Text', type: 'input-text', helpMessage: 'inputHelp' },
             { label: 'URL', type: 'url_input', helpMessage: 'urlInputHelp' },
@@ -71,12 +77,14 @@ export const nodeSectionMapping: NodeSection[] = [
     },
     {
         section: 'Models',
+        icon: AiOutlineRobot,
         nodes: [
             { label: 'NoContextPrompt', type: 'gpt-no-context-prompt', helpMessage: 'noContextPromptHelp' }
         ],
     },
     {
         section: 'ImageGeneration',
+        icon: FaImage,
         nodes: [
             { label: 'DALL-E', type: 'dalle-prompt', helpMessage: 'dallePromptHelp' },
             { label: 'Stable Diffusion', type: 'stable-diffusion-stabilityai-prompt', helpMessage: 'dallePromptHelp' }
@@ -84,6 +92,7 @@ export const nodeSectionMapping: NodeSection[] = [
     },
     {
         section: 'Tools',
+        icon: FaToolbox,
         nodes: [//{ label: 'DataSplitter', type: 'data-splitter', helpMessage: 'dataSplitterHelp' },
             { label: 'DataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp' }],
     }

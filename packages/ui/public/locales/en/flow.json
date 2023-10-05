@@ -24,7 +24,7 @@
     "GPT": "GPT Model",
     "GPTPrompt": "GPT Prompt",
     "DataSplitter": "Data Splitter",
-    "NoContextPrompt": "GPT Isolated Prompt",
+    "NoContextPrompt": "GPT Prompt",
     "PromptPlaceholder": "Enter your prompt here, for example 'Create a Twitter thread based on the data I sent you.'",
     "DallEPromptPlaceholder": "Enter your prompt here, for example 'A dog and a cat playing in the desert'",
     "ImageGeneration": "Image Generation",

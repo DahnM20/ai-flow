@@ -17,11 +17,12 @@ const DnDSidebar = () => {
 
   return (
     <>
-      <DnDSidebarContainer isOpen={isOpen} onClick={() => setOpen(!isOpen)} className='bg-zinc-950/50 shadow-md border-r-4 border-r-slate-800/50'>
+      <DnDSidebarContainer isOpen={isOpen} onClick={() => setOpen(!isOpen)} className='bg-zinc-950/50 shadow-md border-r-2 border-r-sky-900/50'>
         {nodeSectionMapping.map((section, index) => (
           <Section key={index} className='flex flex-col gap-y-2 mb-5'>
             <SectionTitle className="flex flex-row items-center gap-x-2 text-md text-slate-300 ml-1 py-1 border-b-2 border-b-slate-500/20">
-              <FaToolbox />{t(section.section)}
+              {section.icon && <section.icon />}
+              {t(section.section)}
             </SectionTitle>
             {section.nodes.map((node, nodeIndex) => (
               <Node
@@ -64,7 +65,6 @@ const DnDSidebarContainer = styled.div<{ isOpen: boolean }>`
   top: 0;
   height: 100%;
   width: 12%;
-  /* background: ${({ theme }) => theme.sidebarBg}; */
   z-index: 1;
   overflow-y: ${({ isOpen }) => (isOpen ? 'auto' : 'hidden')};
   padding: 75px 10px;
@@ -83,10 +83,6 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  /* font-size: 1.1em;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: ${({ theme }) => theme.accentText}; */
 `;
 
 const Node = styled.div`

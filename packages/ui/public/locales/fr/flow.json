@@ -23,7 +23,7 @@
     "Models": "Modèles",
     "GPT": "Modèle GPT",
     "GPTPrompt": "GPT Prompt",
-    "NoContextPrompt": "Prompt Isolé",
+    "NoContextPrompt": "GPT Prompt",
     "PromptPlaceholder": "Entrez votre prompt ici, par exemple 'Crée un thread Twitter basé sur les données que je t'ai envoyées.'",
     "DallEPromptPlaceholder": "Entrez votre prompt ici, par exemple 'Un chien et un chat jouant dans le désert'",
     "DataSplitter": "Data Splitter",
