@@ -1,13 +1,14 @@
 import { NodeProps } from "reactflow";
-import DataSplitterNode from "../components/nodes/dataSplitterNode/DataSplitterNode";
-import FileDropNode from "../components/nodes/fileDropNode/fileDropNode";
-import GenericNode from "../components/nodes/genericNode/GenericNode";
-import AIDataSplitterNode from "../components/nodes/aiDataSplitterNode/AIDataSplitterNode";
+import DataSplitterNode from "../components/nodes/DataSplitterNode";
+import FileDropNode from "../components/nodes/fileDropNode";
+import GenericNode from "../components/nodes/GenericNode";
+import AIDataSplitterNode from "../components/nodes/AIDataSplitterNode";
+import AIActionNode from "../components/nodes/AIActionNode";
 
 /**
  * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
  */
-export const allNodeTypes = ['gpt', 'file', 'url_input', 'dalle-prompt', 'data-splitter', 'ai-data-splitter', 'input-text', 'gpt-prompt', 'youtube_transcript_input', 'gpt-no-context-prompt', 'stable-diffusion-stabilityai-prompt'] as const;
+export const allNodeTypes = ['gpt', 'file', 'url_input', 'dalle-prompt', 'data-splitter', 'ai-data-splitter', 'input-text', 'gpt-prompt', 'youtube_transcript_input', 'gpt-no-context-prompt', 'ai-action', 'stable-diffusion-stabilityai-prompt'] as const;
 export type NodeType = typeof allNodeTypes[number];
 
 
@@ -18,6 +19,7 @@ export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> =
   "file": FileDropNode,
   "data-splitter": DataSplitterNode,
   "ai-data-splitter": AIDataSplitterNode,
+  "ai-action": AIActionNode,
 };
 
 

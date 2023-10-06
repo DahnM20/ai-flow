@@ -79,7 +79,8 @@ export const nodeSectionMapping: NodeSection[] = [
         section: 'Models',
         icon: AiOutlineRobot,
         nodes: [
-            { label: 'NoContextPrompt', type: 'gpt-no-context-prompt', helpMessage: 'noContextPromptHelp' }
+            { label: 'NoContextPrompt', type: 'gpt-no-context-prompt', helpMessage: 'noContextPromptHelp' },
+            { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp' }
         ],
     },
     {

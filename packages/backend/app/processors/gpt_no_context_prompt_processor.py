@@ -4,11 +4,12 @@ import openai
 
 class GPTNoContextPromptProcessor(APIContextProcessor):
     processor_type = "gpt-no-context-prompt"
+    DEFAULT_MODEL = "gpt-4"
 
     def __init__(self, config, api_context_data):
         super().__init__(config, api_context_data)
 
-        self.model = config.get("gptVersion")
+        self.model = config.get("gptVersion", GPTNoContextPromptProcessor.DEFAULT_MODEL)
         self.prompt = config["inputText"]
         self.api_key = self.get_api_key("session_openai_api_key")
 
