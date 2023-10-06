@@ -251,6 +251,7 @@ export const NodeInput = styled.input`
 `;
 
 export const InputHandle = styled(Handle)`
+  z-index: 45;
   background: #72c8fa;
   width: 10px;
   height: 10px;
@@ -266,6 +267,7 @@ export const InputHandle = styled(Handle)`
 `;
 
 export const OutputHandle = styled(Handle)`
+  z-index: 45;
   background: rgb(224, 166, 79);
   width: 10px;
   height: 10px;

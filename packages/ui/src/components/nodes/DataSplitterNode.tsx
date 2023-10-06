@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import styled from 'styled-components';
 import ReactTooltip, { Tooltip } from 'react-tooltip';
-import { NodeContext } from '../../providers/NodeProvider';
-import NodePlayButton from '../../shared/nodes-parts/NodePlayButton';
-import { generateIdForHandle } from '../../../utils/flowUtils';
-import { InputHandle, NodeTitle, OutputHandle } from '../../shared/Node.styles';
+import { NodeContext } from '../providers/NodeProvider';
+import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
+import { generateIdForHandle } from '../../utils/flowUtils';
+import { InputHandle, NodeTitle, OutputHandle } from '../shared/Node.styles';
 import { darken } from 'polished';
-import { useIsPlaying } from '../../../hooks/useIsPlaying';
+import { useIsPlaying } from '../../hooks/useIsPlaying';
 
 interface DataSplitterNodeData {
   splitChar: string;

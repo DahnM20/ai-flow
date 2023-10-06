@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
-import { NodeContext } from '../../providers/NodeProvider';
-import NodePlayButton from '../../shared/nodes-parts/NodePlayButton';
-import { generateIdForHandle } from '../../../utils/flowUtils';
-import { InputHandle, NodeTitle, OutputHandle } from '../../shared/Node.styles';
-import { useIsPlaying } from '../../../hooks/useIsPlaying';
+import { NodeContext } from '../providers/NodeProvider';
+import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
+import { generateIdForHandle } from '../../utils/flowUtils';
+import { InputHandle, NodeTitle, OutputHandle } from '../shared/Node.styles';
+import { useIsPlaying } from '../../hooks/useIsPlaying';
 
 interface AIDataSplitterNodeData {
   id: string;
