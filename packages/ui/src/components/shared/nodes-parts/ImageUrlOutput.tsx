@@ -21,7 +21,7 @@ const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
   return <OutputImageContainer>
     <OutputImage src={url} alt="Output Image" />
     <div
-      className='absolute top-2 right-3 px-1 py-1 text-slate-100 text-2xl bg-slate-600/75 hover:bg-sky-400/90 rounded-md'
+      className='absolute top-2 right-3 px-1 py-1 text-slate-100 text-2xl bg-slate-600/75 hover:bg-sky-600/90 rounded-md'
       onClick={handleDownloadClick}>
       <FaDownload />
     </div>

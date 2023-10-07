@@ -1,5 +1,5 @@
 import React, { useContext, memo } from 'react';
-import { FiCrosshair, FiDelete, FiDownload, FiUpload } from 'react-icons/fi';
+import { FiCrosshair, FiDownload, FiUpload } from 'react-icons/fi';
 import { Edge, Node } from 'reactflow';
 import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../../utils/flowUtils';
 import styled from 'styled-components';
@@ -75,23 +75,23 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
         <JSONViewContainer>
             <JSONViewButtons>
                 <JSONViewButton onClick={handleUploadClick}>
-                    <FiUpload className="json-view-icon" />
+                    <FiUpload />
                     {t('Upload')}
                 </JSONViewButton>
                 <JSONViewButton onClick={handleDownloadClick}>
-                    <FiDownload className="json-view-icon" />
+                    <FiDownload />
                     {t('Download')}
                 </JSONViewButton>
                 <JSONViewButton onClick={handleDeleteOutput} dangerous>
-                    <FiCrosshair className="json-view-icon" />
+                    <FiCrosshair />
                     {t('Delete Output')}
                 </JSONViewButton>
                 <JSONViewButton onClick={handleDeleteAll} dangerous>
-                    <FaExclamationTriangle className="json-view-icon" />
+                    <FaExclamationTriangle />
                     {t('Delete All')}
                 </JSONViewButton>
             </JSONViewButtons>
-            <JSONViewContent>{JSON.stringify(data, null, 2)}</JSONViewContent>
+            <JSONViewContent className='mt-5'>{JSON.stringify(data, null, 2)}</JSONViewContent>
         </JSONViewContainer>
     );
 
@@ -99,18 +99,6 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
 
 const JSONViewContainer = styled.div`
     padding: 20px;
-`;
-
-const JSONViewHeader = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-`;
-
-const JSONViewTitle = styled.div`
-    font-size: 20px;
-    font-weight: bold;
 `;
 
 const JSONViewButtons = styled.div`

@@ -42,7 +42,7 @@ function Flow(props: FlowProps) {
 
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
-  const { socket, verifyConfiguration, config } = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
 
   const nodeTypes = useMemo(() => getAllNodeTypesComponentMapping(), []);
 

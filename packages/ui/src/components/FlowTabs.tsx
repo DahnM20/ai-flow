@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Flow from './Flow';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { FiSun, FiMoon, FiMail } from 'react-icons/fi';
 import { Node, Edge } from 'reactflow';
 import { ThemeContext } from './providers/ThemeProvider';
 import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaPlus } from 'react-icons/fa';
 import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../utils/flowUtils';
-import { toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
+import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
 import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
 
@@ -126,6 +126,10 @@ const FlowTabs = () => {
     }
   }
 
+  const handleClickFeedback = () => {
+    toastCustomIconInfoMessage('You can send me a DM on X/Twitter, or open an Issue on Github :) My links are at the bottom of the configuration menu', FiMail)
+  }
+
   return (
     <FlowManagerContainer>
       <TabsContainer className='flex flex-row items-center justify-center max-h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
@@ -146,16 +150,23 @@ const FlowTabs = () => {
           <FaPlus />
         </AddTabButton>
         <RightControls>
-          <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
-          <ShowOutputButton onClick={handleToggleOutput}>
-            <FaEye />
-          </ShowOutputButton>
+          <div className='px-2 py-2'>
+            <FaEye className='text-slate-400 hover:text-slate-50'
+              onClick={handleToggleOutput} />
+          </div>
+          <div className='pr-2'>
+            <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
+          </div>
           {/* <ToggleThemeButton onClick={toggleTheme}>
             {dark ? <FiMoon /> : <FiSun />}
           </ToggleThemeButton> */}
         </RightControls>
       </TabsContainer>
-      <FeedbackIcon className="fixed right-10 top-16 px-6 bg-sky-950 text-slate-100 z-10 rounded-b-md invisible:sd visible:md">Feedback ?</FeedbackIcon>
+      <FeedbackIcon className="fixed right-10 top-14 
+                              pt-1 px-6 
+                              bg-sky-950 text-slate-100 
+                              z-10 rounded-b-md invisible:sd visible:md cursor-pointer
+                              hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>Feedback ?</FeedbackIcon>
       <Flow
         key={`flow-${currentTab}-${refresh}`}
         nodes={flowTabs.tabs[currentTab].nodes}
@@ -233,18 +244,5 @@ const ToggleThemeButton = styled.button`
     color:${({ theme }) => theme.text};
   }
 `;
-
-const ShowOutputButton = styled.div`
-  padding: 8px 12px;
-  border: none;
-  background-color: ${({ theme }) => theme.accent};
-  color: ${({ theme }) => theme.accentText};
-  cursor: pointer;
-
-  :hover {
-    color:${({ theme }) => theme.text};
-  }
-`;
-
 
 export default FlowTabs;

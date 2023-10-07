@@ -82,11 +82,11 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
       <div className="output-strip-node-outputs">
         {data.nbOutput && Array.from(Array(data.nbOutput)).map((_, index) => (
           <OutputHandle
-            key={generateIdForHandle(index)}
+            key={generateIdForHandle(index, true)}
             data-tooltip-id={`${id}-tooltip`}
             data-tooltip-content={data.outputData ? data.outputData[index] : ''}
             type="source"
-            id={generateIdForHandle(index)}
+            id={generateIdForHandle(index, true)}
             position={Position.Right}
             style={{
               background: data?.outputData ? (data.outputData[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',

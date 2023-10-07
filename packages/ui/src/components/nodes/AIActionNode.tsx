@@ -13,6 +13,8 @@ import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
 import { Popover } from '@headlessui/react'
 import { actions } from "../../nodesConfiguration/data/aiAction";
 import { useTranslation } from 'react-i18next';
+import { useRefreshOnAppearanceChange } from '../../hooks/useRefreshOnAppearanceChange';
+import useHandleShowOutput from '../../hooks/useHandleShowOutput';
 
 interface AIActionNodeData extends GenericNodeData {
     inputText: string;
@@ -43,7 +45,18 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
     }, [])
 
 
-    const { onUpdateNodeData } = useContext(NodeContext);
+
+    const { showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);
+
+    useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
+
+    useHandleShowOutput({
+        showOnlyOutput,
+        id: id,
+        setCollapsed: setCollapsed,
+        setShowLogs: setShowLogs,
+        updateNodeInternals: updateNodeInternals
+    });
 
     useEffect(() => {
         onUpdateNodeData(id, {
@@ -88,7 +101,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
 
     return (
         <AIActionNodeContainer
-            className='flex flex-col items-center w-96 justify-center h-auto text-slate-300 rounded-md shadow-md'
+            className='flex flex-col items-center w-96 justify-center h-auto text-slate-300 rounded-md shadow-lg'
             selected={selected}
             collapsed={collapsed}
             key={id}

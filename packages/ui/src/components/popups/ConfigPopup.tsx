@@ -1,4 +1,4 @@
-import { FaGithub, FaTwitter, FaCoffee } from 'react-icons/fa';
+import { FaGithub, FaXTwitter } from 'react-icons/fa6';
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { SocketContext, WSConfiguration } from '../providers/SocketProvider';
@@ -68,8 +68,8 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
           <Header>
             <Title>{t('configurationTitle')}</Title>
           </Header>
-          <SoftMessage>{t('apiKeyDisclaimer')}</SoftMessage>
           <SoftMessage>{t('openSourceDisclaimer')}</SoftMessage>
+          <SoftMessage>{t('apiKeyDisclaimer')}</SoftMessage>
           <SoftMessage>{t('apiKeyRevokeReminder')}</SoftMessage>
           <Field>
             <Label htmlFor="api-key">{t('openAIKeyFieldLabel')}</Label>
@@ -90,8 +90,7 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
             </MessageContainer>
             <Message>{t('supportProjectPrompt')}</Message>
             <Icons>
-              <Icon href="https://twitter.com/DahnM20" target="_blank" rel="noopener noreferrer"><FaTwitter /></Icon>
-              {/* <Icon href="https://ko-fi.com/YOUR-ACCOUNT-HERE" target="_blank" rel="noopener noreferrer"><FaCoffee /></Icon> */}
+              <Icon href="https://twitter.com/DahnM20" target="_blank" rel="noopener noreferrer"><FaXTwitter /></Icon>
             </Icons>
           </Footer>
         </Content>

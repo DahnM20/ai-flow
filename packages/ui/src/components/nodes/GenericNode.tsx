@@ -51,6 +51,8 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         setIsPlaying(false);
         if (!data.config.defaultHideOutput) {
             setShowLogs(true);
+        } else {
+            setShowLogs(false);
         }
         updateNodeInternals(id);
     }, [data.lastRun]);
