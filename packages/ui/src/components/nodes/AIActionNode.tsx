@@ -6,13 +6,13 @@ import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
 import { generateIdForHandle } from '../../utils/flowUtils';
 import { InputHandle, NodeBand, NodeLogs, NodeLogsText, NodeTitle, OutputHandle } from '../shared/Node.styles';
 import { useIsPlaying } from '../../hooks/useIsPlaying';
-import { FaRobot } from 'react-icons/fa';
+import { FaCogs, FaRobot } from 'react-icons/fa';
 import { GenericNodeData } from '../../types/node';
 import HandleWrapper from '../handles/HandleWrapper';
-import { t } from 'i18next';
 import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
 import { Popover } from '@headlessui/react'
 import { actions } from "../../nodesConfiguration/data/aiAction";
+import { useTranslation } from 'react-i18next';
 
 interface AIActionNodeData extends GenericNodeData {
     inputText: string;
@@ -26,13 +26,21 @@ interface AIActionNodeProps extends NodeProps {
 const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, selected }) => {
 
     const updateNodeInternals = useUpdateNodeInternals();
+    const { t } = useTranslation('aiActions');
 
     const [isPlaying, setIsPlaying] = useIsPlaying();
     const [collapsed, setCollapsed] = useState(false);
     const [showLogs, setShowLogs] = useState<boolean>(false);
 
     const inputHandleId = useMemo(() => generateIdForHandle(0), []);
-    const outputHandleId = useMemo(() => generateIdForHandle(0), []);
+    const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
+
+    const allActions = useMemo(() => {
+        const savedCustomActions = localStorage.getItem('customActions');
+        const customActions = savedCustomActions ? JSON.parse(savedCustomActions) : [];
+        const allActions = [...actions, ...customActions];
+        return allActions;
+    }, [])
 
 
     const { onUpdateNodeData } = useContext(NodeContext);
@@ -80,7 +88,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
 
     return (
         <AIActionNodeContainer
-            className='flex flex-col items-center w-72 justify-center h-auto text-slate-300 rounded-md shadow-md'
+            className='flex flex-col items-center w-96 justify-center h-auto text-slate-300 rounded-md shadow-md'
             selected={selected}
             collapsed={collapsed}
             key={id}
@@ -92,29 +100,40 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
                     : Position.Top}
                 onChangeHandlePosition={handleChangeHandlePosition} />
 
-            <NodeBand className='w-full rounded-t-md h-2 mb-2' />
+            <div className='flex flex-row justify-between items-center w-full px-2' >
+                <Popover className="relative">
+                    <Popover.Button className={`text-3xl hover:text-sky-200 hover:animate-pulse cursor-pointer py-1 ${!data.actionName ? '' : ''}`} >
+                        {
+                            !data.actionName
+                                ? <>
+                                    <span className="absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75 ml-4 animate-ping"></span>
+                                    <span className="absolute inline-flex rounded-full h-2 w-2 bg-yellow-300 ml-4"></span>
+                                    <FaCogs />
+                                </>
+                                : <FaRobot />
+                        }
+                    </Popover.Button>
+                    <Popover.Overlay className="fixed inset-0 bg-black opacity-30" />
+                    <Popover.Panel className="absolute bg-slate-800  text-slate-200 px-2 py-2 z-50">
+                        <div className="grid grid-row-4">
+                            {allActions.map(action => (
+                                <div key={action.name}
+                                    onClick={() => handleActionClick(action.name, action.prompt)}
+                                    className="cursor-pointer hover:bg-slate-600 p-2 rounded w-64">
+                                    {t(action.name)}
+                                </div>
+                            ))}
+                        </div>
+                    </Popover.Panel>
+                </Popover>
 
-            <Popover className="relative">
-                <Popover.Button><FaRobot className='text-6xl hover:text-sky-200 hover:animate-pulse cursor-pointer' /></Popover.Button>
-                <Popover.Overlay className="fixed inset-0 bg-black opacity-30" />
-                <Popover.Panel className="absolute bg-slate-800  text-slate-200 px-2 py-2 z-50">
-                    <div className="grid grid-row-4">
-                        {actions.map(action => (
-                            <div key={action.name}
-                                onClick={() => handleActionClick(action.name, action.prompt)}
-                                className="cursor-pointer hover:bg-slate-600 p-2 rounded w-64">
-                                {action.name}
-                            </div>
-                        ))}
-                    </div>
-                </Popover.Panel>
-            </Popover>
+                <div className='text-lg font-bold text-center items-center mx-auto py-2 px-2'> {t(data.actionName)} </div>
 
-            <div className='text-2xl font-bold text-center items-center mx-auto py-2 px-2'> {data.actionName} </div>
-
-            <div className='mb-5' >
-                <NodePlayButton isPlaying={isPlaying} nodeName={data.name} onClick={handlePlayClick} />
+                <div>
+                    <NodePlayButton isPlaying={isPlaying} nodeName={data.name} onClick={handlePlayClick} />
+                </div>
             </div>
+            <NodeBand className='w-full h-1' />
 
 
             <HandleWrapper id={outputHandleId} position={

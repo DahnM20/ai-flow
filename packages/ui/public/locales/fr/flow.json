@@ -29,13 +29,15 @@
     "DataSplitter": "Data Splitter",
     "ImageGeneration": "Génération d'image",
     "AdvancedSection": "Avancé",
+    "AiAction": "Action IA",
     "inputHelp": "Ce noeud sert à saisir du texte.",
     "urlInputHelp": "Saisissez une URL valide et le noeud récupérera les données de cette URL si javascript n'est pas nécessaire pour charger la page.",
     "youtubeTranscriptHelp": "Ce noeud récupère les sous titres d'une vidéo Youtube à partir de son URL",
     "gptHelp": "Ce noeud permet de configurer un modèle GPT, de lui préciser son rôle, et les données sur lesquelles il se basera pour répondre.",
     "gptPromptHelp": "Ce noeud permet d'interroger un modèle GPT. Il partage son contexte avec les autres noeuds connectés au modèle.",
     "noContextPromptHelp": "Ce noeud permet d'interroger GPT sans contexte, juste à partir de données d'entrées et d'un prompt. Pas besoin de le connecter à un modèle.",
-    "dallePromptHelp": "Ce noeud utilise le modèle DALL-E pour générer des images à partir d'une description textuelle.",
+    "stableDiffusionPromptHelp": "Ce noeud utilise le modèle Stable Diffusion pour générer des images à partir d'une description textuelle.",
+    "aiActionPromptHelp": "Ce noeud permet de réaliser des actions simples avec GPT-4 sans préciser de prompt.",
     "dataSplitterHelp": "Ce noeud sert à diviser les données en plusieurs parties. Vous pouvez spécifier en amont combien de parties vous voulez créer. Vous pouvez également le lancer unitairement pour qu'il trouve le nombre exact de sorties à générer.",
     "socketConnectionLost": "La connexion a été perdue. \n\n Vous pouvez réessayer plus tard ou installer l'application localement pour éviter ce type de problème à l'avenir."
 }

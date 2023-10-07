@@ -1,42 +1,42 @@
 export const actions = [
     {
         name: "Summary",
-        prompt: "Please make a short summary of the important parts of the following text. The response should be in the language of the text provided.",
+        prompt: "Based on the text I previously provided, please summarize it, highlighting the key points. Respond in the language of the provided text.",
         description: "Summarize the content"
     },
     {
-        name: "Spell Check",
-        prompt: "Please check the text for any spelling errors. The response should be in the language of the text provided.",
-        description: "Review the text for orthographic mistakes"
+        name: "SpellCheck",
+        prompt: "Based on the text I previously provided, review it for spelling errors and highlight any found. Respond in the language of the provided text.",
+        description: "Identify orthographic mistakes"
     },
     {
-        name: "Visual Prompt",
-        prompt: "Please generate a prompt for an AI image generator tool like DALL-E. The prompt must be a representation of the provided information.",
-        description: "Create a visual aid based on input"
+        name: "VisualPrompt",
+        prompt: "From the text I previously provided, create a descriptive prompt suitable for an AI visual generator like DALL-E.",
+        description: "Generate a visual cue from the content"
     },
     {
-        name: "Constructive Critique",
-        prompt: "Please provide constructive feedback on the provided content. The response should be in the language of the text provided.",
-        description: "Give insightful feedback"
+        name: "ConstructiveCritique",
+        prompt: "Analyze the text I previously provided and give constructive feedback. Respond in the language of the provided text.",
+        description: "Provide valuable feedback"
     },
     {
-        name: "Simple Explanation",
-        prompt: "Please explain the following topic in simple terms. The response should be in the language of the text provided.",
-        description: "Break down the topic for easy understanding"
+        name: "SimpleExplanation",
+        prompt: "Based on the text I previously provided, simplify and explain it. Respond in the language of the provided text.",
+        description: "Clarify the topic for a broader audience"
     },
     {
         name: "Paraphrase",
-        prompt: "Please paraphrase the following text while retaining its original meaning. The response should be in the language of the text provided.",
-        description: "Reword the content without changing its essence"
+        prompt: "Retain the essence of the text I previously provided, but rephrase it. Respond in the language of the provided text.",
+        description: "Alter wording without changing meaning"
     },
     {
-        name: "Sentiment Analysis",
-        prompt: "Please analyze and identify the sentiment (positive, negative, neutral) of the following text. The response should be in the language of the text provided.",
-        description: "Assess the emotional tone of content"
+        name: "SentimentAnalysis",
+        prompt: "Determine the sentiment of the text I previously provided: positive, negative, or neutral. Respond in the language of the provided text.",
+        description: "Gauge the mood of the content"
     },
     {
-        name: "Text Extension",
-        prompt: "Please expand on the provided text to give a more detailed explanation. The response should be in the language of the text provided.",
-        description: "Elaborate on a brief text"
+        name: "TextExtension",
+        prompt: "Elaborate on the content I previously provided, offering a more detailed explanation. Respond in the language of the provided text.",
+        description: "Expand on a concise text"
     }
 ];

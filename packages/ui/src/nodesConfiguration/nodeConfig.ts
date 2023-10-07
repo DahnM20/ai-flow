@@ -88,7 +88,7 @@ export const nodeSectionMapping: NodeSection[] = [
         icon: FaImage,
         nodes: [
             { label: 'DALL-E', type: 'dalle-prompt', helpMessage: 'dallePromptHelp' },
-            { label: 'Stable Diffusion', type: 'stable-diffusion-stabilityai-prompt', helpMessage: 'dallePromptHelp' }
+            { label: 'Stable Diffusion', type: 'stable-diffusion-stabilityai-prompt', helpMessage: 'stableDiffusionPromptHelp' }
         ],
     },
     {
