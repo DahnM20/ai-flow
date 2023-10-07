@@ -41,7 +41,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
     const inputHandleId = useMemo(() => generateIdForHandle(0), []);
-    const outputHandleId = useMemo(() => generateIdForHandle(0), []);
+    const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
 
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
