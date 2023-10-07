@@ -32,7 +32,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
 
     const [isPlaying, setIsPlaying] = useIsPlaying();
     const [collapsed, setCollapsed] = useState(false);
-    const [showLogs, setShowLogs] = useState<boolean>(false);
+    const [showLogs, setShowLogs] = useState<boolean>(true);
 
     const inputHandleId = useMemo(() => generateIdForHandle(0), []);
     const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
