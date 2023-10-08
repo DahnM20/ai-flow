@@ -37,7 +37,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     const [collapsed, setCollapsed] = useState<boolean>(true);
     const [showLogs, setShowLogs] = useState<boolean>(data.config.defaultHideOutput == null ? true : !data.config.defaultHideOutput);
-    const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
+    const [nodeId, setNodeId] = useState<string>(`${data.name}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
     const inputHandleId = useMemo(() => generateIdForHandle(0), []);
@@ -47,7 +47,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-        setNodeId(`${data.id}-${Date.now()}`);
+        setNodeId(`${data.name}-${Date.now()}`);
         setIsPlaying(false);
         if (!data.config.defaultHideOutput) {
             setShowLogs(true);
@@ -144,9 +144,9 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                     }
                     return (
                         <>
-                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)}>
+                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)} defaultValue={data[field.name]}>
                                 {field.options?.map(option => (
-                                    <NodeSelectOption key={`${id}-${option}`} selected={data[field.name] === option.value}>
+                                    <NodeSelectOption key={`${id}-${option.value}`} >
                                         {t(option.label)}
                                     </NodeSelectOption>
                                 ))}
@@ -163,7 +163,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                                 <OptionSelector>
                                     {field.options?.map(option => (
                                         <OptionButton
-                                            key={`${id}-${option}`}
+                                            key={`${id}-${option.value}`}
                                             selected={data[field.name] === option.value}
                                             onClick={() => handleOptionChange(field.name, option.value)}
                                         >
