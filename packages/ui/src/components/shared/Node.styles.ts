@@ -37,16 +37,6 @@ export const NodeBand = styled.div`
   background: ${({ theme }) => theme.accent};
 `;
 
-export const NodeWrapper = styled.div`
-  position: relative;
-  resize: both;
-  background-color: ${({ theme }) => theme.nodeBg};
-  box-shadow: ${({ theme }) => theme.boxShadow};
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  margin-left: 10px;
-`;
-
 export const NodeTitle = styled.div`
   font-size: 1.1em;
   font-weight: 600;
@@ -176,7 +166,7 @@ export const NodeSelect = styled.select`
   transition: all 0.3s ease;
 `;
 
-export const NodeSelectOption = styled.option<{ selected: boolean }>`
+export const NodeSelectOption = styled.option`
   padding: 10px 16px;
 `;
 
