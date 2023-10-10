@@ -133,7 +133,10 @@ const FlowTabs = () => {
   return (
     <FlowManagerContainer>
       <TabsContainer className='flex flex-row items-center justify-center max-h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
-        <img src="logo.png" className='ml-14 mx-auto w-28' alt="Logo"></img>
+        <div className='ml-4 mx-auto flex flex-row text-center align-middle justify-center'>
+          <img src="logo.png" className='w-16' alt="Logo"></img>
+          <h1 className='flex text-slate-200 items-center justify-center px-2 text-xl font-bold sm:invisible md:visible'> AI-Flow </h1>
+        </div>
         <Tabs>
           {flowTabs.tabs.map((tab, index) => (
             <TabButton
@@ -162,11 +165,14 @@ const FlowTabs = () => {
           </ToggleThemeButton> */}
         </RightControls>
       </TabsContainer>
-      <FeedbackIcon className="fixed right-10 top-14 
-                              pt-1 px-6 
+      <FeedbackIcon className="absolute right-10 top-0 h-24 w-28 
+                              px-6 
                               bg-sky-950 text-slate-100 
-                              z-10 rounded-b-md invisible:sd visible:md cursor-pointer
-                              hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>Feedback ?</FeedbackIcon>
+                              z-10 rounded-b-md sm:invisible md:visible cursor-pointer
+                              flex items-center justify-center
+                              hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>
+        <div className='absolute bottom-0 pb-1' > Feedback ? </div>
+      </FeedbackIcon>
       <Flow
         key={`flow-${currentTab}-${refresh}`}
         nodes={flowTabs.tabs[currentTab].nodes}
