@@ -27,14 +27,14 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
         <PopupContent className='bg-zinc-900 text-slate-300 py-3 px-4 overflow-auto text-lg max-h-96'>
           <div className='flex flex-col justify-center items-center border-b-2 border-zinc-600/50 py-3 text-xl font-bold'>
             <div>
-              Full documentation is available here :
+              {t('docAvailable')}
             </div>
             <div>
               <a href="https://docs.ai-flow.net/docs/intro" className='text-[#8FB0A1] hover:text-slate-100 hover:underline' target="_blank"> docs.ai-flow.net </a>
             </div>
           </div>
           <div className='flex justify-center py-2 text-xl font-bold'>
-            Tips
+            {t("tipsSection")}
           </div>
           <PopupTipList>
             {tips.map((tip, index) => (
