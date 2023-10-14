@@ -1,6 +1,9 @@
 import { useContext, useEffect } from "react";
 import FlowTabs from "./FlowTabs"
 import { ThemeContext } from "./providers/ThemeProvider";
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
+import { DndProvider } from 'react-dnd';
 
 const App = () => {
 
@@ -14,7 +17,15 @@ const App = () => {
         }
     }, [dark])
 
-    return <FlowTabs />
+
+
+    function isTouchDevice() {
+        return 'ontouchstart' in window || navigator.maxTouchPoints;
+    }
+
+    return <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
+        <FlowTabs />
+    </DndProvider>
 }
 
 

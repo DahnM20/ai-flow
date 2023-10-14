@@ -1,19 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
-import { FaInfoCircle, FaToolbox } from 'react-icons/fa';
-import { nodeSectionMapping } from '../../nodesConfiguration/nodeConfig';
+import { nodeSectionMapping } from '../../../nodesConfiguration/nodeConfig';
 import { memo, useState } from 'react';
+import DraggableNode from './DraggableNode';
+
+
 
 
 const DnDSidebar = () => {
   const { t } = useTranslation('flow');
   const [isOpen, setOpen] = useState(true);
-
-  const onDragStart = (event: any, nodeType: any) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
-    event.dataTransfer.effectAllowed = 'move';
-  };
 
   return (
     <>
@@ -25,31 +22,7 @@ const DnDSidebar = () => {
               {t(section.section)}
             </SectionTitle>
             {section.nodes.map((node, nodeIndex) => (
-              <Node
-                key={nodeIndex}
-                onDragStart={(event) => onDragStart(event, node.type)}
-                draggable
-                onClick={(e) => e.stopPropagation()}
-                className='flex flex-row w-full gap-x-1 text-md 
-                text-slate-200 
-                justify-center items-center text-center
-                h-auto py-2 rounded-md 
-                hover:ring-2
-                hover:ring-slate-200/50
-                font-medium
-                shadow-md
-                cursor-grab'
-              >
-                {t(node.label)}
-                {
-                  node.helpMessage &&
-                  <StyledInfoIcon
-                    className='text-sm'
-                    data-tooltip-id={`dnd-tooltip`}
-                    data-tooltip-content={t(node.helpMessage)}
-                  />
-                }
-              </Node>
+              <DraggableNode key={nodeIndex} node={node} />
             ))}
           </Section>
         ))}
@@ -83,13 +56,6 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-`;
-
-const Node = styled.div`
-  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) right / 2% no-repeat, ${({ theme }) => theme.bg};
-`;
-
-const StyledInfoIcon = styled(FaInfoCircle)`
 `;
 
 export default memo(DnDSidebar);

@@ -17,7 +17,7 @@ import RightIconButton from './buttons/ConfigurationButton';
 import ConfigPopup from './popups/ConfigPopup';
 import { FiHelpCircle } from 'react-icons/fi';
 import HelpPopup from './popups/HelpPopup';
-import DnDSidebar from './side-views/DnDSidebar';
+import DnDSidebar from './side-views/DndSidebar/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
 import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
@@ -26,6 +26,7 @@ import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
 import { NodeType, allNodeTypes, getAllNodeTypesComponentMapping, specificNodeTypes } from '../utils/mappings';
 import { useTranslation } from 'react-i18next';
 import { toastInfoMessage } from '../utils/toastUtils';
+import { useDrop } from 'react-dnd';
 
 export interface FlowProps {
   nodes?: Node[];
@@ -41,6 +42,17 @@ function Flow(props: FlowProps) {
   const { t } = useTranslation('flow');
 
   const reactFlowWrapper = useRef(null);
+
+  const [{ isOver }, dropRef] = useDrop({
+    accept: 'NODE',
+    drop: (item, monitor) => {
+      onDrop(item, monitor);
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  });
+
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
   const { socket } = useContext(SocketContext);
 
@@ -155,21 +167,21 @@ function Flow(props: FlowProps) {
   }
 
   const onDrop = useCallback(
-    (event: any) => {
-      event.preventDefault();
-
+    (item: any, monitor?: any) => {
       if (!!reactFlowWrapper && !!reactFlowInstance && !!reactFlowWrapper.current) {
         const reactFlowBounds = (reactFlowWrapper.current as any).getBoundingClientRect();
-        const type = event.dataTransfer.getData('application/reactflow');
+        const type = item.nodeType;
 
         // check if the dropped element is valid
         if (typeof type === 'undefined' || !type) {
           return;
         }
 
+        const { x, y } = monitor.getClientOffset();
+
         const position = (reactFlowInstance as any).project({
-          x: event.clientX - reactFlowBounds.left,
-          y: event.clientY - reactFlowBounds.top,
+          x: x - reactFlowBounds.left,
+          y: y - reactFlowBounds.top,
         });
 
         const id = createUniqNodeId(type);
@@ -238,7 +250,7 @@ function Flow(props: FlowProps) {
     <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput}
       isRunning={props.isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount}
       onUpdateNodeData={handleUpdateNodeData} onUpdateNodes={handleUpdateNodes}>
-      <div style={{ height: '100%' }} onClick={handleNodesClick}>
+      <div style={{ height: '100%' }} onClick={handleNodesClick} ref={dropRef}>
         <div className="reactflow-wrapper" style={{ height: '100%' }} ref={reactFlowWrapper}>
           <ReactFlowStyled
             nodes={nodes}
@@ -249,6 +261,7 @@ function Flow(props: FlowProps) {
             onConnect={onConnect}
             onDrop={onDrop}
             onDragOver={onDragOver}
+            onTouchEnd={onDragOver}
             onInit={onInit}
             fitView
           >
