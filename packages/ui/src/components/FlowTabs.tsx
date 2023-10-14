@@ -157,6 +157,7 @@ const FlowTabs = () => {
             <FaEye className='text-slate-400 hover:text-slate-50'
               onClick={handleToggleOutput} />
           </div>
+          <div className='border-l-2 border-l-slate-500/50 h-6 pl-3'></div>
           <div className='pr-2'>
             <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
           </div>

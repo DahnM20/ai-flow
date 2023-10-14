@@ -159,7 +159,7 @@ const Button = styled.button<{ validate?: boolean }>`
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  background-color: ${props => props.validate ? '#27ae60' : '#6d6a69'};
+  background-color: ${props => props.validate ? '#72CCA5' : '#9B8D8A'};
 
   &:hover {
     background-color: #555;
