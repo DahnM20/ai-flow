@@ -13,11 +13,6 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
-import RightIconButton from './buttons/ConfigurationButton';
-import ConfigPopup from './popups/ConfigPopup';
-import { FiHelpCircle } from 'react-icons/fi';
-import HelpPopup from './popups/HelpPopup';
-import DnDSidebar from './side-views/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
 import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
@@ -50,8 +45,6 @@ function Flow(props: FlowProps) {
   const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
-  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
-  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
   const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
   const [errorCount, setErrorCount] = useState<number>(0);
 
@@ -210,10 +203,6 @@ function Flow(props: FlowProps) {
     setIsPopupOpen(false);
   }, []);
 
-  const handleConfigClose = useCallback(() => {
-    setIsConfigOpen(false);
-  }, []);
-
   function handleChangeFlow(nodes: Node[], edges: Edge[]): void {
     setNodes(nodes);
     setEdges(edges);
@@ -258,12 +247,7 @@ function Flow(props: FlowProps) {
           </ReactFlowStyled>
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />
-        <DnDSidebar />
-        <RightIconButton onClick={() => setIsConfigOpen(true)} />
-        <RightIconButton onClick={() => setIsHelpOpen(true)} color='#7fcce3a9' bottom='80px' icon={<FiHelpCircle />} />
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
-        <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
-        {isHelpOpen && <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />}
       </div>
     </NodeProvider>
   );

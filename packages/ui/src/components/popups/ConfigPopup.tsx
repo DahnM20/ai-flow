@@ -3,18 +3,17 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { SocketContext, WSConfiguration } from '../providers/SocketProvider';
 import { useTranslation } from 'react-i18next';
+import UserProfile from '../login/UserProfile';
+import { Auth } from '@aws-amplify/auth';
 
 interface ConfigPopupProps {
   isOpen: boolean;
+  user: any;
   onClose: () => void;
   onValidate?: () => void;
 }
 
-const ConfigPopup: React.FC<ConfigPopupProps> = ({
-  isOpen,
-  onClose,
-  onValidate,
-}) => {
+function ConfigPopup({ isOpen, user, onClose, onValidate }: ConfigPopupProps) {
 
   const { t } = useTranslation('config');
 
@@ -60,6 +59,9 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
     onClose();
   }
 
+  const handleLogout = () => {
+    Auth.signOut();
+  }
 
   return (
     isOpen ?
@@ -68,9 +70,20 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
           <Header>
             <Title>{t('configurationTitle')}</Title>
           </Header>
-          <SoftMessage>{t('openSourceDisclaimer')}</SoftMessage>
-          <SoftMessage>{t('apiKeyDisclaimer')}</SoftMessage>
-          <SoftMessage>{t('apiKeyRevokeReminder')}</SoftMessage>
+          {
+            !user
+              ? <>
+                <SoftMessage>{t('openSourceDisclaimer')}</SoftMessage>
+                <SoftMessage>{t('apiKeyDisclaimer')}</SoftMessage>
+                <SoftMessage>{t('apiKeyRevokeReminder')}</SoftMessage>
+              </>
+              : <>
+                <UserProfile user={user} />
+                <Button className='bg-[#F09686] my-2' onClick={handleLogout}> Logout </Button>
+              </>
+
+          }
+
           <Field>
             <Label htmlFor="api-key">{t('openAIKeyFieldLabel')}</Label>
             <Input type={"text"} id="api-key" value={apiKeyOpenAI} onChange={onApiKeyOpenAIChange} />
@@ -80,8 +93,8 @@ const ConfigPopup: React.FC<ConfigPopupProps> = ({
             <Input type="text" id="api-key-stabilityai" value={apiKeyStabilityAI} onChange={onStabilityAIAPIKeyChange} />
           </Field>
           <Actions>
-            <Button onClick={onClose}>{t('closeButtonLabel')}</Button>
-            <Button validate onClick={handleValidate}>{t('validateButtonLabel')}</Button>
+            <Button onClick={onClose} className='bg-[#9B8D8A]'>{t('closeButtonLabel')}</Button>
+            <Button onClick={handleValidate} className='bg-[#72CCA5]'>{t('validateButtonLabel')}</Button>
           </Actions>
           <Footer>
             <MessageContainer>
@@ -147,7 +160,7 @@ const Actions = styled.div`
   width: 100%;
 `;
 
-const Button = styled.button<{ validate?: boolean }>`
+const Button = styled.button`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -159,7 +172,6 @@ const Button = styled.button<{ validate?: boolean }>`
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  background-color: ${props => props.validate ? '#72CCA5' : '#9B8D8A'};
 
   &:hover {
     background-color: #555;

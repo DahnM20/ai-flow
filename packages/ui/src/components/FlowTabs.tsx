@@ -12,7 +12,8 @@ import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } fr
 import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
 import { Auth, Hub } from 'aws-amplify';
-import { CognitoHostedUIIdentityProvider, CognitoUser } from '@aws-amplify/auth';
+import LoginButton from './login/LoginButton';
+import FlowWrapper from './FlowWrapper';
 
 interface FlowTab {
   nodes: Node[];
@@ -31,9 +32,10 @@ const FlowTabs = () => {
   const [refresh, setRefresh] = useState(false);
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
   const { dark, toggleTheme } = useContext(ThemeContext);
-  const [user, setUser] = useState<CognitoUser | null>(null);
+  const [user, setUser] = useState<any>(null);
   const { socket, verifyConfiguration, config } = useContext(SocketContext);
   const [isRunning, setIsRunning] = useState(false);
+  const [openConfig, setOpenConfig] = useState(false);
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);
@@ -162,6 +164,10 @@ const FlowTabs = () => {
     }
   };
 
+  const handleClickProfile = () => {
+    setOpenConfig(true);
+  }
+
   return (
     <FlowManagerContainer>
       <TabsContainer className='flex flex-row items-center justify-center max-h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
@@ -189,14 +195,8 @@ const FlowTabs = () => {
             <FaEye className='text-slate-400 hover:text-slate-50'
               onClick={handleToggleOutput} />
           </div>
-          {
-            !user
-              ? <button onClick={() => Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google })}>Open Google</button>
-              : <div> {
-                user.attributes.email
-              }
-              </div>
-          }
+          <div className='border-l-2 border-l-slate-500/50 h-6'></div>
+          <LoginButton user={user} onClickProfile={handleClickProfile} />
           <div className='border-l-2 border-l-slate-500/50 h-6 pl-3'></div>
           <div className='pr-2'>
             <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
@@ -214,15 +214,17 @@ const FlowTabs = () => {
                               hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>
         <div className='absolute bottom-0 pb-1' > Feedback ? </div>
       </FeedbackIcon>
-      <Flow
-        key={`flow-${currentTab}-${refresh}`}
-        nodes={flowTabs.tabs[currentTab].nodes}
-        edges={flowTabs.tabs[currentTab].edges}
-        onFlowChange={handleFlowChange}
-        showOnlyOutput={showOnlyOutput}
-        isRunning={isRunning}
-        onRunChange={handleChangeRun}
-      />
+      <FlowWrapper openConfig={openConfig} user={user} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)}>
+        <Flow
+          key={`flow-${currentTab}-${refresh}`}
+          nodes={flowTabs.tabs[currentTab].nodes}
+          edges={flowTabs.tabs[currentTab].edges}
+          onFlowChange={handleFlowChange}
+          showOnlyOutput={showOnlyOutput}
+          isRunning={isRunning}
+          onRunChange={handleChangeRun}
+        />
+      </FlowWrapper>
     </FlowManagerContainer>
   );
 };
