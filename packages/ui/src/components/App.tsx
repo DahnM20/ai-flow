@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import FlowTabs from "./FlowTabs"
 import { ThemeContext } from "./providers/ThemeProvider";
+import '@aws-amplify/ui-react/styles.css';
 
 const App = () => {
 

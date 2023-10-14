@@ -11,6 +11,8 @@ import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../u
 import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
 import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
+import { Auth, Hub } from 'aws-amplify';
+import { CognitoHostedUIIdentityProvider, CognitoUser } from '@aws-amplify/auth';
 
 interface FlowTab {
   nodes: Node[];
@@ -29,6 +31,7 @@ const FlowTabs = () => {
   const [refresh, setRefresh] = useState(false);
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
   const { dark, toggleTheme } = useContext(ThemeContext);
+  const [user, setUser] = useState<CognitoUser | null>(null);
   const { socket, verifyConfiguration, config } = useContext(SocketContext);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -42,6 +45,25 @@ const FlowTabs = () => {
       setFlowTabs(JSON.parse(savedFlowTabs));
       setRefresh(true);
     }
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
+      switch (event) {
+        case "signIn":
+          setUser(data);
+          break;
+        case "signOut":
+          setUser(null);
+          break;
+        // case "customOAuthState":
+        //   setCustomState(data);
+      }
+    });
+
+    getUser();
+
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -130,6 +152,16 @@ const FlowTabs = () => {
     toastCustomIconInfoMessage('You can send me a DM on X/Twitter, or open an Issue on Github :) My links are at the bottom of the configuration menu', FiMail)
   }
 
+  const getUser = async (): Promise<void> => {
+    try {
+      const currentUser = await Auth.currentAuthenticatedUser();
+      setUser(currentUser);
+    } catch (error) {
+      console.error(error);
+      console.log("Not signed in");
+    }
+  };
+
   return (
     <FlowManagerContainer>
       <TabsContainer className='flex flex-row items-center justify-center max-h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
@@ -157,6 +189,14 @@ const FlowTabs = () => {
             <FaEye className='text-slate-400 hover:text-slate-50'
               onClick={handleToggleOutput} />
           </div>
+          {
+            !user
+              ? <button onClick={() => Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google })}>Open Google</button>
+              : <div> {
+                user.attributes.email
+              }
+              </div>
+          }
           <div className='border-l-2 border-l-slate-500/50 h-6 pl-3'></div>
           <div className='pr-2'>
             <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />

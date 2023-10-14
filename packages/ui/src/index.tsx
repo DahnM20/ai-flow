@@ -11,9 +11,16 @@ import './i18n';
 import { ToastContainer } from 'react-toastify';
 import App from './components/App';
 
+import awsExports from "./aws-exports";
+import { Amplify } from "aws-amplify";
+
+
+Amplify.configure(awsExports);
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <GlobalStyle />
