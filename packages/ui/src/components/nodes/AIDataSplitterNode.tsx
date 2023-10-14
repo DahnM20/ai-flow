@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
-import { NodeContext } from '../../providers/NodeProvider';
-import NodePlayButton from '../../shared/nodes-parts/NodePlayButton';
-import { generateIdForHandle } from '../../../utils/flowUtils';
-import { InputHandle, NodeTitle, OutputHandle } from '../../shared/Node.styles';
-import { useIsPlaying } from '../../../hooks/useIsPlaying';
+import { NodeContext } from '../providers/NodeProvider';
+import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
+import { generateIdForHandle } from '../../utils/flowUtils';
+import { InputHandle, NodeTitle, OutputHandle } from '../shared/Node.styles';
+import { useIsPlaying } from '../../hooks/useIsPlaying';
 
 interface AIDataSplitterNodeData {
   id: string;
@@ -82,11 +82,11 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(({ data
       <div className="output-strip-node-outputs">
         {data.nbOutput && Array.from(Array(data.nbOutput)).map((_, index) => (
           <OutputHandle
-            key={generateIdForHandle(index)}
+            key={generateIdForHandle(index, true)}
             data-tooltip-id={`${id}-tooltip`}
             data-tooltip-content={data.outputData ? data.outputData[index] : ''}
             type="source"
-            id={generateIdForHandle(index)}
+            id={generateIdForHandle(index, true)}
             position={Position.Right}
             style={{
               background: data?.outputData ? (data.outputData[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',

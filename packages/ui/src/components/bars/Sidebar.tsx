@@ -4,8 +4,8 @@ import { Edge, Node } from 'reactflow';
 import JSONView from '../side-views/JSONView';
 import styled, { css } from 'styled-components';
 import TopologicalView from '../side-views/TopologicalView';
-import { t } from 'i18next';
 import { TabButton } from '../FlowTabs';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarProps {
   nodes: Node[];
@@ -14,6 +14,9 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
+
+  const { t } = useTranslation('flow');
+
   const [show, setShow] = useState(false);
   const [activeTab, setActiveTab] = useState('json');
   const toggleShow = () => setShow(!show);
@@ -28,10 +31,10 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
       <SidebarContainer show={show}>
 
         <HeaderContainer>
-          <TabButton active={activeTab === 'json'} onClick={() => setActiveTab('json')}>
+          <TabButton active={activeTab === 'json'} onClick={() => setActiveTab('json')} className='hover:text-slate-50 text-md px-1 py-2'>
             <Title>{t('JsonView')}</Title>
           </TabButton>
-          <TabButton active={activeTab === 'topological'} onClick={() => setActiveTab('topological')}>
+          <TabButton active={activeTab === 'topological'} onClick={() => setActiveTab('topological')} className='hover:text-slate-50 text-md px-1 py-2'>
             <Title>{t('TopologicalView')}</Title>
           </TabButton>
         </HeaderContainer>
@@ -56,7 +59,6 @@ const HeaderContainer = styled.div`
 `
 
 const Title = styled.div`
-  font-size: 20px;
   font-weight: bold;
   margin: 0 10px;
 `;

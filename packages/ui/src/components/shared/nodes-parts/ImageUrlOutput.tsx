@@ -20,9 +20,11 @@ const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
 
   return <OutputImageContainer>
     <OutputImage src={url} alt="Output Image" />
-    <DownloadButton onClick={handleDownloadClick}>
+    <div
+      className='absolute top-2 right-3 px-1 py-1 text-slate-100 text-2xl bg-slate-600/75 hover:bg-sky-600/90 rounded-md'
+      onClick={handleDownloadClick}>
       <FaDownload />
-    </DownloadButton>
+    </div>
   </OutputImageContainer>
 };
 
@@ -38,23 +40,4 @@ const OutputImage = styled.img`
   border-radius: 8px;
 `;
 
-const DownloadButton = styled.a`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background-color: #4285f4;
-  color: #fff;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #0d47a1;
-  }
-`;
 export default ImageUrlOutput;

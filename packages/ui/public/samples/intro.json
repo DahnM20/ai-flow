@@ -5,47 +5,77 @@
     "processorType": "gpt-no-context-prompt",
     "gptVersion": "gpt-4",
     "inputText": "Generate a short poem about a bird and a butterfly",
-    "outputData": "In a world where the sunflowers sway,\nA bird and a butterfly play,\nEach morn at the break of day,\nChasing the whims of the breeze, light and gay.\n\nThe bird, with feathers of fiery gold,\nWings potent, heart brave and bold.\nSoaring high, stories untold,\nIn the canvas of blue, beauty unfold.\n\nThe butterfly, a flitting art,\nWings like petals, a soft heart,\nIts hued canvas, nature's part,\nIn every garden, it leaves a mark.\n\nTwirling, swirling, in a dance so fair,\nIn the nectar's sweetness, they share,\nWhispers in flight, through the sunlit air,\nSymphony of life, beyond any compare.\n\nThe bird sings, the butterfly flutters,\nThrough twilight whispers, the wind utters,\nVerses of unity, that the universe mutters,\nIn the grand play of existence, neither stutters.\n\nIn their dance, emerge lessons untold,\nOf life, colors, adventures bold,\nOf soaring high, of forms manifold,\nIn the tale of the bird and butterfly, we behold.",
-    "lastRun": "2023-09-21T06:29:49.759Z",
-    "x": -911.2707176494437,
-    "y": -251.00226805963663
+    "outputData": "In the heart of nature's grand design,\nA bird and a butterfly, so divine. \n\nWith wings of grace, the bird takes flight,\nInto the vast and boundless daylight.\nIts song echoes in the morning breeze,\nA melody sculpted to please.\n\nIn hues of rainbow, the butterfly teases,\nDancing on flowers and the wind it seizes.\nIts lightness whispers a delicate story,\nOf nature's finesse and quiet glory.\n\nFeathers and scales in a restless twirl, \nPaint a beautiful tapestry unfurl.\nIn this dance, both awe and inspire,\nA symphony of life, never to tire.\n\nTwo tiny pieces of the wondrous wild,\nIn them, the heart of the universe beguiled.\nA bird and a butterfly, in rhythm and rhyme,\nCelebrate life, in the vast stream of time.\n",
+    "lastRun": "2023-09-30T18:27:25.498Z",
+    "handle-0": "right",
+    "handles": {
+      "handle-0": "top",
+      "handle-out-0": "right"
+    },
+    "x": -2297.489700133565,
+    "y": -434.5187891092438
   },
   {
     "input": "g1ei670qc#gpt-no-context-prompt",
     "inputKey": 0,
-    "name": "0rhbnaol3#gpt-no-context-prompt",
-    "processorType": "gpt-no-context-prompt",
-    "gptVersion": "gpt-4",
-    "inputText": "Based on the following poem, act as a prompt engineer, generate a prompt for a image generator AI like DALL-E.",
-    "outputData": "\"Generate an image of a vibrant scene at dawn where a bird with fiery gold feathers and a colorful butterfly are playfully interacting amid swaying sunflowers. The bird is soaring in the bright blue sky, and the butterfly is flitting around the garden, leaving noticeable marks. They are sharing in the sweetness of the nectar and almost seem to be whispering to each other through their flutters and songs. This dance of life unfolds in a way that speaks volumes about unity, color, and the grand play of existence.\"",
-    "lastRun": "2023-09-21T06:31:28.919Z",
-    "x": -1421.1347706756055,
-    "y": -249.3422344340221
+    "name": "88ssuswli#ai-action",
+    "processorType": "ai-action",
+    "inputText": "From the text I previously provided, create a descriptive prompt suitable for an AI visual generator like DALL-E.",
+    "actionName": "VisualPrompt",
+    "handles": {
+      "handle-0": "left",
+      "handle-out-0": "right"
+    },
+    "outputData": "\"Create an image that captures a scene of a bird in graceful flight against the daylight backdrop and a butterfly dancing on flowers with rainbow colors. Show the natural beauty and interaction between these two creatures, showcasing nature's finesse and quiet glory. Be sure to capture a sense of awe and inspiration from this symphony of life.\"",
+    "lastRun": "2023-10-07T18:46:20.186Z",
+    "x": -1765.3942830576125,
+    "y": -294.73656776845803
   },
   {
-    "input": "0rhbnaol3#gpt-no-context-prompt",
+    "input": "88ssuswli#ai-action",
     "inputKey": 0,
     "name": "vd6up8r0m#stable-diffusion-stabilityai-prompt",
     "processorType": "stable-diffusion-stabilityai-prompt",
     "size": "1024x1024",
     "outputData": [
-      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/vd6up8r0mstable-diffusion-stabilityai-prompt-20230921083341776933.png"
+      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/v0.4.0-sample-1.png"
     ],
-    "lastRun": "2023-09-21T06:33:41.781Z",
-    "x": -1958.8653206229412,
-    "y": -73.26855714327525
+    "lastRun": "2023-10-02T18:16:09.209Z",
+    "handles": {
+      "handle-0": "left"
+    },
+    "x": -1229.678920262376,
+    "y": -707.5431408374382
   },
   {
-    "input": "0rhbnaol3#gpt-no-context-prompt",
+    "input": "88ssuswli#ai-action",
     "inputKey": 0,
     "name": "45ooyfg7v#stable-diffusion-stabilityai-prompt",
     "processorType": "stable-diffusion-stabilityai-prompt",
     "size": "1024x1024",
     "outputData": [
-      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/45ooyfg7vstable-diffusion-stabilityai-prompt-20230921083237502194.png"
+      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/v0.4.0-sample-2.png"
     ],
-    "lastRun": "2023-09-21T06:32:37.507Z",
-    "x": -1420.4700215803477,
-    "y": 274.7389686571499
+    "lastRun": "2023-09-30T18:27:57.113Z",
+    "handles": {
+      "handle-0": "left"
+    },
+    "x": -1227.161796495116,
+    "y": -67.07643352962052
+  },
+  {
+    "input": "g1ei670qc#gpt-no-context-prompt",
+    "inputKey": 0,
+    "name": "iczuh3hvm#ai-action",
+    "processorType": "ai-action",
+    "inputText": "Based on the text I previously provided, review it for spelling errors and highlight any found. Respond in the language of the provided text.",
+    "actionName": "SpellCheck",
+    "handles": {
+      "handle-0": "left"
+    },
+    "outputData": "The text you provided does not contain any spelling errors. It is well written.",
+    "lastRun": "2023-10-07T18:49:40.952Z",
+    "x": -1765.6880916692674,
+    "y": 28.640937310876154
   }
 ]

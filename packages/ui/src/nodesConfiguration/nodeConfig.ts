@@ -79,7 +79,8 @@ export const nodeSectionMapping: NodeSection[] = [
         section: 'Models',
         icon: AiOutlineRobot,
         nodes: [
-            { label: 'NoContextPrompt', type: 'gpt-no-context-prompt', helpMessage: 'noContextPromptHelp' }
+            { label: 'NoContextPrompt', type: 'gpt-no-context-prompt', helpMessage: 'noContextPromptHelp' },
+            { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp' }
         ],
     },
     {
@@ -87,7 +88,7 @@ export const nodeSectionMapping: NodeSection[] = [
         icon: FaImage,
         nodes: [
             { label: 'DALL-E', type: 'dalle-prompt', helpMessage: 'dallePromptHelp' },
-            { label: 'Stable Diffusion', type: 'stable-diffusion-stabilityai-prompt', helpMessage: 'dallePromptHelp' }
+            { label: 'Stable Diffusion', type: 'stable-diffusion-stabilityai-prompt', helpMessage: 'stableDiffusionPromptHelp' }
         ],
     },
     {

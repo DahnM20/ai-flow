@@ -8,6 +8,7 @@
     <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English">
     <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
+    <img src="https://img.shields.io/github/v/release/DahnM20/ai-flow">
     <a href="https://twitter.com/DahnM20"><img src="https://img.shields.io/twitter/follow/AI-Flow?style=social"></a>
 </p>
 
@@ -18,6 +19,16 @@
 <p align="center">
 <em>While a live demo is available for convenience, for the best experience we recommend running the application directly on your local machine.</em>
 </p>
+
+<div align="center">
+
+## 🎉 v0.4.0 is Now Available 🎉
+
+🌟 **UI Enhancements** | ↔️ **Handles are now movable** | 🤖 **New AI Action Node**
+
+</div>
+
+---
 
 **AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of **ChatGPT**. This unique tool paves the way to creating interactive networks of different AI models, fostering a multi-perspective response to various prompts.
 
@@ -59,11 +70,17 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 ![image-summary](assets/summary.png)
 
+
+#### Use pre-made prompts to build quickly
+
+![image-ai-actions](assets/predefined-prompts.png)
+
 #### Split input with AI 
 
 ![image-summary](assets/split-input.png)
 
 > By combining those features we can create different flows.
+
 
 ## Installation (Windows executable)
 

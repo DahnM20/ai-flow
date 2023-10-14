@@ -19,7 +19,7 @@ import { FiHelpCircle } from 'react-icons/fi';
 import HelpPopup from './popups/HelpPopup';
 import DnDSidebar from './side-views/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
-import { ControlsStyled, MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
+import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
 import { SocketContext } from './providers/SocketProvider';
 import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
@@ -42,7 +42,7 @@ function Flow(props: FlowProps) {
 
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
-  const { socket, verifyConfiguration, config } = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
 
   const nodeTypes = useMemo(() => getAllNodeTypesComponentMapping(), []);
 
@@ -206,7 +206,6 @@ function Flow(props: FlowProps) {
     setIsPopupOpen(true);
   }, []);
 
-  //Popup
   const handlePopupClose = useCallback(() => {
     setIsPopupOpen(false);
   }, []);
@@ -261,7 +260,7 @@ function Flow(props: FlowProps) {
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />
         <DnDSidebar />
         <RightIconButton onClick={() => setIsConfigOpen(true)} />
-        <RightIconButton onClick={() => setIsHelpOpen(true)} color='#6576f8' bottom='80px' icon={<FiHelpCircle />} />
+        <RightIconButton onClick={() => setIsHelpOpen(true)} color='#7fcce3a9' bottom='80px' icon={<FiHelpCircle />} />
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
         <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
         {isHelpOpen && <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />}

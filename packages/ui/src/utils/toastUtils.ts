@@ -1,3 +1,5 @@
+import { FaGithub } from "react-icons/fa";
+import { IconType } from "react-icons/lib";
 import { toast } from "react-toastify";
 
 export function toastInfoMessage(message: string) {
@@ -26,9 +28,9 @@ export function toastFastInfoMessage(message: string) {
   });
 }
 
-export function toastBottomInfoMessage(message: string) {
+export function toastCustomIconInfoMessage(message: string, icon: IconType) {
   toast.info(message, {
-    position: "bottom-left",
+    position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -36,5 +38,6 @@ export function toastBottomInfoMessage(message: string) {
     draggable: true,
     progress: undefined,
     theme: "dark",
+    icon: icon,
   });
 }

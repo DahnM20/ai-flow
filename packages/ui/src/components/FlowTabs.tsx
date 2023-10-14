@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Flow from './Flow';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { FiSun, FiMoon, FiMail } from 'react-icons/fi';
 import { Node, Edge } from 'reactflow';
 import { ThemeContext } from './providers/ThemeProvider';
 import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaPlus } from 'react-icons/fa';
 import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../utils/flowUtils';
-import { toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
+import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
 import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
 
@@ -126,10 +126,17 @@ const FlowTabs = () => {
     }
   }
 
+  const handleClickFeedback = () => {
+    toastCustomIconInfoMessage('You can send me a DM on X/Twitter, or open an Issue on Github :) My links are at the bottom of the configuration menu', FiMail)
+  }
+
   return (
     <FlowManagerContainer>
       <TabsContainer className='flex flex-row items-center justify-center max-h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
-        <img src="logo.png" className='ml-14 mx-auto w-28' alt="Logo"></img>
+        <div className='ml-4 mx-auto flex flex-row text-center align-middle justify-center'>
+          <img src="logo.png" className='w-16' alt="Logo"></img>
+          <h1 className='flex text-slate-200 items-center justify-center px-2 text-xl font-bold sm:invisible md:visible'> AI-Flow </h1>
+        </div>
         <Tabs>
           {flowTabs.tabs.map((tab, index) => (
             <TabButton
@@ -146,16 +153,27 @@ const FlowTabs = () => {
           <FaPlus />
         </AddTabButton>
         <RightControls>
-          <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
-          <ShowOutputButton onClick={handleToggleOutput}>
-            <FaEye />
-          </ShowOutputButton>
+          <div className='px-2 py-2'>
+            <FaEye className='text-slate-400 hover:text-slate-50'
+              onClick={handleToggleOutput} />
+          </div>
+          <div className='border-l-2 border-l-slate-500/50 h-6 pl-3'></div>
+          <div className='pr-2'>
+            <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
+          </div>
           {/* <ToggleThemeButton onClick={toggleTheme}>
             {dark ? <FiMoon /> : <FiSun />}
           </ToggleThemeButton> */}
         </RightControls>
       </TabsContainer>
-      <FeedbackIcon className="fixed right-10 top-16 px-6 bg-sky-950 text-slate-100 z-10 rounded-b-md invisible:sd visible:md">Feedback ?</FeedbackIcon>
+      <FeedbackIcon className="absolute right-10 top-0 h-24 w-28 
+                              px-6 
+                              bg-sky-950 text-slate-100 
+                              z-10 rounded-b-md sm:invisible md:visible cursor-pointer
+                              flex items-center justify-center
+                              hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>
+        <div className='absolute bottom-0 pb-1' > Feedback ? </div>
+      </FeedbackIcon>
       <Flow
         key={`flow-${currentTab}-${refresh}`}
         nodes={flowTabs.tabs[currentTab].nodes}
@@ -233,18 +251,5 @@ const ToggleThemeButton = styled.button`
     color:${({ theme }) => theme.text};
   }
 `;
-
-const ShowOutputButton = styled.div`
-  padding: 8px 12px;
-  border: none;
-  background-color: ${({ theme }) => theme.accent};
-  color: ${({ theme }) => theme.accentText};
-  cursor: pointer;
-
-  :hover {
-    color:${({ theme }) => theme.text};
-  }
-`;
-
 
 export default FlowTabs;

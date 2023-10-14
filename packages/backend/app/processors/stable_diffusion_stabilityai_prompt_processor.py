@@ -24,9 +24,9 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
             "STABLE_DIFFUSION_STABILITYAI_API_HOST", "https://api.stability.ai"
         )
 
+    def process(self):
         self.api_key = self.get_api_key("session_stabilityai_api_key")
 
-    def process(self):
         if getattr(self, "input_processor", None) is not None:
             self.prompt = (
                 self.input_processor.get_output(self.input_key)

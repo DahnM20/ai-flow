@@ -11,9 +11,9 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({ onClick, isRunning }) => {
     return (
         <div className={`flex flex-row items-center justify-center gap-x-2 
                 ${isRunning
-                ? 'text-slate-200 bg-sky-500'
-                : 'text-sky-500 ring-sky-800 bg-slate-800 ring-2'} 
-                hover:bg-sky-500 
+                ? 'text-slate-200 bg-[#86D8F0]'
+                : 'text-[#86D8F0] ring-sky-800 bg-slate-800 ring-2'} 
+                hover:bg-[#86D8F0]/80
                 hover:text-slate-200
                 py-1 px-2 rounded-md cursor-pointer`} onClick={onClick}>
             <Button>

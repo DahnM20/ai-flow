@@ -1,26 +1,25 @@
-import React, { useState, useEffect, useContext, useRef, memo } from 'react';
+import React, { useState, useEffect, useContext, useRef, memo, useMemo } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { NodeResizer } from '@reactflow/node-resizer';
-import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle, NodeSelect, NodeSelectOption } from '../../shared/Node.styles';
-import useHandleShowOutput from '../../../hooks/useHandleShowOutput';
-import { useRefreshOnAppearanceChange } from '../../../hooks/useRefreshOnAppearanceChange';
-import { generateIdForHandle } from '../../../utils/flowUtils';
-import { ICON_MAP } from '../../shared/NodeIcons';
-import { Field } from '../../../nodesConfiguration/nodeConfig';
-import MarkdownOutput from '../../shared/nodes-parts/MarkdownOutput';
-import { NodeContext } from '../../providers/NodeProvider';
-import NodePlayButton from '../../shared/nodes-parts/NodePlayButton';
+import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle, NodeSelect, NodeSelectOption } from '../shared/Node.styles';
+import useHandleShowOutput from '../../hooks/useHandleShowOutput';
+import { useRefreshOnAppearanceChange } from '../../hooks/useRefreshOnAppearanceChange';
+import { generateIdForHandle } from '../../utils/flowUtils';
+import { ICON_MAP } from '../shared/NodeIcons';
+import { Field } from '../../nodesConfiguration/nodeConfig';
+import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
+import { NodeContext } from '../providers/NodeProvider';
+import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
 import { useTranslation } from 'react-i18next';
 import { FiCopy } from 'react-icons/fi';
 import styled from 'styled-components';
-import { copyToClipboard } from '../../../utils/navigatorUtils';
-import { useIsPlaying } from '../../../hooks/useIsPlaying';
-import ImageUrlOutput from '../../shared/nodes-parts/ImageUrlOutput';
-import ImageBase64Output from '../../shared/nodes-parts/ImageBase64Output';
-import { GenericNodeData } from '../../../types/node';
-import HandleWrapper from '../../handles/HandleWrapper';
-import { toast } from 'react-toastify';
-import { toastFastInfoMessage, toastInfoMessage } from '../../../utils/toastUtils';
+import { copyToClipboard } from '../../utils/navigatorUtils';
+import { useIsPlaying } from '../../hooks/useIsPlaying';
+import ImageUrlOutput from '../shared/nodes-parts/ImageUrlOutput';
+import ImageBase64Output from '../shared/nodes-parts/ImageBase64Output';
+import { GenericNodeData } from '../../types/node';
+import HandleWrapper from '../handles/HandleWrapper';
+import { toastFastInfoMessage } from '../../utils/toastUtils';
 
 interface GenericNodeProps {
     data: GenericNodeData;
@@ -38,16 +37,22 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     const [collapsed, setCollapsed] = useState<boolean>(true);
     const [showLogs, setShowLogs] = useState<boolean>(data.config.defaultHideOutput == null ? true : !data.config.defaultHideOutput);
-    const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
+    const [nodeId, setNodeId] = useState<string>(`${data.name}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
+
+    const inputHandleId = useMemo(() => generateIdForHandle(0), []);
+    const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
+
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-        setNodeId(`${data.id}-${Date.now()}`);
+        setNodeId(`${data.name}-${Date.now()}`);
         setIsPlaying(false);
         if (!data.config.defaultHideOutput) {
             setShowLogs(true);
+        } else {
+            setShowLogs(false);
         }
         updateNodeInternals(id);
     }, [data.lastRun]);
@@ -139,9 +144,9 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                     }
                     return (
                         <>
-                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)}>
+                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)} defaultValue={data[field.name]}>
                                 {field.options?.map(option => (
-                                    <NodeSelectOption key={`${id}-${option}`} selected={data[field.name] === option.value}>
+                                    <NodeSelectOption key={`${id}-${option.value}`} >
                                         {t(option.label)}
                                     </NodeSelectOption>
                                 ))}
@@ -158,7 +163,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                                 <OptionSelector>
                                     {field.options?.map(option => (
                                         <OptionButton
-                                            key={`${id}-${option}`}
+                                            key={`${id}-${option.value}`}
                                             selected={data[field.name] === option.value}
                                             onClick={() => handleOptionChange(field.name, option.value)}
                                         >
@@ -221,17 +226,17 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             <NodeHeader onDoubleClick={toggleCollapsed}>
                 {
                     data.config.hasInputHandle &&
-                    <HandleWrapper id={generateIdForHandle(0)} position={
-                        !!data?.handles && data.handles[generateIdForHandle(0)]
-                            ? data.handles[generateIdForHandle(0)]
+                    <HandleWrapper id={inputHandleId} position={
+                        !!data?.handles && data.handles[inputHandleId]
+                            ? data.handles[inputHandleId]
                             : Position.Top}
                         onChangeHandlePosition={handleChangeHandlePosition} />
                 }
                 <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
                 <NodeTitle>{t(data.config.nodeName)}</NodeTitle>
-                <HandleWrapper id={generateIdForHandle(1)} position={
-                    !!data?.handles && data.handles[generateIdForHandle(1)]
-                        ? data.handles[generateIdForHandle(1)]
+                <HandleWrapper id={outputHandleId} position={
+                    !!data?.handles && data.handles[outputHandleId]
+                        ? data.handles[outputHandleId]
                         : Position.Bottom}
                     onChangeHandlePosition={handleChangeHandlePosition}
                     isOutput />
@@ -255,7 +260,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                         handleCopyToClipboard(event);
                     }} />}
                 {!showLogs && data.outputData
-                    ? <NodeLogsText>{t('ClickToShowOutput')}</NodeLogsText>
+                    ? <NodeLogsText className='text-center'>{t('ClickToShowOutput')}</NodeLogsText>
                     : getOutputComponent()}
             </NodeLogs>
         </NodeContainer>

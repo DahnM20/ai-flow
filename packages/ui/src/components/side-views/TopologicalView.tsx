@@ -16,23 +16,6 @@ const TopologicalView: React.FC<TopologicalViewProps> = ({ nodes, edges }) => {
     nodes = nodesTopologicalSort(nodes, edges);
     const data: NodeData[] = convertFlowToJson(nodes, edges, false);
 
-    const handleDownloadClick = () => {
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'data.json';
-        link.click();
-        URL.revokeObjectURL(url);
-        link.remove();
-    };
-
-    const focusToNode = (node: any) => () => {
-        // TODO 
-        //setCenter(node.x, node.y);
-    }
-
-
     function getOutputDataComponent(item: NodeData): React.ReactNode {
         if (!item.outputData) return <></>
 
@@ -51,7 +34,7 @@ const TopologicalView: React.FC<TopologicalViewProps> = ({ nodes, edges }) => {
             {
                 data.map((item, index) => {
                     if (!item.outputData) return undefined;
-                    return <TopologicalViewContent onClick={focusToNode(item)}>
+                    return <TopologicalViewContent>
                         <TopologicalViewNodeName>{item.name}</TopologicalViewNodeName>
                         {getOutputDataComponent(item)}
                     </TopologicalViewContent>

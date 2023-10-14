@@ -3,9 +3,11 @@ import { getConfigViaType } from "../nodesConfiguration/nodeConfig";
 import { NodeData } from "../types/node";
 
 const handlePrefix = 'handle';
+const handleOutPrefix = 'handle-out';
 const handleSeparator = '-';
+const indexKeyHandleOut = 2;
 
-export const generateIdForHandle = (key: number) => `${handlePrefix}${handleSeparator}${key}`;
+export const generateIdForHandle = (key: number, isOutput?: boolean) => !isOutput ? `${handlePrefix}${handleSeparator}${key}` : `${handleOutPrefix}${handleSeparator}${key}`;
 
 export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   const visited = new Set<string>();
@@ -37,7 +39,7 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
     const inputEdge = edges.find((edge: any) => edge.target === id);
     const inputId = inputEdge?.source || '';
 
-    const keySplitted = inputEdge?.sourceHandle?.split(handleSeparator)[1]
+    const keySplitted = inputEdge?.sourceHandle?.split(handleSeparator)[indexKeyHandleOut]
     const inputKey = !keySplitted || isNaN(+keySplitted) ? undefined : +keySplitted;
 
     let inputFound;
