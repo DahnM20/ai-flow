@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { FaCheck, FaPlay, FaSpinner, FaStop } from 'react-icons/fa';
 import { NodeContext } from '../../providers/NodeProvider';
+import TapScale from '../motions/TapScale';
 
 
 interface NodePlayButtonProps {
@@ -32,14 +33,16 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onCl
   const IconComponent = getIconComponent(isPlaying, isCurrentNodeRunning, hasRun, isHovered);
 
   return (
-    <NodePlayButtonContainer
-      onClick={handleClick}
-      disabled={isDisabled}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <IconComponent />
-    </NodePlayButtonContainer>
+    <TapScale scale={0.5}>
+      <NodePlayButtonContainer
+        onClick={handleClick}
+        disabled={isDisabled}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <IconComponent />
+      </NodePlayButtonContainer>
+    </TapScale>
   );
 };
 

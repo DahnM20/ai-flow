@@ -10,6 +10,7 @@ import {
   addEdge,
   Connection,
   ReactFlowInstance,
+  NodeProps,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
@@ -23,7 +24,7 @@ import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
 import { SocketContext } from './providers/SocketProvider';
 import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
-import { NodeType, allNodeTypes, getAllNodeTypesComponentMapping, specificNodeTypes } from '../utils/mappings';
+import { getAllNodeWithEaseOut } from '../utils/mappings';
 import { useTranslation } from 'react-i18next';
 import { toastInfoMessage } from '../utils/toastUtils';
 import { useDrop } from 'react-dnd';
@@ -42,6 +43,18 @@ function Flow(props: FlowProps) {
   const { t } = useTranslation('flow');
 
   const reactFlowWrapper = useRef(null);
+  const { socket } = useContext(SocketContext);
+  const nodeTypes = useMemo(() => getAllNodeWithEaseOut(), []);
+
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
+  const [nodes, setNodes] = useState<Node[]>(props.nodes ? props.nodes : []);
+  const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
+  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
+  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
+  const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
+  const [errorCount, setErrorCount] = useState<number>(0);
 
   const [{ isOver }, dropRef] = useDrop({
     accept: 'NODE',
@@ -53,19 +66,6 @@ function Flow(props: FlowProps) {
     }),
   });
 
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
-  const { socket } = useContext(SocketContext);
-
-  const nodeTypes = useMemo(() => getAllNodeTypesComponentMapping(), []);
-
-  const [nodes, setNodes] = useState<Node[]>(props.nodes ? props.nodes : []);
-  const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
-  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
-  const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
-  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
-  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
-  const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
-  const [errorCount, setErrorCount] = useState<number>(0);
 
   const onInit = (reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(reactFlowInstance);

@@ -15,6 +15,7 @@
     "autoprefixer": "^10.4.14",
     "dompurify": "^3.0.2",
     "dotenv": "^16.0.3",
+    "framer-motion": "^10.16.4",
     "i18next": "^22.5.0",
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.2.1",
