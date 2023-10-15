@@ -230,7 +230,3 @@ const Icon = styled.a`
 `;
 
 export default ConfigPopup;
-
-function connectSocket(config: WSConfiguration) {
-  throw new Error('Function not implemented.');
-}

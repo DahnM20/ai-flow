@@ -30,7 +30,7 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
               {t('docAvailable')}
             </div>
             <div>
-              <a href="https://docs.ai-flow.net/docs/intro" className='text-[#8FB0A1] hover:text-slate-100 hover:underline' target="_blank"> docs.ai-flow.net </a>
+              <a href="https://docs.ai-flow.net" className='text-[#8FB0A1] hover:text-slate-100 hover:underline' target="_blank"> docs.ai-flow.net </a>
             </div>
           </div>
           <div className='flex justify-center py-2 text-xl font-bold'>

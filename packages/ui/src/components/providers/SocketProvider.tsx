@@ -47,15 +47,17 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             stabilityaiApiKey: !!storedStabilityAiKey ? storedStabilityAiKey : undefined,
         })
 
-        const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);
+        // Connect by default only if user got api keys
+        if (!!storedOpenAIKey || !!storedStabilityAiKey) {
+            const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);
 
-        //console.log(`Connecting to ${WS_HOST}:${WS_PORT} with ${protocol}`);
+            setSocket(newSocket);
 
-        setSocket(newSocket);
+            return () => {
+                newSocket.close();
+            };
+        }
 
-        return () => {
-            newSocket.close();
-        };
     }, []);
 
     function connectSocket(configuration: WSConfiguration): void {
