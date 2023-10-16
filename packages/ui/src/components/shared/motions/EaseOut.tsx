@@ -4,9 +4,8 @@ import { AnimationProps } from "./types";
 function EaseOut({ children }: AnimationProps) {
     return (
         <motion.div
-            className="box"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{ scale: [0.95, 1], opacity: [0, 1] }}
             transition={{
                 duration: 0.3,
                 delay: 0,
