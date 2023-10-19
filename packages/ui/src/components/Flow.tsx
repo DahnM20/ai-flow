@@ -147,7 +147,7 @@ function Flow(props: FlowProps) {
 
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((eds) => {
-      if (isNodeAlreadyTargeted(connection, eds)) {
+      if (isHandleAlreadyTargeted(connection, eds)) {
         return eds;
       }
       return addEdge({ ...connection, type: 'smoothstep', markerEnd: 'arrowClosed' }, eds);
@@ -202,8 +202,8 @@ function Flow(props: FlowProps) {
     [reactFlowInstance]
   );
 
-  const isNodeAlreadyTargeted = (connection: Connection, eds: Edge[]) => {
-    if (eds.filter(edge => edge.target === connection.target).length > 0) {
+  const isHandleAlreadyTargeted = (connection: Connection, eds: Edge[]) => {
+    if (eds.filter(edge => edge.targetHandle === connection.targetHandle).length > 0) {
       return true;
     }
     return false;
