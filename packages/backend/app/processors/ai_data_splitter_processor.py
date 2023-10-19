@@ -14,10 +14,12 @@ class AIDataSplitterProcessor(APIContextProcessor):
         self.api_key = self.get_api_key("session_openai_api_key")
 
     def process(self):
-        if getattr(self, "input_processor", None) is None:
+        if self.get_input_processor() is None:
             return None
 
-        input_data = self.input_processor.get_output(self.input_key)
+        input_data = self.get_input_processor().get_output(
+            self.get_input_node_output_key()
+        )
 
         self.init_context(input_data)
 

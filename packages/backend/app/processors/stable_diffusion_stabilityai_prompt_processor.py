@@ -29,7 +29,7 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
 
         if getattr(self, "input_processor", None) is not None:
             self.prompt = (
-                self.input_processor.get_output(self.input_key)
+                self.get_input_processor().get_output(self.get_input_node_output_key())
                 if self.prompt is None or len(self.prompt) == 0
                 else self.prompt
             )

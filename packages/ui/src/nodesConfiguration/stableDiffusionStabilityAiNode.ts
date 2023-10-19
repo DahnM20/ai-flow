@@ -5,6 +5,7 @@ const stableDiffusionStabilityAiNodeConfig: NodeConfig = {
     nodeName: "Stable Diffusion",
     icon: "FaImage",
     hasInputHandle: true,
+    inputNames: ["prompt"],
     fields: [
         {
             type: "textarea",

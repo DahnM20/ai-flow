@@ -16,7 +16,7 @@ class DataSplitterProcessor(SimpleProcessor):
         self.separator = ESCAPE_CHARACTERS.get(separator_config, separator_config)
 
     def process(self):
-        self.data_to_split = self.input_processor.get_output(0)
+        self.data_to_split = self.get_input_processor().get_output(0)
         self.set_output(self.data_to_split.split(self.separator))
         self.nb_output = len(self._output)
         return self._output

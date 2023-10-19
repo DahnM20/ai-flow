@@ -32,6 +32,7 @@ export interface Field {
 export interface NodeConfig {
     nodeName: string;
     icon: string;
+    inputNames?: string[];
     fields: Field[];
     hideFieldsIfParent?: boolean;
     outputType: 'text' | 'imageUrl' | 'imageBase64';

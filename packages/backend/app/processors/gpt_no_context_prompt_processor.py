@@ -15,8 +15,10 @@ class GPTNoContextPromptProcessor(APIContextProcessor):
 
     def process(self):
         input_data = None
-        if getattr(self, "input_processor", None) is not None:
-            input_data = self.input_processor.get_output(self.input_key)
+        if self.get_input_processor() is not None:
+            input_data = self.get_input_processor().get_output(
+                self.get_input_node_output_key()
+            )
 
         self.init_context(input_data)
 

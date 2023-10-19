@@ -17,15 +17,17 @@ def load_config_data(fileName):
 
 def link_processors(processors):
     for processor in processors.values():
-        if hasattr(processor, "input"):
-            input_name = processor.input
-            input_processor = processors.get(input_name)
-            if not input_processor:
-                logging.error(
-                    f"Link_processors - processor name : '{processor.name}' - input_processor : ''{processor.input}'"
-                )
-                raise ValueError(f"Input processor '{input_name}' not found")
-            processor.set_input_processor(input_processor)
+        if hasattr(processor, "inputs"):
+            for input in processor.inputs:
+                input_processor = processors.get(input.get("inputNode"))
+                if not input_processor:
+                    logging.error(
+                        f"Link_processors - processor name : '{processor.name}' - input_processor : '{input.get('inputNode')}'"
+                    )
+                    raise ValueError(
+                        f"Input processor '{input.get('inputNode')}' not found"
+                    )
+                processor.add_input_processor(input_processor)
 
 
 def load_processors(config_data):

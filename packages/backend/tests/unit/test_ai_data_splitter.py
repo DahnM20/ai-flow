@@ -46,7 +46,7 @@ class TestAIDataSplitter(unittest.TestCase):
 
         # Act
         processor = AIDataSplitterProcessor(config, api_context_data)
-        processor.set_input_processor(input_processor)
+        processor.add_input_processor(input_processor)
         result = processor.process()
 
         # Assert

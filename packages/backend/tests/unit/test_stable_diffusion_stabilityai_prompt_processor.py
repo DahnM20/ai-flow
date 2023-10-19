@@ -116,7 +116,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
         api_context_data = {"session_stabilityai_api_key": "fake_api_key"}
         processor = StableDiffusionStabilityAIPromptProcessor(config, api_context_data)
         processor.set_storage_strategy(LocalStorageStrategy())
-        processor.set_input_processor(input_processor)
+        processor.add_input_processor(input_processor)
 
         # Act
         processor.process()

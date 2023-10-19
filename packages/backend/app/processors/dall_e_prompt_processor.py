@@ -14,7 +14,7 @@ class DallEPromptProcessor(APIContextProcessor):
 
     def process(self):
         self.prompt = (
-            self.input_processor.get_output(self.input_key)
+            self.get_input_processor().get_output(self.get_input_node_output_key())
             if self.prompt is None or len(self.prompt) == 0
             else self.prompt
         )

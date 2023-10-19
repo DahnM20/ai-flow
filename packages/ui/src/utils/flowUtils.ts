@@ -2,12 +2,12 @@ import { Node, Edge } from "reactflow";
 import { getConfigViaType } from "../nodesConfiguration/nodeConfig";
 import { NodeData } from "../types/node";
 
-const handlePrefix = 'handle';
+const handleInPrefix = 'handle-in';
 const handleOutPrefix = 'handle-out';
 const handleSeparator = '-';
 const indexKeyHandleOut = 2;
 
-export const generateIdForHandle = (key: number, isOutput?: boolean) => !isOutput ? `${handlePrefix}${handleSeparator}${key}` : `${handleOutPrefix}${handleSeparator}${key}`;
+export const generateIdForHandle = (key: number, isOutput?: boolean) => !isOutput ? `${handleInPrefix}${handleSeparator}${key}` : `${handleOutPrefix}${handleSeparator}${key}`;
 
 export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   const visited = new Set<string>();
@@ -36,33 +36,38 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
   return nodes.map((node: Node) => {
     withCoordinates = true
     const { id, ...rest } = node;
-    const inputEdge = edges.find((edge: any) => edge.target === id);
-    const inputId = inputEdge?.source || '';
 
-    const keySplitted = inputEdge?.sourceHandle?.split(handleSeparator)[indexKeyHandleOut]
-    const inputKey = !keySplitted || isNaN(+keySplitted) ? undefined : +keySplitted;
 
-    let inputFound;
-    if (node.data.processorType === 'inputFound') {
-      inputFound = node.data?.inputFound;
-    } else {
-      inputFound = nodes.find((node: any) => node.id === inputId)?.data.name || '';
-    }
+    const inputEdges = edges.filter((edge: any) => edge.target === id);
+
+    const inputs = inputEdges.map((edge: any, index) => {
+      const inputId = edge?.source || '';
+
+      const keySplitted = edge?.sourceHandle?.split(handleSeparator)[indexKeyHandleOut]
+      const inputNodeOutputKey = !keySplitted || isNaN(+keySplitted) ? undefined : +keySplitted;
+
+      const inputNode = nodes.find((node: any) => node.id === inputId)?.data.name || '';
+
+      return {
+        inputName: !!node.data.config?.inputNames ? node.data.config.inputNames[index] : undefined,
+        inputNode,
+        inputNodeOutputKey,
+      }
+
+    });
 
     const { a, nodeType, output, input, config, ...nodeDataForConfig } = node.data;
 
     if (withCoordinates) {
       return {
-        input: inputFound,
-        inputKey,
+        inputs,
         ...nodeDataForConfig,
         x: node.position.x,
         y: node.position.y,
       }
     } else {
       return {
-        input: inputFound,
-        inputKey,
+        inputs,
         ...nodeDataForConfig,
         // output,
       };
