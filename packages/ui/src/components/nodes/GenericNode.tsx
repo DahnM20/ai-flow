@@ -40,7 +40,6 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const [nodeId, setNodeId] = useState<string>(`${data.name}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
-    const inputHandleId = useMemo(() => generateIdForHandle(0), []);
     const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
 
 
@@ -221,16 +220,29 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
+    const nbInput = !!data.config.inputNames
+        ? data.config.inputNames.length
+        : 1;
+
     return (
         <NodeContainer key={nodeId} >
             <NodeHeader onDoubleClick={toggleCollapsed}>
                 {
                     data.config.hasInputHandle &&
-                    <HandleWrapper id={inputHandleId} position={
-                        !!data?.handles && data.handles[inputHandleId]
-                            ? data.handles[inputHandleId]
-                            : Position.Top}
-                        onChangeHandlePosition={handleChangeHandlePosition} />
+                    <>
+                        {
+                            Array.from({ length: nbInput }, (_, i) => i).map((index) => {
+                                const inputHandleId = generateIdForHandle(index);
+                                return <HandleWrapper id={inputHandleId} position={
+                                    !!data?.handles && data.handles[inputHandleId]
+                                        ? data.handles[inputHandleId]
+                                        : Position.Top}
+                                    handleIndex={index}
+                                    onChangeHandlePosition={handleChangeHandlePosition} />
+                            })
+                        }
+                    </>
+
                 }
                 <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
                 <NodeTitle>{t(data.config.nodeName)}</NodeTitle>

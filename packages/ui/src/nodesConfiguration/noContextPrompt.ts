@@ -3,6 +3,7 @@ import { NodeConfig } from "./nodeConfig";
 export const noContextPromptNodeConfig: NodeConfig = {
     nodeName: 'NoContextPrompt',
     icon: 'FaRobot',
+    inputNames: ['initData'],
     fields: [
         {
             name: 'gptVersion',
