@@ -73,6 +73,11 @@ class Processor(ABC):
             return 0
         return self.inputs[0].get("inputNodeOutputKey")
 
+    def get_input_node_output_keys(self):
+        if self.inputs is None or len(self.inputs) == 0:
+            return None
+        return [input.get("inputNodeOutputKey") for input in self.inputs]
+
     def add_input_processor(self, input_processor):
         self.input_processors.append(input_processor)
 
