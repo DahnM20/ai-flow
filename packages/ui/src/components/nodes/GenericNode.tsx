@@ -18,8 +18,10 @@ import { useIsPlaying } from '../../hooks/useIsPlaying';
 import ImageUrlOutput from '../shared/nodes-parts/ImageUrlOutput';
 import ImageBase64Output from '../shared/nodes-parts/ImageBase64Output';
 import { GenericNodeData } from '../../types/node';
-import HandleWrapper from '../handles/HandleWrapper';
+import HandleWrapper, { LinkedHandlePositions } from '../handles/HandleWrapper';
 import { toastFastInfoMessage } from '../../utils/toastUtils';
+import InputNameBar from '../shared/nodes-parts/InputNameBar';
+import { config } from 'process';
 
 interface GenericNodeProps {
     data: GenericNodeData;
@@ -41,9 +43,33 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
     const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
-
-
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+
+
+    const nbInput = useMemo(() => {
+        return !!data.config.inputNames
+            ? data.config.inputNames.length
+            : 1;
+    }, []);
+
+    const allInputHandleIds = Array.from({ length: nbInput }, (_, i) => i).map((index) => generateIdForHandle(index));
+    const allOutputHandleIds = [outputHandleId];
+
+    const allHandleIds = useMemo(() => {
+        const inputHandleIds = Array.from({ length: nbInput }, (_, i) => generateIdForHandle(i));
+        return [...inputHandleIds, outputHandleId];
+    }, [nbInput, outputHandleId]);
+
+    const allHandlePositions = useMemo(() => {
+        const positions = {} as LinkedHandlePositions;
+        allHandleIds.forEach((id) => {
+            let currentPosition: Position = data?.handles?.[id] ?? (id.includes('out') ? Position.Right : Position.Left);
+            positions[currentPosition] = [...(positions[currentPosition] || []), id];
+        });
+        return positions;
+    }, [allHandleIds, data]);
+
 
     useEffect(() => {
         setNodeId(`${data.name}-${Date.now()}`);
@@ -127,6 +153,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                             <NodeInput key={`${id}-${field.name}`} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
                         </>
                     );
+
                 case 'textarea':
                     return (
                         <>
@@ -151,7 +178,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                                 ))}
                             </NodeSelect>
                         </>
-                    )
+                    );
                 case 'option':
                     if (!data[field.name]) {
                         setDefaultOption(field);
@@ -172,6 +199,12 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                                 </OptionSelector>
                             </div>
                         </>
+                    );
+
+                case 'inputNameBar':
+                    return (
+                        !!data.config.inputNames
+                        && <InputNameBar inputNames={data.config.inputNames} textareaRef={textareaRef} />
                     );
             }
         });
@@ -220,10 +253,6 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
-    const nbInput = !!data.config.inputNames
-        ? data.config.inputNames.length
-        : 1;
-
     return (
         <NodeContainer key={nodeId} >
             <NodeHeader onDoubleClick={toggleCollapsed}>
@@ -231,13 +260,12 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                     data.config.hasInputHandle &&
                     <>
                         {
-                            Array.from({ length: nbInput }, (_, i) => i).map((index) => {
-                                const inputHandleId = generateIdForHandle(index);
-                                return <HandleWrapper id={inputHandleId} position={
-                                    !!data?.handles && data.handles[inputHandleId]
-                                        ? data.handles[inputHandleId]
-                                        : Position.Top}
-                                    handleIndex={index}
+                            allInputHandleIds.map((id) => {
+                                return <HandleWrapper id={id} position={
+                                    !!data?.handles && data.handles[id]
+                                        ? data.handles[id]
+                                        : Position.Left}
+                                    linkedHandlePositions={allHandlePositions}
                                     onChangeHandlePosition={handleChangeHandlePosition} />
                             })
                         }
@@ -249,7 +277,8 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 <HandleWrapper id={outputHandleId} position={
                     !!data?.handles && data.handles[outputHandleId]
                         ? data.handles[outputHandleId]
-                        : Position.Bottom}
+                        : Position.Right}
+                    linkedHandlePositions={allHandlePositions}
                     onChangeHandlePosition={handleChangeHandlePosition}
                     isOutput />
                 <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />

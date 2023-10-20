@@ -110,7 +110,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
             <HandleWrapper id={inputHandleId} position={
                 !!data?.handles && data.handles[inputHandleId]
                     ? data.handles[inputHandleId]
-                    : Position.Top}
+                    : Position.Left}
                 onChangeHandlePosition={handleChangeHandlePosition} />
 
             <div className='flex flex-row justify-between items-center w-full px-2' >
@@ -152,7 +152,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
             <HandleWrapper id={outputHandleId} position={
                 !!data?.handles && data.handles[outputHandleId]
                     ? data.handles[outputHandleId]
-                    : Position.Bottom}
+                    : Position.Right}
                 onChangeHandlePosition={handleChangeHandlePosition}
                 isOutput />
             {

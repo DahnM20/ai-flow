@@ -203,7 +203,7 @@ function Flow(props: FlowProps) {
   );
 
   const isHandleAlreadyTargeted = (connection: Connection, eds: Edge[]) => {
-    if (eds.filter(edge => edge.targetHandle === connection.targetHandle).length > 0) {
+    if (eds.filter(edge => edge.targetHandle === connection.targetHandle && edge.target === connection.target).length > 0) {
       return true;
     }
     return false;

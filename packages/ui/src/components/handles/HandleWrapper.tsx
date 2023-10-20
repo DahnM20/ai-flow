@@ -5,15 +5,19 @@ import { useMemo, useRef, useState } from "react";
 import { Position } from "reactflow";
 import React from "react";
 
+export type LinkedHandlePositions = {
+    [key in Position]: string[];
+};
+
 type HandleWrapperProps = {
     id: string;
     position: Position;
+    linkedHandlePositions?: LinkedHandlePositions;
     isOutput?: boolean;
-    handleIndex?: number;
     onChangeHandlePosition: (newPosition: Position, id: string) => void;
 };
 
-const HandleWrapper: React.FC<HandleWrapperProps> = ({ id, position, onChangeHandlePosition, isOutput, handleIndex }) => {
+const HandleWrapper: React.FC<HandleWrapperProps> = ({ id, position, onChangeHandlePosition, isOutput, linkedHandlePositions }) => {
 
     const HANDLE_DEFAULT_OFFSET = 20;
 
@@ -50,7 +54,9 @@ const HandleWrapper: React.FC<HandleWrapperProps> = ({ id, position, onChangeHan
     }
 
     const adjustPositionByIndex = (): CSSProperties => {
-        if (handleIndex == null) return {}
+        if (linkedHandlePositions == null) return {}
+
+        const handleIndex = !!linkedHandlePositions[currentPosition] ? linkedHandlePositions[currentPosition].indexOf(id) : 0;
 
         switch (currentPosition) {
             case Position.Left:
