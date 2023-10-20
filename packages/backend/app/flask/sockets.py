@@ -4,6 +4,17 @@ import json
 import eventlet
 from flask import g
 from flask_socketio import SocketIO, emit
+
+from ..authentication.verifyUser import (
+    verify_access_token,
+    verify_id_token,
+)
+
+from ..authentication.cognitoUtils import (
+    get_cognito_app_client_id,
+    get_cognito_keys,
+    get_user_details,
+)
 from ..processors_utils.processor_launcher import (
     load_processors,
     launchProcessors,
@@ -42,9 +53,35 @@ def populate_session_global_object(data):
             g.session_stabilityai_api_key = data["stabilityaiApiKey"]
 
 
+def reset_context():
+    g.user_authentication_jwt = None
+    g.isAuthenticated = False
+    g.user_details = None
+
+
 @socketio.on("connect")
 def handle_connect():
     logging.info("Client connected")
+
+
+@socketio.on("auth")
+def handle_connect(data):
+    logging.debug("Auth received")
+
+    user_authentication_jwt = data.get("idToken")
+    user_access_jwt = data.get("accessToken")
+    keys = get_cognito_keys()
+    app_client_id = get_cognito_app_client_id()
+
+    if verify_id_token(
+        user_authentication_jwt, keys, app_client_id
+    ) and verify_access_token(user_access_jwt, keys, app_client_id):
+        g.user_authentication_jwt = user_authentication_jwt
+        g.isAuthenticated = True
+        g.user_details = get_user_details(user_access_jwt)
+        print("Logged in")
+    else:
+        reset_context()
 
 
 @socketio.on("process_file")
@@ -117,3 +154,4 @@ def handle_run_node(data):
 @socketio.on("disconnect")
 def handle_disconnect():
     logging.info("Client disconnected")
+    reset_context()
