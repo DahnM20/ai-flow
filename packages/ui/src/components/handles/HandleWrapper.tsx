@@ -20,6 +20,7 @@ type HandleWrapperProps = {
 const HandleWrapper: React.FC<HandleWrapperProps> = ({ id, position, onChangeHandlePosition, isOutput, linkedHandlePositions }) => {
 
     const HANDLE_DEFAULT_OFFSET = 20;
+    const POPUP_DEFAULT_TOP_OFFSET = 10;
 
     const [showPopup, setShowPopup] = useState(false);
     const [currentPosition, setCurrentPosition] = useState<Position>(position)
@@ -30,7 +31,7 @@ const HandleWrapper: React.FC<HandleWrapperProps> = ({ id, position, onChangeHan
     const handleMouseEnter = (event: React.MouseEvent) => {
         if (ref.current) {
             const rect = ref.current.getBoundingClientRect();
-            setPopupCoords({ x: rect.left + rect.width / 2, y: rect.top - 10 });
+            setPopupCoords({ x: rect.left + rect.width / 2, y: rect.top - POPUP_DEFAULT_TOP_OFFSET });
             setShowPopup(true);
         }
     };

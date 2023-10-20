@@ -10,7 +10,6 @@ import {
   addEdge,
   Connection,
   ReactFlowInstance,
-  NodeProps,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';

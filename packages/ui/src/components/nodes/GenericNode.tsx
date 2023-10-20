@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef, memo, useMemo } from 'react';
-import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
+import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { NodeResizer } from '@reactflow/node-resizer';
 import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle, NodeSelect, NodeSelectOption } from '../shared/Node.styles';
 import useHandleShowOutput from '../../hooks/useHandleShowOutput';
@@ -18,10 +18,10 @@ import { useIsPlaying } from '../../hooks/useIsPlaying';
 import ImageUrlOutput from '../shared/nodes-parts/ImageUrlOutput';
 import ImageBase64Output from '../shared/nodes-parts/ImageBase64Output';
 import { GenericNodeData } from '../../types/node';
-import HandleWrapper, { LinkedHandlePositions } from '../handles/HandleWrapper';
+import HandleWrapper from '../handles/HandleWrapper';
 import { toastFastInfoMessage } from '../../utils/toastUtils';
 import InputNameBar from '../shared/nodes-parts/InputNameBar';
-import { config } from 'process';
+import useHandlePositions from '../../hooks/useHandlePositions';
 
 interface GenericNodeProps {
     data: GenericNodeData;
@@ -53,23 +53,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             : 1;
     }, []);
 
-    const allInputHandleIds = Array.from({ length: nbInput }, (_, i) => i).map((index) => generateIdForHandle(index));
-    const allOutputHandleIds = [outputHandleId];
-
-    const allHandleIds = useMemo(() => {
-        const inputHandleIds = Array.from({ length: nbInput }, (_, i) => generateIdForHandle(i));
-        return [...inputHandleIds, outputHandleId];
-    }, [nbInput, outputHandleId]);
-
-    const allHandlePositions = useMemo(() => {
-        const positions = {} as LinkedHandlePositions;
-        allHandleIds.forEach((id) => {
-            let currentPosition: Position = data?.handles?.[id] ?? (id.includes('out') ? Position.Right : Position.Left);
-            positions[currentPosition] = [...(positions[currentPosition] || []), id];
-        });
-        return positions;
-    }, [allHandleIds, data]);
-
+    const { allInputHandleIds, allHandlePositions } = useHandlePositions(data, nbInput, outputHandleId);
 
     useEffect(() => {
         setNodeId(`${data.name}-${Date.now()}`);
