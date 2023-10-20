@@ -11,6 +11,7 @@ import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
 import { IconType } from "react-icons/lib";
 import { BsInputCursorText } from "react-icons/bs";
 import { AiOutlineRobot } from "react-icons/ai";
+import { mergerPromptNode } from "./mergerPromptNode";
 
 export type SectionType = 'basic' | 'advanced';
 
@@ -22,7 +23,7 @@ export interface Option {
 
 export interface Field {
     name: string;
-    type: 'input' | 'textarea' | 'select' | 'option';
+    type: 'input' | 'textarea' | 'select' | 'option' | 'inputNameBar';
     label?: string;
     placeholder?: string;
     options?: Option[];
@@ -51,6 +52,7 @@ const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'youtube_transcript_input': youtubeTranscriptNodeConfig,
     'dalle-prompt': dallENodeConfig,
     'stable-diffusion-stabilityai-prompt': stableDiffusionStabilityAiNodeConfig,
+    'merger-prompt': mergerPromptNode,
     // add other configs here...
 }
 
@@ -96,7 +98,8 @@ export const nodeSectionMapping: NodeSection[] = [
         section: 'Tools',
         icon: FaToolbox,
         nodes: [//{ label: 'DataSplitter', type: 'data-splitter', helpMessage: 'dataSplitterHelp' },
-            { label: 'DataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp' }],
+            { label: 'DataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp' },
+            { label: 'MergerPrompt', type: 'merger-prompt', helpMessage: 'mergerPromptHelp' }],
     }
 ];
 

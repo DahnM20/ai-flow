@@ -9,7 +9,7 @@ import EaseOut from "../components/shared/motions/EaseOut";
 /**
  * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
  */
-export const allNodeTypes = ['gpt', 'file', 'url_input', 'dalle-prompt', 'data-splitter', 'ai-data-splitter', 'input-text', 'gpt-prompt', 'youtube_transcript_input', 'gpt-no-context-prompt', 'ai-action', 'stable-diffusion-stabilityai-prompt'] as const;
+export const allNodeTypes = ['gpt', 'file', 'url_input', 'dalle-prompt', 'data-splitter', 'ai-data-splitter', 'input-text', 'gpt-prompt', 'youtube_transcript_input', 'gpt-no-context-prompt', 'ai-action', 'stable-diffusion-stabilityai-prompt', 'merger-prompt'] as const;
 export type NodeType = typeof allNodeTypes[number];
 
 
