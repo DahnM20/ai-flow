@@ -1,5 +1,6 @@
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
 import { io, Socket } from "socket.io-client";
+import { UserContext } from './UserProvider';
 
 export type WSConfiguration = {
     openaiApiKey?: string;
@@ -34,6 +35,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [config, setConfig] = useState<WSConfiguration | null>(null);
 
+    const { user, getUserIDToken, getUserAccessToken } = useContext(UserContext);
+
     useEffect(() => {
         if (socket) {
             socket.disconnect();
@@ -42,30 +45,32 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         const storedOpenAIKey = window.localStorage.getItem('openaiApiKey');
         const storedStabilityAiKey = window.localStorage.getItem('stabilityaiApiKey');
 
-        setConfig({
+        const config = {
             openaiApiKey: !!storedOpenAIKey ? storedOpenAIKey : undefined,
             stabilityaiApiKey: !!storedStabilityAiKey ? storedStabilityAiKey : undefined,
-        })
+        }
 
-        const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);
-
-        //console.log(`Connecting to ${WS_HOST}:${WS_PORT} with ${protocol}`);
-
-        setSocket(newSocket);
+        const newSocket = connectSocket(config);
 
         return () => {
             newSocket.close();
         };
-    }, []);
+    }, [user]);
 
-    function connectSocket(configuration: WSConfiguration): void {
+    function connectSocket(configuration: WSConfiguration): Socket {
         setConfig(configuration);
 
         const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);
 
-        //console.log(`Connecting to ${WS_HOST}:${WS_PORT} with ${protocol}`);
+        if (!!user) {
+            const idToken = getUserIDToken();
+            const accessToken = getUserAccessToken()
+            newSocket.emit('auth', { idToken, accessToken });
+        }
 
         setSocket(newSocket);
+
+        return newSocket;
     }
 
     function verifyConfiguration(): boolean {

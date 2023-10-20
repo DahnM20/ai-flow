@@ -11,9 +11,9 @@ import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../u
 import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
 import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
-import { Auth, Hub } from 'aws-amplify';
 import LoginButton from './login/LoginButton';
 import FlowWrapper from './FlowWrapper';
+import { UserContext } from './providers/UserProvider';
 
 interface FlowTab {
   nodes: Node[];
@@ -32,10 +32,12 @@ const FlowTabs = () => {
   const [refresh, setRefresh] = useState(false);
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
   const { dark, toggleTheme } = useContext(ThemeContext);
-  const [user, setUser] = useState<any>(null);
   const { socket, verifyConfiguration, config } = useContext(SocketContext);
+  const { user, setLoggedUser } = useContext(UserContext);
   const [isRunning, setIsRunning] = useState(false);
   const [openConfig, setOpenConfig] = useState(false);
+
+
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);
@@ -47,25 +49,6 @@ const FlowTabs = () => {
       setFlowTabs(JSON.parse(savedFlowTabs));
       setRefresh(true);
     }
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      switch (event) {
-        case "signIn":
-          setUser(data);
-          break;
-        case "signOut":
-          setUser(null);
-          break;
-        // case "customOAuthState":
-        //   setCustomState(data);
-      }
-    });
-
-    getUser();
-
-    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -154,16 +137,6 @@ const FlowTabs = () => {
     toastCustomIconInfoMessage('You can send me a DM on X/Twitter, or open an Issue on Github :) My links are at the bottom of the configuration menu', FiMail)
   }
 
-  const getUser = async (): Promise<void> => {
-    try {
-      const currentUser = await Auth.currentAuthenticatedUser();
-      setUser(currentUser);
-    } catch (error) {
-      console.error(error);
-      console.log("Not signed in");
-    }
-  };
-
   const handleClickProfile = () => {
     setOpenConfig(true);
   }
@@ -214,7 +187,7 @@ const FlowTabs = () => {
                               hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>
         <div className='absolute bottom-0 pb-1' > Feedback ? </div>
       </FeedbackIcon>
-      <FlowWrapper openConfig={openConfig} user={user} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)}>
+      <FlowWrapper openConfig={openConfig} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)}>
         <Flow
           key={`flow-${currentTab}-${refresh}`}
           nodes={flowTabs.tabs[currentTab].nodes}

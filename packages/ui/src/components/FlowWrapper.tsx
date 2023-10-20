@@ -7,13 +7,12 @@ import RightIconButton from './buttons/ConfigurationButton';
 
 interface FlowWrapperProps {
     children?: ReactNode;
-    user?: any;
     openConfig: boolean;
     onCloseConfig: () => void;
     onOpenConfig: () => void;
 }
 
-function FlowWrapper({ user, openConfig, onCloseConfig, onOpenConfig, children }: FlowWrapperProps) {
+function FlowWrapper({ openConfig, onCloseConfig, onOpenConfig, children }: FlowWrapperProps) {
     const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
 
     const handleConfigClose = useCallback(() => {
@@ -30,7 +29,7 @@ function FlowWrapper({ user, openConfig, onCloseConfig, onOpenConfig, children }
             <DnDSidebar />
             <RightIconButton onClick={handleOpenConfig} />
             <RightIconButton onClick={() => setIsHelpOpen(true)} color='#7fcce3a9' bottom='80px' icon={<FiHelpCircle />} />
-            <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} user={user} />
+            <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
             {isHelpOpen && <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />}
             {children}
         </>

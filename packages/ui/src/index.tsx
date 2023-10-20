@@ -13,6 +13,7 @@ import App from './components/App';
 
 import awsExports from "./aws-exports";
 import { Amplify } from "aws-amplify";
+import { UserProvider } from './components/providers/UserProvider';
 
 
 Amplify.configure(awsExports);
@@ -24,14 +25,16 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <GlobalStyle />
-    <SocketProvider>
-      <ThemeProvider>
-        <Suspense fallback={<Fallback />}>
-          <ToastContainer />
-          <App />
-        </Suspense>
-      </ThemeProvider>
-    </SocketProvider>
+    <UserProvider>
+      <SocketProvider>
+        <ThemeProvider>
+          <Suspense fallback={<Fallback />}>
+            <ToastContainer />
+            <App />
+          </Suspense>
+        </ThemeProvider>
+      </SocketProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 

@@ -5,19 +5,20 @@ import { SocketContext, WSConfiguration } from '../providers/SocketProvider';
 import { useTranslation } from 'react-i18next';
 import UserProfile from '../login/UserProfile';
 import { Auth } from '@aws-amplify/auth';
+import { UserContext } from '../providers/UserProvider';
 
 interface ConfigPopupProps {
   isOpen: boolean;
-  user: any;
   onClose: () => void;
   onValidate?: () => void;
 }
 
-function ConfigPopup({ isOpen, user, onClose, onValidate }: ConfigPopupProps) {
+function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
 
   const { t } = useTranslation('config');
 
   const { config, connectSocket } = useContext(SocketContext);
+  const { user } = useContext(UserContext);
 
   const [apiKeyOpenAI, setApiKeyOpenAI] = useState('');
   const [apiKeyStabilityAI, setApiKeyStabilityAI] = useState('');
