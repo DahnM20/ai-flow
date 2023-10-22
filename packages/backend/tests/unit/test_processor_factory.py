@@ -1,5 +1,7 @@
 import unittest
-from app.processors.factory.processor_factory import ProcessorFactoryIterModules
+from app.processors.factory.processor_factory_iter_modules import (
+    ProcessorFactoryIterModules,
+)
 from app.processors.types.processor import SimpleProcessor, APIContextProcessor
 
 

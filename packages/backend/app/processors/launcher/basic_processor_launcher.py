@@ -11,7 +11,7 @@ from ..factory.processor_factory import ProcessorFactory
 
 
 @singleton
-class BasicWSProcessorLauncher:
+class BasicProcessorLauncher:
     """
     Basic Processor Launcher emiting event through flask_socketio websockets
 
