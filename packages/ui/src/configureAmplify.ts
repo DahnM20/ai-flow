@@ -5,8 +5,13 @@ const configureAmplify = async () => {
 
     if (useAuth.toLowerCase() === 'true') {
         // @ts-ignore
-        const awsExports = await import("./aws-exports");
-        Amplify.configure(awsExports.default);
+        import('./utils/aws-exports')
+            .then((awsExports) => {
+                Amplify.configure(awsExports.default);
+            })
+            .catch((error) => {
+                console.error("Erreur lors de l'importation de aws-exports:", error);
+            });
     }
 };
 
