@@ -2,7 +2,7 @@ import { ReactNode, memo, useCallback, useState } from "react";
 import { FiHelpCircle } from "react-icons/fi";
 import ConfigPopup from "./popups/ConfigPopup";
 import HelpPopup from "./popups/HelpPopup";
-import DnDSidebar from "./side-views/DnDSidebar";
+import DnDSidebar from "./side-views/DndSidebar/DnDSidebar";
 import RightIconButton from './buttons/ConfigurationButton';
 
 interface FlowWrapperProps {

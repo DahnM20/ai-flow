@@ -51,7 +51,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         }
 
         // Connect by default only if user got api keys
-        if (!!storedOpenAIKey || !!storedStabilityAiKey) {
+        if (!!storedOpenAIKey || !!storedStabilityAiKey || !!user) {
             const newSocket = connectSocket(config);
 
             setSocket(newSocket);
