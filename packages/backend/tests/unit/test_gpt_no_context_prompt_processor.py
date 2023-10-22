@@ -11,7 +11,7 @@ class TestGPTNoContextPromptProcessor(unittest.TestCase):
     @staticmethod
     def get_default_valid_config(model):
         return {
-            "input": "",
+            "input": [],
             "name": "g1ei670qc#gpt-no-context-prompt",
             "processorType": "gpt-no-context-prompt",
             "gptVersion": model,

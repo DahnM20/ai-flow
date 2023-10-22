@@ -12,8 +12,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
     @staticmethod
     def get_default_valid_config():
         return {
-            "input": "0rhbnaol3#gpt-no-context-prompt",
-            "inputKey": 0,
+            "inputs": [{"inputNode": "0rhbnaol3#gpt-no-context-prompt"}],
             "name": "vd6up8r0m#stable-diffusion-stabilityai-prompt",
             "processorType": "stable-diffusion-stabilityai-prompt",
             "size": "1024x1024",
@@ -95,7 +94,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
 
         input_processor = InputProcessor(
             {
-                "input": "",
+                "inputs": [],
                 "name": "p00tklq5w#input-text",
                 "processorType": "input-text",
                 "inputText": expected_prompt,

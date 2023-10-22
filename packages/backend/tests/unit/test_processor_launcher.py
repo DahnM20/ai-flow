@@ -9,9 +9,9 @@ from app.processors.factory.processor_factory_iter_modules import (
 
 class NoInputMock(MagicMock):
     def __getattr__(self, name):
-        if name == "input":
+        if name == "inputs":
             raise AttributeError(
-                f"'{type(self).__name__}' object has no attribute 'input'"
+                f"'{type(self).__name__}' object has no attribute 'inputs'"
             )
         return super().__getattr__(name)
 
@@ -32,7 +32,7 @@ class TestProcessorLauncher(unittest.TestCase):
 
         processor1 = Mock()
         processor1.name = "processor1"
-        processor1.input = "processor2"
+        processor1.inputs = [{"inputNode": "processor2"}]
 
         processor2 = NoInputMock()
         processor2.name = "processor2"
@@ -43,4 +43,4 @@ class TestProcessorLauncher(unittest.TestCase):
         }
 
         launcher._link_processors(processors)
-        processor1.set_input_processor.assert_called_once_with(processor2)
+        processor1.add_input_processor.assert_called_once_with(processor2)

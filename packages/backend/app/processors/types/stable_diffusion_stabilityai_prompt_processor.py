@@ -43,7 +43,6 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
             "steps": 30,
         }
 
-        print("hi")
         response = requests.post(
             f"{self.api_host}/v1/generation/{self.engine_id}/text-to-image",
             headers={

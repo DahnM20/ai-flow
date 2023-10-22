@@ -10,8 +10,7 @@ class TestAIDataSplitter(unittest.TestCase):
     @staticmethod
     def get_default_valid_config():
         return {
-            "input": "45ooyfg7v#input-processor",
-            "inputKey": 0,
+            "inputs": [{"inputNode": "4f2d3sh03#input-processor"}],
             "name": "s69w5eiha#ai-data-splitter",
             "processorType": "ai-data-splitter",
             "nbOutput": 0,
@@ -36,7 +35,7 @@ class TestAIDataSplitter(unittest.TestCase):
         input_text = "a dog, a dolphin, an elephant"
         input_processor = InputProcessor(
             {
-                "input": "",
+                "inputs": [],
                 "name": "4f2d3sh03#input-text",
                 "processorType": "input-text",
                 "inputText": input_text,
