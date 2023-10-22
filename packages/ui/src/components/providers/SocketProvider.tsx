@@ -50,11 +50,17 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             stabilityaiApiKey: !!storedStabilityAiKey ? storedStabilityAiKey : undefined,
         }
 
-        const newSocket = connectSocket(config);
+        // Connect by default only if user got api keys
+        if (!!storedOpenAIKey || !!storedStabilityAiKey) {
+            const newSocket = connectSocket(config);
 
-        return () => {
-            newSocket.close();
-        };
+            setSocket(newSocket);
+
+            return () => {
+                newSocket.close();
+            };
+        }
+
     }, [user]);
 
     function connectSocket(configuration: WSConfiguration): Socket {

@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { FaPlay, FaSpinner } from 'react-icons/fa';
 import { memo, useContext } from 'react';
+import TapScale from '../shared/motions/TapScale';
 
 interface ButtonRunAllProps {
     onClick: () => void;
@@ -9,24 +10,26 @@ interface ButtonRunAllProps {
 const ButtonRunAll: React.FC<ButtonRunAllProps> = ({ onClick, isRunning }) => {
 
     return (
-        <div className={`flex flex-row items-center justify-center gap-x-2 
+        <TapScale>
+            <div className={`flex flex-row items-center justify-center gap-x-2 
                 ${isRunning
-                ? 'text-slate-200 bg-[#86D8F0]'
-                : 'text-[#86D8F0] ring-sky-800 bg-slate-800 ring-2'} 
+                    ? 'text-slate-200 bg-[#86D8F0]'
+                    : 'text-[#86D8F0] ring-sky-800 bg-slate-800 ring-2'} 
                 hover:bg-[#86D8F0]/80
                 hover:text-slate-200
                 py-1 px-2 rounded-md cursor-pointer`} onClick={onClick}>
-            <Button>
-                {isRunning ? <Spinner className='text-xl ' /> : <FaPlay />}
-            </Button>
+                <Button>
+                    {isRunning ? <Spinner className='text-xl ' /> : <FaPlay />}
+                </Button>
 
-            {
-                !isRunning &&
-                <div>
-                    RUN ALL
-                </div>
-            }
-        </div>
+                {
+                    !isRunning &&
+                    <div>
+                        RUN ALL
+                    </div>
+                }
+            </div>
+        </TapScale>
     );
 };
 

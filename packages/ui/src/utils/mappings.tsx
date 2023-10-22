@@ -4,6 +4,7 @@ import FileDropNode from "../components/nodes/fileDropNode";
 import GenericNode from "../components/nodes/GenericNode";
 import AIDataSplitterNode from "../components/nodes/AIDataSplitterNode";
 import AIActionNode from "../components/nodes/AIActionNode";
+import EaseOut from "../components/shared/motions/EaseOut";
 
 /**
  * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
@@ -22,7 +23,6 @@ export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> =
   "ai-action": AIActionNode,
 };
 
-
 /**
  * Generate the mapping used by ReactFlow. 
  * 
@@ -37,3 +37,19 @@ export const getAllNodeTypesComponentMapping = () => {
 
   return completeNodeTypes;
 }
+
+export const getAllNodeWithEaseOut = (): Record<NodeType, React.FC<NodeProps>> => {
+  const completeNodeTypes: Record<NodeType, React.FC<NodeProps>> = {} as Record<NodeType, React.FC<NodeProps>>;
+
+  allNodeTypes.forEach((type: NodeType) => {
+    const NodeComponent = specificNodeTypes[type] || GenericNode;
+
+    completeNodeTypes[type] = (props: NodeProps) => (
+      <EaseOut>
+        <NodeComponent {...props} />
+      </EaseOut>
+    );
+  });
+
+  return completeNodeTypes;
+};
