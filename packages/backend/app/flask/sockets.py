@@ -1,7 +1,11 @@
+import eventlet
+
+eventlet.monkey_patch(all=False, socket=True)
+
 from app.flask.app import app
 import logging
 import json
-import eventlet
+
 from flask import g
 from flask_socketio import SocketIO, emit
 from ..root_injector import root_injector
@@ -22,7 +26,6 @@ import os
 from .decorators import with_flow_data_validations
 from .validators import max_empty_output_data, max_url_input_nodes, max_nodes
 
-eventlet.monkey_patch(all=False, socket=True)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 
@@ -145,6 +148,7 @@ def handle_run_node(data):
             "error",
             {"error": str({node_name}) + " - " + str(e), "node_name": node_name},
         )
+        traceback.print_exc()
         logging.error(f"An error occurred: {node_name} - {str(e)}")
 
 
