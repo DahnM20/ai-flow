@@ -10,13 +10,18 @@ import { Fallback } from './components/tools/Fallback';
 import './i18n';
 import { ToastContainer } from 'react-toastify';
 import App from './components/App';
-
-import awsExports from "./aws-exports";
 import { Amplify } from "aws-amplify";
 import { UserProvider } from './components/providers/UserProvider';
 
+import('./aws-exports')
+  .then((module) => {
+    const awsExports = module.default;
+    Amplify.configure(awsExports);
+  })
+  .catch((error) => {
+    console.error("aws-exports module not found");
+  });
 
-Amplify.configure(awsExports);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
