@@ -2,8 +2,10 @@ from ..storage.storage_strategy import StorageStrategy
 import boto3
 import os
 from datetime import timedelta
+from injector import singleton
 
 
+@singleton
 class S3StorageStrategy(StorageStrategy):
     """S3 storage strategy. For the cloud version, every generated image is saved in an S3 bucket for 12H."""
 

@@ -11,20 +11,29 @@ import './i18n';
 import { ToastContainer } from 'react-toastify';
 import App from './components/App';
 
+import configureAmplify from "./configureAmplify";
+import { UserProvider } from './components/providers/UserProvider';
+
+
+configureAmplify();
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <GlobalStyle />
-    <SocketProvider>
-      <ThemeProvider>
-        <Suspense fallback={<Fallback />}>
-          <ToastContainer />
-          <App />
-        </Suspense>
-      </ThemeProvider>
-    </SocketProvider>
+    <UserProvider>
+      <SocketProvider>
+        <ThemeProvider>
+          <Suspense fallback={<Fallback />}>
+            <ToastContainer />
+            <App />
+          </Suspense>
+        </ThemeProvider>
+      </SocketProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 

@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import MagicMock, Mock, patch, mock_open
 
-from app.processors_utils.processor_launcher import (
-    link_processors,
-    load_config_data,
+from app.processors.launcher.basic_processor_launcher import BasicProcessorLauncher
+from app.processors.factory.processor_factory_iter_modules import (
+    ProcessorFactoryIterModules,
 )
 
 
@@ -18,12 +18,18 @@ class NoInputMock(MagicMock):
 
 class TestProcessorLauncher(unittest.TestCase):
     def test_load_config_data_valid_file(self):
+        factory = ProcessorFactoryIterModules()
+        launcher = BasicProcessorLauncher(factory, None)
+
         m = mock_open(read_data='{"key": "value"}')
         with patch("builtins.open", m):
-            data = load_config_data("fake_file_path")
+            data = launcher._load_config_data("fake_file_path")
             self.assertEqual(data, {"key": "value"})
 
     def test_link_processors_valid(self):
+        factory = ProcessorFactoryIterModules()
+        launcher = BasicProcessorLauncher(factory, None)
+
         processor1 = Mock()
         processor1.name = "processor1"
         processor1.input = "processor2"
@@ -36,5 +42,5 @@ class TestProcessorLauncher(unittest.TestCase):
             "processor2": processor2,
         }
 
-        link_processors(processors)
+        launcher._link_processors(processors)
         processor1.set_input_processor.assert_called_once_with(processor2)

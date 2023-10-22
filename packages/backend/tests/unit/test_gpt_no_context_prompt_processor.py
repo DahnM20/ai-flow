@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import ANY, patch
 
-from app.processors.gpt_no_context_prompt_processor import (
+from app.processors.types.gpt_no_context_prompt_processor import (
     GPTNoContextPromptProcessor,
 )
 from tests.utils.openai_mock_utils import create_mocked_openai_response

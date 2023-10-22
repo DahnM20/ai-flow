@@ -3,6 +3,7 @@
   "version": "0.4.1",
   "private": true,
   "dependencies": {
+    "@aws-amplify/ui-react": "^5.3.1",
     "@headlessui/react": "^1.7.17",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -13,6 +14,7 @@
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "autoprefixer": "^10.4.14",
+    "aws-amplify": "^5.3.11",
     "dompurify": "^3.0.2",
     "dotenv": "^16.0.3",
     "framer-motion": "^10.16.4",

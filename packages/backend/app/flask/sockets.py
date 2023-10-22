@@ -1,21 +1,31 @@
+import eventlet
+
+eventlet.monkey_patch(all=False, socket=True)
+
 from app.flask.app import app
 import logging
 import json
-import eventlet
+
 from flask import g
 from flask_socketio import SocketIO, emit
-from ..processors_utils.processor_launcher import (
-    load_processors,
-    launchProcessors,
-    launch_processors_for_node,
-    load_processors_for_node,
+from ..root_injector import root_injector
+
+from ..authentication.verifyUser import (
+    verify_access_token,
+    verify_id_token,
 )
+
+from ..authentication.cognitoUtils import (
+    get_cognito_app_client_id,
+    get_cognito_keys,
+    get_user_details,
+)
+from ..processors.launcher.processor_launcher import ProcessorLauncher
 import traceback
 import os
 from .decorators import with_flow_data_validations
 from .validators import max_empty_output_data, max_url_input_nodes, max_nodes
 
-eventlet.monkey_patch(all=False, socket=True)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 
@@ -42,9 +52,35 @@ def populate_session_global_object(data):
             g.session_stabilityai_api_key = data["stabilityaiApiKey"]
 
 
+def reset_context():
+    g.user_authentication_jwt = None
+    g.isAuthenticated = False
+    g.user_details = None
+
+
 @socketio.on("connect")
 def handle_connect():
     logging.info("Client connected")
+
+
+@socketio.on("auth")
+def handle_connect(data):
+    logging.debug("Auth received")
+
+    user_authentication_jwt = data.get("idToken")
+    user_access_jwt = data.get("accessToken")
+    keys = get_cognito_keys()
+    app_client_id = get_cognito_app_client_id()
+
+    if verify_id_token(
+        user_authentication_jwt, keys, app_client_id
+    ) and verify_access_token(user_access_jwt, keys, app_client_id):
+        g.user_authentication_jwt = user_authentication_jwt
+        g.isAuthenticated = True
+        g.user_details = get_user_details(user_access_jwt)
+        print("Logged in")
+    else:
+        reset_context()
 
 
 @socketio.on("process_file")
@@ -60,13 +96,13 @@ def handle_process_file(data):
 
     """
     try:
-        logging.debug("Received process_config event with data: %s", data)
         populate_session_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
+        launcher = root_injector.get(ProcessorLauncher)
 
         if flow_data:
-            processors = load_processors(flow_data)
-            output = launchProcessors(processors, ws=True)
+            processors = launcher.load_processors(flow_data)
+            output = launcher.launch_processors(processors)
 
             logging.debug("Emitting processing_result event with output: %s", output)
             emit("run_end", {"output": output})
@@ -93,14 +129,15 @@ def handle_run_node(data):
 
     """
     try:
-        logging.debug("Received run_node event with data: %s", data)
         populate_session_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
         node_name = data.get("nodeName")
 
+        launcher = root_injector.get(ProcessorLauncher)
+
         if flow_data and node_name:
-            processors = load_processors_for_node(flow_data, node_name)
-            output = launch_processors_for_node(processors, node_name, ws=True)
+            processors = launcher.load_processors_for_node(flow_data, node_name)
+            output = launcher.launch_processors_for_node(processors, node_name)
             logging.debug("Emitting processing_result event with output: %s", output)
             emit("run_end", {"output": output})
         else:
@@ -111,9 +148,11 @@ def handle_run_node(data):
             "error",
             {"error": str({node_name}) + " - " + str(e), "node_name": node_name},
         )
+        # traceback.print_exc()
         logging.error(f"An error occurred: {node_name} - {str(e)}")
 
 
 @socketio.on("disconnect")
 def handle_disconnect():
     logging.info("Client disconnected")
+    reset_context()

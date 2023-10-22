@@ -50,8 +50,6 @@ function Flow(props: FlowProps) {
   const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
-  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
-  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
   const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
   const [errorCount, setErrorCount] = useState<number>(0);
 
@@ -221,10 +219,6 @@ function Flow(props: FlowProps) {
     setIsPopupOpen(false);
   }, []);
 
-  const handleConfigClose = useCallback(() => {
-    setIsConfigOpen(false);
-  }, []);
-
   function handleChangeFlow(nodes: Node[], edges: Edge[]): void {
     setNodes(nodes);
     setEdges(edges);
@@ -270,12 +264,7 @@ function Flow(props: FlowProps) {
           </ReactFlowStyled>
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />
-        <DnDSidebar />
-        <RightIconButton onClick={() => setIsConfigOpen(true)} />
-        <RightIconButton onClick={() => setIsHelpOpen(true)} color='#7fcce3a9' bottom='80px' icon={<FiHelpCircle />} />
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
-        <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
-        {isHelpOpen && <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />}
       </div>
     </NodeProvider>
   );

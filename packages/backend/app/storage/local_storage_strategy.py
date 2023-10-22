@@ -4,8 +4,10 @@ import os
 from app.env_config import (
     get_local_storage_folder_path,
 )
+from injector import singleton
 
 
+@singleton
 class LocalStorageStrategy(StorageStrategy):
     """Local storage strategy. To be used only when you're running the app on your own machine.
     Every generated image is saved in a local directory."""

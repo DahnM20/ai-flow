@@ -12,7 +12,7 @@ interface RightButtonProps {
 
 const RightIconButton: React.FC<RightButtonProps> = ({ onClick, color = '#808080', icon = <FiSettings />, bottom = '30px' }) => {
   return (
-    <StyledRightButton className="fixed right-0 w-11 rounded-l-lg py-1 mx-auto items-center pl-1 hover:bg-slate-700" color={color} bottom={bottom} onClick={onClick}>
+    <StyledRightButton className="fixed right-0 w-11 rounded-l-lg py-1 mx-auto items-center pl-1 hover:bg-slate-700 z-20" color={color} bottom={bottom} onClick={onClick}>
       <div className='text-slate-200 fon align-middle text-xl'>{icon}</div>
     </StyledRightButton>
   );
