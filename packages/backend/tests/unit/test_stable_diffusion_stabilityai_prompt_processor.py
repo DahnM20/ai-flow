@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import ANY, patch, Mock
 import re
-from app.processors.stable_diffusion_stabilityai_prompt_processor import (
+from app.processors.types.stable_diffusion_stabilityai_prompt_processor import (
     StableDiffusionStabilityAIPromptProcessor,
 )
 from app.storage.local_storage_strategy import LocalStorageStrategy
-from app.processors.input_processor import InputProcessor
+from app.processors.types.input_processor import InputProcessor
 
 
 class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):

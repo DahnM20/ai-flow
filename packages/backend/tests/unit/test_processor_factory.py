@@ -1,6 +1,6 @@
 import unittest
-from app.processors_utils.processor_factory import ProcessorFactory
-from app.processors.processor import SimpleProcessor, APIContextProcessor
+from app.processors.factory.processor_factory import ProcessorFactoryIterModules
+from app.processors.types.processor import SimpleProcessor, APIContextProcessor
 
 
 class DummyProcessor(SimpleProcessor):
@@ -29,7 +29,7 @@ class APIDummyProcessor(APIContextProcessor):
 
 class TestProcessorFactory(unittest.TestCase):
     def setUp(self):
-        self.factory = ProcessorFactory()
+        self.factory = ProcessorFactoryIterModules()
 
     def test_register_and_create_simple_processor(self):
         self.factory.register_processor(DummyProcessor.processor_type, DummyProcessor)

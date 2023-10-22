@@ -1,10 +1,13 @@
 import importlib
 import pkgutil
 import inspect
-from ..processors.processor import Processor
+from ..types.processor import Processor
+from .processor_factory import ProcessorFactory
+from injector import singleton
 
 
-class ProcessorFactory:
+@singleton
+class ProcessorFactoryIterModules(ProcessorFactory):
     def __init__(self):
         self._processors = {}
 
@@ -32,7 +35,7 @@ class ProcessorFactory:
         return processor
 
     def load_processors(self):
-        package = importlib.import_module("app.processors")
+        package = importlib.import_module("app.processors.types")
         prefix = package.__name__ + "."
         for importer, module_name, is_pkg in pkgutil.iter_modules(
             package.__path__, prefix

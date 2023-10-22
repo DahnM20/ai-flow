@@ -4,6 +4,7 @@ import json
 import eventlet
 from flask import g
 from flask_socketio import SocketIO, emit
+from ..root_injector import root_injector
 
 from ..authentication.verifyUser import (
     verify_access_token,
@@ -15,12 +16,7 @@ from ..authentication.cognitoUtils import (
     get_cognito_keys,
     get_user_details,
 )
-from ..processors_utils.processor_launcher import (
-    load_processors,
-    launchProcessors,
-    launch_processors_for_node,
-    load_processors_for_node,
-)
+from ..processors.launcher.processor_launcher import ProcessorLauncher
 import traceback
 import os
 from .decorators import with_flow_data_validations
@@ -97,13 +93,13 @@ def handle_process_file(data):
 
     """
     try:
-        logging.debug("Received process_config event with data: %s", data)
         populate_session_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
+        launcher = root_injector.get(ProcessorLauncher)
 
         if flow_data:
-            processors = load_processors(flow_data)
-            output = launchProcessors(processors, ws=True)
+            processors = launcher.load_processors(flow_data)
+            output = launcher.launch_processors(processors)
 
             logging.debug("Emitting processing_result event with output: %s", output)
             emit("run_end", {"output": output})
@@ -130,14 +126,15 @@ def handle_run_node(data):
 
     """
     try:
-        logging.debug("Received run_node event with data: %s", data)
         populate_session_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
         node_name = data.get("nodeName")
 
+        launcher = root_injector.get(ProcessorLauncher)
+
         if flow_data and node_name:
-            processors = load_processors_for_node(flow_data, node_name)
-            output = launch_processors_for_node(processors, node_name, ws=True)
+            processors = launcher.load_processors_for_node(flow_data, node_name)
+            output = launcher.launch_processors_for_node(processors, node_name)
             logging.debug("Emitting processing_result event with output: %s", output)
             emit("run_end", {"output": output})
         else:

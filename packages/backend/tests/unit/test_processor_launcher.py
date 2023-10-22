@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, Mock, patch, mock_open
 
-from app.processors_utils.processor_launcher import (
+from app.processors.launcher.processor_launcher import (
     link_processors,
     load_config_data,
 )
