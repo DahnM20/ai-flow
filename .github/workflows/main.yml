@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - multiple-input
 
 jobs:
   build_and_test:

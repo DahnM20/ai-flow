@@ -27,7 +27,7 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
     def process(self):
         self.api_key = self.get_api_key("session_stabilityai_api_key")
 
-        if getattr(self, "input_processor", None) is not None:
+        if self.get_input_processor() is not None:
             self.prompt = (
                 self.get_input_processor().get_output(self.get_input_node_output_key())
                 if self.prompt is None or len(self.prompt) == 0
@@ -43,6 +43,7 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
             "steps": 30,
         }
 
+        print("hi")
         response = requests.post(
             f"{self.api_host}/v1/generation/{self.engine_id}/text-to-image",
             headers={

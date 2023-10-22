@@ -13,11 +13,13 @@ class DallEPromptProcessor(APIContextProcessor):
         self.api_key = self.get_api_key("session_openai_api_key")
 
     def process(self):
-        self.prompt = (
-            self.get_input_processor().get_output(self.get_input_node_output_key())
-            if self.prompt is None or len(self.prompt) == 0
-            else self.prompt
-        )
+        if self.get_input_processor() is not None:
+            self.prompt = (
+                self.get_input_processor().get_output(self.get_input_node_output_key())
+                if self.prompt is None or len(self.prompt) == 0
+                else self.prompt
+            )
+
         response = openai.Image.create(
             prompt=self.prompt,
             n=1,

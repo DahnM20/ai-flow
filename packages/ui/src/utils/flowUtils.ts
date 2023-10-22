@@ -95,7 +95,21 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
 
   // Create edges
   json.forEach((node: any) => {
-    if (node.input) {
+    if (node.inputs) {
+      node.inputs.forEach((input: any, index: number) => {
+        edges.push({
+          id: `${input.inputNode}-to-${node.name}`,
+          sourceHandle: generateIdForHandle(input.inputNodeOutputKey ?? 0, true),
+          targetHandle: generateIdForHandle(index),
+          target: node.name,
+          source: input.inputNode,
+          type: 'smoothstep',
+        });
+      });
+    }
+
+    //For old files
+    if (node.input && !node.inputs) {
       edges.push({
         id: `${node.input}-to-${node.name}`,
         sourceHandle: !!node.inputKey ? generateIdForHandle(node.inputKey) : undefined,
