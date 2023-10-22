@@ -148,7 +148,7 @@ def handle_run_node(data):
             "error",
             {"error": str({node_name}) + " - " + str(e), "node_name": node_name},
         )
-        traceback.print_exc()
+        # traceback.print_exc()
         logging.error(f"An error occurred: {node_name} - {str(e)}")
 
 

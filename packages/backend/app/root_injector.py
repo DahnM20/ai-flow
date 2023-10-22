@@ -1,6 +1,7 @@
 from typing import List
 from injector import Injector, Binder, Module
 from .processors.observer.event_emitter import EventEmitter
+from .processors.observer.simple_stats_logger import SimpleStatsLogger
 from .processors.observer.observer import Observer
 from .storage.local_storage_strategy import LocalStorageStrategy
 from .storage.s3_storage_strategy import S3StorageStrategy
@@ -11,7 +12,7 @@ from .processors.factory.processor_factory_iter_modules import (
     ProcessorFactoryIterModules,
 )
 from .processors.launcher.processor_launcher import ProcessorLauncher
-from .processors.launcher.basic_ws_processor_launcher import BasicWSProcessorLauncher
+from .processors.launcher.basic_processor_launcher import BasicProcessorLauncher
 
 
 class ProcessorFactoryModule(Module):
@@ -29,8 +30,8 @@ class StorageModule(Module):
 
 class ProcessorLauncherModule(Module):
     def configure(self, binder: Binder):
-        binder.bind(ProcessorLauncher, to=BasicWSProcessorLauncher)
-        binder.multibind(List[Observer], to=[EventEmitter()])
+        binder.bind(ProcessorLauncher, to=BasicProcessorLauncher)
+        binder.multibind(List[Observer], to=[EventEmitter(), SimpleStatsLogger()])
 
 
 def create_application_injector() -> Injector:
