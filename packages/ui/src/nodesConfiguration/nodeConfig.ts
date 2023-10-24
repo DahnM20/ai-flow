@@ -1,9 +1,8 @@
 import { FaImage, FaToolbox } from "react-icons/fa";
 import { NodeType } from "../utils/mappings";
-import { basicProcessorNodeConfig } from "./basicProcessorNode";
 import dallENodeConfig from "./dallENode";
 import inputTextNodeConfig from "./inputTextNode";
-import { noContextPromptNodeConfig } from "./noContextPrompt";
+import { llmPromptNodeConfig } from "./llmPrompt";
 import { promptNodeConfig } from "./promptNode";
 import stableDiffusionStabilityAiNodeConfig from "./stableDiffusionStabilityAiNode";
 import { urlNodeConfig } from "./urlNode";
@@ -46,9 +45,8 @@ export interface NodeConfig {
 const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'gpt-prompt': promptNodeConfig,
     'input-text': inputTextNodeConfig,
-    'gpt': basicProcessorNodeConfig,
     'url_input': urlNodeConfig,
-    'gpt-no-context-prompt': noContextPromptNodeConfig,
+    'llm-prompt': llmPromptNodeConfig,
     'youtube_transcript_input': youtubeTranscriptNodeConfig,
     'dalle-prompt': dallENodeConfig,
     'stable-diffusion-stabilityai-prompt': stableDiffusionStabilityAiNodeConfig,
@@ -82,7 +80,7 @@ export const nodeSectionMapping: NodeSection[] = [
         section: 'Models',
         icon: AiOutlineRobot,
         nodes: [
-            { label: 'NoContextPrompt', type: 'gpt-no-context-prompt', helpMessage: 'noContextPromptHelp' },
+            { label: 'LLMPrompt', type: 'llm-prompt', helpMessage: 'llmPromptHelp' },
             { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp' }
         ],
     },

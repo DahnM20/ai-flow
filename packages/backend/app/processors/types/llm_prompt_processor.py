@@ -5,22 +5,25 @@ from ...root_injector import root_injector
 
 from llama_index.llms.base import ChatMessage
 
+
 class LLMPromptProcessor(APIContextProcessor):
-    processor_type = "gpt-no-context-prompt"
+    processor_type = "llm-prompt"
     DEFAULT_MODEL = "gpt-4"
 
-    def __init__(self, config, api_context_data:ProcessorContext, custom_llm_factory=None):
+    def __init__(
+        self, config, api_context_data: ProcessorContext, custom_llm_factory=None
+    ):
         super().__init__(config, api_context_data)
 
-        self.model = config.get("gptVersion", LLMPromptProcessor.DEFAULT_MODEL) #TODO: update gptVersion to model
-        self.prompt = config["inputText"]
+        self.model = config.get("model", LLMPromptProcessor.DEFAULT_MODEL)
+        self.prompt = config["prompt"]
         self.api_key = api_context_data.get_api_key_for_model(self.model)
-        
+
         if custom_llm_factory is None:
             custom_llm_factory = self._get_default_llm_factory()
-            
+
         self.llm_factory = custom_llm_factory
-        
+
     @staticmethod
     def _get_default_llm_factory():
         return root_injector.get(LLMFactory)
@@ -33,7 +36,7 @@ class LLMPromptProcessor(APIContextProcessor):
             )
 
         self.init_context(input_data)
-        
+
         llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
         chat_response = llm.chat(self.messages)
         answer = chat_response.message.content
@@ -51,15 +54,17 @@ class LLMPromptProcessor(APIContextProcessor):
         if input_data is None:
             system_msg = "You are a helpful assistant. "
             user_msg_content = self.prompt
-        else: 
-            system_msg = ("You are a helpful assistant. "
-                        "You will respond to requests indicated by the '#Request' tag, "
-                        "using the context provided under the '#Context' tag.")
+        else:
+            system_msg = (
+                "You are a helpful assistant. "
+                "You will respond to requests indicated by the '#Request' tag, "
+                "using the context provided under the '#Context' tag."
+            )
             user_msg_content = f"#Context: {input_data} \n\n#Request: {self.prompt}"
-            
+
         self.messages = [
             ChatMessage(role="system", content=system_msg),
-            ChatMessage(role="user", content=user_msg_content)
+            ChatMessage(role="user", content=user_msg_content),
         ]
 
     def updateContext(self, data):

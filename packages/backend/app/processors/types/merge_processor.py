@@ -1,10 +1,11 @@
 from .processor import APIContextProcessor
-import openai
 import re
-
+from ...llms.factory.llm_factory import LLMFactory
+from ...root_injector import root_injector
 
 from enum import Enum
 
+from llama_index.llms.base import ChatMessage
 
 class MergeModeEnum(Enum):
     MERGE = 1
@@ -15,13 +16,21 @@ class MergeProcessor(APIContextProcessor):
     processor_type = "merger-prompt"
     DEFAULT_MODEL = "gpt-4"
 
-    def __init__(self, config, api_context_data):
+    def __init__(self, config, api_context_data, custom_llm_factory=None):
         super().__init__(config, api_context_data)
 
-        self.model = config.get("gptVersion", MergeProcessor.DEFAULT_MODEL)
-        self.prompt = config["inputText"]
+        self.model = config.get("model", MergeProcessor.DEFAULT_MODEL)
+        self.prompt = config["prompt"]
         self.merge_mode = MergeModeEnum(int(config["mergeMode"]))
-        self.api_key = self.get_api_key("session_openai_api_key")
+        self.api_key = api_context_data.get_api_key_for_model(self.model)
+        if custom_llm_factory is None:
+            custom_llm_factory = self._get_default_llm_factory()
+            
+        self.llm_factory = custom_llm_factory
+        
+    @staticmethod
+    def _get_default_llm_factory():
+        return root_injector.get(LLMFactory)
 
     def update_prompt(self, inputs):
         for idx, value in enumerate(inputs, start=1):
@@ -43,27 +52,23 @@ class MergeProcessor(APIContextProcessor):
             return self.prompt
 
         self.init_context()
-        chat_completion = openai.ChatCompletion.create(
-            model=self.model,
-            messages=self.messages,
-            api_key=self.api_key,
-        )
-
-        assistant_message = chat_completion.choices[0].message
-        answer = assistant_message.content
-        answer = answer.encode("utf-8").decode("utf8")
+        
+        llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
+        chat_response = llm.chat(self.messages)
+        answer = chat_response.message.content
 
         self.set_output(answer)
         return answer
 
     def init_context(self) -> None:
+        system_msg = "You are an assistant that provides direct answers to tasks without adding any meta comments or referencing yourself as an AI."
+        user_msg_content = self.prompt
+        
         self.messages = [
-            {
-                "role": "system",
-                "content": "You are an assistant that provides direct answers to tasks without adding any meta comments or referencing yourself as an AI.",
-            },
+            ChatMessage(role="system", content=system_msg),
+            ChatMessage(role="user", content=user_msg_content)
         ]
-        self.messages.append({"role": "user", "content": self.prompt})
+
 
     def updateContext(self, data):
         pass

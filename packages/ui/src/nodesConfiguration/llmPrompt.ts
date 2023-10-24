@@ -1,11 +1,12 @@
 import { NodeConfig } from "./nodeConfig";
 
-export const basicProcessorNodeConfig: NodeConfig = {
-    nodeName: 'GPT Model',
+export const llmPromptNodeConfig: NodeConfig = {
+    nodeName: 'LLMPrompt',
     icon: 'FaRobot',
+    inputNames: ['initData'],
     fields: [
         {
-            name: 'gptVersion',
+            name: 'model',
             label: '',
             type: 'option',
             options: [
@@ -21,9 +22,10 @@ export const basicProcessorNodeConfig: NodeConfig = {
             ]
         },
         {
-            name: 'initData',
-            placeholder: 'RoleInitPrompt',
+            name: 'prompt',
             type: 'textarea',
+            //label: 'Prompt',
+            placeholder: 'PromptPlaceholder',
         },
 
     ],
