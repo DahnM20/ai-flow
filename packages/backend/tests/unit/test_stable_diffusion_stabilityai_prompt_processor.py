@@ -6,6 +6,7 @@ from app.processors.types.stable_diffusion_stabilityai_prompt_processor import (
 )
 from app.storage.local_storage_strategy import LocalStorageStrategy
 from app.processors.types.input_processor import InputProcessor
+from tests.utils.processor_context_mock import ProcessorContextMock
 
 
 class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
@@ -25,6 +26,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
         self, mock_post
     ):
         # Arrange
+        API_KEY = "FAKE"
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -36,7 +38,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
 
         config = self.get_default_valid_config()
         clean_name = config["name"].replace("#", "")
-        api_context_data = {"session_stabilityai_api_key": "fake_api_key"}
+        api_context_data = ProcessorContextMock(API_KEY)
 
         processor = StableDiffusionStabilityAIPromptProcessor(config, api_context_data)
         processor.set_storage_strategy(LocalStorageStrategy())
@@ -59,6 +61,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
     @patch("requests.post")
     def test_process_transmit_prompt_to_api(self, mock_post):
         # Arrange
+        API_KEY = "FAKE"
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -70,7 +73,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
         expected_prompt = "Expected prompt"
         config["prompt"] = expected_prompt
 
-        api_context_data = {"session_stabilityai_api_key": "fake_api_key"}
+        api_context_data = ProcessorContextMock(API_KEY)
         processor = StableDiffusionStabilityAIPromptProcessor(config, api_context_data)
         processor.set_storage_strategy(LocalStorageStrategy())
 
@@ -90,6 +93,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
         self, mock_post
     ):
         # Arrange
+        API_KEY = "FAKE"
         expected_prompt = "Expected prompt"
 
         input_processor = InputProcessor(
@@ -112,7 +116,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
 
         config = self.get_default_valid_config()
 
-        api_context_data = {"session_stabilityai_api_key": "fake_api_key"}
+        api_context_data = ProcessorContextMock(API_KEY)
         processor = StableDiffusionStabilityAIPromptProcessor(config, api_context_data)
         processor.set_storage_strategy(LocalStorageStrategy())
         processor.add_input_processor(input_processor)
