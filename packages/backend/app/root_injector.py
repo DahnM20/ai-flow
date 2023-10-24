@@ -1,5 +1,8 @@
 from typing import List
 from injector import Injector, Binder, Module
+
+from .llms.factory.llm_factory import LLMFactory
+from .llms.factory.paid_api_llm_factory import PaidAPILLMFactory
 from .processors.observer.event_emitter import EventEmitter
 from .processors.observer.simple_stats_logger import SimpleStatsLogger
 from .processors.observer.observer import Observer
@@ -34,9 +37,13 @@ class ProcessorLauncherModule(Module):
         binder.multibind(List[Observer], to=[EventEmitter(), SimpleStatsLogger()])
 
 
+class LLMFactoryModule(Module):
+    def configure(self, binder: Binder):
+         binder.bind(LLMFactory, to=PaidAPILLMFactory)
+         
 def create_application_injector() -> Injector:
     injector = Injector(
-        [ProcessorFactoryModule(), StorageModule(), ProcessorLauncherModule()],
+        [ProcessorFactoryModule(), StorageModule(), ProcessorLauncherModule(), LLMFactoryModule()],
         auto_bind=True,
     )
     return injector
