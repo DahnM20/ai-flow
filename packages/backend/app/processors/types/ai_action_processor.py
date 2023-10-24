@@ -1,7 +1,8 @@
-from .gpt_no_context_prompt_processor import GPTNoContextPromptProcessor
+from .llm_prompt_processor import LLMPromptProcessor
 
+from llama_index.llms.base import ChatMessage
 
-class AIActionProcessor(GPTNoContextPromptProcessor):
+class AIActionProcessor(LLMPromptProcessor):
     processor_type = "ai-action"
 
     def __init__(self, config, api_context_data):
@@ -12,24 +13,17 @@ class AIActionProcessor(GPTNoContextPromptProcessor):
         Initialise the context for the OpenAI Chat model with a standard set of messages.
         Additional user input data can be provided, which will be added to the messages.
 
-        :param input_data: additional information to be used by the assistant.
+        :param input_data: Additional information to be used by the assistant.
         """
-        self.messages = [
-            {
-                "role": "system",
-                "content": "You are an assistant that provides direct answers to tasks without adding any meta comments or referencing yourself as an AI.",
-            },
-        ]
-
+        system_msg = ("You are an assistant that provides direct answers to tasks indicated by the #Task tag, using the data provided by the #Data tag."
+                    "without adding any meta comments or referencing yourself as an AI.")
+        
         if input_data:
-            self.messages.extend(
-                [
-                    {
-                        "role": "user",
-                        "content": f"Here's the data you need: {input_data}. Use it to provide a direct answer to my next request.",
-                    },
-                    {"role": "assistant", "content": "Very well."},
-                ]
-            )
-
-        self.messages.append({"role": "user", "content": self.prompt})
+            user_msg_content = (f"#Data {input_data} \n\n #Task {self.prompt}")
+        else :
+            user_msg_content = (f"#Task {self.prompt}")
+        
+        self.messages = [
+            ChatMessage(role="system", content=system_msg),
+            ChatMessage(role="user", content=user_msg_content)
+        ]

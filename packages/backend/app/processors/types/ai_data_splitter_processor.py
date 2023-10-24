@@ -1,17 +1,31 @@
+from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
-import openai
+from ...llms.factory.llm_factory import LLMFactory
+from ...root_injector import root_injector
 
+from llama_index.llms.base import ChatMessage
 
 class AIDataSplitterProcessor(APIContextProcessor):
     processor_type = "ai-data-splitter"
     SPLIT_CHAR = ";"
 
-    def __init__(self, config, api_context_data):
+    def __init__(self, config, api_context_data:ProcessorContext,custom_llm_factory=None):
         super().__init__(config, api_context_data)
 
         self.nb_output = 0
         self.model = "gpt-4"
-        self.api_key = self.get_api_key("session_openai_api_key")
+        self.api_key = api_context_data.get_api_key_for_model(self.model)
+        
+        
+        if custom_llm_factory is None:
+            custom_llm_factory = self._get_default_llm_factory()
+        
+        
+        self.llm_factory = custom_llm_factory
+    
+    @staticmethod
+    def _get_default_llm_factory():
+        return root_injector.get(LLMFactory)
 
     def process(self):
         if self.get_input_processor() is None:
@@ -23,18 +37,14 @@ class AIDataSplitterProcessor(APIContextProcessor):
 
         self.init_context(input_data)
 
-        chat_completion = openai.ChatCompletion.create(
-            model=self.model,
-            messages=self.messages,
-            api_key=self.api_key,
-        )
-
-        assistant_message = chat_completion.choices[0].message
-        answer = assistant_message.content
+        llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
+        chat_response = llm.chat(self.messages)
+        answer = chat_response.message.content
+        
         data_to_split = answer.encode("utf-8").decode("utf8")
-
         self.set_output(data_to_split.split(AIDataSplitterProcessor.SPLIT_CHAR))
         self.nb_output = len(self._output)
+        
         return self._output
 
     def init_context(self, input_data: str) -> None:
@@ -44,21 +54,14 @@ class AIDataSplitterProcessor(APIContextProcessor):
 
         :param input_data: additional information to be used by the assistant.
         """
-        self.messages = [
-            {"role": "system", "content": "You're an helpful assistant"},
-        ]
-
-        if input_data:
-            self.messages.extend(
-                [
-                    {
-                        "role": "user",
-                        "content": """I'm going to give you a list of ideas and concepts that might be presented in different ways. Your task is to logically separate them with a semicolon (;), remove any unnecessary elements, and only give the essential ideas or concepts.
-
+        system_msg = ("You are an assistant that provides direct answers to tasks without adding any meta comments or referencing yourself as an AI. "
+                      "Your only task is to logically separate with a semicolon (;) ideas or concepts."
+                      "To help you, here's a list of examples : "
+                      """
 1st example:
 
 Input: "The main idea is that dogs are very popular pets, and many people enjoy walking them in parks. Another important concept is that dogs need a lot of exercise to stay healthy."
-Output: Dogs are very popular pets;many people enjoy walking them in parks;dogs need a lot of exercise to stay healthy.
+Output: Dogs are very popular pets;many people enjoy walking them in parks;dogs need a lot of exercise to stay healthy.")
 
 2nd example:
 
@@ -80,13 +83,14 @@ Output: Dogs are better than cats;Birds are beautiful
 
 Output: Crée une interprétation artistique numérique de la ville de New York la nuit sous la pluie, mettant l'accent sur les reflets lumineux sur les surfaces mouillées.;Imagine et dessine un nouveau type de fleur qui n'existe pas encore dans la nature. Assure-toi qu'elle a une allure exotique et utilise des couleurs vives et uniques que l'on ne trouve pas couramment chez les fleurs.;Conçois une image représentant une scène du futur, avec des villes futuristes, des technologies avancées et des formes de vie artificielles coexistant avec des formes de vie naturelles.
 
-Now, be ready to do it with my next message""",
-                    },
-                    {"role": "assistant", "content": "Very well."},
-                ]
-            )
+Now, be ready to do it with my next message
+""")
+        
+        self.messages = [
+            ChatMessage(role="system", content=system_msg),
+            ChatMessage(role="user", content=input_data)
+        ]
 
-        self.messages.append({"role": "user", "content": input_data})
 
     def updateContext(self, data):
         pass
