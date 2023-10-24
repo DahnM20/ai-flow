@@ -1,8 +1,9 @@
 import json
 import logging
 from typing import List
-from flask import g
 from injector import singleton, inject
+
+from ..context.processor_context import ProcessorContext
 
 from ..observer.observer import Observer
 
@@ -10,7 +11,6 @@ from ...storage.storage_strategy import StorageStrategy
 from ..factory.processor_factory import ProcessorFactory
 
 
-@singleton
 class BasicProcessorLauncher:
     """
     Basic Processor Launcher emiting event through flask_socketio websockets
@@ -21,6 +21,7 @@ class BasicProcessorLauncher:
     processor_factory: ProcessorFactory
     storage_strategy: StorageStrategy
     observers: List[Observer]
+    context: ProcessorContext
 
     @inject
     def __init__(
@@ -33,13 +34,14 @@ class BasicProcessorLauncher:
         self.storage_strategy = storage_strategy
         self.processor_factory.load_processors()
         self.observers = observers or []
+        self.context = None
+        
+    
+    def set_context(self, context: ProcessorContext):
+        self.context = context
 
     def add_observer(self, observer):
         self.observers.append(observer)
-
-    def notify_observers(self, event, data):
-        for observer in self.observers:
-            observer.notify(event, data)
 
     def _load_config_data(self, fileName):
         with open(fileName, "r") as file:
@@ -63,7 +65,7 @@ class BasicProcessorLauncher:
     def load_processors(self, config_data):
         processors = {
             config["name"]: self.processor_factory.create_processor(
-                config, g, self.storage_strategy
+                config, self.context, self.storage_strategy
             )
             for config in config_data
         }
@@ -94,13 +96,13 @@ class BasicProcessorLauncher:
             if config_output is None or config["name"] == node_name:
                 logging.debug(f"Empty or current node - {config['name']}")
                 processor = self.processor_factory.create_processor(
-                    config, g, self.storage_strategy
+                    config, self.context, self.storage_strategy
                 )
                 processors[config["name"]] = processor
             else:
                 logging.debug(f"Non empty node -  {config['name']}")
                 processor = self.processor_factory.create_processor(
-                    config, g, self.storage_strategy
+                    config, self.context, self.storage_strategy
                 )
                 processor.set_output(config_output)
                 processors[config["name"]] = processor

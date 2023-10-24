@@ -1,3 +1,4 @@
+from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
 
 import openai
@@ -6,11 +7,11 @@ import openai
 class DallEPromptProcessor(APIContextProcessor):
     processor_type = "dalle-prompt"
 
-    def __init__(self, config, api_context_data):
+    def __init__(self, config, api_context_data:ProcessorContext):
         super().__init__(config, api_context_data)
         self.prompt = config.get("prompt")
         self.size = config.get("size", "256x256")  # Default size is "256x256"
-        self.api_key = self.get_api_key("session_openai_api_key")
+        self.api_key = api_context_data.get_api_key_for_provider("openai")
 
     def process(self):
         if self.get_input_processor() is not None:

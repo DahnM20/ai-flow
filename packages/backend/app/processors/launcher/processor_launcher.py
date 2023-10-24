@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from ..context.processor_context import ProcessorContext
+
 
 class ProcessorLauncher(ABC):
     @abstractmethod
@@ -15,5 +17,9 @@ class ProcessorLauncher(ABC):
         pass
 
     @abstractmethod
-    def launchProcessorsForNode(self, processors, node_name):
+    def launch_processors_for_node(self, processors, node_name):
+        pass
+    
+    @abstractmethod
+    def set_context(self, context: ProcessorContext):
         pass

@@ -1,4 +1,6 @@
 import base64
+
+from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
 from datetime import datetime
 import requests
@@ -8,7 +10,7 @@ import os
 class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
     processor_type = "stable-diffusion-stabilityai-prompt"
 
-    def __init__(self, config, api_context_data):
+    def __init__(self, config, api_context_data:ProcessorContext):
         super().__init__(config, api_context_data)
         self.prompt = config.get("prompt")
 
@@ -25,7 +27,7 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
         )
 
     def process(self):
-        self.api_key = self.get_api_key("session_stabilityai_api_key")
+        self.api_key = self.api_context_data.get_api_key_for_provider("stabilityai")
 
         if self.get_input_processor() is not None:
             self.prompt = (

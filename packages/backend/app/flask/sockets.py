@@ -21,6 +21,7 @@ from ..authentication.cognitoUtils import (
     get_user_details,
 )
 from ..processors.launcher.processor_launcher import ProcessorLauncher
+from ..processors.context.processor_context_flask_request import ProcessorContextFlaskRequest
 import traceback
 import os
 from .decorators import with_flow_data_validations
@@ -99,6 +100,7 @@ def handle_process_file(data):
         populate_session_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
         launcher = root_injector.get(ProcessorLauncher)
+        launcher.set_context(ProcessorContextFlaskRequest())
 
         if flow_data:
             processors = launcher.load_processors(flow_data)
@@ -134,7 +136,8 @@ def handle_run_node(data):
         node_name = data.get("nodeName")
 
         launcher = root_injector.get(ProcessorLauncher)
-
+        launcher.set_context(ProcessorContextFlaskRequest())
+        
         if flow_data and node_name:
             processors = launcher.load_processors_for_node(flow_data, node_name)
             output = launcher.launch_processors_for_node(processors, node_name)
@@ -148,7 +151,7 @@ def handle_run_node(data):
             "error",
             {"error": str({node_name}) + " - " + str(e), "node_name": node_name},
         )
-        # traceback.print_exc()
+        traceback.print_exc()
         logging.error(f"An error occurred: {node_name} - {str(e)}")
 
 

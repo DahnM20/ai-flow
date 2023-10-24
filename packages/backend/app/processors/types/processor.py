@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List, Union
 
+from ..context.processor_context import ProcessorContext
+
 
 class BadKeyInputIndex(Exception):
     """Exception raised for index out of bounds in the output list."""
@@ -32,11 +34,7 @@ class Processor(ABC):
     @abstractmethod
     def updateContext(self, data):
         pass
-
-    @abstractmethod
-    def get_api_key(self, key_name):
-        pass
-
+    
     def get_output(self, input_key=None):
         output = getattr(self, "_output", None)
         if output is not None and isinstance(output, list) and len(output) > 0:
@@ -100,17 +98,6 @@ class SimpleProcessor(Processor):
 
 
 class APIContextProcessor(Processor):
-    def __init__(self, config, api_context_data=None):
+    def __init__(self, config, api_context_data:ProcessorContext=None):
         super().__init__(config)
         self.api_context_data = api_context_data
-
-    def get_api_key(self, key_name):
-        if self.api_context_data is None:
-            raise Exception(f"No API Context Data Provided")
-
-        api_key = self.api_context_data.get(key_name)
-
-        if api_key is None:
-            raise Exception(f"No {key_name} Provided")
-
-        return api_key
