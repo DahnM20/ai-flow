@@ -4,8 +4,7 @@ version = "0.4.3"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-packages = [{include = "app"}]
-
+packages = [{ include = "app" }]
 
 
 [tool.poetry.dependencies]
@@ -36,7 +35,7 @@ python-jose = "^3.3.0"
 cachetools = "^5.3.1"
 flask-injector = "^0.15.0"
 llama-index = "^0.8.48"
-
+setuptools = "^68.2.2"
 
 
 [build-system]
