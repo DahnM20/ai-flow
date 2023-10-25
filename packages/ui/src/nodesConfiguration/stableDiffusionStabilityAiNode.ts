@@ -59,6 +59,8 @@ const stableDiffusionStabilityAiNodeConfig: NodeConfig = {
         }
     ],
     outputType: "imageUrl",
+    section: 'image-generation',
+    helpMessage: 'stableDiffusionPromptHelp',
 };
 
 export default stableDiffusionStabilityAiNodeConfig;

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
-import { nodeSectionMapping } from '../../../nodesConfiguration/nodeConfig';
+import { nodeSectionMapping } from '../../../nodesConfiguration/sectionConfig';
 import { memo, useState } from 'react';
 import DraggableNode from './DraggableNode';
 
@@ -19,9 +19,9 @@ const DnDSidebar = () => {
           <Section key={index} className='flex flex-col gap-y-2 mb-5'>
             <SectionTitle className="flex flex-row items-center gap-x-2 text-md text-slate-300 ml-1 py-1 border-b-2 border-b-slate-500/20">
               {section.icon && <section.icon />}
-              {t(section.section)}
+              {t(section.label)}
             </SectionTitle>
-            {section.nodes.map((node, nodeIndex) => (
+            {section.nodes?.map((node, nodeIndex) => (
               <DraggableNode key={nodeIndex} node={node} />
             ))}
           </Section>

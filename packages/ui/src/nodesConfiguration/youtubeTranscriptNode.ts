@@ -32,4 +32,6 @@ export const youtubeTranscriptNodeConfig: NodeConfig = {
   ],
   outputType: 'text',
   defaultHideOutput: true,
+  section: 'input',
+  helpMessage: 'youtubeTranscriptHelp',
 };

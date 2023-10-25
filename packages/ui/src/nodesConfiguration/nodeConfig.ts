@@ -1,18 +1,13 @@
-import { FaImage, FaToolbox } from "react-icons/fa";
 import { NodeType } from "../utils/mappings";
 import dallENodeConfig from "./dallENode";
 import inputTextNodeConfig from "./inputTextNode";
 import { llmPromptNodeConfig } from "./llmPrompt";
-import { promptNodeConfig } from "./promptNode";
 import stableDiffusionStabilityAiNodeConfig from "./stableDiffusionStabilityAiNode";
 import { urlNodeConfig } from "./urlNode";
 import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
-import { IconType } from "react-icons/lib";
-import { BsInputCursorText } from "react-icons/bs";
-import { AiOutlineRobot } from "react-icons/ai";
 import { mergerPromptNode } from "./mergerPromptNode";
 
-export type SectionType = 'basic' | 'advanced';
+export type SectionType = 'llm' | 'image-generation' | 'tools' | 'input'
 
 export interface Option {
     label: string;
@@ -38,12 +33,12 @@ export interface NodeConfig {
     outputType: 'text' | 'imageUrl' | 'imageBase64';
     defaultHideOutput?: boolean;
     hasInputHandle?: boolean;
-    section?: SectionType;
+    section: SectionType;
+    helpMessage?: string;
 }
 
 
-const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
-    'gpt-prompt': promptNodeConfig,
+export const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'input-text': inputTextNodeConfig,
     'url_input': urlNodeConfig,
     'llm-prompt': llmPromptNodeConfig,
@@ -53,55 +48,6 @@ const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'merger-prompt': mergerPromptNode,
     // add other configs here...
 }
-
-export type NodeSection = {
-    section: string;
-    icon?: any;
-    nodes: DnDNode[];
-};
-
-export type DnDNode = {
-    label: string;
-    type: NodeType;
-    helpMessage?: string;
-};
-
-export const nodeSectionMapping: NodeSection[] = [
-    {
-        section: 'Input',
-        icon: BsInputCursorText,
-        nodes: [
-            { label: 'Text', type: 'input-text', helpMessage: 'inputHelp' },
-            { label: 'URL', type: 'url_input', helpMessage: 'urlInputHelp' },
-            { label: 'YoutubeVideo', type: 'youtube_transcript_input', helpMessage: 'youtubeTranscriptHelp' },
-        ],
-    },
-    {
-        section: 'Models',
-        icon: AiOutlineRobot,
-        nodes: [
-            { label: 'LLMPrompt', type: 'llm-prompt', helpMessage: 'llmPromptHelp' },
-            { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp' }
-        ],
-    },
-    {
-        section: 'ImageGeneration',
-        icon: FaImage,
-        nodes: [
-            { label: 'DALL-E', type: 'dalle-prompt', helpMessage: 'dallePromptHelp' },
-            { label: 'Stable Diffusion', type: 'stable-diffusion-stabilityai-prompt', helpMessage: 'stableDiffusionPromptHelp' }
-        ],
-    },
-    {
-        section: 'Tools',
-        icon: FaToolbox,
-        nodes: [//{ label: 'DataSplitter', type: 'data-splitter', helpMessage: 'dataSplitterHelp' },
-            { label: 'DataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp' },
-            { label: 'MergerPrompt', type: 'merger-prompt', helpMessage: 'mergerPromptHelp' }],
-    }
-];
-
-
 export const getConfigViaType = (type: NodeType): NodeConfig | undefined => {
     return nodeConfigs[type];
 }

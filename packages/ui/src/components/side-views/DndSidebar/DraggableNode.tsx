@@ -1,6 +1,6 @@
 import { useDrag } from "react-dnd";
 import { useTranslation } from "react-i18next";
-import { DnDNode } from "../../../nodesConfiguration/nodeConfig";
+import { DnDNode } from "../../../nodesConfiguration/sectionConfig";
 import { memo } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import styled from "styled-components";

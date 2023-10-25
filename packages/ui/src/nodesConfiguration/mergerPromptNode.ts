@@ -34,4 +34,6 @@ export const mergerPromptNode: NodeConfig = {
     ],
     outputType: 'text',
     hasInputHandle: true,
+    section: 'tools',
+    helpMessage: 'mergerPromptHelp',
 };

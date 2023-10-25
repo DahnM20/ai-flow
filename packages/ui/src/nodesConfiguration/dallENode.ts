@@ -14,6 +14,8 @@ const dallENodeConfig: NodeConfig = {
         },
     ],
     outputType: "imageUrl",
+    section: 'image-generation',
+    helpMessage: 'dallePromptHelp',
 };
 
 export default dallENodeConfig;
