@@ -1,7 +1,8 @@
+from ...llms.utils.max_token_for_model import max_token_for_model, nb_token_for_input
+from ...llms.prompt_engine.simple_prompt_engine import SimplePromptEngine
+from ...llms.prompt_engine.vector_index_prompt_engine import VectorIndexPromptEngine
 from ..context.processor_context import ProcessorContext
-from ...llms.factory.llm_factory import LLMFactory
 from .processor import APIContextProcessor
-from ...root_injector import root_injector
 
 from llama_index.llms.base import ChatMessage
 
@@ -19,15 +20,6 @@ class LLMPromptProcessor(APIContextProcessor):
         self.prompt = config["prompt"]
         self.api_key = api_context_data.get_api_key_for_model(self.model)
 
-        if custom_llm_factory is None:
-            custom_llm_factory = self._get_default_llm_factory()
-
-        self.llm_factory = custom_llm_factory
-
-    @staticmethod
-    def _get_default_llm_factory():
-        return root_injector.get(LLMFactory)
-
     def process(self):
         input_data = None
         if self.get_input_processor() is not None:
@@ -35,11 +27,15 @@ class LLMPromptProcessor(APIContextProcessor):
                 self.get_input_node_output_key()
             )
 
-        self.init_context(input_data)
-
-        llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
-        chat_response = llm.chat(self.messages)
-        answer = chat_response.message.content
+        if nb_token_for_input(input_data, self.model) > max_token_for_model(self.model):
+            prompt_engine = VectorIndexPromptEngine(
+                model=self.model, api_key=self.api_key, init_data=input_data
+            )
+            answer = prompt_engine.prompt(self.prompt)
+        else:
+            self.init_context(input_data)
+            prompt_engine = SimplePromptEngine(model=self.model, api_key=self.api_key)
+            answer = prompt_engine.prompt(self.messages)
 
         self.set_output(answer)
         return answer

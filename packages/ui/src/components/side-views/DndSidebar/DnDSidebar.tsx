@@ -6,8 +6,6 @@ import { memo, useState } from 'react';
 import DraggableNode from './DraggableNode';
 
 
-
-
 const DnDSidebar = () => {
   const { t } = useTranslation('flow');
   const [isOpen, setOpen] = useState(true);
