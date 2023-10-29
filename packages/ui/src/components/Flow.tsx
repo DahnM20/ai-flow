@@ -17,7 +17,7 @@ import RightIconButton from './buttons/ConfigurationButton';
 import ConfigPopup from './popups/ConfigPopup';
 import { FiHelpCircle } from 'react-icons/fi';
 import HelpPopup from './popups/HelpPopup';
-import DnDSidebar from './side-views/DndSidebar/DnDSidebar';
+import DnDSidebar from './bars/DndSidebar/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
 import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';

@@ -1,3 +1,4 @@
+from ..utils.processor_output import ProcessorOutput
 from ...llms.utils.max_token_for_model import max_token_for_model, nb_token_for_input
 from ...llms.prompt_engine.simple_prompt_engine import SimplePromptEngine
 from ...llms.prompt_engine.vector_index_prompt_engine import VectorIndexPromptEngine
@@ -12,7 +13,7 @@ class LLMPromptProcessor(APIContextProcessor):
     DEFAULT_MODEL = "gpt-4"
 
     def __init__(
-        self, config, api_context_data: ProcessorContext, custom_llm_factory=None
+        self, config, api_context_data: ProcessorContext
     ):
         super().__init__(config, api_context_data)
 

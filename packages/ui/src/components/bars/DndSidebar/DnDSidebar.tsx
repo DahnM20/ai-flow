@@ -31,20 +31,15 @@ const DnDSidebar = () => {
 };
 
 const DnDSidebarContainer = styled.div<{ isOpen: boolean }>`
-  position: fixed;
-  left: 0;
-  top: 0;
   height: 100%;
-  width: 12%;
   z-index: 1;
   overflow-y: ${({ isOpen }) => (isOpen ? 'auto' : 'hidden')};
-  padding: 75px 10px;
-
+  padding: 1rem .75rem;
   transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-95%)')};
   transition: transform 0.3s ease-in-out;
 
   @media screen and (max-width: 768px) {
-    width: 30%;
+    width: 70%;
     font-size: 0.9em;
     padding: 50px 5px;
   }

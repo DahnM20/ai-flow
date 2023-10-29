@@ -10,6 +10,7 @@ import { Fallback } from './components/tools/Fallback';
 import './i18n';
 import { ToastContainer } from 'react-toastify';
 import App from './components/App';
+import "allotment/dist/style.css";
 
 import configureAmplify from "./configureAmplify";
 import { UserProvider } from './components/providers/UserProvider';
