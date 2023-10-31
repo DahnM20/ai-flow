@@ -13,20 +13,15 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
-import RightIconButton from './buttons/ConfigurationButton';
-import ConfigPopup from './popups/ConfigPopup';
-import { FiHelpCircle } from 'react-icons/fi';
-import HelpPopup from './popups/HelpPopup';
-import DnDSidebar from './bars/DndSidebar/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
 import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
-import { SocketContext } from './providers/SocketProvider';
 import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
 import { getAllNodeWithEaseOut } from '../utils/mappings';
 import { useTranslation } from 'react-i18next';
 import { toastInfoMessage } from '../utils/toastUtils';
 import { useDrop } from 'react-dnd';
+import { useSocketListeners } from '../hooks/useFlowSocketListeners';
 
 export interface FlowProps {
   nodes?: Node[];
@@ -38,11 +33,9 @@ export interface FlowProps {
 }
 
 function Flow(props: FlowProps) {
-
   const { t } = useTranslation('flow');
 
   const reactFlowWrapper = useRef(null);
-  const { socket } = useContext(SocketContext);
   const nodeTypes = useMemo(() => getAllNodeWithEaseOut(), []);
 
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
@@ -68,39 +61,16 @@ function Flow(props: FlowProps) {
     setReactFlowInstance(reactFlowInstance);
   }
 
-  useEffect(() => {
-    if (!!socket) {
-      socket.on('progress', onProgress);
-      socket.on('error', onError)
-      socket.on('run_end', onRunEnd)
-      socket.on('current_node_running', onCurrentNodeRunning)
-      socket.on('disconnect', onDisconnect)
-    }
+  useSocketListeners(onProgress, onError, onRunEnd, onCurrentNodeRunning)
 
-    return () => {
-      if (!!socket) {
-        socket.off('progress', onProgress);
-        socket.off('error', onError)
-        socket.off('run_end', onRunEnd)
-        socket.off('current_node_running', onCurrentNodeRunning)
-        socket.off('disconnect', onDisconnect)
-      }
-    }
-  }, [socket]);
 
-  useEffect(() => {
-    if (props.onFlowChange) {
-      props.onFlowChange(nodes, edges);
-    }
-  }, [nodes, edges]);
-
-  const onProgress = (data: any) => {
+  function onProgress(data: any) {
     const nodeToUpdate = data.instanceName as string;
     const output = data.output;
 
     if (nodeToUpdate && output) {
       setNodes((currentState) => {
-        return [...currentState.map((node) => {
+        return [...currentState.map((node: Node) => {
           if (node.data.name == nodeToUpdate) {
             node.data = { ...node.data, outputData: output, lastRun: new Date() };
           }
@@ -112,26 +82,26 @@ function Flow(props: FlowProps) {
     }
   }
 
-  const onError = (data: any) => {
+  function onError(data: any) {
     setCurrentUserMessage({ content: data.error, type: MessageType.Error });
     props.onRunChange(false);
     setErrorCount(prevErrorCount => prevErrorCount + 1);
     setIsPopupOpen(true);
   }
 
-  const onRunEnd = (data: any) => {
+  function onRunEnd() {
     props.onRunChange(false);
   }
 
-  const onCurrentNodeRunning = (data: any) => {
+  function onCurrentNodeRunning(data: any) {
     setCurrentNodeRunning(data.instanceName);
   }
 
-  const onDisconnect = (reason: any) => {
-    if (reason === 'transport close') {
-      toastInfoMessage(t('socketConnectionLost'));
+  useEffect(() => {
+    if (props.onFlowChange) {
+      props.onFlowChange(nodes, edges);
     }
-  }
+  }, [nodes, edges]);
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
