@@ -59,10 +59,6 @@ const FlowTabs = () => {
 
   useEffect(() => {
     if (flowTabs.tabs.length >= 1 && flowTabs.tabs[0].nodes.length !== 0) {
-      const flowCopy = { ...flowTabs }
-      flowCopy.tabs.forEach((tab, index) => {
-        tab.layout = undefined
-      })
       localStorage.setItem('flowTabs', JSON.stringify(flowTabs));
     }
   }, [flowTabs]);
@@ -104,7 +100,7 @@ const FlowTabs = () => {
   const handleFlowChange = (nodes: Node[], edges: Edge[]) => {
     const updatedTabs = flowTabs.tabs.map((tab, index) => {
       if (index === currentTab) {
-        return { nodes, edges };
+        return { ...tab, nodes, edges };
       }
       return tab;
     });
@@ -232,8 +228,10 @@ const FlowTabs = () => {
         {
           mode === 'view' &&
           <SmartView
+            key={`smartview-${currentTab}-${refresh}`}
             nodes={flowTabs.tabs[currentTab].nodes}
-            layout={flowTabs.tabs[currentTab].layout}
+            edges={flowTabs.tabs[currentTab].edges}
+            tabLayout={flowTabs.tabs[currentTab].layout}
             isRunning={isRunning}
             onLayoutChange={handleLayoutChange}
             onFlowChange={handleFlowChange}

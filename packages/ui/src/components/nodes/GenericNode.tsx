@@ -22,6 +22,7 @@ import HandleWrapper from '../handles/HandleWrapper';
 import { toastFastInfoMessage } from '../../utils/toastUtils';
 import InputNameBar from '../shared/nodes-parts/InputNameBar';
 import useHandlePositions from '../../hooks/useHandlePositions';
+import { useFormFields } from '../../hooks/useFormFields';
 
 interface GenericNodeProps {
     data: GenericNodeData;
@@ -123,75 +124,15 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         }
     }
 
-    const formFields = data.config.fields
-        .filter((field: Field) => hasParent(id) && field.hideIfParent != null ? !field.hideIfParent : true)
-        .map((field: Field) => {
-            switch (field.type) {
-                case 'input':
-                    return (
-                        <>
-                            {
-                                field.label &&
-                                <NodeLabel key={`${id}-${field.name}`} >{t(field.label)}</NodeLabel>
-                            }
-                            <NodeInput key={`${id}-${field.name}`} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
-                        </>
-                    );
-
-                case 'textarea':
-                    return (
-                        <>
-                            {
-                                field.label &&
-                                <NodeLabel key={`${id}-${field.name}`}>{t(field.label)}</NodeLabel>
-                            }
-                            <NodeTextarea key={`${id}-${field.name}`} ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
-                        </>
-                    );
-                case 'select':
-                    if (!data[field.name]) {
-                        setDefaultOption(field);
-                    }
-                    return (
-                        <>
-                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)} defaultValue={data[field.name]}>
-                                {field.options?.map(option => (
-                                    <NodeSelectOption key={`${id}-${option.value}`} >
-                                        {t(option.label)}
-                                    </NodeSelectOption>
-                                ))}
-                            </NodeSelect>
-                        </>
-                    );
-                case 'option':
-                    if (!data[field.name]) {
-                        setDefaultOption(field);
-                    }
-                    return (
-                        <>
-                            <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-                                <OptionSelector>
-                                    {field.options?.map(option => (
-                                        <OptionButton
-                                            key={`${id}-${option.value}`}
-                                            selected={data[field.name] === option.value}
-                                            onClick={() => handleOptionChange(field.name, option.value)}
-                                        >
-                                            {t(option.label)}
-                                        </OptionButton>
-                                    ))}
-                                </OptionSelector>
-                            </div>
-                        </>
-                    );
-
-                case 'inputNameBar':
-                    return (
-                        !!data.config.inputNames
-                        && <InputNameBar inputNames={data.config.inputNames} textareaRef={textareaRef} />
-                    );
-            }
-        });
+    const formFields = useFormFields(
+        data,
+        id,
+        handleNodeDataChange,
+        handleOptionChange,
+        setDefaultOption,
+        textareaRef,
+        hasParent
+    );
 
     const outputIsImage = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64') && !!data.outputData;
 

@@ -1,164 +1,131 @@
 import { useEffect, useState } from "react";
-import RenderLayout, { Layout, LayoutIndex } from "./RenderLayout";
-import NodePane from "./NodePane";
-
+import RenderLayout, { BasicPane, Layout, LayoutIndex } from "./RenderLayout";
 import { Node, Edge } from 'reactflow';
 import { NodeProvider } from "../providers/NodeProvider";
+import { useSocketListeners } from "../../hooks/useFlowSocketListeners";
+import { toastInfoMessage } from "../../utils/toastUtils";
+import { attachNode, splitPane, deletePane, layoutIsEmpty } from "./layoutUtils";
 
 
 interface SmartViewProps {
-    layout?: Layout;
+    tabLayout?: Layout;
     nodes: Node[];
+    edges: Edge[];
     onFlowChange?: (nodes: Node[], edges: Edge[]) => void;
     onLayoutChange: (layout: Layout) => void;
     isRunning: boolean;
     onRunChange: (isRunning: boolean) => void;
 }
 
-function SmartView({ layout, nodes, onFlowChange, onLayoutChange, isRunning, onRunChange }: SmartViewProps) {
+function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRunning, onRunChange }: SmartViewProps) {
 
-    const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
+    useSocketListeners(onProgress, onError, onRunEnd, onCurrentNodeRunning)
 
     const initialLayout: Layout = {
         type: 'horizontal',
         panes: [
             {
                 minSize: 200,
-                content: <NodePane index={0} onAttachNode={handleAttachNode} />,
+                paneType: 'NodePane'
             },
         ],
     };
 
+    const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
+    const [currentLayout, setCurrentLayout] = useState<Layout | null>(!!tabLayout && !layoutIsEmpty(tabLayout) ? tabLayout : initialLayout);
+
     useEffect(() => {
-        if (!layout && onLayoutChange) {
-            onLayoutChange(initialLayout)
+        if (!!currentLayout) {
+            onLayoutChange({ ...currentLayout })
         }
-    }, [])
+    }, [currentLayout?.panes])
 
+    function onProgress(data: any) {
+        const nodeToUpdate = data.instanceName as string;
+        const output = data.output;
 
-    function handleAttachNode(index: LayoutIndex, nodeId?: string) {
-        if (nodeId != null && !!layout) {
-            onLayoutChange(attachNode(layout, index, nodeId));
-        }
-    }
-
-    function attachNode(layout: Layout, index: LayoutIndex, nodeId: string): Layout {
-        const newLayout = { ...layout, panes: layout?.panes ? [...layout.panes] : [] };
-
-        if (typeof index === 'number') {
-            newLayout.panes[index] = {
-                nodeId,
-                content: <NodePane index={index} nodeId={nodeId} onAttachNode={handleAttachNode} />
-            };
-            return newLayout;
-        } else {
-            const [first, ...rest] = index.split('-').map(Number);
-            if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
-                newLayout.panes[first].content = attachNode(newLayout.panes[first].content as Layout,
-                    rest.length > 1 ? rest.join('-') : rest[0],
-                    nodeId);
-            }
-            return newLayout;
-        }
-    }
-
-
-    function splitPane(currentLayout: Layout, index: LayoutIndex, type: 'horizontal' | 'vertical', firstParentIndex?: LayoutIndex): Layout {
-        const newLayout = { ...currentLayout, panes: [...currentLayout.panes] };
-
-        if (firstParentIndex == null) {
-            console.log("First call")
-            console.log(`${currentLayout}  -- ${index} --- ${type}`)
-            firstParentIndex = index;
-        }
-
-        if (typeof index === 'string' && index.includes('-')) {
-            const [first, ...rest] = index.split('-').map(Number);
-            if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
-                console.log(` first : ${first}     ____  rest : ${rest}`)
-                newLayout.panes[first].content = splitPane(newLayout.panes[first].content as Layout,
-                    rest.length > 1 ? rest.join('-') : rest[0],
-                    type, firstParentIndex);
-            }
-            return newLayout;
-        } else {
-            const paneIndex = typeof index === 'string' ? Number(index) : index;
-            const parentNodeId = currentLayout.panes[paneIndex].nodeId != null ? currentLayout.panes[paneIndex].nodeId : undefined;
-            const newPanes = [
-                {
-                    nodeId: parentNodeId,
-                    content: <NodePane index={`${firstParentIndex}-0`} onAttachNode={handleAttachNode} nodeId={parentNodeId} />
-                },
-                {
-                    content: <NodePane index={`${firstParentIndex}-1`} onAttachNode={handleAttachNode} />
+        if (nodeToUpdate && output) {
+            const nodesUpdated = [...nodes]
+            nodesUpdated.map((node: Node) => {
+                if (node.data.name == nodeToUpdate) {
+                    node.data = { ...node.data, outputData: output, lastRun: new Date() };
                 }
-            ];
 
-            console.log("else")
-
-            newLayout.panes[paneIndex] = {
-                content: {
-                    type,
-                    panes: newPanes
-                }
-            };
-            return newLayout;
+                return node;
+            });
+            if (onFlowChange) {
+                onFlowChange(nodesUpdated, edges);
+            }
         }
     }
 
+    function onError(data: any) {
+        toastInfoMessage("Error")
+    }
+
+    function onRunEnd() {
+        onRunChange(false);
+    }
+
+    function onCurrentNodeRunning(data: any) {
+        setCurrentNodeRunning(data.instanceName);
+    }
+
+
+    function handleAttachNode(index: LayoutIndex, nodeId?: string, fieldName?: string) {
+        setCurrentLayout((currentLayout) => {
+            if (nodeId != null && fieldName != null && !!currentLayout) {
+                return attachNode(currentLayout, index, nodeId, fieldName);
+            }
+            return currentLayout;
+        });
+    }
     function updateLayout(layout: Layout, index: LayoutIndex, type: 'horizontal' | 'vertical'): Layout {
-
-        console.log('updateLayout with index:', index);
         return splitPane(layout, index, type);
     }
 
     function handleSplitVertical(index: LayoutIndex) {
-        if (!!layout) {
-            const updatedLayout = updateLayout(layout, index, 'vertical');
-            onLayoutChange(updatedLayout);
-        }
+        setCurrentLayout((currentLayout) => {
+            if (!!currentLayout) {
+                return updateLayout(currentLayout, index, 'vertical');
+            }
+            return currentLayout;
+        });
     }
 
 
     function handleSplitHorizontal(index: LayoutIndex) {
-        if (!!layout) {
-            const updatedLayout = updateLayout(layout, index, 'horizontal');
-            onLayoutChange(updatedLayout);
-        }
+        setCurrentLayout((currentLayout) => {
+            if (!!currentLayout) {
+                return updateLayout(currentLayout, index, 'horizontal');
+            }
+            return currentLayout;
+        });
     }
 
 
     function handleDeletePane(index: LayoutIndex) {
-        if (!!layout) {
-            onLayoutChange(deletePane(layout, index));
-        }
-    }
-
-    function deletePane(layout: Layout, index: LayoutIndex): Layout {
-        const newLayout = { ...layout, panes: [...layout.panes] };
-
-        if (typeof index === 'string' && !index.includes('-')) {
-            index = +index;
-        }
-
-        if (typeof index === 'number') {
-            newLayout.panes.splice(index, 1);
-            return newLayout;
-        } else {
-            const [first, ...rest] = index.split('-').map(Number);
-            if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
-                newLayout.panes[first].content = deletePane(newLayout.panes[first].content as Layout, rest.join('-'));
+        setCurrentLayout((currentLayout) => {
+            if (!!currentLayout) {
+                return deletePane(currentLayout, index);
             }
-            return newLayout;
-        }
+            return currentLayout;
+        });
     }
+
 
     function handleUpdateNodes(nodesUpdated: Node[], edgesUpdated: Edge[]): void {
         throw new Error("Function not implemented.");
     }
 
     function handleUpdateNodeData(nodeId: string, data: any): void {
-        throw new Error("Function not implemented.");
+        const updatedNodes = nodes.map((node) => {
+            if (node.id === nodeId) {
+                return { ...node, data };
+            }
+            return node;
+        });
+        onFlowChange?.(updatedNodes, edges);
     }
 
 
@@ -170,8 +137,12 @@ function SmartView({ layout, nodes, onFlowChange, onLayoutChange, isRunning, onR
                     currentNodeRunning={currentNodeRunning}
                     onUpdateNodeData={handleUpdateNodeData} onUpdateNodes={handleUpdateNodes}>
                     {
-                        !!layout
-                        && <RenderLayout {...layout} onSplitHorizontal={handleSplitHorizontal} onSplitVertical={handleSplitVertical} onDelete={handleDeletePane} />
+                        !!currentLayout
+                        && <RenderLayout {...currentLayout}
+                            onSplitHorizontal={handleSplitHorizontal}
+                            onSplitVertical={handleSplitVertical}
+                            onDelete={handleDeletePane}
+                            onAttachNode={handleAttachNode} />
                     }
 
                 </NodeProvider>

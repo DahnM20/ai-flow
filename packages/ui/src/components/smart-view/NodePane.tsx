@@ -3,17 +3,24 @@ import { LayoutIndex } from "./RenderLayout";
 import { useContext, useMemo, useState } from "react";
 import { NodeContext } from "../providers/NodeProvider";
 import AttachNodeDialog from "./AttachNodeDialog";
+import { Field } from "../../nodesConfiguration/nodeConfig";
+import { useTranslation } from "react-i18next";
+import { useFormFields } from "../../hooks/useFormFields";
+import MarkdownOutput from "../shared/nodes-parts/MarkdownOutput";
+import ImageUrlOutput from "../shared/nodes-parts/ImageUrlOutput";
 
 interface NodePaneProps {
     nodeId?: string;
-    index: LayoutIndex;
-    onAttachNode: (index: LayoutIndex, nodeId?: string) => void;
+    fieldName?: string;
+    index?: LayoutIndex;
+    onAttachNode?: (index: LayoutIndex, nodeId?: string, fieldName?: string) => void;
 }
 
-function NodePane({ nodeId, onAttachNode, index }: NodePaneProps) {
+function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
 
-    const { nodes } = useContext(NodeContext);
+    const { nodes, onUpdateNodeData } = useContext(NodeContext);
     const [popupOpen, setPopupOpen] = useState(false);
+    const { t } = useTranslation('flow');
 
     const currentNode = useMemo(() => nodes.find(n => n.data.name === nodeId), [nodeId, nodes]);
 
@@ -29,15 +36,67 @@ function NodePane({ nodeId, onAttachNode, index }: NodePaneProps) {
     }
 
     function handleSubmit(nodeName: string, fieldName: string) {
-        onAttachNode(index, nodeName);
+        if (!!onAttachNode && index != null) {
+            onAttachNode(index, nodeName, fieldName);
+        }
     }
+
+    function getFieldConfig() {
+        if (!!currentNode?.data?.config) {
+            return currentNode?.data.config.fields.find((field: Field) => field.name === fieldName);
+        }
+    }
+
+    const handleOptionChange = (name: string, value: string) => {
+        if (currentNode && currentNode.data) {
+            onUpdateNodeData(currentNode.id, {
+                ...currentNode.data,
+                [name]: value,
+            });
+        }
+    };
+
+    const handleNodeDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (currentNode && currentNode.data) {
+            onUpdateNodeData(currentNode.id, {
+                ...currentNode.data,
+                [event.target.name]: event.target.value,
+            });
+
+        }
+    };
+
+
+    const formFields = useFormFields(
+        currentNode?.data,
+        nodeId ?? "",
+        handleNodeDataChange,
+        handleOptionChange,
+        () => { },
+        undefined,
+        () => { },
+        getFieldConfig()?.name
+    );
 
     return (
         <div className="h-full w-full overflow-y-auto" style={{ backgroundColor: !currentNode ? color : "rgb(30, 30, 31)" }}>
             {
-                nodeId
-                    ? <div className="w-full h-full flex p-4 text-slate-300/95 text-justify">
-                        {currentNode?.data.outputData}
+                (currentNode != null && fieldName)
+                    ? <div className="w-full h-5/6 flex p-4 text-slate-300/95 text-justify justify-center">
+                        {
+                            fieldName === "outputData"
+                                ? <>
+                                    {
+                                        !!currentNode?.data && currentNode?.data.config?.outputType === "imageUrl"
+                                            ? currentNode?.data[fieldName]
+                                                ? <ImageUrlOutput url={currentNode?.data[fieldName]} name="" />
+                                                : <p> No Output </p>
+                                            : <MarkdownOutput data={currentNode?.data[fieldName] ? currentNode?.data[fieldName] : "No output"} />
+                                    }
+
+                                </>
+                                : formFields
+                        }
                     </div>
                     : <div className="w-full h-full flex 
                                       justify-center items-center 

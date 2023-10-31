@@ -71,8 +71,8 @@ export const NodeTextarea = styled.textarea`
   box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.1);
   color: ${({ theme }) => theme.text};
   resize: vertical;
-  min-height: 85px;
-  max-height: 300px;
+  min-height: 6rem;
+  width: 100%;
   transition: all 0.3s ease;
 `;
 
@@ -125,7 +125,8 @@ export const OptionSelector = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  width: 200px;
+  width: fit-content;
+  height: fit-content;
   border: 2px solid ${({ theme }) => theme.accent};
   border-radius: 4px;
   overflow: hidden;
@@ -137,7 +138,7 @@ export const OptionSelector = styled.div`
 
 export const OptionButton = styled.button<{ selected: boolean }>`
   flex-grow: 1;
-  padding: 10px;
+  padding: 10px 15px;
   background: ${({ selected, theme }) => selected ? theme.optionButtonBgSelected : null};
   color: ${({ selected, theme }) => selected ? theme.optionButtonColorSelected : theme.optionButtonColor};
   border: none;
@@ -163,6 +164,7 @@ export const NodeSelect = styled.select`
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   color: ${({ theme }) => theme.text};
   resize: vertical;
+  height: fit-content;
   transition: all 0.3s ease;
 `;
 
