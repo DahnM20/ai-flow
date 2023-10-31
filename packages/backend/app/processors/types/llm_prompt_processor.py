@@ -12,9 +12,7 @@ class LLMPromptProcessor(APIContextProcessor):
     processor_type = "llm-prompt"
     DEFAULT_MODEL = "gpt-4"
 
-    def __init__(
-        self, config, api_context_data: ProcessorContext
-    ):
+    def __init__(self, config, api_context_data: ProcessorContext):
         super().__init__(config, api_context_data)
 
         self.model = config.get("model", LLMPromptProcessor.DEFAULT_MODEL)
@@ -28,7 +26,9 @@ class LLMPromptProcessor(APIContextProcessor):
                 self.get_input_node_output_key()
             )
 
-        if nb_token_for_input(input_data, self.model) > max_token_for_model(self.model):
+        if input_data is not None and nb_token_for_input(
+            input_data, self.model
+        ) > max_token_for_model(self.model):
             prompt_engine = VectorIndexPromptEngine(
                 model=self.model, api_key=self.api_key, init_data=input_data
             )

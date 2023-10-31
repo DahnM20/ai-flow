@@ -91,7 +91,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
     const handleActionClick = (actionName: string, prompt: string) => {
         onUpdateNodeData(id, {
             ...data,
-            inputText: prompt,
+            prompt,
             actionName: actionName,
         });
     }
