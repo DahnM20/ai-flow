@@ -42,8 +42,7 @@ const FlowTabs = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [openConfig, setOpenConfig] = useState(false)
   const [mode, setMode] = useState<ApplicationMode>('flow')
-
-
+  const useAuth = process.env.REACT_APP_USE_AUTH === 'true';
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);
@@ -190,8 +189,15 @@ const FlowTabs = () => {
             <FaEye className='text-slate-400 hover:text-slate-50'
               onClick={handleToggleOutput} />
           </div>
-          <div className='border-l-2 border-l-slate-500/50 h-6'></div>
-          <LoginButton user={user} onClickProfile={handleClickProfile} />
+
+          {
+            useAuth
+            && <>
+              <div className='border-l-2 border-l-slate-500/50 h-6'></div>
+              <LoginButton user={user} onClickProfile={handleClickProfile} />
+            </>
+          }
+
           <div className='border-l-2 border-l-slate-500/50 h-6 pl-3'></div>
           <div className='pr-2'>
             <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
