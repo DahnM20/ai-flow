@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -9,6 +9,7 @@ import ReactFlow, {
 import { createGlobalStyle } from 'styled-components';
 import { darken } from "polished";
 import { FiCopy } from "react-icons/fi";
+import { FaSpinner } from "react-icons/fa";
 
 export const GlobalStyle = createGlobalStyle`
   body {
@@ -272,4 +273,15 @@ export const OutputHandle = styled(Handle)`
     background: rgb(234, 176, 89);
     box-shadow: 0 0 15px 7px rgba(224, 166, 79, 0.5);
   }
+`;
+
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+export const LoadingIcon = styled(FaSpinner)`
+  animation:  ${spin} 1s linear infinite;
+  font-size: 16px;
 `;

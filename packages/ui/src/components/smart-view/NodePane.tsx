@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useFormFields } from "../../hooks/useFormFields";
 import MarkdownOutput from "../shared/nodes-parts/MarkdownOutput";
 import ImageUrlOutput from "../shared/nodes-parts/ImageUrlOutput";
+import { LoadingIcon } from "../shared/Node.styles";
 
 interface NodePaneProps {
     nodeId?: string;
@@ -18,18 +19,13 @@ interface NodePaneProps {
 
 function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
 
-    const { nodes, onUpdateNodeData } = useContext(NodeContext);
+    const outputFieldName = "outputData"
+
+    const { nodes, onUpdateNodeData, currentNodeRunning, isRunning } = useContext(NodeContext);
     const [popupOpen, setPopupOpen] = useState(false);
     const { t } = useTranslation('flow');
 
     const currentNode = useMemo(() => nodes.find(n => n.data.name === nodeId), [nodeId, nodes]);
-
-    const color = useMemo(() => getRandomColor(), []);
-
-    function getRandomColor() {
-        const getRandom = () => Math.floor(Math.random() * 256);
-        return `rgba(${getRandom()}, ${getRandom()}, ${getRandom()}, 0.01)`;
-    }
 
     function handleAttachNode() {
         setPopupOpen(true);
@@ -84,7 +80,7 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
     const renderOutput = () => {
         if (!currentNode || !fieldName) return null;
 
-        const isOutputDataField = fieldName === "outputData";
+        const isOutputDataField = fieldName === outputFieldName;
         const isImageUrlOutput = currentNode.data?.config?.outputType === "imageUrl";
         const data = currentNode.data?.[fieldName] || "No output";
 
@@ -99,19 +95,29 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
         return formFields;
     };
 
+    const isCurrentNodeRunning = (currentNodeRunning === nodeId && isRunning && outputFieldName === fieldName)
+
+    const renderLoadingIcon = () => {
+        return <div className="w-full h-full flex justify-center items-center text-sky-300">
+            <LoadingIcon className="h-[10%] w-[10%] " />
+        </div>
+    }
+
     return (
         <div className="h-full w-full group" style={{ backgroundColor: "rgb(30, 30, 31)" }}>
             {
-                (currentNode != null && fieldName)
-                    ? <div className={`w-full overflow-y-auto h-[95%] flex pt-2 px-3 pb-10 text-slate-300 text-justify justify-center text-lg 
+                isCurrentNodeRunning
+                    ? renderLoadingIcon()
+                    : (currentNode != null && fieldName)
+                        ? <div className={`w-full overflow-y-auto h-[95%] flex pt-2 px-3 pb-10 text-slate-300 text-justify justify-center text-lg 
                                         ${isTextField || fieldName === "outputData" ? "" : "items-center"}`}>
-                        {renderOutput()}
-                    </div>
-                    : <div className="w-full h-full flex 
+                            {renderOutput()}
+                        </div>
+                        : <div className="w-full h-full flex 
                                       justify-center items-center 
                                       text-4xl text-sky-600  ">
-                        <FiPlus className="ring-2 rounded-full ring-sky-600/50 hover:text-sky-300 invisible group-hover:visible  transition-opacity ease-linear duration-300" onClick={handleAttachNode} />
-                    </div>
+                            <FiPlus className="ring-2 rounded-full ring-sky-600/50 hover:text-sky-300 invisible group-hover:visible  transition-opacity ease-linear duration-300" onClick={handleAttachNode} />
+                        </div>
             }
 
             <AttachNodeDialog isOpen={popupOpen}
