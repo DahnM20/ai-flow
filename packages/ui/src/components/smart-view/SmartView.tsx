@@ -4,7 +4,7 @@ import { Node, Edge } from 'reactflow';
 import { NodeProvider } from "../providers/NodeProvider";
 import { useSocketListeners } from "../../hooks/useFlowSocketListeners";
 import { toastInfoMessage } from "../../utils/toastUtils";
-import { attachNode, splitPane, deletePane, layoutIsEmpty } from "./layoutUtils";
+import { attachNode, splitPane, deletePane, layoutIsEmpty, updateLayoutSize } from "./layoutUtils";
 
 
 interface SmartViewProps {
@@ -128,9 +128,8 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
         onFlowChange?.(updatedNodes, edges);
     }
 
-
     return (
-        <div className="w-full h-full bg-zinc-900/95">
+        <div className="w-full h-full bg-zinc-950/95">
             <div className="ml-10 h-full">
                 <NodeProvider nodes={nodes} edges={[]} showOnlyOutput={false}
                     isRunning={isRunning} errorCount={0}

@@ -1,11 +1,14 @@
 import { Allotment } from "allotment";
 import PaneWrapper from "./PaneWrapper";
 import NodePane from "./NodePane";
+import React, { useCallback } from 'react';
+import debounce from 'lodash.debounce';
 
 export interface BasicPane {
     nodeId?: string;
     fieldName?: string;
     minSize?: number;
+    size?: number;
     snap?: boolean;
     paneType?: 'NodePane';
     content?: Layout;
@@ -24,9 +27,10 @@ export interface RenderLayoutProps extends Layout {
     onSplitVertical: (index: LayoutIndex) => void;
     onDelete: (index: LayoutIndex) => void;
     onAttachNode: (index: LayoutIndex, nodeId?: string | undefined, fieldName?: string) => void
+    onChangePaneSize?: (sizes: number[], panes: BasicPane[], parentIndex?: LayoutIndex) => void
 }
 
-const RenderLayout = ({ type, panes, parentIndex, onSplitHorizontal, onSplitVertical, onDelete, onAttachNode }: RenderLayoutProps) => {
+const RenderLayout = ({ type, panes, parentIndex, onSplitHorizontal, onSplitVertical, onDelete, onAttachNode, onChangePaneSize }: RenderLayoutProps) => {
 
     function renderPaneFromData(paneData: BasicPane, index: LayoutIndex): JSX.Element {
         switch (paneData.paneType) {
@@ -37,12 +41,21 @@ const RenderLayout = ({ type, panes, parentIndex, onSplitHorizontal, onSplitVert
         }
     }
 
+    const debouncedOnChangeAllotmentSize = useCallback(
+        debounce((sizes: number[]) => {
+            if (onChangePaneSize) {
+                onChangePaneSize(sizes, panes, parentIndex);
+            }
+        }, 500),
+        []
+    );
     return (
         <Allotment vertical={type === 'vertical'}>
             {panes.map((pane, index) => (
-                <Allotment.Pane key={index} minSize={pane.minSize} snap={pane.snap}>
+                <Allotment.Pane key={index} snap={pane.snap}>
                     <PaneWrapper
                         name={pane.nodeId}
+                        fieldName={pane.fieldName}
                         showTools={!(pane.content instanceof Object && 'panes' in pane.content)}
                         onSplitHorizontal={() => onSplitHorizontal(parentIndex != null ? `${parentIndex}-${index}` : index)}
                         onSplitVertical={() => onSplitVertical(parentIndex != null ? `${parentIndex}-${index}` : index)}
@@ -54,7 +67,8 @@ const RenderLayout = ({ type, panes, parentIndex, onSplitHorizontal, onSplitVert
                                 onSplitHorizontal={onSplitHorizontal}
                                 onSplitVertical={onSplitVertical}
                                 onAttachNode={onAttachNode}
-                                onDelete={onDelete} />
+                                onDelete={onDelete}
+                                onChangePaneSize={onChangePaneSize} />
                         ) : (
                             renderPaneFromData(pane, parentIndex != null ? `${parentIndex}-${index}` : index)
                         )}

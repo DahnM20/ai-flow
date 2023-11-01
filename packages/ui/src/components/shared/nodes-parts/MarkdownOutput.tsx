@@ -1,7 +1,11 @@
 import React, { memo } from 'react';
-import { marked } from "marked";
-import * as DOMPurify from 'dompurify';
+import remarkGfm from "remark-gfm";
 import EaseOut from '../motions/EaseOut';
+import ReactMarkdown from "react-markdown";
+import styled from 'styled-components';
+
+import "github-markdown-css"
+
 
 interface MarkdownOutputProps {
     data: string;
@@ -11,12 +15,11 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({ data }) => {
     if (!data) return <p> </p>
 
     const stringifiedData = typeof data === 'string' ? data : JSON.stringify(data);
-
-    const html = marked(stringifiedData);
-    const sanitizedHtml = DOMPurify.sanitize(html);
-
-    return <EaseOut><div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} style={{ paddingTop: '10px' }} /></EaseOut>;
+    return <EaseOut><StyledReactMarkdown remarkPlugins={[remarkGfm]} children={stringifiedData} className="markdown-body" /></EaseOut>;
 };
 
+const StyledReactMarkdown = styled(ReactMarkdown)`
+    background-color: transparent !important;
+`
 
 export default memo(MarkdownOutput);
