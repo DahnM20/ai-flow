@@ -4,6 +4,7 @@ import { NodeContext } from '../providers/NodeProvider';
 import { Node } from 'reactflow';
 import { FiChevronDown } from 'react-icons/fi';
 import { Field } from '../../nodesConfiguration/nodeConfig';
+import { useTranslation } from 'react-i18next';
 
 interface AttachNodeDialogProps {
     isOpen: boolean;
@@ -44,6 +45,7 @@ const CustomCombobox = ({ items, selectedItem, onChange, query, setQuery }: any)
 
 function AttachNodeDialog({ isOpen, setIsOpen, handleClose, handleSubmit }: AttachNodeDialogProps) {
     const { nodes } = useContext(NodeContext);
+    const { t } = useTranslation('dialogs');
 
     const [selectedNode, setSelectedNode] = useState<Node>()
     const [selectedField, setSelectedField] = useState<string>()
@@ -83,7 +85,7 @@ function AttachNodeDialog({ isOpen, setIsOpen, handleClose, handleSubmit }: Atta
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
             <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
                 <Dialog.Panel className="mx-auto max-w-sm rounded bg-zinc-900/90 h-3/5 w-4/5 p-4">
-                    <Dialog.Title className="text-lg font-bold text-slate-200 text-center mb-4">Attach Node</Dialog.Title>
+                    <Dialog.Title className="text-lg font-bold text-slate-200 text-center mb-4">{t('attachNodeTitle')}</Dialog.Title>
                     <CustomCombobox
                         items={nodes.map(node => {
                             return { key: node.data.name, value: node }
@@ -102,7 +104,7 @@ function AttachNodeDialog({ isOpen, setIsOpen, handleClose, handleSubmit }: Atta
                             setQuery={setQueryField}
                         />
                     }
-                    <button className='text-sky-300 bg-slate-700 p-5 mt-4 w-full' onClick={submit}>Submit</button>
+                    <button className='text-sky-300 bg-slate-700 p-5 mt-4 w-full' onClick={submit}>{t('attachNodeAction')}</button>
                 </Dialog.Panel>
             </div>
         </Dialog>
