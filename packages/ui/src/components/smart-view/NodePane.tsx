@@ -28,7 +28,7 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
 
     function getRandomColor() {
         const getRandom = () => Math.floor(Math.random() * 256);
-        return `rgba(${getRandom()}, ${getRandom()}, ${getRandom()}, 0.15)`;
+        return `rgba(${getRandom()}, ${getRandom()}, ${getRandom()}, 0.01)`;
     }
 
     function handleAttachNode() {
@@ -41,7 +41,7 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
         }
     }
 
-    function getFieldConfig() {
+    function getFieldConfig(): Field | undefined {
         if (!!currentNode?.data?.config) {
             return currentNode?.data.config.fields.find((field: Field) => field.name === fieldName);
         }
@@ -78,30 +78,39 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
         getFieldConfig()?.name
     );
 
+    const fieldConfig = getFieldConfig()
+    const isTextField = fieldName && fieldConfig && ["input", "textarea"].includes(fieldConfig.type)
+
+    const renderOutput = () => {
+        if (!currentNode || !fieldName) return null;
+
+        const isOutputDataField = fieldName === "outputData";
+        const isImageUrlOutput = currentNode.data?.config?.outputType === "imageUrl";
+        const data = currentNode.data?.[fieldName] || "No output";
+
+        if (isOutputDataField && isImageUrlOutput) {
+            return data ? <ImageUrlOutput url={data} name="" /> : <p>No Output</p>;
+        }
+
+        if (isOutputDataField && !isImageUrlOutput) {
+            return <MarkdownOutput data={data} />;
+        }
+
+        return formFields;
+    };
+
     return (
-        <div className="h-full w-full overflow-y-auto" style={{ backgroundColor: !currentNode ? color : "rgb(30, 30, 31)" }}>
+        <div className="h-full w-full group" style={{ backgroundColor: "rgb(30, 30, 31)" }}>
             {
                 (currentNode != null && fieldName)
-                    ? <div className="w-full h-5/6 flex p-4 text-slate-300/95 text-justify justify-center">
-                        {
-                            fieldName === "outputData"
-                                ? <>
-                                    {
-                                        !!currentNode?.data && currentNode?.data.config?.outputType === "imageUrl"
-                                            ? currentNode?.data[fieldName]
-                                                ? <ImageUrlOutput url={currentNode?.data[fieldName]} name="" />
-                                                : <p> No Output </p>
-                                            : <MarkdownOutput data={currentNode?.data[fieldName] ? currentNode?.data[fieldName] : "No output"} />
-                                    }
-
-                                </>
-                                : formFields
-                        }
+                    ? <div className={`w-full overflow-y-auto h-[95%] flex pt-2 px-3 pb-10 text-slate-300 text-justify justify-center text-lg 
+                                        ${isTextField || fieldName === "outputData" ? "" : "items-center"}`}>
+                        {renderOutput()}
                     </div>
                     : <div className="w-full h-full flex 
                                       justify-center items-center 
-                                      text-4xl text-sky-600  hover:text-sky-300">
-                        <FiPlus className="ring-2 rounded-full ring-sky-600/50" onClick={handleAttachNode} />
+                                      text-4xl text-sky-600  ">
+                        <FiPlus className="ring-2 rounded-full ring-sky-600/50 hover:text-sky-300 invisible group-hover:visible  transition-opacity ease-linear duration-300" onClick={handleAttachNode} />
                     </div>
             }
 

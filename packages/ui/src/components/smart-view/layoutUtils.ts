@@ -19,6 +19,26 @@ export function layoutIsEmpty(layout: Layout | undefined): boolean {
     return true;
 }
 
+export function updateLayoutSize(layout: Layout, index: LayoutIndex, sizes: number[]): Layout {
+    const newLayout = { ...layout, panes: layout?.panes ? [...layout.panes] : [] };
+
+    if (typeof index === 'number') {
+        newLayout.panes.map((pane, index) => {
+            pane.size = sizes[index]
+        })
+        return newLayout;
+    } else {
+        const [first, ...rest] = index.split('-').map(Number);
+        if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
+            newLayout.panes[first].content = updateLayoutSize(newLayout.panes[first].content as Layout,
+                rest.length > 1 ? rest.join('-') : rest[0],
+                sizes);
+        }
+        return newLayout;
+    }
+}
+
+
 export function attachNode(layout: Layout, index: LayoutIndex, nodeId: string, fieldName: string): Layout {
     const newLayout = { ...layout, panes: layout?.panes ? [...layout.panes] : [] };
 
