@@ -128,6 +128,15 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
         onFlowChange?.(updatedNodes, edges);
     }
 
+    function handleChangePaneSize(sizes: number[], panes: BasicPane[], parentIndex?: LayoutIndex): void {
+        setCurrentLayout((currentLayout) => {
+            if (!!currentLayout) {
+                return updateLayoutSize(currentLayout, parentIndex ? parentIndex : 0, sizes);
+            }
+            return currentLayout;
+        });
+    }
+
     return (
         <div className="w-full h-full bg-zinc-950/95">
             <div className="ml-10 h-full">
@@ -141,7 +150,8 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
                             onSplitHorizontal={handleSplitHorizontal}
                             onSplitVertical={handleSplitVertical}
                             onDelete={handleDeletePane}
-                            onAttachNode={handleAttachNode} />
+                            onAttachNode={handleAttachNode}
+                            onChangePaneSize={handleChangePaneSize} />
                     }
 
                 </NodeProvider>

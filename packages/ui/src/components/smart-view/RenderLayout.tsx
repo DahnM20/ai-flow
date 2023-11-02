@@ -32,6 +32,9 @@ export interface RenderLayoutProps extends Layout {
 
 const RenderLayout = ({ type, panes, parentIndex, onSplitHorizontal, onSplitVertical, onDelete, onAttachNode, onChangePaneSize }: RenderLayoutProps) => {
 
+    const DEFAULT_SIZE = 20;
+    const DEBOUNCE_MS_DELAY = 800;
+
     function renderPaneFromData(paneData: BasicPane, index: LayoutIndex): JSX.Element {
         switch (paneData.paneType) {
             case 'NodePane':
@@ -43,14 +46,16 @@ const RenderLayout = ({ type, panes, parentIndex, onSplitHorizontal, onSplitVert
 
     const debouncedOnChangeAllotmentSize = useCallback(
         debounce((sizes: number[]) => {
-            if (onChangePaneSize) {
+            const allSizesDefined = sizes.every(size => size !== undefined);
+            if (onChangePaneSize && allSizesDefined) {
                 onChangePaneSize(sizes, panes, parentIndex);
             }
-        }, 500),
+        }, DEBOUNCE_MS_DELAY),
         []
     );
+
     return (
-        <Allotment vertical={type === 'vertical'}>
+        <Allotment vertical={type === 'vertical'} defaultSizes={panes.map((pane) => pane.size ? pane.size : DEFAULT_SIZE)} onChange={debouncedOnChangeAllotmentSize}>
             {panes.map((pane, index) => (
                 <Allotment.Pane key={index} snap={pane.snap}>
                     <PaneWrapper

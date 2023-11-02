@@ -23,9 +23,14 @@ export function updateLayoutSize(layout: Layout, index: LayoutIndex, sizes: numb
     const newLayout = { ...layout, panes: layout?.panes ? [...layout.panes] : [] };
 
     if (typeof index === 'number') {
-        newLayout.panes.map((pane, index) => {
-            pane.size = sizes[index]
-        })
+        const isRootLayout = !(newLayout.panes[index]?.content?.panes && sizes.length > 1)
+        if (isRootLayout) {
+            newLayout.panes[index].size = sizes[0];
+        } else {
+            newLayout.panes[index]?.content?.panes.forEach((pane, index) => {
+                pane.size = sizes[index]
+            })
+        }
         return newLayout;
     } else {
         const [first, ...rest] = index.split('-').map(Number);

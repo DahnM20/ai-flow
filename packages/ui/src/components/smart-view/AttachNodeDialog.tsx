@@ -104,7 +104,10 @@ function AttachNodeDialog({ isOpen, setIsOpen, handleClose, handleSubmit }: Atta
                             setQuery={setQueryField}
                         />
                     }
-                    <button className='text-sky-300 bg-slate-700 p-5 mt-4 w-full' onClick={submit}>{t('attachNodeAction')}</button>
+                    {
+                        (!!selectedNode && !!selectedField)
+                        && <button className='text-sky-300 bg-slate-700 p-5 mt-4 w-full' onClick={submit}>{t('attachNodeAction')}</button>
+                    }
                 </Dialog.Panel>
             </div>
         </Dialog>
