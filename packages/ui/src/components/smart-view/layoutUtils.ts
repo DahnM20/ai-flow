@@ -1,5 +1,6 @@
 import { Layout, LayoutIndex, BasicPane } from "./RenderLayout";
 
+const INDEX_SPLIT_CHAR = '-'
 
 export function layoutIsEmpty(layout: Layout | undefined): boolean {
     if (!layout) return true;
@@ -23,7 +24,7 @@ export function updateLayoutSize(layout: Layout, index: LayoutIndex, sizes: numb
     const newLayout = { ...layout, panes: layout?.panes ? [...layout.panes] : [] };
 
     if (typeof index === 'number') {
-        const isRootLayout = !(newLayout.panes[index]?.content?.panes && sizes.length > 1)
+        const isRootLayout = sizes.length === 1
         if (isRootLayout) {
             newLayout.panes[index].size = sizes[0];
         } else {
@@ -33,10 +34,12 @@ export function updateLayoutSize(layout: Layout, index: LayoutIndex, sizes: numb
         }
         return newLayout;
     } else {
-        const [first, ...rest] = index.split('-').map(Number);
+        const [first, ...rest] = index.split(INDEX_SPLIT_CHAR).map(Number);
+
         if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
+
             newLayout.panes[first].content = updateLayoutSize(newLayout.panes[first].content as Layout,
-                rest.length > 1 ? rest.join('-') : rest[0],
+                rest.length > 1 ? rest.join(INDEX_SPLIT_CHAR) : rest[0],
                 sizes);
         }
         return newLayout;
@@ -49,16 +52,19 @@ export function attachNode(layout: Layout, index: LayoutIndex, nodeId: string, f
 
     if (typeof index === 'number') {
         newLayout.panes[index] = {
+            ...newLayout.panes[index],
             nodeId,
             fieldName,
             paneType: 'NodePane'
         };
         return newLayout;
     } else {
-        const [first, ...rest] = index.split('-').map(Number);
+        const [first, ...rest] = index.split(INDEX_SPLIT_CHAR).map(Number);
+
         if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
+
             newLayout.panes[first].content = attachNode(newLayout.panes[first].content as Layout,
-                rest.length > 1 ? rest.join('-') : rest[0],
+                rest.length > 1 ? rest.join(INDEX_SPLIT_CHAR) : rest[0],
                 nodeId,
                 fieldName);
         }
@@ -74,11 +80,13 @@ export function splitPane(layout: Layout, index: LayoutIndex, type: 'horizontal'
         firstParentIndex = index;
     }
 
-    if (typeof index === 'string' && index.includes('-')) {
-        const [first, ...rest] = index.split('-').map(Number);
+    if (typeof index === 'string' && index.includes(INDEX_SPLIT_CHAR)) {
+        const [first, ...rest] = index.split(INDEX_SPLIT_CHAR).map(Number);
+
         if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
+
             newLayout.panes[first].content = splitPane(newLayout.panes[first].content as Layout,
-                rest.length > 1 ? rest.join('-') : rest[0],
+                rest.length > 1 ? rest.join(INDEX_SPLIT_CHAR) : rest[0],
                 type, firstParentIndex);
         }
         return newLayout;
@@ -88,10 +96,12 @@ export function splitPane(layout: Layout, index: LayoutIndex, type: 'horizontal'
         const newPanes: BasicPane[] = [
             {
                 ...layout.panes[paneIndex],
-                paneType: 'NodePane'
+                paneType: 'NodePane',
+                size: layout.panes[paneIndex].size / 2,
             },
             {
-                paneType: 'NodePane'
+                paneType: 'NodePane',
+                size: layout.panes[paneIndex].size / 2
             }
         ];
 
@@ -99,7 +109,8 @@ export function splitPane(layout: Layout, index: LayoutIndex, type: 'horizontal'
             content: {
                 type,
                 panes: newPanes
-            }
+            },
+            size: layout.panes[paneIndex].size
         };
         return newLayout;
     }
@@ -108,7 +119,7 @@ export function splitPane(layout: Layout, index: LayoutIndex, type: 'horizontal'
 export function deletePane(layout: Layout, index: LayoutIndex): Layout {
     const newLayout = { ...layout, panes: [...layout.panes] };
 
-    if (typeof index === 'string' && !index.includes('-')) {
+    if (typeof index === 'string' && !index.includes(INDEX_SPLIT_CHAR)) {
         index = +index;
     }
 
@@ -116,7 +127,7 @@ export function deletePane(layout: Layout, index: LayoutIndex): Layout {
         newLayout.panes.splice(index, 1);
         return newLayout;
     } else {
-        const [first, ...rest] = index.split('-').map(Number);
+        const [first, ...rest] = index.split(INDEX_SPLIT_CHAR).map(Number);
         if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
             newLayout.panes[first].content = deletePane(newLayout.panes[first].content as Layout, rest.join('-'));
         }

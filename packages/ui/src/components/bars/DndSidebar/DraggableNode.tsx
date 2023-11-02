@@ -31,15 +31,19 @@ const DraggableNode = (props: DraggableNodeProps) => {
                   hover:ring-slate-200/50
                   font-medium
                   shadow-md
-                  cursor-grab'
+                  cursor-grab
+                  group'
         >
             {t(props.node.label)}
             {
                 props.node.helpMessage &&
-                <StyledInfoIcon
-                    data-tooltip-id={`dnd-tooltip`}
-                    data-tooltip-content={t(props.node.helpMessage)}
-                />
+                <div className="absolute left-5 flex items-center">
+                    <StyledInfoIcon
+                        className="opacity-0 group-hover:opacity-100"
+                        data-tooltip-id={`dnd-tooltip`}
+                        data-tooltip-content={t(props.node.helpMessage)}
+                    />
+                </div>
             }
         </Node>
     );

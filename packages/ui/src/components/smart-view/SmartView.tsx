@@ -25,7 +25,7 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
         type: 'horizontal',
         panes: [
             {
-                minSize: 200,
+                size: 200,
                 paneType: 'NodePane'
             },
         ],

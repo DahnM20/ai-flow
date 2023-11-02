@@ -8,7 +8,7 @@ export interface BasicPane {
     nodeId?: string;
     fieldName?: string;
     minSize?: number;
-    size?: number;
+    size: number;
     snap?: boolean;
     paneType?: 'NodePane';
     content?: Layout;

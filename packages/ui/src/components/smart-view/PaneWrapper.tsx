@@ -29,7 +29,7 @@ function PaneWrapper({ children, name, fieldName, showTools, onSplitHorizontal, 
                             nodeKind + ' - ' + fieldName
                         }
                     </div>
-                    <div className="absolute top-0 right-0 space-x-2 pr-2 py-1 
+                    <div className="absolute top-0 right-0 space-x-2 pr-2 my-1 bg-zinc-900
                     group-hover:opacity-100 invisible group-hover:visible transition-opacity ease-linear duration-200">
                         <PaneWrapperButton onClick={onSplitHorizontal}>
                             <MdOutlineVerticalSplit />
