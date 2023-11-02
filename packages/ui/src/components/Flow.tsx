@@ -227,6 +227,8 @@ function Flow(props: FlowProps) {
             onTouchEnd={onDragOver}
             onInit={onInit}
             fitView
+            minZoom={0.2}
+            maxZoom={4}
           >
             {/* <Background /> */}
             <MiniMapStyled style={{ right: '4vw' }} />
