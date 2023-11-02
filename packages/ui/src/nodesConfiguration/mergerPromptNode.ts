@@ -26,7 +26,7 @@ export const mergerPromptNode: NodeConfig = {
             type: 'inputNameBar',
         },
         {
-            name: 'inputText',
+            name: 'prompt',
             type: 'textarea',
             placeholder: 'PromptPlaceholder',
         },
