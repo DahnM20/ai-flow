@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { NodeLabel, NodeInput, NodeTextarea, NodeSelect, NodeSelectOption, OptionSelector, OptionButton } from "../components/shared/Node.styles";
 import InputNameBar from "../components/shared/nodes-parts/InputNameBar";
 import { Field } from "../nodesConfiguration/nodeConfig";
+import { useEffect } from "react";
 
 
 export function useFormFields(data: any,
@@ -14,6 +15,16 @@ export function useFormFields(data: any,
     specificField?: string) {
 
     const { t } = useTranslation('flow');
+
+    useEffect(() => {
+        data?.config.fields.forEach((field: Field) => {
+            if (!data[field.name]) {
+                setDefaultOption(field);
+            }
+        });
+    }, [])
+
+
     if (!data || !data.config || !data.config.fields) {
         return <></>
     }
@@ -45,9 +56,6 @@ export function useFormFields(data: any,
                         </>
                     );
                 case 'select':
-                    if (!data[field.name]) {
-                        setDefaultOption(field);
-                    }
                     return (
                         <>
                             <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)} defaultValue={data[field.name]}>
@@ -60,9 +68,6 @@ export function useFormFields(data: any,
                         </>
                     );
                 case 'option':
-                    if (!data[field.name]) {
-                        setDefaultOption(field);
-                    }
                     return (
                         <>
                             <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
