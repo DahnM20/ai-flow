@@ -22,9 +22,9 @@
 
 <div align="center">
 
-## 🎉 v0.4.0 is Now Available 🎉
+## 🎉 v0.5.0 is Now Available 🎉
 
-🌟 **UI Enhancements** | ↔️ **Handles are now movable** | 🤖 **New AI Action Node**
+🌟 **UI Enhancements** | ↔️ **New Layout View** | 🤖 **New Merge Node** | ✨ **Support for large input**
 
 </div>
 
@@ -53,7 +53,9 @@ This flow logic can then be applied to different inputs, yielding varied results
 
 Our primary goal with AI Flow is to democratize access to AI interactions, enabling anyone to create and manage their own AI networks right from their personal computer. In addition, we value your autonomy and control over costs. With AI Flow, you utilize your own OpenAI keys, giving you full authority over your budget. Importantly, the software runs locally on your machine, assuring you of privacy and control over your data and operations.
 
-⚠️ Please note that AI Flow is still under active development. At present, it is constrained by the maximum input size supported by GPT models. However, we're hard at work devising solutions to this limitation, and we're excited about rolling out updates in future releases.
+⚠️ Please note that very large input _(for example the transcript of a 1 hour podcast)_ may incur additionnal costs, because for this type of entry the default behavior is to split the input into chunks, create embeddings **(with the OpenAI API)**, and then use a similarity search to find the right items to answer the prompt. 
+
+> N.B : For large inputs, you'll get better result with a precise prompt.
 
 ## Features
 
@@ -80,6 +82,12 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 ![image-summary](assets/split-input.png)
 
 > By combining those features we can create different flows.
+
+#### Create a custom layout for your flow
+
+When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting part.
+
+![image-summary](assets/layout.png)
 
 
 ## Installation (Windows executable)
