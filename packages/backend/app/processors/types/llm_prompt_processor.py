@@ -1,4 +1,3 @@
-from ..utils.processor_output import ProcessorOutput
 from ...llms.utils.max_token_for_model import max_token_for_model, nb_token_for_input
 from ...llms.prompt_engine.simple_prompt_engine import SimplePromptEngine
 from ...llms.prompt_engine.vector_index_prompt_engine import VectorIndexPromptEngine

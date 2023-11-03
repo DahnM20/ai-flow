@@ -31,13 +31,14 @@ class TestLLMPromptProcessor(unittest.TestCase):
 
         api_context_data = ProcessorContextMock(API_KEY)
         mock_factory = LLMMockFactory(expected_response=MOCKED_RESPONSE)
+        
+        with patch('app.llms.prompt_engine.simple_prompt_engine.SimplePromptEngine._get_default_llm_factory', return_value=mock_factory):
+            # Act
+            processor = LLMPromptProcessor(config, api_context_data)
+            result = processor.process()
 
-        # Act
-        processor = LLMPromptProcessor(config, api_context_data, mock_factory)
-        result = processor.process()
-
-        # Assert
-        self.assertEqual(result, MOCKED_RESPONSE)
+            # Assert
+            self.assertEqual(result, MOCKED_RESPONSE)
 
     def test_missing_inputText_raises_exception(self):
         MODEL = "gpt-4"
