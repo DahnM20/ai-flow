@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RenderLayout, { BasicPane, Layout, LayoutIndex } from "./RenderLayout";
 import { Node, Edge } from 'reactflow';
 import { NodeProvider } from "../providers/NodeProvider";
@@ -34,6 +34,9 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
     const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
     const [currentLayout, setCurrentLayout] = useState<Layout | null>(!!tabLayout && !layoutIsEmpty(tabLayout) ? tabLayout : initialLayout);
 
+    const nodesRef = useRef(nodes);
+    nodesRef.current = nodes;
+
     useEffect(() => {
         if (!!currentLayout) {
             onLayoutChange({ ...currentLayout })
@@ -45,7 +48,7 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
         const output = data.output;
 
         if (nodeToUpdate && output) {
-            const nodesUpdated = [...nodes]
+            const nodesUpdated = [...nodesRef.current]
             nodesUpdated.map((node: Node) => {
                 if (node.data.name == nodeToUpdate) {
                     node.data = { ...node.data, outputData: output, lastRun: new Date() };

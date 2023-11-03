@@ -228,7 +228,7 @@ function Flow(props: FlowProps) {
             onInit={onInit}
             fitView
             minZoom={0.2}
-            maxZoom={4}
+            maxZoom={2}
           >
             {/* <Background /> */}
             <MiniMapStyled style={{ right: '4vw' }} />
