@@ -5,8 +5,8 @@
   <em>Open-source tool to seamlessly connect multiple AI models in repeatable flow.</em>
 </p>
 <p align="center">
-    <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English">
-    <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French">
+    <a href="https://docs.ai-flow.net/"> <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"> </a>
+    <a href="https://docs.ai-flow.net/"> <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French"> </a>
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
     <img src="https://img.shields.io/github/v/release/DahnM20/ai-flow">
     <a href="https://twitter.com/DahnM20"><img src="https://img.shields.io/twitter/follow/AI-Flow?style=social"></a>
@@ -22,7 +22,7 @@
 
 <div align="center">
 
-## 🎉 v0.5.0 is Now Available 🎉
+## 🎉🚀 v0.5.0 is Now Available 🚀🎉
 
 🌟 **UI Enhancements** | ↔️ **New Layout View** | 🤖 **New Merge Node** | ✨ **Support for large input**
 
@@ -86,7 +86,7 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 #### Create a custom layout for your flow
 
-When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting part.
+When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting parts.
 
 ![image-summary](assets/layout.png)
 
