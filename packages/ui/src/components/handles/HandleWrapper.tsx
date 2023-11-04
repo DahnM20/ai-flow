@@ -122,9 +122,9 @@ const Popup: React.FC<PopupProps> = ({ currentPosition, onSelect, coords, onCanc
             style={{ top: `${coords.y}px`, left: `${coords.x}px` }}
         >
             <div className="flex flex-row">
-                {handles.map(handle => (
+                {handles.map((handle, index) => (
                     <img
-                        key={handle.src}
+                        key={`${handle.position}`}
                         src={handle.src}
                         className={`w-14 cursor-pointer ${handle.position === currentPosition ? 'opacity-100' : 'opacity-40'}`}
                         onClick={() => onSelect(handle.position)}

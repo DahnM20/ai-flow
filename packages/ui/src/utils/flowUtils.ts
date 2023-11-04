@@ -134,8 +134,10 @@ function arrangeOldFields(nodeData: any) {
   }
 
   if (nodeData.processorType === 'ai-action') {
-    nodeData.model = nodeData.gptVersion;
-    nodeData.prompt = nodeData.inputText;
+    if (!!nodeData.inputText) {
+      nodeData.model = nodeData.gptVersion;
+      nodeData.prompt = nodeData.inputText;
+    }
   }
 
   nodeData.gptVersion = undefined;

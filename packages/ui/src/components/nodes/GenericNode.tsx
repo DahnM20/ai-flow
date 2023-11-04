@@ -186,10 +186,13 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                     <>
                         {
                             allInputHandleIds.map((id) => {
-                                return <HandleWrapper id={id} position={
-                                    !!data?.handles && data.handles[id]
-                                        ? data.handles[id]
-                                        : Position.Left}
+                                return <HandleWrapper
+                                    key={id}
+                                    id={id}
+                                    position={
+                                        !!data?.handles && data.handles[id]
+                                            ? data.handles[id]
+                                            : Position.Left}
                                     linkedHandlePositions={allHandlePositions}
                                     onChangeHandlePosition={handleChangeHandlePosition} />
                             })

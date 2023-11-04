@@ -36,60 +36,58 @@ export function useFormFields(data: any,
             switch (field.type) {
                 case 'input':
                     return (
-                        <>
+                        <div key={`${id}-${field.name}`}>
                             {
                                 field.label &&
-                                <NodeLabel key={`${id}-${field.name}`} >{t(field.label)}</NodeLabel>
+                                <NodeLabel>{t(field.label)}</NodeLabel>
                             }
-                            <NodeInput key={`${id}-${field.name}`} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
-                        </>
+                            <NodeInput name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                        </div>
                     );
 
                 case 'textarea':
                     return (
-                        <>
+                        <div key={`${id}-${field.name}`}>
                             {
                                 field.label &&
-                                <NodeLabel key={`${id}-${field.name}`}>{t(field.label)}</NodeLabel>
+                                <NodeLabel>{t(field.label)}</NodeLabel>
                             }
                             <NodeTextarea key={`${id}-${field.name}`} ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
-                        </>
+                        </div>
                     );
                 case 'select':
                     return (
-                        <>
-                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)} defaultValue={data[field.name]}>
+                        <div key={`${id}-${field.name}`}>
+                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)} defaultValue={data[field.name]} className="w-full">
                                 {field.options?.map(option => (
                                     <NodeSelectOption key={`${id}-${option.value}`} >
                                         {t(option.label)}
                                     </NodeSelectOption>
                                 ))}
                             </NodeSelect>
-                        </>
+                        </div>
                     );
                 case 'option':
                     return (
-                        <>
-                            <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-                                <OptionSelector>
-                                    {field.options?.map(option => (
-                                        <OptionButton
-                                            key={`${id}-${option.value}`}
-                                            selected={data[field.name] === option.value}
-                                            onClick={() => handleOptionChange(field.name, option.value)}
-                                        >
-                                            {t(option.label)}
-                                        </OptionButton>
-                                    ))}
-                                </OptionSelector>
-                            </div>
-                        </>
+                        <div key={`${id}-${field.name}`} style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+                            <OptionSelector>
+                                {field.options?.map(option => (
+                                    <OptionButton
+                                        key={`${id}-${option.value}`}
+                                        selected={data[field.name] === option.value}
+                                        onClick={() => handleOptionChange(field.name, option.value)}
+                                    >
+                                        {t(option.label)}
+                                    </OptionButton>
+                                ))}
+                            </OptionSelector>
+                        </div>
                     );
 
                 case 'inputNameBar':
                     return (
                         !!data.config.inputNames
-                        && <InputNameBar inputNames={data.config.inputNames} textareaRef={textareaRef} />
+                        && <InputNameBar key={`${id}-${field.name}`} inputNames={data.config.inputNames} textareaRef={textareaRef} />
                     );
             }
         });

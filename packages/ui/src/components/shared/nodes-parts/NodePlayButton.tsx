@@ -34,16 +34,16 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onCl
   const IconComponent = getIconComponent(isPlaying, isCurrentNodeRunning, hasRun, isHovered);
 
   return (
-    <TapScale scale={0.5}>
-      <NodePlayButtonContainer
-        onClick={handleClick}
-        disabled={isDisabled}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+    <NodePlayButtonContainer
+      onClick={handleClick}
+      disabled={isDisabled}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <TapScale scale={0.5}>
         <IconComponent />
-      </NodePlayButtonContainer>
-    </TapScale>
+      </TapScale>
+    </NodePlayButtonContainer>
   );
 };
 

@@ -13,6 +13,8 @@ interface UserProviderProps {
 }
 
 export const UserProvider = ({ children }: UserProviderProps) => {
+    const useAuth = process.env.REACT_APP_USE_AUTH === 'true';
+
     const [currentUser, setCurrentUser] = useState<any>(undefined);
 
     useEffect(() => {
@@ -35,6 +37,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     }, []);
 
     const getUser = async (): Promise<void> => {
+        if (!useAuth) return;
+
         try {
             const currentUser = await Auth.currentAuthenticatedUser();
             setLoggedUser(currentUser);

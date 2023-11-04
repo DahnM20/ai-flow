@@ -45,7 +45,7 @@ export const getAllNodeWithEaseOut = (): Record<NodeType, React.FC<NodeProps>> =
     const NodeComponent = specificNodeTypes[type] || GenericNode;
 
     completeNodeTypes[type] = (props: NodeProps) => (
-      <EaseOut>
+      <EaseOut key={props.id}>
         <NodeComponent {...props} />
       </EaseOut>
     );
