@@ -10,24 +10,18 @@ import {
   addEdge,
   Connection,
   ReactFlowInstance,
-  NodeProps,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
-import RightIconButton from './buttons/ConfigurationButton';
-import ConfigPopup from './popups/ConfigPopup';
-import { FiHelpCircle } from 'react-icons/fi';
-import HelpPopup from './popups/HelpPopup';
-import DnDSidebar from './side-views/DndSidebar/DnDSidebar';
 import { NodeProvider } from './providers/NodeProvider';
 import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
-import { SocketContext } from './providers/SocketProvider';
 import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
 import { getAllNodeWithEaseOut } from '../utils/mappings';
 import { useTranslation } from 'react-i18next';
 import { toastInfoMessage } from '../utils/toastUtils';
 import { useDrop } from 'react-dnd';
+import { useSocketListeners } from '../hooks/useFlowSocketListeners';
 
 export interface FlowProps {
   nodes?: Node[];
@@ -39,11 +33,9 @@ export interface FlowProps {
 }
 
 function Flow(props: FlowProps) {
-
   const { t } = useTranslation('flow');
 
   const reactFlowWrapper = useRef(null);
-  const { socket } = useContext(SocketContext);
   const nodeTypes = useMemo(() => getAllNodeWithEaseOut(), []);
 
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
@@ -51,8 +43,6 @@ function Flow(props: FlowProps) {
   const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
-  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
-  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
   const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
   const [errorCount, setErrorCount] = useState<number>(0);
 
@@ -71,39 +61,16 @@ function Flow(props: FlowProps) {
     setReactFlowInstance(reactFlowInstance);
   }
 
-  useEffect(() => {
-    if (!!socket) {
-      socket.on('progress', onProgress);
-      socket.on('error', onError)
-      socket.on('run_end', onRunEnd)
-      socket.on('current_node_running', onCurrentNodeRunning)
-      socket.on('disconnect', onDisconnect)
-    }
+  useSocketListeners(onProgress, onError, onRunEnd, onCurrentNodeRunning)
 
-    return () => {
-      if (!!socket) {
-        socket.off('progress', onProgress);
-        socket.off('error', onError)
-        socket.off('run_end', onRunEnd)
-        socket.off('current_node_running', onCurrentNodeRunning)
-        socket.off('disconnect', onDisconnect)
-      }
-    }
-  }, [socket]);
 
-  useEffect(() => {
-    if (props.onFlowChange) {
-      props.onFlowChange(nodes, edges);
-    }
-  }, [nodes, edges]);
-
-  const onProgress = (data: any) => {
+  function onProgress(data: any) {
     const nodeToUpdate = data.instanceName as string;
     const output = data.output;
 
     if (nodeToUpdate && output) {
       setNodes((currentState) => {
-        return [...currentState.map((node) => {
+        return [...currentState.map((node: Node) => {
           if (node.data.name == nodeToUpdate) {
             node.data = { ...node.data, outputData: output, lastRun: new Date() };
           }
@@ -115,26 +82,26 @@ function Flow(props: FlowProps) {
     }
   }
 
-  const onError = (data: any) => {
+  function onError(data: any) {
     setCurrentUserMessage({ content: data.error, type: MessageType.Error });
     props.onRunChange(false);
     setErrorCount(prevErrorCount => prevErrorCount + 1);
     setIsPopupOpen(true);
   }
 
-  const onRunEnd = (data: any) => {
+  function onRunEnd() {
     props.onRunChange(false);
   }
 
-  const onCurrentNodeRunning = (data: any) => {
+  function onCurrentNodeRunning(data: any) {
     setCurrentNodeRunning(data.instanceName);
   }
 
-  const onDisconnect = (reason: any) => {
-    if (reason === 'transport close') {
-      toastInfoMessage(t('socketConnectionLost'));
+  useEffect(() => {
+    if (props.onFlowChange) {
+      props.onFlowChange(nodes, edges);
     }
-  }
+  }, [nodes, edges]);
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -147,7 +114,7 @@ function Flow(props: FlowProps) {
 
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((eds) => {
-      if (isNodeAlreadyTargeted(connection, eds)) {
+      if (isHandleAlreadyTargeted(connection, eds)) {
         return eds;
       }
       return addEdge({ ...connection, type: 'smoothstep', markerEnd: 'arrowClosed' }, eds);
@@ -202,8 +169,8 @@ function Flow(props: FlowProps) {
     [reactFlowInstance]
   );
 
-  const isNodeAlreadyTargeted = (connection: Connection, eds: Edge[]) => {
-    if (eds.filter(edge => edge.target === connection.target).length > 0) {
+  const isHandleAlreadyTargeted = (connection: Connection, eds: Edge[]) => {
+    if (eds.filter(edge => edge.targetHandle === connection.targetHandle && edge.target === connection.target).length > 0) {
       return true;
     }
     return false;
@@ -220,10 +187,6 @@ function Flow(props: FlowProps) {
 
   const handlePopupClose = useCallback(() => {
     setIsPopupOpen(false);
-  }, []);
-
-  const handleConfigClose = useCallback(() => {
-    setIsConfigOpen(false);
   }, []);
 
   function handleChangeFlow(nodes: Node[], edges: Edge[]): void {
@@ -264,6 +227,8 @@ function Flow(props: FlowProps) {
             onTouchEnd={onDragOver}
             onInit={onInit}
             fitView
+            minZoom={0.2}
+            maxZoom={2}
           >
             {/* <Background /> */}
             <MiniMapStyled style={{ right: '4vw' }} />
@@ -271,12 +236,7 @@ function Flow(props: FlowProps) {
           </ReactFlowStyled>
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />
-        <DnDSidebar />
-        <RightIconButton onClick={() => setIsConfigOpen(true)} />
-        <RightIconButton onClick={() => setIsHelpOpen(true)} color='#7fcce3a9' bottom='80px' icon={<FiHelpCircle />} />
         <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
-        <ConfigPopup isOpen={isConfigOpen} onClose={handleConfigClose} />
-        {isHelpOpen && <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />}
       </div>
     </NodeProvider>
   );

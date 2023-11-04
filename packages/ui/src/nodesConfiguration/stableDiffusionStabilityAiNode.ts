@@ -5,6 +5,7 @@ const stableDiffusionStabilityAiNodeConfig: NodeConfig = {
     nodeName: "Stable Diffusion",
     icon: "FaImage",
     hasInputHandle: true,
+    inputNames: ["prompt"],
     fields: [
         {
             type: "textarea",
@@ -58,6 +59,8 @@ const stableDiffusionStabilityAiNodeConfig: NodeConfig = {
         }
     ],
     outputType: "imageUrl",
+    section: 'image-generation',
+    helpMessage: 'stableDiffusionPromptHelp',
 };
 
 export default stableDiffusionStabilityAiNodeConfig;

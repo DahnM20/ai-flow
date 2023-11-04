@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { NodeContext } from '../providers/NodeProvider';
 import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
 import { generateIdForHandle } from '../../utils/flowUtils';
-import { InputHandle, NodeBand, NodeLogs, NodeLogsText, NodeTitle, OutputHandle } from '../shared/Node.styles';
+import { NodeBand, NodeLogs, NodeLogsText } from '../shared/Node.styles';
 import { useIsPlaying } from '../../hooks/useIsPlaying';
 import { FaCogs, FaRobot } from 'react-icons/fa';
 import { GenericNodeData } from '../../types/node';
@@ -15,6 +15,7 @@ import { actions } from "../../nodesConfiguration/data/aiAction";
 import { useTranslation } from 'react-i18next';
 import { useRefreshOnAppearanceChange } from '../../hooks/useRefreshOnAppearanceChange';
 import useHandleShowOutput from '../../hooks/useHandleShowOutput';
+import useHandlePositions from '../../hooks/useHandlePositions';
 
 interface AIActionNodeData extends GenericNodeData {
     inputText: string;
@@ -27,6 +28,7 @@ interface AIActionNodeProps extends NodeProps {
 
 const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, selected }) => {
 
+    const NB_INPUT_HANDLE = 1;
     const updateNodeInternals = useUpdateNodeInternals();
     const { t } = useTranslation('aiActions');
 
@@ -47,6 +49,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
 
 
     const { showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);
+    const { allHandlePositions } = useHandlePositions(data, NB_INPUT_HANDLE, outputHandleId);
 
     useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
 
@@ -88,7 +91,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
     const handleActionClick = (actionName: string, prompt: string) => {
         onUpdateNodeData(id, {
             ...data,
-            inputText: prompt,
+            prompt,
             actionName: actionName,
         });
     }
@@ -110,7 +113,8 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
             <HandleWrapper id={inputHandleId} position={
                 !!data?.handles && data.handles[inputHandleId]
                     ? data.handles[inputHandleId]
-                    : Position.Top}
+                    : Position.Left}
+                linkedHandlePositions={allHandlePositions}
                 onChangeHandlePosition={handleChangeHandlePosition} />
 
             <div className='flex flex-row justify-between items-center w-full px-2' >
@@ -152,8 +156,9 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
             <HandleWrapper id={outputHandleId} position={
                 !!data?.handles && data.handles[outputHandleId]
                     ? data.handles[outputHandleId]
-                    : Position.Bottom}
+                    : Position.Right}
                 onChangeHandlePosition={handleChangeHandlePosition}
+                linkedHandlePositions={allHandlePositions}
                 isOutput />
             {
                 !!data.outputData

@@ -3,6 +3,7 @@ import styled, { css, keyframes } from 'styled-components';
 import { FaCheck, FaPlay, FaSpinner, FaStop } from 'react-icons/fa';
 import { NodeContext } from '../../providers/NodeProvider';
 import TapScale from '../motions/TapScale';
+import { LoadingIcon } from '../Node.styles';
 
 
 interface NodePlayButtonProps {
@@ -33,16 +34,16 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onCl
   const IconComponent = getIconComponent(isPlaying, isCurrentNodeRunning, hasRun, isHovered);
 
   return (
-    <TapScale scale={0.5}>
-      <NodePlayButtonContainer
-        onClick={handleClick}
-        disabled={isDisabled}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+    <NodePlayButtonContainer
+      onClick={handleClick}
+      disabled={isDisabled}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <TapScale scale={0.5}>
         <IconComponent />
-      </NodePlayButtonContainer>
-    </TapScale>
+      </TapScale>
+    </NodePlayButtonContainer>
   );
 };
 
@@ -55,11 +56,6 @@ function getIconComponent(isPlaying: boolean | undefined, isCurrentNodeRunning: 
   return isCurrentNodeRunning ? NodeStopButtonIcon : NodePlayButtonIcon;
 }
 
-
-const spin = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
 
 const NodePlayButtonContainer = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
@@ -89,10 +85,5 @@ const CheckIcon = styled(FaCheck)`
   font-size: 16px;
 `;
 
-
-const LoadingIcon = styled(FaSpinner)`
-  animation:  ${spin} 1s linear infinite;
-  font-size: 16px;
-`;
 
 export default NodePlayButton;

@@ -12,4 +12,6 @@ export const urlNodeConfig: NodeConfig = {
   ],
   outputType: 'text',
   defaultHideOutput: true,
+  section: 'input',
+  helpMessage: 'urlInputHelp',
 };

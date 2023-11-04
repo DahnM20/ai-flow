@@ -5,8 +5,8 @@
   <em>Open-source tool to seamlessly connect multiple AI models in repeatable flow.</em>
 </p>
 <p align="center">
-    <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English">
-    <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French">
+    <a href="https://docs.ai-flow.net/"> <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"> </a>
+    <a href="https://docs.ai-flow.net/"> <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French"> </a>
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
     <img src="https://img.shields.io/github/v/release/DahnM20/ai-flow">
     <a href="https://twitter.com/DahnM20"><img src="https://img.shields.io/twitter/follow/AI-Flow?style=social"></a>
@@ -22,13 +22,15 @@
 
 <div align="center">
 
-## 🎉 v0.4.0 is Now Available 🎉
+## 🎉🚀 v0.5.0 is Now Available 🚀🎉
 
-🌟 **UI Enhancements** | ↔️ **Handles are now movable** | 🤖 **New AI Action Node**
+🌟 **UI Enhancements** | ↔️ **New Layout View** | 🤖 **New Merge Node** | ✨ **Support for large input**
 
 </div>
 
 ---
+
+![image-scenario-1-1](assets/presentation.png)
 
 **AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of **ChatGPT**. This unique tool paves the way to creating interactive networks of different AI models, fostering a multi-perspective response to various prompts.
 
@@ -50,10 +52,11 @@ This flow logic can then be applied to different inputs, yielding varied results
 
 **AI Flow is particularly useful for content creation.** By enabling different GPT models to adopt different roles, AI Flow orchestrates the creation and evaluation of digital content, from social media threads to blog articles. 
 
+With AI Flow, you utilize your own OpenAI keys, giving you full authority over your budget. Importantly, the software runs locally on your machine, assuring you of privacy and control over your data and operations.
 
-Our primary goal with AI Flow is to democratize access to AI interactions, enabling anyone to create and manage their own AI networks right from their personal computer. In addition, we value your autonomy and control over costs. With AI Flow, you utilize your own OpenAI keys, giving you full authority over your budget. Importantly, the software runs locally on your machine, assuring you of privacy and control over your data and operations.
+⚠️ Please note that very large input _(for example the transcript of a 1 hour podcast)_ may incur additionnal costs, because for this type of entry the default behavior is to split the input into chunks, create embeddings **(with the OpenAI API)**, and then use a similarity search to find the right items to answer the prompt. 
 
-⚠️ Please note that AI Flow is still under active development. At present, it is constrained by the maximum input size supported by GPT models. However, we're hard at work devising solutions to this limitation, and we're excited about rolling out updates in future releases.
+> N.B : For large inputs, you'll get better result with a precise prompt.
 
 ## Features
 
@@ -80,6 +83,12 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 ![image-summary](assets/split-input.png)
 
 > By combining those features we can create different flows.
+
+#### Create a custom layout for your flow
+
+When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting parts.
+
+![image-summary](assets/layout.png)
 
 
 ## Installation (Windows executable)

@@ -1,36 +1,42 @@
 [tool.poetry]
 name = "gpt-abstract-back"
-version = "0.1.0"
+version = "0.4.3"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-packages = [{include = "app"}]
-
+packages = [{ include = "app" }]
 
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.12"
 python-dotenv = "^1.0.0"
 openai = "^0.27.4"
 flask = "^2.2.3"
 flask-socketio = "^5.3.3"
 flask-cors = "^3.0.10"
 unstructured = "^0.6.3"
-langchain = "^0.0.160"
+langchain = ">=0.0.303"
 python-magic = "^0.4.14"
 pytesseract = "^0.3.10"
 requests = "^2.31.0"
 tabulate = "^0.9.0"
 pdf2image = "^1.16.3"
-gevent = "^22.10.2"
-gevent-websocket = "^0.10.1"
+# gevent = "^22.10.2"
+# gevent-websocket = "^0.10.1"
 colorlog = "^6.7.0"
 eventlet = "^0.33.3"
 playwright = "^1.36.0"
 youtube-transcript-api = "^0.6.1"
 pytube = "^15.0.0"
 boto3 = "^1.28.52"
-
+pyjwt = "^2.8.0"
+jwcrypto = "^1.5.0"
+python-jose = "^3.3.0"
+cachetools = "^5.3.1"
+flask-injector = "^0.15.0"
+llama-index = "^0.8.48"
+setuptools = "^68.2.2"
+pypdf = "^3.16.4"
 
 
 [build-system]

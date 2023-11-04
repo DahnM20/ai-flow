@@ -15,6 +15,7 @@ interface NodeContextType {
     errorCount: number;
     onUpdateNodeData: (nodeId: string, data: any) => void;
     onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void;
+    nodes: Node[];
 }
 
 
@@ -28,13 +29,15 @@ export const NodeContext = createContext<NodeContextType>({
     errorCount: 0,
     onUpdateNodeData: () => (undefined),
     onUpdateNodes: () => (undefined),
+    nodes: [],
 });
 
 export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes, children }
     : {
         nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; errorCount: number;
         onUpdateNodeData: (nodeId: string, data: any) => void;
-        onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void; children: ReactNode
+        onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void;
+        children: ReactNode
     }) => {
 
     const { t } = useTranslation('flow');
@@ -69,7 +72,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
     }
 
     return (
-        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes }}>
+        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes, nodes }}>
             {children}
         </NodeContext.Provider>
     );

@@ -11,15 +11,23 @@ import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../u
 import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
 import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
+import LoginButton from './login/LoginButton';
+import FlowWrapper from './FlowWrapper';
+import { UserContext } from './providers/UserProvider';
+import SmartView from './smart-view/SmartView';
+import { Layout } from './smart-view/RenderLayout';
 
 interface FlowTab {
   nodes: Node[];
   edges: Edge[];
+  layout?: Layout;
 }
 
 interface FlowManagerState {
   tabs: FlowTab[];
 }
+
+export type ApplicationMode = 'flow' | 'view'
 
 const FlowTabs = () => {
   const { t } = useTranslation('flow');
@@ -30,7 +38,11 @@ const FlowTabs = () => {
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
   const { dark, toggleTheme } = useContext(ThemeContext);
   const { socket, verifyConfiguration, config } = useContext(SocketContext);
+  const { user, setLoggedUser } = useContext(UserContext);
   const [isRunning, setIsRunning] = useState(false);
+  const [openConfig, setOpenConfig] = useState(false)
+  const [mode, setMode] = useState<ApplicationMode>('flow')
+  const useAuth = process.env.REACT_APP_USE_AUTH === 'true';
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);
@@ -45,8 +57,9 @@ const FlowTabs = () => {
   }, []);
 
   useEffect(() => {
-    if (flowTabs.tabs.length >= 1 && flowTabs.tabs[0].nodes.length !== 0)
+    if (flowTabs.tabs.length >= 1 && flowTabs.tabs[0].nodes.length !== 0) {
       localStorage.setItem('flowTabs', JSON.stringify(flowTabs));
+    }
   }, [flowTabs]);
 
   useEffect(() => {
@@ -86,13 +99,24 @@ const FlowTabs = () => {
   const handleFlowChange = (nodes: Node[], edges: Edge[]) => {
     const updatedTabs = flowTabs.tabs.map((tab, index) => {
       if (index === currentTab) {
-        return { nodes, edges };
+        return { ...tab, nodes, edges };
       }
       return tab;
     });
     const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
     setFlowTabs(updatedFlowTabs);
   };
+
+  const handleLayoutChange = (layout: Layout) => {
+    const updatedTabs = flowTabs.tabs.map((tab, index) => {
+      if (index === currentTab) {
+        return { ...tab, layout };
+      }
+      return tab;
+    });
+    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
+    setFlowTabs(updatedFlowTabs);
+  }
 
   const handleRunAllCurrentFlow = () => {
     if (!verifyConfiguration()) {
@@ -130,9 +154,17 @@ const FlowTabs = () => {
     toastCustomIconInfoMessage('You can send me a DM on X/Twitter, or open an Issue on Github :) My links are at the bottom of the configuration menu', FiMail)
   }
 
+  const handleClickProfile = () => {
+    setOpenConfig(true);
+  }
+
+  const handleChangeMode = (mode: ApplicationMode) => {
+    setMode(mode);
+  }
+
   return (
     <FlowManagerContainer>
-      <TabsContainer className='flex flex-row items-center justify-center max-h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
+      <TabsContainer className='flex flex-row items-center justify-center h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
         <div className='ml-4 mx-auto flex flex-row text-center align-middle justify-center'>
           <img src="logo.png" className='w-16' alt="Logo"></img>
           <h1 className='flex text-slate-200 items-center justify-center px-2 text-xl font-bold sm:invisible md:visible'> AI-Flow </h1>
@@ -157,6 +189,15 @@ const FlowTabs = () => {
             <FaEye className='text-slate-400 hover:text-slate-50'
               onClick={handleToggleOutput} />
           </div>
+
+          {
+            useAuth
+            && <>
+              <div className='border-l-2 border-l-slate-500/50 h-6'></div>
+              <LoginButton user={user} onClickProfile={handleClickProfile} />
+            </>
+          }
+
           <div className='border-l-2 border-l-slate-500/50 h-6 pl-3'></div>
           <div className='pr-2'>
             <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
@@ -166,23 +207,45 @@ const FlowTabs = () => {
           </ToggleThemeButton> */}
         </RightControls>
       </TabsContainer>
-      <FeedbackIcon className="absolute right-10 top-0 h-24 w-28 
+      {
+        mode === 'flow' &&
+        <FeedbackIcon className="absolute right-10 top-0 h-24 w-28 
                               px-6 
                               bg-sky-950 text-slate-100 
                               z-10 rounded-b-md sm:invisible md:visible cursor-pointer
                               flex items-center justify-center
                               hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>
-        <div className='absolute bottom-0 pb-1' > Feedback ? </div>
-      </FeedbackIcon>
-      <Flow
-        key={`flow-${currentTab}-${refresh}`}
-        nodes={flowTabs.tabs[currentTab].nodes}
-        edges={flowTabs.tabs[currentTab].edges}
-        onFlowChange={handleFlowChange}
-        showOnlyOutput={showOnlyOutput}
-        isRunning={isRunning}
-        onRunChange={handleChangeRun}
-      />
+          <div className='absolute bottom-0 pb-1' > Feedback ? </div>
+        </FeedbackIcon>
+      }
+      <FlowWrapper mode={mode} openConfig={openConfig} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)} onChangeMode={handleChangeMode}>
+        {
+          mode === 'flow' &&
+          <Flow
+            key={`flow-${currentTab}-${refresh}`}
+            nodes={flowTabs.tabs[currentTab].nodes}
+            edges={flowTabs.tabs[currentTab].edges}
+            onFlowChange={handleFlowChange}
+            showOnlyOutput={showOnlyOutput}
+            isRunning={isRunning}
+            onRunChange={handleChangeRun}
+          />
+        }
+        {
+          mode === 'view' &&
+          <SmartView
+            key={`smartview-${currentTab}-${refresh}`}
+            nodes={flowTabs.tabs[currentTab].nodes}
+            edges={flowTabs.tabs[currentTab].edges}
+            tabLayout={flowTabs.tabs[currentTab].layout}
+            isRunning={isRunning}
+            onLayoutChange={handleLayoutChange}
+            onFlowChange={handleFlowChange}
+            onRunChange={handleChangeRun}
+          />
+        }
+
+      </FlowWrapper>
     </FlowManagerContainer>
   );
 };

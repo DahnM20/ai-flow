@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -9,6 +9,7 @@ import ReactFlow, {
 import { createGlobalStyle } from 'styled-components';
 import { darken } from "polished";
 import { FiCopy } from "react-icons/fi";
+import { FaSpinner } from "react-icons/fa";
 
 export const GlobalStyle = createGlobalStyle`
   body {
@@ -71,8 +72,8 @@ export const NodeTextarea = styled.textarea`
   box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.1);
   color: ${({ theme }) => theme.text};
   resize: vertical;
-  min-height: 85px;
-  max-height: 300px;
+  min-height: 6rem;
+  width: 100%;
   transition: all 0.3s ease;
 `;
 
@@ -125,7 +126,8 @@ export const OptionSelector = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  width: 200px;
+  width: fit-content;
+  height: fit-content;
   border: 2px solid ${({ theme }) => theme.accent};
   border-radius: 4px;
   overflow: hidden;
@@ -137,7 +139,7 @@ export const OptionSelector = styled.div`
 
 export const OptionButton = styled.button<{ selected: boolean }>`
   flex-grow: 1;
-  padding: 10px;
+  padding: 10px 15px;
   background: ${({ selected, theme }) => selected ? theme.optionButtonBgSelected : null};
   color: ${({ selected, theme }) => selected ? theme.optionButtonColorSelected : theme.optionButtonColor};
   border: none;
@@ -163,6 +165,7 @@ export const NodeSelect = styled.select`
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   color: ${({ theme }) => theme.text};
   resize: vertical;
+  height: fit-content;
   transition: all 0.3s ease;
 `;
 
@@ -270,4 +273,15 @@ export const OutputHandle = styled(Handle)`
     background: rgb(234, 176, 89);
     box-shadow: 0 0 15px 7px rgba(224, 166, 79, 0.5);
   }
+`;
+
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+export const LoadingIcon = styled(FaSpinner)`
+  animation:  ${spin} 1s linear infinite;
+  font-size: 16px;
 `;

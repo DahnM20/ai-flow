@@ -11,7 +11,7 @@ type RunNodeData = {
 
 const basicJsonFlow = [
     {
-        input: "",
+        inputs: [],
         name: "kbk1proh1#input-text",
         processorType: "input-text",
         inputText: "Hello World",
@@ -22,7 +22,7 @@ const basicJsonFlow = [
 
 const jsonFlowWithMissingInputText = [
     {
-        input: "",
+        inputs: [],
         name: "kbk1proh1#input-text",
         processorType: "input-text",
         x: 1,

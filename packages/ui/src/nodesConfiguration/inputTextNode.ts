@@ -14,6 +14,8 @@ const inputTextNodeConfig: NodeConfig = {
   ],
   outputType: "text",
   defaultHideOutput: true,
+  section: 'input',
+  helpMessage: 'inputHelp'
 };
 
 export default inputTextNodeConfig;
