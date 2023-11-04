@@ -15,7 +15,7 @@ class LLMPromptProcessor(APIContextProcessor):
         super().__init__(config, api_context_data)
 
         self.model = config.get("model", LLMPromptProcessor.DEFAULT_MODEL)
-        self.prompt = config["prompt"]
+        self.prompt = config.get("prompt", "")
         self.api_key = api_context_data.get_api_key_for_model(self.model)
 
     def process(self):
