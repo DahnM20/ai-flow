@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { NodeLabel, NodeInput, NodeTextarea, NodeSelect, NodeSelectOption, OptionSelector, OptionButton } from "../components/shared/Node.styles";
 import InputNameBar from "../components/shared/nodes-parts/InputNameBar";
 import { Field } from "../nodesConfiguration/nodeConfig";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 
 export function useFormFields(data: any,
@@ -36,36 +36,38 @@ export function useFormFields(data: any,
             switch (field.type) {
                 case 'input':
                     return (
-                        <div key={`${id}-${field.name}`}>
+                        <React.Fragment key={`${id}-${field.name}`}>
                             {
                                 field.label &&
                                 <NodeLabel>{t(field.label)}</NodeLabel>
                             }
-                            <NodeInput name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
-                        </div>
+                            <NodeInput name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
+                                onChange={handleNodeDataChange} />
+                        </React.Fragment>
                     );
 
                 case 'textarea':
                     return (
-                        <div key={`${id}-${field.name}`}>
+                        <React.Fragment key={`${id}-${field.name}`}>
                             {
                                 field.label &&
                                 <NodeLabel>{t(field.label)}</NodeLabel>
                             }
-                            <NodeTextarea key={`${id}-${field.name}`} ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]} placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
-                        </div>
+                            <NodeTextarea key={`${id}-${field.name}`} ref={textareaRef} name={field.name} className="nodrag" defaultValue={data[field.name]}
+                                placeholder={field.placeholder ? String(t(field.placeholder)) : ""} onChange={handleNodeDataChange} />
+                        </React.Fragment>
                     );
                 case 'select':
                     return (
-                        <div key={`${id}-${field.name}`}>
-                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)} defaultValue={data[field.name]} className="w-full">
+                        <React.Fragment key={`${id}-${field.name}`}>
+                            <NodeSelect onChange={(e) => handleOptionChange(field.name, e.target.value)} defaultValue={data[field.name]}>
                                 {field.options?.map(option => (
                                     <NodeSelectOption key={`${id}-${option.value}`} >
                                         {t(option.label)}
                                     </NodeSelectOption>
                                 ))}
                             </NodeSelect>
-                        </div>
+                        </React.Fragment>
                     );
                 case 'option':
                     return (
