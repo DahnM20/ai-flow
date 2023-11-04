@@ -82,6 +82,10 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
   // Create nodes
   json.forEach((node: any) => {
     const { x, y, ...nodeData } = node;
+
+    //Temp - for old files
+    arrangeOldFields(nodeData);
+
     nodes.push({
       id: node.name,
       type: nodeData.processorType,
@@ -122,3 +126,19 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
 
   return { nodes, edges };
 }
+function arrangeOldFields(nodeData: any) {
+  if (nodeData.processorType === 'gpt-no-context-prompt') {
+    nodeData.processorType = "llm-prompt";
+    nodeData.model = nodeData.gptVersion;
+    nodeData.prompt = nodeData.inputText;
+  }
+
+  if (nodeData.processorType === 'ai-action') {
+    nodeData.model = nodeData.gptVersion;
+    nodeData.prompt = nodeData.inputText;
+  }
+
+  nodeData.gptVersion = undefined;
+  nodeData.inputText = undefined;
+}
+

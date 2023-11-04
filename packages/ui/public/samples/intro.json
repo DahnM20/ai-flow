@@ -5,7 +5,7 @@
     "processorType": "llm-prompt",
     "model": "gpt-4",
     "prompt": "Generate a short poem about a bird and a butterfly",
-    "outputData": "In the heart of the morning's golden light,\nA bird and a butterfly took flight.\nTheir wings, a canvas of colors so bright,\nDancing in the rhythm of the sunlight.\n\nThe bird, with feathers of azure hue,\nSang melodies that the morning dew knew.\nIn the vast sky, it freely flew,\nA spectacle of grace in the day's debut.\n\nThe butterfly, with wings of lace,\nFluttered in an elegant pace.\nA painting in motion, full of grace,\nAdding beauty to the vast green space.\n\nThey danced in the air, so free, so wild,\nNature's harmony, pure and undefiled.\nA sight to behold, for every man, woman, and child,\nThe bird and the butterfly, nature's reconciled.\n\nIn the twilight, as the day did end,\nThey parted as the night did descend.\nA tale of freedom, messages to send,\nOf a bird and a butterfly, the sky's best friend.",
+    "outputData": "# A Symphony of Wings\n\nIn the realm where the sun kisses the sky,\nA bird and a butterfly, together they fly.\nTheir dance is a melody, a sight to behold,\nA tale of friendship, silently told.\n\nThe bird, with feathers of sapphire hue,\nSoars through the clouds, in the morning dew.\nThe butterfly, with wings of gold,\nDances in the wind, bold and bold.\n\nThey meet in the meadow, under the sun's warm light,\nTheir wings fluttering, a beautiful sight.\nThe bird sings a song, so sweet and clear,\nThe butterfly dances, without any fear.\n\nIn the twilight glow, under the moon's soft beam,\nThey part ways, like a fleeting dream.\nA bird and a butterfly, under the sky so wide,\nIn the symphony of nature, they take pride.",
     "lastRun": "2023-11-03T16:41:34.482Z",
     "x": -1853.4623149727402,
     "y": -789.4748403024386
@@ -21,7 +21,7 @@
     "processorType": "ai-action",
     "prompt": "From the text I previously provided, create a descriptive prompt suitable for an AI visual generator like DALL-E.",
     "actionName": "VisualPrompt",
-    "outputData": "Generate an image of a serene spring morning filled with blooming flowers, where a bird with feathers of sapphire, ruby, and gold is singing melodiously while flying in the soft light. Simultaneously, a butterfly with stained glass-like wings is seen dancing in the air. The bird and butterfly seem to be dancing together, gliding and twirling around each other, sharing their flight in the azure sky decorated with fluffy clouds. The scene depicts a charming dance, presenting a picturesque aerial ballet.",
+    "outputData": "Create an image that captures a scene of a bird in graceful flight against the daylight backdrop and a butterfly dancing on flowers with rainbow colors. Show the natural beauty and interaction between these two creatures, showcasing nature's finesse and quiet glory. Be sure to capture a sense of awe and inspiration from this symphony of life.",
     "lastRun": "2023-11-03T16:41:43.416Z",
     "x": -1308.197250447152,
     "y": -625.1455299079078
@@ -54,7 +54,7 @@
     "processorType": "stable-diffusion-stabilityai-prompt",
     "size": "1024x1024",
     "outputData": [
-      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/45ooyfg7vstable-diffusion-stabilityai-prompt-20231022193353991229.png"
+      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/v0.4.0-sample-1.png"
     ],
     "lastRun": "2023-11-03T16:51:27.083Z",
     "x": -653.9779123846465,
@@ -72,7 +72,7 @@
     "processorType": "stable-diffusion-stabilityai-prompt",
     "size": "1024x1024",
     "outputData": [
-      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/92cceb3u4stable-diffusion-stabilityai-prompt-20231103175127079374.png"
+      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/v0.4.0-sample-2.png"
     ],
     "lastRun": "2023-11-03T16:42:48.390Z",
     "x": -652.8642006269613,

@@ -1,6 +1,6 @@
 {
   "name": "ai-flow-front",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^5.3.1",
