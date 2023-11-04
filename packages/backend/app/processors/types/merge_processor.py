@@ -20,7 +20,7 @@ class MergeProcessor(APIContextProcessor):
         super().__init__(config, api_context_data)
 
         self.model = config.get("model", MergeProcessor.DEFAULT_MODEL)
-        self.prompt = config.get("prompt", "")
+        self.prompt = config["prompt"]
         self.merge_mode = MergeModeEnum(int(config["mergeMode"]))
         self.api_key = api_context_data.get_api_key_for_model(self.model)
         if custom_llm_factory is None:
