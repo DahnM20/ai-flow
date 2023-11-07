@@ -6,6 +6,7 @@ import stableDiffusionStabilityAiNodeConfig from "./stableDiffusionStabilityAiNo
 import { urlNodeConfig } from "./urlNode";
 import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
 import { mergerPromptNode } from "./mergerPromptNode";
+import { gptVisionNodeConfig } from "./gptVisionNode";
 import inputImageNodeConfig from "./inputImageNode";
 
 export type SectionType = 'llm' | 'image-generation' | 'tools' | 'input'
@@ -44,6 +45,7 @@ export const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'input-image': inputImageNodeConfig,
     'url_input': urlNodeConfig,
     'llm-prompt': llmPromptNodeConfig,
+    'gpt-vision': gptVisionNodeConfig,
     'youtube_transcript_input': youtubeTranscriptNodeConfig,
     'dalle-prompt': dallENodeConfig,
     'stable-diffusion-stabilityai-prompt': stableDiffusionStabilityAiNodeConfig,

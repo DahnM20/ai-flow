@@ -29,6 +29,7 @@
     "DataSplitter": "Data Splitter",
     "NoContextPrompt": "GPT Prompt",
     "PromptPlaceholder": "Enter your prompt here, for example 'Create a Twitter thread based on the data I sent you.'",
+    "VisionPromptPlaceholder": "Please enter your prompt here to start the image analysis. For example, you could write 'Describe this image'",
     "DallEPromptPlaceholder": "Enter your prompt here, for example 'A dog and a cat playing in the desert'",
     "ImageGeneration": "Image Generation",
     "AdvancedSection": "Advanced",
