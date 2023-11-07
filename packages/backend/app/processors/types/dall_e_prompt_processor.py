@@ -6,11 +6,16 @@ import openai
 
 class DallEPromptProcessor(APIContextProcessor):
     processor_type = "dalle-prompt"
+    
+    DEFAULT_MODEL = "dall-e-3"
+    DEFAULT_SIZE = "1024x1024"
+    DEFAULT_QUALITY="standard"
 
     def __init__(self, config, api_context_data:ProcessorContext):
         super().__init__(config, api_context_data)
         self.prompt = config.get("prompt")
-        self.size = config.get("size", "256x256")  # Default size is "256x256"
+        self.size = config.get("size", DallEPromptProcessor.DEFAULT_SIZE)
+        self.quality = config.get("quality", DallEPromptProcessor.DEFAULT_QUALITY)
         self.api_key = api_context_data.get_api_key_for_provider("openai")
 
     def process(self):
@@ -22,9 +27,11 @@ class DallEPromptProcessor(APIContextProcessor):
             )
 
         response = openai.Image.create(
+            model=DallEPromptProcessor.DEFAULT_MODEL,
             prompt=self.prompt,
             n=1,
             size=self.size,
+            quality=self.quality,
             api_key=self.api_key,
         )
         self.set_output(response["data"][0]["url"])
