@@ -7,7 +7,7 @@ import { ThemeContext } from './providers/ThemeProvider';
 import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaPlus } from 'react-icons/fa';
-import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../utils/flowUtils';
+import { convertFlowToJson, convertJsonToFlow, isCompatibleConfigVersion, migrateConfig, nodesTopologicalSort } from '../utils/flowUtils';
 import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
 import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
@@ -17,11 +17,19 @@ import { UserContext } from './providers/UserProvider';
 import SmartView from './smart-view/SmartView';
 import { Layout } from './smart-view/RenderLayout';
 
-interface FlowTab {
+
+export interface FlowTab {
   nodes: Node[];
   edges: Edge[];
   layout?: Layout;
+  metadata?: FlowMetadata;
 }
+
+
+interface FlowMetadata {
+  version: string;
+}
+
 
 interface FlowManagerState {
   tabs: FlowTab[];
@@ -49,9 +57,15 @@ const FlowTabs = () => {
   };
 
   useEffect(() => {
-    const savedFlowTabs = localStorage.getItem('flowTabs');
-    if (savedFlowTabs) {
-      setFlowTabs(JSON.parse(savedFlowTabs));
+    const savedFlowTabsJson = localStorage.getItem('flowTabs');
+    if (savedFlowTabsJson) {
+      const savedFlowTabs = JSON.parse(savedFlowTabsJson) as FlowManagerState;
+      savedFlowTabs.tabs.forEach((tab) => {
+        if (!isCompatibleConfigVersion(tab.metadata?.version)) {
+          migrateConfig(tab)
+        }
+      })
+      setFlowTabs(savedFlowTabs);
       setRefresh(true);
     }
   }, []);
@@ -92,7 +106,7 @@ const FlowTabs = () => {
 
   const addFlowTab = () => {
     const newFlowTab = { ...flowTabs }
-    newFlowTab.tabs.push({ nodes: [], edges: [] })
+    newFlowTab.tabs.push({ nodes: [], edges: [], metadata: { version: '1.0.0' } })
     setFlowTabs(newFlowTab);
   };
 

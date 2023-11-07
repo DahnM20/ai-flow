@@ -1,11 +1,24 @@
 import { Node, Edge } from "reactflow";
 import { getConfigViaType } from "../nodesConfiguration/nodeConfig";
 import { NodeData } from "../types/node";
+import { FlowTab } from "../components/FlowTabs";
+
+const CONFIG = {
+  FLOW_VERSION: "1.0.0",
+};
 
 const handleInPrefix = 'handle-in';
 const handleOutPrefix = 'handle-out';
 const handleSeparator = '-';
 const indexKeyHandleOut = 2;
+
+export function getConfig() {
+  return CONFIG;
+}
+
+export function isCompatibleConfigVersion(fileVersion: string | undefined) {
+  return fileVersion === CONFIG.FLOW_VERSION;
+}
 
 export const generateIdForHandle = (key: number, isOutput?: boolean) => !isOutput ? `${handleInPrefix}${handleSeparator}${key}` : `${handleOutPrefix}${handleSeparator}${key}`;
 
@@ -126,6 +139,7 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
 
   return { nodes, edges };
 }
+
 function arrangeOldFields(nodeData: any) {
   if (nodeData.processorType === 'gpt-no-context-prompt') {
     nodeData.processorType = "llm-prompt";
@@ -144,3 +158,18 @@ function arrangeOldFields(nodeData: any) {
   nodeData.inputText = undefined;
 }
 
+function arrangeOldType(node: any) {
+  if (node.type === 'gpt-no-context-prompt') {
+    node.type = "llm-prompt";
+    node.data.config = getConfigViaType(node.type);
+  }
+}
+
+export function migrateConfig(oldConfig: FlowTab) {
+  if (!oldConfig.metadata) {
+    oldConfig.nodes.forEach((node) => {
+      arrangeOldType(node)
+      arrangeOldFields(node.data)
+    })
+  }
+}
