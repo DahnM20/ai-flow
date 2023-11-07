@@ -1,7 +1,7 @@
 from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
 
-import openai
+from openai import OpenAI
 
 
 class DallEPromptProcessor(APIContextProcessor):
@@ -26,15 +26,18 @@ class DallEPromptProcessor(APIContextProcessor):
                 else self.prompt
             )
 
-        response = openai.Image.create(
+        client = OpenAI(
+            api_key=self.api_key,
+        )
+        
+        response = client.images.generate(
             model=DallEPromptProcessor.DEFAULT_MODEL,
             prompt=self.prompt,
             n=1,
             size=self.size,
             quality=self.quality,
-            api_key=self.api_key,
         )
-        self.set_output(response["data"][0]["url"])
+        self.set_output(response.data[0].url)
 
         return self._output
 
