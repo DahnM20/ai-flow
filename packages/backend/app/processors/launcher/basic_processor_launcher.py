@@ -1,7 +1,7 @@
 import json
 import logging
 from typing import List
-from injector import singleton, inject
+from injector import inject
 
 from ..context.processor_context import ProcessorContext
 

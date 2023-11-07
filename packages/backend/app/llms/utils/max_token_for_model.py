@@ -6,6 +6,8 @@ DEFAULT_MAX_TOKEN = 4097
 def max_token_for_model(model_name):
     token_data = {
         # GPT-4 models
+        "gpt-4-1106-preview":128000,
+        "gpt-4-vision-preview":128000,
         "gpt-4": 8192,
         "gpt-4-0613": 8192,
         "gpt-4-32k": 32768,

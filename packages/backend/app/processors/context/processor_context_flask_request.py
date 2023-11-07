@@ -7,7 +7,7 @@ class ProcessorContextFlaskRequest(ProcessorContext):
         return g
     
     def get_api_key_for_model(self, model_name):
-        if model_name == 'gpt-4' or model_name == 'gpt-3.5-turbo':
+        if 'gpt-4' in model_name or 'gpt-3.5-turbo' in model_name:
             return g.get("session_openai_api_key")
         elif model_name == 'claude-2':
             return g.get("session_anthropic_api_key")
