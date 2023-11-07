@@ -12,7 +12,7 @@ const inputImageNodeConfig: NodeConfig = {
     },
   ],
   outputType: "imageUrl",
-  defaultHideOutput: true,
+  defaultHideOutput: false,
   section: 'input',
   helpMessage: 'inputHelp'
 };

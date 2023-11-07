@@ -22,9 +22,13 @@
 
 <div align="center">
 
-## 🎉🚀 v0.5.0 is Now Available 🚀🎉
+## 🎉🚀 v0.5.1 is Now Available 🚀🎉
 
+
+🚀 **GPT-4-Turbo** | 👀 **GPT-4-Vision** | 🎨 **Dall-E-3**
+</br>
 🌟 **UI Enhancements** | ↔️ **New Layout View** | 🤖 **New Merge Node** | ✨ **Support for large input**
+
 
 </div>
 
@@ -84,11 +88,15 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 > By combining those features we can create different flows.
 
+#### Describe picture with AI
+
+![ai-vision](assets/gpt-vision.png)
+
 #### Create a custom layout for your flow
 
 When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting parts.
 
-![image-summary](assets/layout.png)
+![layout-view](assets/layout.png)
 
 
 ## Installation (Windows executable)
