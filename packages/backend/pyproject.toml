@@ -34,7 +34,7 @@ jwcrypto = "^1.5.0"
 python-jose = "^3.3.0"
 cachetools = "^5.3.1"
 flask-injector = "^0.15.0"
-llama-index = "v0.8.63.post2"
+llama-index = "v0.8.68"
 setuptools = "^68.2.2"
 pypdf = "^3.16.4"
 
