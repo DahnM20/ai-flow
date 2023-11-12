@@ -1,37 +1,37 @@
 import styled from 'styled-components';
 
 export enum MessageType {
-    Error,
-    Info,
+  Error,
+  Info,
 }
 
 export interface UserMessage {
-    type?: MessageType;
-    content: string;
+  type?: MessageType;
+  content: string;
 }
 
 interface PopupProps {
-    isOpen: boolean;
-    message: UserMessage;
-    onClose: () => void;
+  isOpen: boolean;
+  message: UserMessage;
+  onClose: () => void;
 }
 
 function UserMessagePopup(props: PopupProps) {
-    return (
-        props.isOpen ?
-            <PopupContainer>
-                <PopupInner>
-                    <PopupHeader>
-                        <h3>{props.message?.type === MessageType.Error ? "Error" : "Info"}</h3>
-                        <CloseButton onClick={props.onClose}>X</CloseButton>
-                    </PopupHeader>
-                    <PopupBody>
-                        {props.message?.content}
-                    </PopupBody>
-                </PopupInner>
-            </PopupContainer>
-            : <></>
-    );
+  return (
+    props.isOpen ?
+      <PopupContainer>
+        <PopupInner>
+          <PopupHeader>
+            <h3>{props.message?.type === MessageType.Error ? "Error" : "Info"}</h3>
+            <CloseButton onClick={props.onClose}>X</CloseButton>
+          </PopupHeader>
+          <PopupBody>
+            {props.message?.content}
+          </PopupBody>
+        </PopupInner>
+      </PopupContainer>
+      : <></>
+  );
 }
 
 
@@ -47,7 +47,7 @@ const PopupContainer = styled.div`
 `;
 
 const PopupInner = styled.div`
-  background-color: ${({ theme }) => theme.nodeBg};
+  background-color: ${({ theme }) => theme.popupBg};
   color: ${({ theme }) => theme.text};
   box-shadow: ${({ theme }) => theme.boxShadow};
   padding: 20px;

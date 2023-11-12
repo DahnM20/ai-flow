@@ -1,21 +1,21 @@
+import { Popover } from '@headlessui/react';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
-import styled from 'styled-components';
-import { NodeContext } from '../providers/NodeProvider';
-import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
-import { generateIdForHandle } from '../../utils/flowUtils';
-import { NodeBand, NodeLogs, NodeLogsText } from '../shared/Node.styles';
-import { useIsPlaying } from '../../hooks/useIsPlaying';
-import { FaCogs, FaRobot } from 'react-icons/fa';
-import { GenericNodeData } from '../../types/node';
-import HandleWrapper from '../handles/HandleWrapper';
-import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
-import { Popover } from '@headlessui/react'
-import { actions } from "../../nodesConfiguration/data/aiAction";
 import { useTranslation } from 'react-i18next';
-import { useRefreshOnAppearanceChange } from '../../hooks/useRefreshOnAppearanceChange';
-import useHandleShowOutput from '../../hooks/useHandleShowOutput';
+import { FaCogs, FaRobot } from 'react-icons/fa';
+import { NodeProps, Position, useUpdateNodeInternals } from 'reactflow';
+import styled from 'styled-components';
 import useHandlePositions from '../../hooks/useHandlePositions';
+import useHandleShowOutput from '../../hooks/useHandleShowOutput';
+import { useIsPlaying } from '../../hooks/useIsPlaying';
+import { useRefreshOnAppearanceChange } from '../../hooks/useRefreshOnAppearanceChange';
+import { actions } from "../../nodesConfiguration/data/aiAction";
+import { GenericNodeData } from '../../types/node';
+import { generateIdForHandle } from '../../utils/flowUtils';
+import HandleWrapper from '../handles/HandleWrapper';
+import { NodeContext } from '../providers/NodeProvider';
+import { NodeBand, NodeLogs, NodeLogsText } from '../shared/Node.styles';
+import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
+import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
 
 interface AIActionNodeData extends GenericNodeData {
     inputText: string;
@@ -104,7 +104,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(({ data, id, select
 
     return (
         <AIActionNodeContainer
-            className='flex flex-col items-center w-96 justify-center h-auto text-slate-300 rounded-md shadow-lg'
+            className='flex flex-col items-center w-96 justify-center h-auto text-slate-300 rounded-md shadow-sm shadow-black/80'
             selected={selected}
             collapsed={collapsed}
             key={id}

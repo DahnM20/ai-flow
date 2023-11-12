@@ -64,12 +64,12 @@ export const NodeLabel = styled.label`
 `;
 
 export const NodeTextarea = styled.textarea`
-  padding: 10px 16px;
+  padding: 10px 20px;
   border: none;
   border-radius: 12px;
   font-size: 14px;
   background-color: ${({ theme }) => theme.nodeInputBg};
-  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.15);
   color: ${({ theme }) => theme.text};
   resize: vertical;
   min-height: 6rem;
@@ -139,7 +139,8 @@ export const OptionSelector = styled.div`
 
 export const OptionButton = styled.button<{ selected: boolean }>`
   flex-grow: 1;
-  padding: 10px 15px;
+  padding: 10px 10px;
+  font-size: 1rem;
   background: ${({ selected, theme }) => selected ? theme.optionButtonBgSelected : null};
   color: ${({ selected, theme }) => selected ? theme.optionButtonColorSelected : theme.optionButtonColor};
   border: none;
@@ -189,7 +190,7 @@ export const MiniMapStyled = styled(MiniMap)`
   }
 
   .react-flow__minimap-node {
-    fill: ${(props) => props.theme.nodeBg};
+    fill: ${(props) => props.theme.minimapMaskBg};
     stroke: none;
   }
 

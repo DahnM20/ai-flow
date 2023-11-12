@@ -31,7 +31,7 @@ const DnDSidebar = () => {
 };
 
 const DnDSidebarContainer = styled.div<{ isOpen: boolean }>`
-  height: 100%;
+  height: 95%;
   z-index: 1;
   overflow-y: ${({ isOpen }) => (isOpen ? 'auto' : 'hidden')};
   padding: 1rem .75rem;
