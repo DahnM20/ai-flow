@@ -72,6 +72,22 @@ class BasicProcessorLauncher:
 
         self._link_processors(processors)
         return processors
+    
+    def get_node_by_name(self, config_data, node_name):
+        """
+        Retrieves a node by its name from the available nodes.
+
+        Parameters:
+            config_data (list): A list of dictionaries containing the configuration data for each processor.
+            node_name (str): The name of the node to find.
+
+        Returns:
+            The node with the given name if found, otherwise None.
+        """
+        for node in config_data:
+            if node.get('name') == node_name:
+                return node
+        return None
 
     def load_required_processors(self, config_data, node_name):
         """
@@ -91,23 +107,50 @@ class BasicProcessorLauncher:
             - Stores each processor instance in a dictionary with its name as the key.
         """
         processors = {}
-        for config in config_data:
-            config_output = config.get("outputData", None)
-            if config_output is None or config["name"] == node_name:
-                logging.debug(f"Empty or current node - {config['name']}")
-                processor = self.processor_factory.create_processor(
-                    config, self.context, self.storage_strategy
-                )
-                processors[config["name"]] = processor
-            else:
-                logging.debug(f"Non empty node -  {config['name']}")
-                processor = self.processor_factory.create_processor(
-                    config, self.context, self.storage_strategy
-                )
-                processor.set_output(config_output)
-                processors[config["name"]] = processor
+        node = self.get_node_by_name(config_data, node_name)
+        if node and not node.get('inputs'):
+            processor = self.processor_factory.create_processor(
+                node, self.context, self.storage_strategy
+            )
+            processors[node["name"]] = processor
+            logging.debug(f"Created single processor for node - {node_name}")
+        else :
+            related_config_data = self.get_related_config_data(config_data, node_name, [])
+            related_config_data.reverse()
+            for config in related_config_data:
+                config_output = config.get("outputData", None)
+                if config_output is None or config["name"] == node_name:
+                    logging.debug(f"Empty or current node - {config['name']}")
+                    processor = self.processor_factory.create_processor(
+                        config, self.context, self.storage_strategy
+                    )
+                    processors[config["name"]] = processor
+                else:
+                    logging.debug(f"Non empty node -  {config['name']}")
+                    processor = self.processor_factory.create_processor(
+                        config, self.context, self.storage_strategy
+                    )
+                    processor.set_output(config_output)
+                    processors[config["name"]] = processor
         return processors
-
+    
+    def get_related_config_data(self, config_data, node_name,  visited):
+        if node_name in visited:
+            return []
+        visited.append(node_name)
+        
+        current_config = next((config for config in config_data if config["name"] == node_name), None)
+        
+        if not current_config:
+            return []
+        
+        related_configs = [current_config]
+        
+        for input in current_config.get("inputs", []):
+            related_configs.extend(self.get_related_config_data(config_data, input.get("inputNode"), visited))
+        
+        return related_configs
+    
     def load_processors_for_node(self, config_data, node_name):
         processors = self.load_required_processors(config_data, node_name)
 
