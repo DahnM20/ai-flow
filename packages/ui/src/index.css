@@ -20,6 +20,11 @@ body,
   --scrollbar-thumb-hover-color: #888;
 }
 
+:root .smart-view {
+  --separator-border: #ffffff00;
+  --sash-size: 8px;
+}
+
 body.dark-theme {
   --scrollbar-track-color: #2A2A2A;
   --scrollbar-thumb-color: #555;

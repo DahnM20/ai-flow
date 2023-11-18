@@ -25,12 +25,12 @@ function PaneWrapper({ children, name, fieldName, showTools, onSplitHorizontal, 
     const NodeIconComponent = nodeConfig ? ICON_MAP[nodeConfig?.icon] : null;
 
     return (
-        <div className="relative h-full border-b-sky-800/30 shadow-3xl">
+        <div className="relative h-full shadow-3xl">
             {showTools &&
-                <div className="p-4 flex text-center justify-center items-center
+                <div
+                    className="p-4 flex text-center justify-center items-center rounded-t-xl
                                 text-slate-100/80 hover:text-slate-100 group
-                                bg-zinc-950/3
-                                hover:bg-zinc-900">
+                                bg-[#1E1E1F]/80">
                     <div className="absolute left-0 py-1 pl-2 whitespace-nowrap text-md
                                     text-center items-center 
                                     flex flex-row space-x-3">
@@ -44,7 +44,7 @@ function PaneWrapper({ children, name, fieldName, showTools, onSplitHorizontal, 
                             </p>
                         }
                     </div>
-                    <div className="absolute right-0 space-x-2 pr-2 bg-zinc-900
+                    <div className="absolute right-0 space-x-2 pr-2 bg-[#1E1E1F]
                     group-hover:opacity-100 invisible group-hover:visible transition-opacity ease-linear duration-200">
                         <PaneWrapperButton onClick={onSplitHorizontal}>
                             <MdOutlineVerticalSplit />

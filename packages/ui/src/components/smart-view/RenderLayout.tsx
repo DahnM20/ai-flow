@@ -55,32 +55,38 @@ const RenderLayout = ({ type, panes, parentIndex, onSplitHorizontal, onSplitVert
     );
 
     return (
-        <Allotment vertical={type === 'vertical'} defaultSizes={panes.map((pane) => pane.size ? pane.size : DEFAULT_SIZE)} onChange={debouncedOnChangeAllotmentSize}>
+        <Allotment vertical={type === 'vertical'}
+            defaultSizes={panes.map((pane) => pane.size ? pane.size : DEFAULT_SIZE)}
+            onChange={debouncedOnChangeAllotmentSize}>
             {panes.map((pane, index) => {
 
                 const isLeafPane = !(pane.content instanceof Object && 'panes' in pane.content)
                 return (
-                    <Allotment.Pane key={index} snap={pane.snap} className={`${isLeafPane ? ' bg-zinc-900/80' : ''}`}>
-                        < PaneWrapper
-                            name={pane.nodeId}
-                            fieldName={pane.fieldName}
-                            showTools={isLeafPane}
-                            onSplitHorizontal={() => onSplitHorizontal(parentIndex != null ? `${parentIndex}-${index}` : index)}
-                            onSplitVertical={() => onSplitVertical(parentIndex != null ? `${parentIndex}-${index}` : index)}
-                            onDelete={() => onDelete(parentIndex != null ? `${parentIndex}-${index}` : index)}
-                        >
-                            {pane.content instanceof Object && 'panes' in pane.content ? (
-                                <RenderLayout {...pane.content}
-                                    parentIndex={parentIndex != null ? `${parentIndex}-${index}` : index}
-                                    onSplitHorizontal={onSplitHorizontal}
-                                    onSplitVertical={onSplitVertical}
-                                    onAttachNode={onAttachNode}
-                                    onDelete={onDelete}
-                                    onChangePaneSize={onChangePaneSize} />
-                            ) : (
-                                renderPaneFromData(pane, parentIndex != null ? `${parentIndex}-${index}` : index)
-                            )}
-                        </PaneWrapper>
+                    <Allotment.Pane key={index} snap={pane.snap} className={`${isLeafPane ? ' leafPane bg-zinc-950 rounded-xl' : ''}`}>
+                        < div className={`${isLeafPane ? 'px-1 py-2 h-full w-full ' : 'h-full w-full'}`
+                        }>
+                            < PaneWrapper
+                                name={pane.nodeId}
+                                fieldName={pane.fieldName}
+                                showTools={isLeafPane}
+                                onSplitHorizontal={() => onSplitHorizontal(parentIndex != null ? `${parentIndex}-${index}` : index)}
+                                onSplitVertical={() => onSplitVertical(parentIndex != null ? `${parentIndex}-${index}` : index)}
+                                onDelete={() => onDelete(parentIndex != null ? `${parentIndex}-${index}` : index)}
+                            >
+                                {pane.content instanceof Object && 'panes' in pane.content ? (
+                                    <RenderLayout
+                                        {...pane.content}
+                                        parentIndex={parentIndex != null ? `${parentIndex}-${index}` : index}
+                                        onSplitHorizontal={onSplitHorizontal}
+                                        onSplitVertical={onSplitVertical}
+                                        onAttachNode={onAttachNode}
+                                        onDelete={onDelete}
+                                        onChangePaneSize={onChangePaneSize} />
+                                ) : (
+                                    renderPaneFromData(pane, parentIndex != null ? `${parentIndex}-${index}` : index)
+                                )}
+                            </PaneWrapper>
+                        </div>
                     </Allotment.Pane >
                 )
             })}

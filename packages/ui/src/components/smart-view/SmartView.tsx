@@ -141,7 +141,7 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
     }
 
     return (
-        <div className="w-full h-full bg-zinc-950/95">
+        <div className="smart-view w-full h-full bg-zinc-950">
             <div className="ml-10 h-full">
                 <NodeProvider nodes={nodes} edges={[]} showOnlyOutput={false}
                     isRunning={isRunning} errorCount={0}

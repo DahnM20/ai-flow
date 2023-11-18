@@ -104,7 +104,7 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
     }
 
     return (
-        <div className="h-full w-full group" style={{ backgroundColor: "rgb(30, 30, 31)" }} key={`${nodeId}-${fieldName}-${index}`}>
+        <div className="h-full w-full group bg-subtle-gradient" key={`${nodeId}-${fieldName}-${index}`}>
             {
                 isCurrentNodeRunning
                     ? renderLoadingIcon()
