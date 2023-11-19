@@ -104,12 +104,12 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
     }
 
     return (
-        <div className="h-full w-full group bg-subtle-gradient" key={`${nodeId}-${fieldName}-${index}`}>
+        <div className="flex-grow w-full group min-h-0" key={`${nodeId}-${fieldName}-${index}`}>
             {
                 isCurrentNodeRunning
                     ? renderLoadingIcon()
                     : (currentNode != null && fieldName)
-                        ? <div className={`w-full overflow-y-auto h-[95%] flex pt-2 px-3 pb-10 text-slate-300 text-justify justify-center text-lg 
+                        ? <div className={`w-full overflow-y-auto h-full flex py-2 px-3 text-slate-300 text-justify justify-center text-lg 
                                         ${isTextField || fieldName === "outputData" ? "" : "items-center"}`}>
                             {renderOutput()}
                         </div>

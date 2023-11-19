@@ -96,6 +96,8 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting parts.
 
+Here is an example of layout, the underlying flow retrieve a youtube transcript and ask GPT for a markdown summary and interesting quotes : 
+
 ![layout-view](assets/layout.png)
 
 

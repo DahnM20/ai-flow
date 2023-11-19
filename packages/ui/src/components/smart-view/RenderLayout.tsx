@@ -62,7 +62,7 @@ const RenderLayout = ({ type, panes, parentIndex, onSplitHorizontal, onSplitVert
 
                 const isLeafPane = !(pane.content instanceof Object && 'panes' in pane.content)
                 return (
-                    <Allotment.Pane key={index} snap={pane.snap} className={`${isLeafPane ? ' leafPane bg-zinc-950 rounded-xl' : ''}`}>
+                    <Allotment.Pane key={index} snap={pane.snap} className={`${isLeafPane ? ' leafPane' : ''}`}>
                         < div className={`${isLeafPane ? 'px-1 py-2 h-full w-full ' : 'h-full w-full'}`
                         }>
                             < PaneWrapper

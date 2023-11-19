@@ -4,6 +4,7 @@ import { MdOutlineVerticalSplit, MdHorizontalSplit } from 'react-icons/md';
 import { getConfigViaType } from "../../nodesConfiguration/nodeConfig";
 import { NodeType } from "../../utils/mappings";
 import { ICON_MAP } from "../shared/NodeIcons";
+import NodePlayButton from "../shared/nodes-parts/NodePlayButton";
 
 interface PaneWrapperProps {
     children: JSX.Element;
@@ -25,36 +26,40 @@ function PaneWrapper({ children, name, fieldName, showTools, onSplitHorizontal, 
     const NodeIconComponent = nodeConfig ? ICON_MAP[nodeConfig?.icon] : null;
 
     return (
-        <div className="relative h-full shadow-3xl">
+        <div className={`relative flex flex-col h-full ${showTools ? 'bg-subtle-gradient rounded-xl' : ''}`}>
             {showTools &&
-                <div
-                    className="p-4 flex text-center justify-center items-center rounded-t-xl
-                                text-slate-100/80 hover:text-slate-100 group
-                                bg-[#1E1E1F]/80">
-                    <div className="absolute left-0 py-1 pl-2 whitespace-nowrap text-md
+                <div className="h-8 w-full">
+                    <div
+                        className="p-4 flex text-center justify-center items-center rounded-t-xl
+                                text-slate-100/80 hover:text-slate-100 group">
+                        <div className="absolute left-0 py-1 pl-2 whitespace-nowrap text-md
                                     text-center items-center 
                                     flex flex-row space-x-3">
-                        {
-                            NodeIconComponent && <NodeIconComponent />
-                        }
-                        {
-                            nodeType &&
-                            <p>
-                                {nodeType + ' - ' + fieldName}
-                            </p>
-                        }
-                    </div>
-                    <div className="absolute right-0 space-x-2 pr-2 bg-[#1E1E1F]
+                            {
+                                NodeIconComponent && <NodeIconComponent />
+                            }
+                            {
+                                nodeType &&
+                                <p>
+                                    {nodeType + ' - ' + fieldName}
+                                </p>
+                            }
+                        </div>
+                        <div className="absolute right-0 space-x-2 pr-2 bg-[#1E1E1F]/80 rounded-xl
                     group-hover:opacity-100 invisible group-hover:visible transition-opacity ease-linear duration-200">
-                        <PaneWrapperButton onClick={onSplitHorizontal}>
-                            <MdOutlineVerticalSplit />
-                        </PaneWrapperButton>
-                        <PaneWrapperButton onClick={onSplitVertical}>
-                            <MdHorizontalSplit />
-                        </PaneWrapperButton>
-                        <PaneWrapperButton onClick={onDelete}>
-                            <FaTimes />
-                        </PaneWrapperButton>
+                            {
+                                name && <NodePlayButton nodeName={name} />
+                            }
+                            <PaneWrapperButton onClick={onSplitHorizontal}>
+                                <MdOutlineVerticalSplit />
+                            </PaneWrapperButton>
+                            <PaneWrapperButton onClick={onSplitVertical}>
+                                <MdHorizontalSplit />
+                            </PaneWrapperButton>
+                            <PaneWrapperButton onClick={onDelete}>
+                                <FaTimes />
+                            </PaneWrapperButton>
+                        </div>
                     </div>
                 </div>
             }
