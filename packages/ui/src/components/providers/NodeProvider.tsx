@@ -16,6 +16,7 @@ interface NodeContextType {
     onUpdateNodeData: (nodeId: string, data: any) => void;
     onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void;
     nodes: Node[];
+    edges: Edge[];
 }
 
 
@@ -30,6 +31,7 @@ export const NodeContext = createContext<NodeContextType>({
     onUpdateNodeData: () => (undefined),
     onUpdateNodes: () => (undefined),
     nodes: [],
+    edges: [],
 });
 
 export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes, children }
@@ -72,7 +74,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
     }
 
     return (
-        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes, nodes }}>
+        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes, nodes, edges }}>
             {children}
         </NodeContext.Provider>
     );

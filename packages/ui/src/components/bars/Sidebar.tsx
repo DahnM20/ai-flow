@@ -4,8 +4,8 @@ import { Edge, Node } from 'reactflow';
 import JSONView from '../side-views/JSONView';
 import styled, { css } from 'styled-components';
 import TopologicalView from '../side-views/TopologicalView';
-import { TabButton } from '../FlowTabs';
 import { useTranslation } from 'react-i18next';
+import { TabButton } from '../Tab';
 
 interface SidebarProps {
   nodes: Node[];

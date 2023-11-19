@@ -124,7 +124,9 @@ function Flow(props: FlowProps) {
 
   const onDragOver = useCallback((event: any) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    if (!!event.dataTransfert) {
+      event.dataTransfer.dropEffect = 'move';
+    }
   }, []);
 
   const generatedIdIdentifier = '#';

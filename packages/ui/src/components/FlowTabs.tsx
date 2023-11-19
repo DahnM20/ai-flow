@@ -16,6 +16,7 @@ import FlowWrapper from './FlowWrapper';
 import { UserContext } from './providers/UserProvider';
 import SmartView from './smart-view/SmartView';
 import { Layout } from './smart-view/RenderLayout';
+import Tab from './Tab';
 
 
 export interface FlowTab {
@@ -176,6 +177,17 @@ const FlowTabs = () => {
     setMode(mode);
   }
 
+  const handleDeleteFlow = (index: number) => {
+    if (flowTabs.tabs.length === 1) {
+      toastInfoMessage(t('CannotDeleteLastFlow'));
+      return;
+    }
+    const updatedTabs = flowTabs.tabs.filter((_, i) => i !== index);
+    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
+    setFlowTabs(updatedFlowTabs);
+    setCurrentTab(index - 1 > 0 ? index - 1 : 0);
+  }
+
   return (
     <FlowManagerContainer>
       <TabsContainer className='flex flex-row items-center justify-center h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
@@ -185,14 +197,14 @@ const FlowTabs = () => {
         </div>
         <Tabs>
           {flowTabs.tabs.map((tab, index) => (
-            <TabButton
+            <Tab
               key={index}
+              index={index}
               active={index === currentTab}
-              onClick={() => handleChangeTab(index)}
-              className={`relative ${index === currentTab ? 'text-slate-50' : 'text-slate-500'} hover:text-slate-50 text-md mr-5 px-2 py-2`}
-            >
+              onChangeTab={handleChangeTab}
+              onDeleteFlow={handleDeleteFlow}>
               {t('Flow')} {index + 1}
-            </TabButton>
+            </Tab>
           ))}
         </Tabs>
         <AddTabButton onClick={addFlowTab} className='text-lg text-slate-200 hover:text-slate-50 hover:ring-2 ring-slate-200 rounded-lg py-1 px-1'>
@@ -287,26 +299,7 @@ const Tabs = styled.div`
   max-width: 60%;
 `;
 
-export const TabButton = styled.button<{ active: boolean }>`
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-  transform: ${(props) => (props.active ? 'scale(1.15)' : 'scale(1)')};
 
-  &::after {
-    content: "";
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    bottom: 0;
-    left: 15%;
-    right: 15%;
-    height: 3px;
-    background: ${(props) => props.theme.accent};
-    transform: ${(props) => (props.active ? 'scaleX(1)' : 'scaleX(0)')};
-    transition: transform 0.3s ease-in-out;
-    z-index: 11;
-  }
-`;
 
 const AddTabButton = styled.div`
 `;
