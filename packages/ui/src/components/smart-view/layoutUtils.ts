@@ -129,7 +129,12 @@ export function deletePane(layout: Layout, index: LayoutIndex): Layout {
     } else {
         const [first, ...rest] = index.split(INDEX_SPLIT_CHAR).map(Number);
         if ("content" in newLayout.panes[first] && typeof newLayout.panes[first].content === "object") {
-            newLayout.panes[first].content = deletePane(newLayout.panes[first].content as Layout, rest.join('-'));
+            const newContent = deletePane(newLayout.panes[first].content as Layout, rest.join('-'));
+            if (newContent.panes.length === 0) {
+                newLayout.panes.splice(first, 1);
+            } else {
+                newLayout.panes[first].content = newContent
+            }
         }
         return newLayout;
     }
