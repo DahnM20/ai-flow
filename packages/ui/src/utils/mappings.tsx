@@ -5,6 +5,7 @@ import GenericNode from "../components/nodes/GenericNode";
 import AIDataSplitterNode from "../components/nodes/AIDataSplitterNode";
 import AIActionNode from "../components/nodes/AIActionNode";
 import EaseOut from "../components/shared/motions/EaseOut";
+import NodeWrapper from "../components/shared/NodeWrapper";
 
 /**
  * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
@@ -46,7 +47,9 @@ export const getAllNodeWithEaseOut = (): Record<NodeType, React.FC<NodeProps>> =
 
     completeNodeTypes[type] = (props: NodeProps) => (
       <EaseOut key={props.id}>
-        <NodeComponent {...props} />
+        <NodeWrapper nodeId={props.id}>
+          <NodeComponent {...props} />
+        </NodeWrapper>
       </EaseOut>
     );
   });
