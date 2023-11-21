@@ -175,15 +175,13 @@ export const NodeSelectOption = styled.option`
 `;
 
 export const ReactFlowStyled = styled(ReactFlow)`
-  background-color: ${(props) => props.theme.bg};
-
   .react-flow__attribution {
     background: transparent;
   }
 `;
 
 export const MiniMapStyled = styled(MiniMap)`
-  background-color: ${(props) => props.theme.bg};
+  background-color: ${(props) => props.theme.minimapBg};
 
   .react-flow__minimap-mask {
     fill: ${(props) => props.theme.minimapMaskBg};

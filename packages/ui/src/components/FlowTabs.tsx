@@ -189,11 +189,11 @@ const FlowTabs = () => {
   }
 
   return (
-    <FlowManagerContainer>
-      <TabsContainer className='flex flex-row items-center justify-center h-16 py-2 bg-zinc-900 border-b-2 border-b-sky-950 z-30'>
+    <FlowManagerContainer className='bg-app-dark-gradient'>
+      <TabsContainer className='flex flex-row items-center justify-center h-16 py-2  border-b-sky-950/50 z-30'>
         <div className='ml-4 mx-auto flex flex-row text-center align-middle justify-center'>
           <img src="logo.png" className='w-16' alt="Logo"></img>
-          <h1 className='flex text-slate-200 items-center justify-center px-2 text-xl font-bold sm:invisible md:visible'> AI-Flow </h1>
+          <h1 className='flex text-slate-200 items-center justify-center px-2 text-xl font-medium sm:invisible md:visible'> AI-Flow </h1>
         </div>
         <Tabs>
           {flowTabs.tabs.map((tab, index) => (
@@ -233,7 +233,7 @@ const FlowTabs = () => {
           </ToggleThemeButton> */}
         </RightControls>
       </TabsContainer>
-      {
+      {/* {
         mode === 'flow' &&
         <FeedbackIcon className="absolute right-10 top-0 h-24 w-28 
                               px-6 
@@ -243,7 +243,7 @@ const FlowTabs = () => {
                               hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>
           <div className='absolute bottom-0 pb-1' > Feedback ? </div>
         </FeedbackIcon>
-      }
+      } */}
       <FlowWrapper mode={mode} openConfig={openConfig} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)} onChangeMode={handleChangeMode}>
         {
           mode === 'flow' &&

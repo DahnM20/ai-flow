@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { ApplicationMode } from "../FlowTabs";
 import { FaColumns, FaProjectDiagram } from "react-icons/fa";
+import { ApplicationMode } from "../FlowTabs";
 
 interface ModeBarProps {
     onChangeMode: (mode: ApplicationMode) => void;
@@ -18,7 +18,7 @@ function ModeBar({ onChangeMode, currentMode }: ModeBarProps) {
     };
 
     return (
-        <div className="w-10 h-full flex flex-col space-y-2 pt-4 p-2 z-10 bg-zinc-900 shadow-md border-r-2 border-r-sky-900/50">
+        <div className="w-10 h-full flex flex-col space-y-2 pt-4 p-2 z-10 border-r-2  border-r-sky-900/10">
             {modes.map((mode, index) => {
                 const Icon = mode.icon;
                 return (

@@ -1,11 +1,11 @@
 // ThemeProvider.tsx
 import React, { createContext, useState, ReactNode } from 'react';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-import { theme } from '../shared/theme';
+import { theme } from "../shared/theme";
 
 export const ThemeContext = createContext({
   dark: false,
-  toggleTheme: () => {},
+  toggleTheme: () => { },
 });
 
 interface ThemeProviderProps {

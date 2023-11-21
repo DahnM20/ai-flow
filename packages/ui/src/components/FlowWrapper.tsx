@@ -42,7 +42,7 @@ function FlowWrapper({ openConfig, mode, onCloseConfig, onOpenConfig, onChangeMo
                 }
             </div>
             <RightIconButton onClick={handleOpenConfig} />
-            <RightIconButton onClick={() => setIsHelpOpen(true)} color='#7fcce3a9' bottom='80px' icon={<FiHelpCircle />} />
+            <RightIconButton onClick={() => setIsHelpOpen(true)} color='#7fcce38f' bottom='80px' icon={<FiHelpCircle />} />
             <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
             {isHelpOpen && <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />}
             {children}

@@ -17,6 +17,7 @@ const Tab = ({ index, active, onChangeTab, onDeleteFlow, children }: TabProps) =
             className={`relative inline-block
                         group
                         text-md mr-5 px-2 py-2 cursor-pointer 
+                        font-medium
                         ${active ? 'text-slate-50' : 'text-slate-500'} 
                         hover:text-slate-50`}
             onClick={() => onChangeTab(index)}

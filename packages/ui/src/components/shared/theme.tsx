@@ -1,4 +1,4 @@
-// theme.ts
+// theme.tsx
 export const theme = {
   light: {
     bg: "#f7f7f7",
@@ -7,6 +7,7 @@ export const theme = {
     accentText: "rgb(33 34 43)",
     logsText: "#EFF0F7",
     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+    minimapBg: "#f7f7f7",
     minimapMaskBg: '#f2f2f5',
     primary: '#ff0072',
     sidebarBg: 'rgb(242 242 245 / 67%)',
@@ -36,13 +37,14 @@ export const theme = {
     accentText: "rgb(186 188 215)",
     logsText: "#EFF0F7",
     boxShadow: "rgb(1 1 1 / 82%) 0px 2px 4px",
-    minimapMaskBg: '#343435',
+    minimapBg: "#2323237a",
+    minimapMaskBg: '#3434356e',
     primary: '#ff0072',
     sidebarBg: 'rgba(31, 23, 34, 0.84)',
     tabBarBg: 'rgb(31 23 34)',
     popupBg: '#343435',
-    nodeBg: 'rgba(52, 52, 53, 0,3)',
-    nodeGradientBg: 'linear-gradient(rgb(35, 35, 35), rgb(24 20 57 / 8%))',
+    nodeBg: 'rgba(28, 28, 30, 0.685)',
+    nodeGradientBg: 'linear-gradient(rgb(32 32 32), rgba(24, 20, 57, 0.08)) rgb(41 44 58)',
     outputBg: 'rgb(28 20 31 / 84%)',
     nodeInputBg: 'rgb(54 54 54 / 43%)',
     nodeColor: '#f9f9f9',

@@ -28,7 +28,7 @@ const DraggableNode = (props: DraggableNodeProps) => {
                   justify-center items-center text-center
                   h-auto py-2 rounded-md 
                   hover:ring-2
-                  hover:ring-slate-200/50
+                  hover:ring-slate-200/10
                   font-medium
                   shadow-md
                   cursor-grab

@@ -15,8 +15,9 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({ onClick, isRunning }) => {
                 ${isRunning
                     ? 'text-slate-200 bg-[#86D8F0]'
                     : 'text-[#86D8F0] ring-sky-800 bg-slate-800 ring-2'} 
-                hover:bg-[#86D8F0]/80
-                hover:text-slate-200
+                hover:ring-sky-500
+                hover:text-sky-100
+                transition-all
                 py-1 px-2 rounded-md cursor-pointer`} onClick={onClick}>
                 <Button>
                     {isRunning ? <Spinner className='text-xl ' /> : <FaPlay />}

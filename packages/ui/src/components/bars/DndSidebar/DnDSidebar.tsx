@@ -12,9 +12,9 @@ const DnDSidebar = () => {
 
   return (
     <>
-      <DnDSidebarContainer isOpen={isOpen} onClick={() => setOpen(!isOpen)} className='bg-zinc-950/50 shadow-md border-r-2 border-r-sky-900/50'>
+      <DnDSidebarContainer isOpen={isOpen} onClick={() => setOpen(!isOpen)} className='shadow-md bg-zinc-950/10 border-r-sky-900/50'>
         {nodeSectionMapping.map((section, index) => (
-          <Section key={index} className='flex flex-col gap-y-2 mb-5'>
+          <Section key={index} className={`flex flex-col gap-y-2 mb-5 ${!isOpen ? 'opacity-0' : 'transition-opacity'}`}>
             <SectionTitle className="flex flex-row items-center gap-x-2 text-md text-slate-300 ml-1 py-1 border-b-2 border-b-slate-500/20">
               {section.icon && <section.icon />}
               {t(section.label)}
