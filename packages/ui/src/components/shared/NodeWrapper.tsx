@@ -12,32 +12,32 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
     const { onUpdateNodes, nodes, edges } = useContext(NodeContext);
     let hideIconTimeout: ReturnType<typeof setTimeout>;
 
-    const clearIconTimeout = () => {
+
+    const showIconWithDelay = () => {
+        setShowIcon(true);
+    };
+
+    const hideIconWithDelay = () => {
+        hideIconTimeout = setTimeout(() => setShowIcon(false), 500);
+    };
+
+    const clearHideIconTimeout = () => {
         if (hideIconTimeout) {
             clearTimeout(hideIconTimeout);
         }
     };
-
-    useEffect(() => {
-        if (showIcon) {
-            hideIconTimeout = setTimeout(() => setShowIcon(false), 4000);
-        } else {
-            clearIconTimeout();
-        }
-        return () => clearIconTimeout();
-    }, [showIcon]);
 
 
     function handleRemoveNode(nodeId: string): void {
         const nodesUpdated = nodes.filter((node) => node.id !== nodeId);
         const edgesUpdated = edges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId);
         onUpdateNodes(nodesUpdated, edgesUpdated);
-        clearIconTimeout();
     }
 
     return (
-        <div className="relative group"
-            onClick={() => setShowIcon(!showIcon)}>
+        <div className={`relative group`}
+            onMouseEnter={showIconWithDelay}
+            onMouseLeave={hideIconWithDelay}>
             {children}
             <span
                 className="absolute top-0 right-1/2 -translate-y-14 translate-x-1/2 cursor-pointer 
@@ -49,6 +49,8 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
                         p-2
                         "
                 onClick={() => handleRemoveNode(nodeId)}
+                onMouseEnter={clearHideIconTimeout}
+                onMouseLeave={hideIconWithDelay}
                 style={{ display: showIcon ? 'block' : 'none' }}
             >
                 <AiOutlineClose />
