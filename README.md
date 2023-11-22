@@ -50,17 +50,13 @@ Imagine setting up a simple workflow where:
 
 If we want to change the idea of the poem, we can edit the first node, and keep the same flow. 
 
-![image-scenario-1-2](assets/scenario-1-2.png)
-
 This flow logic can then be applied to different inputs, yielding varied results for similar subject matter. 
 
-**AI Flow is particularly useful for content creation.** By enabling different GPT models to adopt different roles, AI Flow orchestrates the creation and evaluation of digital content, from social media threads to blog articles. 
+**AI Flow is particularly useful for content creation.** By enabling different LLM to adopt different roles, AI Flow orchestrates the creation and evaluation of digital content, from social media threads to blog articles. 
 
 With AI Flow, you utilize your own OpenAI keys, giving you full authority over your budget. Importantly, the software runs locally on your machine, assuring you of privacy and control over your data and operations.
 
 ⚠️ Please note that very large input _(for example the transcript of a 1 hour podcast)_ may incur additionnal costs, because for this type of entry the default behavior is to split the input into chunks, create embeddings **(with the OpenAI API)**, and then use a similarity search to find the right items to answer the prompt. 
-
-> N.B : For large inputs, you'll get better result with a precise prompt.
 
 ## Features
 
@@ -85,8 +81,6 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 #### Split input with AI 
 
 ![image-summary](assets/split-input.png)
-
-> By combining those features we can create different flows.
 
 #### Describe picture with AI
 

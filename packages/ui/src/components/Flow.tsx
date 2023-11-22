@@ -232,9 +232,7 @@ function Flow(props: FlowProps) {
             minZoom={0.2}
             maxZoom={2}
           >
-            {/* <Background /> */}
             <MiniMapStyled style={{ right: '4vw' }} />
-            {/* <ControlsStyled style={{ left: '9vw' }} /> */}
           </ReactFlowStyled>
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />

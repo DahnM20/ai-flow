@@ -182,10 +182,14 @@ const FlowTabs = () => {
       toastInfoMessage(t('CannotDeleteLastFlow'));
       return;
     }
-    const updatedTabs = flowTabs.tabs.filter((_, i) => i !== index);
+
+    let updatedTabs = structuredClone(flowTabs.tabs)
+    updatedTabs = updatedTabs.filter((_: FlowTab, i: number) => i !== index);
+
     const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
     setFlowTabs(updatedFlowTabs);
     setCurrentTab(index - 1 > 0 ? index - 1 : 0);
+    setRefresh(!refresh);
   }
 
   return (
@@ -193,7 +197,6 @@ const FlowTabs = () => {
       <TabsContainer className='flex flex-row items-center justify-center h-16 py-2  border-b-sky-950/50 z-30'>
         <div className='ml-4 mx-auto flex flex-row text-center align-middle justify-center'>
           <img src="logo.png" className='w-16' alt="Logo"></img>
-          <h1 className='flex text-slate-200 items-center justify-center px-2 text-xl font-medium sm:invisible md:visible'> AI-Flow </h1>
         </div>
         <Tabs>
           {flowTabs.tabs.map((tab, index) => (
