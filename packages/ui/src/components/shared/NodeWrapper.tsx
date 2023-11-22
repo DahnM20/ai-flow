@@ -36,7 +36,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
 
     return (
         <div className={`relative group`}
-            onMouseEnter={showIconWithDelay}
+            onClick={showIconWithDelay}
             onMouseLeave={hideIconWithDelay}>
             {children}
             <span
