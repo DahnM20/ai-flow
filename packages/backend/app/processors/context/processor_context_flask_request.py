@@ -1,10 +1,20 @@
 
+from ...flask.utils.constants import SESSION_USER_ID_KEY
 from .processor_context import ProcessorContext
-from flask import g
+from flask import g, session
 
 class ProcessorContextFlaskRequest(ProcessorContext):
+        
     def get_context(self):
         return g
+    
+    def get_current_user_id(self):
+        if session is None :
+            return None
+        if SESSION_USER_ID_KEY not in session:
+            return None
+        
+        return session[SESSION_USER_ID_KEY]
     
     def get_api_key_for_model(self, model_name):
         if 'gpt-4' in model_name or 'gpt-3.5-turbo' in model_name:

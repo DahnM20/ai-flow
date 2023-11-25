@@ -3,8 +3,7 @@ from injector import Injector, Binder, Module
 
 from .llms.factory.llm_factory import LLMFactory
 from .llms.factory.paid_api_llm_factory import PaidAPILLMFactory
-from .processors.observer.event_emitter import EventEmitter
-from .processors.observer.simple_stats_logger import SimpleStatsLogger
+from .processors.observer.socketio_event_emitter import SocketIOEventEmitter
 from .processors.observer.observer import Observer
 from .storage.local_storage_strategy import LocalStorageStrategy
 from .storage.s3_storage_strategy import S3StorageStrategy
@@ -34,7 +33,13 @@ class StorageModule(Module):
 class ProcessorLauncherModule(Module):
     def configure(self, binder: Binder):
         binder.bind(ProcessorLauncher, to=BasicProcessorLauncher)
-        binder.multibind(List[Observer], to=[EventEmitter(), SimpleStatsLogger()])
+        observer_list = [SocketIOEventEmitter()]
+        if is_cloud_env():
+            from .processors.observer.simple_stats_logger import SimpleStatsLogger
+            
+            observer_list.append(SimpleStatsLogger())
+            
+        binder.multibind(List[Observer], to=observer_list)
 
 
 class LLMFactoryModule(Module):

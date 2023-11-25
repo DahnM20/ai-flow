@@ -1,3 +1,4 @@
+from ..launcher.event_type import EventType
 from .observer import Observer
 import logging
 
@@ -23,8 +24,8 @@ class SimpleStatsLogger(Observer):
         else:
             self.event_counts[event] = 1
 
-        if event == "current_node_running":
-            instance_name = data.get("instanceName", "")
+        if event == EventType.CURRENT_NODE_RUNNING:
+            instance_name = data.instance_name
             processor_type = (
                 instance_name.split("#")[-1] if "#" in instance_name else instance_name
             )

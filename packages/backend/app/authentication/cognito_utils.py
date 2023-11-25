@@ -42,3 +42,15 @@ def get_user_details(access_token):
     except Exception as e:
         print(f"Error while retrieving user details: {e}")
         return None
+
+def get_user_id_from_cognito_details(user_details):
+    for attribute in user_details['UserAttributes']:
+        if attribute['Name'] == 'sub':
+            return attribute['Value']
+    return None
+
+def get_user_email_from_cognito_details(user_details):
+    for attribute in user_details['UserAttributes']:
+        if attribute['Name'] == 'email':
+            return attribute['Value']
+    return None

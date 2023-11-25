@@ -7,6 +7,10 @@ class ProcessorContext(ABC):
         pass
     
     @abstractmethod
+    def get_current_user_id(self):
+        pass
+    
+    @abstractmethod
     def get_api_key_for_model(self, model_name):
         pass
     

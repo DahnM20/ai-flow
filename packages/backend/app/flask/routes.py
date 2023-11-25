@@ -1,34 +1,21 @@
 import logging
-from flask import send_from_directory
+from app.env_config import (is_server_static_files_enabled, is_local_environment)
 from app.flask.app import app
-import os
-from app.env_config import (
-    is_local_environment,
-    is_server_static_files_enabled,
-    get_local_storage_folder_path,
-)
+from .utils.constants import HTTP_OK
+
 
 
 @app.route("/healthcheck", methods=["GET"])
 def healthcheck():
-    return "OK", 200
-
-
-if is_local_environment():
-    logging.info("Environment set to LOCAL")
-
-    @app.route("/image/<path:filename>")
-    def serve_image(filename):
-        return send_from_directory(get_local_storage_folder_path(), filename)
+    return "OK", HTTP_OK
 
 
 if is_server_static_files_enabled():
+    from .app_routes.static_routes import static_blueprint
     logging.info("Visual interface will be available at http://localhost:5000")
-
-    @app.route("/", defaults={"path": ""})
-    @app.route("/<path:path>")
-    def serve(path):
-        if path != "" and os.path.exists(app.static_folder + "/" + path):
-            return send_from_directory(app.static_folder, path)
-        else:
-            return send_from_directory(app.static_folder, "index.html")
+    app.register_blueprint(static_blueprint)
+    
+if is_local_environment():
+    from .app_routes.image_routes import image_blueprint
+    logging.info("Environment set to LOCAL")
+    app.register_blueprint(image_blueprint)

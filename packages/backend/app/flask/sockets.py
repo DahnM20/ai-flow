@@ -6,19 +6,21 @@ from app.flask.app import app
 import logging
 import json
 
-from flask import g
+from flask import g, session
 from flask_socketio import SocketIO, emit
 from ..root_injector import root_injector
+from .utils.constants import SESSION_USER_ID_KEY
 
-from ..authentication.verifyUser import (
+from ..authentication.verify_user import (
     verify_access_token,
     verify_id_token,
 )
 
-from ..authentication.cognitoUtils import (
+from ..authentication.cognito_utils import (
     get_cognito_app_client_id,
     get_cognito_keys,
     get_user_details,
+    get_user_id_from_cognito_details,
 )
 from ..processors.launcher.processor_launcher import ProcessorLauncher
 from ..processors.context.processor_context_flask_request import ProcessorContextFlaskRequest
@@ -29,12 +31,11 @@ from .validators import max_empty_output_data, max_url_input_nodes, max_nodes
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
-
-def populate_session_global_object(data):
+def populate_request_global_object(data):
     """
-    This function is responsible for initializing global session objects either from the
+    This function is responsible for initializing individual request objects either from the
     environmental variables or from the data passed as arguments, ensuring that the necessary API
-    keys are available throughout the session for different processes.
+    keys are available throughout the request for different processes.
 
     Parameters:
         data (dict): A dictionary containing potentially necessary keys: "openai_api_key" and "stabilityai_api_key".
@@ -52,11 +53,20 @@ def populate_session_global_object(data):
         if "stabilityaiApiKey" in data:
             g.session_stabilityai_api_key = data["stabilityaiApiKey"]
 
+def log_in_user(user_access_jwt):
+    """
+    This function is responsible for logging in a user by setting the session context. 
+    The session is shared between multiple requests and saved with a client-side (/!\) signed cookie (using the secret_key).
+    """
+    user_details = get_user_details(user_access_jwt)
+    user = get_or_create_user(user_details)
+        
+    if user is not None :
+        session[SESSION_USER_ID_KEY] = get_user_id_from_cognito_details(user_details)
+        logging.info("Logged in")
 
-def reset_context():
-    g.user_authentication_jwt = None
-    g.isAuthenticated = False
-    g.user_details = None
+def reset_session_context():
+    session[SESSION_USER_ID_KEY] = None
 
 
 @socketio.on("connect")
@@ -73,15 +83,10 @@ def handle_connect(data):
     keys = get_cognito_keys()
     app_client_id = get_cognito_app_client_id()
 
-    if verify_id_token(
-        user_authentication_jwt, keys, app_client_id
-    ) and verify_access_token(user_access_jwt, keys, app_client_id):
-        g.user_authentication_jwt = user_authentication_jwt
-        g.isAuthenticated = True
-        g.user_details = get_user_details(user_access_jwt)
-        print("Logged in")
+    if verify_id_token(user_authentication_jwt, keys, app_client_id) and verify_access_token(user_access_jwt, keys, app_client_id):
+        log_in_user(user_access_jwt)
     else:
-        reset_context()
+        reset_session_context()
 
 
 @socketio.on("process_file")
@@ -97,7 +102,7 @@ def handle_process_file(data):
 
     """
     try:
-        populate_session_global_object(data)
+        populate_request_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
         launcher = root_injector.get(ProcessorLauncher)
         launcher.set_context(ProcessorContextFlaskRequest())
@@ -131,7 +136,7 @@ def handle_run_node(data):
 
     """
     try:
-        populate_session_global_object(data)
+        populate_request_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
         node_name = data.get("nodeName")
 
@@ -158,4 +163,4 @@ def handle_run_node(data):
 @socketio.on("disconnect")
 def handle_disconnect():
     logging.info("Client disconnected")
-    reset_context()
+    reset_session_context()

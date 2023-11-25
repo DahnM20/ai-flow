@@ -1,17 +1,21 @@
+import logging
 from flask import Flask, request, redirect
 from flask_cors import CORS
 import os
-import sys
 
-if getattr(sys, "frozen", False):
-    base_path = sys._MEIPASS
-    build_dir = os.path.join(base_path, "build")
-else:
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    build_dir = os.path.join(base_path, "..", "..", "..", "ui", "build")
+from ..env_config import get_flask_secret_key, get_static_folder
 
-app = Flask(__name__, static_folder=build_dir)
+app = Flask(__name__, static_folder=get_static_folder())
+
+if get_flask_secret_key() is not None : 
+    logging.info("Flask secret key set")
+    app.config['SECRET_KEY'] = get_flask_secret_key()
+else :
+    logging.warning("Flask secret key not set")
+    app.config['SECRET_KEY'] = "default_secret"
+    
 CORS(app)
+
 
 if os.getenv("USE_HTTPS", "false").lower() == "true":
 

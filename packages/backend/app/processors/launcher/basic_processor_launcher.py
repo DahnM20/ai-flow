@@ -2,6 +2,8 @@ import json
 import logging
 from typing import List
 from injector import inject
+from .processor_launcher import ProcessorLauncher
+from .event_type import EventType, NodeProcessorEvent
 
 from ..context.processor_context import ProcessorContext
 
@@ -11,13 +13,14 @@ from ...storage.storage_strategy import StorageStrategy
 from ..factory.processor_factory import ProcessorFactory
 
 
-class BasicProcessorLauncher:
+class BasicProcessorLauncher(ProcessorLauncher):
     """
     Basic Processor Launcher emiting event through flask_socketio websockets
 
     A class that launches processors based on configuration data.
     """
 
+    
     processor_factory: ProcessorFactory
     storage_strategy: StorageStrategy
     observers: List[Observer]
@@ -159,27 +162,75 @@ class BasicProcessorLauncher:
 
     def launch_processors(self, processors):
         for processor in processors.values():
-            self.notify_observers(
-                "current_node_running", {"instanceName": processor.name}
+            current_node_running_event_data = NodeProcessorEvent(
+                instance_name=processor.name,
+                user_id=self.context.get_current_user_id(),
+                processor=processor,
             )
+            
+            self.notify_observers(EventType.CURRENT_NODE_RUNNING.value, current_node_running_event_data)
 
-            output = processor.process()
-
-            self.notify_observers(
-                "progress", {"instanceName": processor.name, "output": output}
-            )
+            try :
+                    output = processor.process()
+                    progress_event_data = NodeProcessorEvent(
+                        instance_name=processor.name,
+                        user_id=self.context.get_current_user_id(),
+                        output=output,
+                        processor_type=processor.processor_type,
+                    )
+                    self.notify_observers(EventType.PROGRESS.value, progress_event_data)
+                    
+            except Exception as e:
+                error_event_data = NodeProcessorEvent(
+                    instance_name=processor.name,
+                    user_id=self.context.get_current_user_id(),
+                    processor=processor,
+                    error=str(e),
+                )
+                self.notify_observers(
+                    EventType.ERROR.value, error_event_data
+                )
+                raise e
 
     def launch_processors_for_node(self, processors, node_name=None):
         for processor in processors.values():
             if processor.get_output() is None or processor.name == node_name:
-                self.notify_observers(
-                    "current_node_running", {"instanceName": processor.name}
+                
+                current_node_running_event_data = NodeProcessorEvent(
+                    instance_name=processor.name,
+                    user_id=self.context.get_current_user_id(),
+                    processor=processor,
                 )
-                output = processor.process()
+                
                 self.notify_observers(
-                    "progress",
-                    {"instanceName": processor.name, "output": output},
+                    EventType.CURRENT_NODE_RUNNING.value, current_node_running_event_data
                 )
+                
+                try :
+                    output = processor.process()
+                    
+                    progress_event_data = NodeProcessorEvent(
+                        instance_name=processor.name,
+                        user_id=self.context.get_current_user_id(),
+                        output=output,
+                        processor_type=processor.processor_type,
+                    )
+                    self.notify_observers(
+                        EventType.PROGRESS.value,
+                        progress_event_data
+                    )
+                    
+                except Exception as e:
+                    error_event_data = NodeProcessorEvent(
+                        instance_name=processor.name,
+                        user_id=self.context.get_current_user_id(),
+                        processor=processor,
+                        error=str(e),
+                    )
+                    self.notify_observers(
+                        EventType.ERROR.value, error_event_data
+                    )
+                    raise e
 
             if processor.name == node_name:
                 break
