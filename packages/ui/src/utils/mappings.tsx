@@ -10,7 +10,7 @@ import NodeWrapper from "../components/shared/NodeWrapper";
 /**
  * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
  */
-export const allNodeTypes = ['gpt', 'file-drop', 'url_input', 'dalle-prompt', 'data-splitter', 'ai-data-splitter', 'input-text', 'input-image', 'gpt-prompt', 'youtube_transcript_input', 'llm-prompt', 'ai-action', 'stable-diffusion-stabilityai-prompt', 'merger-prompt', 'gpt-vision'] as const;
+export const allNodeTypes = ['gpt', 'file-drop', 'url_input', 'dalle-prompt', 'data-splitter', 'ai-data-splitter', 'input-text', 'input-image', 'gpt-prompt', 'youtube_transcript_input', 'llm-prompt', 'ai-action', 'stable-diffusion-stabilityai-prompt', 'merger-prompt', 'gpt-vision', 'stable-video-diffusion-replicate'] as const;
 export type NodeType = typeof allNodeTypes[number];
 
 

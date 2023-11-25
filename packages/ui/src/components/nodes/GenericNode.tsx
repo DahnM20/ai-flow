@@ -23,6 +23,7 @@ import { toastFastInfoMessage } from '../../utils/toastUtils';
 import InputNameBar from '../shared/nodes-parts/InputNameBar';
 import useHandlePositions from '../../hooks/useHandlePositions';
 import { useFormFields } from '../../hooks/useFormFields';
+import VideoUrlOutput from '../shared/nodes-parts/VideoUrlOutput';
 
 interface GenericNodeProps {
     data: GenericNodeData;
@@ -134,7 +135,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         hasParent
     );
 
-    const outputIsImage = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64') && !!data.outputData;
+    const outputIsMedia = (data.config.outputType === 'imageUrl' || data.config.outputType === 'imageBase64' || data.config.outputType === 'videoUrl') && !!data.outputData;
 
     const hideNodeParams = (hasParent(id) && data.config.hideFieldsIfParent) || collapsed;
 
@@ -152,6 +153,8 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
                 return <ImageUrlOutput url={output} name={data.name} />
             case 'imageBase64':
                 return <ImageBase64Output data={output} name={data.name} lastRun={data.lastRun} />
+            case 'videoUrl':
+                return <VideoUrlOutput url={output} name={data.name} />
             default:
                 return <MarkdownOutput data={output} />
         }
@@ -221,10 +224,10 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
             )}
             <NodeLogs
                 showLogs={showLogs}
-                noPadding={outputIsImage && showLogs}
+                noPadding={outputIsMedia && showLogs}
                 onClick={() => setShowLogs(!showLogs)}
             >
-                {showLogs && data.outputData && !outputIsImage
+                {showLogs && data.outputData && !outputIsMedia
                     && <StyledCopyIcon className="copy-icon hover:text-white" onClick={(event) => {
                         handleCopyToClipboard(event);
                     }} />}
