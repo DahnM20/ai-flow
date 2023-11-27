@@ -12,7 +12,7 @@ export const llmPromptNodeConfig: NodeConfig = {
             options: [
                 {
                     label: 'GPT3.5',
-                    value: 'gpt-3.5-turbo',
+                    value: 'gpt-3.5-turbo-1106',
                     default: true,
                 },
                 {

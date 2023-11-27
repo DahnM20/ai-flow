@@ -13,7 +13,7 @@ class AIDataSplitterProcessor(APIContextProcessor):
         super().__init__(config, api_context_data)
 
         self.nb_output = 0
-        self.model = "gpt-4"
+        self.model = "gpt-4-1106-preview"
         self.api_key = api_context_data.get_api_key_for_model(self.model)
         
         

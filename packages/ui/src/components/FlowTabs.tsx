@@ -147,8 +147,7 @@ const FlowTabs = () => {
     socket?.emit('process_file',
       {
         jsonFile: JSON.stringify(flowFile),
-        openaiApiKey: config?.openaiApiKey,
-        stabilityaiApiKey: config?.stabilityaiApiKey,
+        apiKeys: config?.apiKeys
       });
     setIsRunning(true);
   }

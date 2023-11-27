@@ -58,8 +58,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
             {
                 jsonFile: JSON.stringify(flowFile),
                 nodeName: name,
-                openaiApiKey: config?.openaiApiKey,
-                stabilityaiApiKey: config?.stabilityaiApiKey,
+                apiKeys: config?.apiKeys,
             });
 
         return true;

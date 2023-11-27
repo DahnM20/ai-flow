@@ -1,11 +1,13 @@
 import { FaGithub, FaXTwitter } from 'react-icons/fa6';
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { SocketContext, WSConfiguration } from '../providers/SocketProvider';
+import { SocketContext, WSConfiguration } from '../../providers/SocketProvider';
 import { useTranslation } from 'react-i18next';
-import UserProfile from '../login/UserProfile';
+import UserProfile from '../../login/UserProfile';
 import { Auth } from '@aws-amplify/auth';
-import { UserContext } from '../providers/UserProvider';
+import { UserContext } from '../../providers/UserProvider';
+import APIKeyFields from './APIKeyFields';
+import { APIKeys, defaultApiKeys } from './ApiKeys';
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -20,37 +22,29 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
   const { config, connectSocket } = useContext(SocketContext);
   const { user } = useContext(UserContext);
 
-  const [apiKeyOpenAI, setApiKeyOpenAI] = useState('');
-  const [apiKeyStabilityAI, setApiKeyStabilityAI] = useState('');
+  const [apiKeys, setApiKeys] = useState<APIKeys>(structuredClone(defaultApiKeys));
 
   useEffect(() => {
-    const storedOpenAIKey = config?.openaiApiKey
-    const storedStabilityAIKey = config?.stabilityaiApiKey
-    if (storedOpenAIKey) {
-      setApiKeyOpenAI(storedOpenAIKey);
-    }
-    if (storedStabilityAIKey) {
-      setApiKeyStabilityAI(storedStabilityAIKey);
+    const storedKeys = config?.apiKeys
+    if (storedKeys) {
+      setApiKeys(storedKeys);
     }
   }, []);
 
-  const onApiKeyOpenAIChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newKey = event.target.value;
-    setApiKeyOpenAI(newKey);
-  };
-
-  const onStabilityAIAPIKeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newKey = event.target.value;
-    setApiKeyStabilityAI(newKey);
+  const onApiKeyChange = (apiKeyType: string, newValue: string) => {
+    setApiKeys(prevApiKeys => ({
+      ...prevApiKeys,
+      [apiKeyType]: newValue,
+    }));
   };
 
   const handleValidate = () => {
-    window.localStorage.setItem('openaiApiKey', apiKeyOpenAI);
-    window.localStorage.setItem('stabilityaiApiKey', apiKeyStabilityAI);
+    window.localStorage.setItem('apiKeys', JSON.stringify(apiKeys));
 
     const config: WSConfiguration = {
-      openaiApiKey: apiKeyOpenAI,
-      stabilityaiApiKey: apiKeyStabilityAI,
+      apiKeys: {
+        ...apiKeys
+      }
     };
 
     if (!!connectSocket) {
@@ -58,7 +52,7 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
     }
 
     onClose();
-  }
+  };
 
   const handleLogout = () => {
     Auth.signOut();
@@ -85,14 +79,7 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
 
           }
 
-          <Field>
-            <Label htmlFor="api-key">{t('openAIKeyFieldLabel')}</Label>
-            <Input type={"text"} id="api-key" value={apiKeyOpenAI} onChange={onApiKeyOpenAIChange} />
-          </Field>
-          <Field>
-            <Label htmlFor="api-key-stabilityai">Stability AI API Key (Optionnal):</Label>
-            <Input type="text" id="api-key-stabilityai" value={apiKeyStabilityAI} onChange={onStabilityAIAPIKeyChange} />
-          </Field>
+          <APIKeyFields apiKeys={apiKeys} onApiKeyChange={onApiKeyChange} />
           <Actions>
             <Button onClick={onClose} className='bg-[#9B8D8A]'>{t('closeButtonLabel')}</Button>
             <Button onClick={handleValidate} className='bg-[#72CCA5]'>{t('validateButtonLabel')}</Button>
@@ -179,27 +166,6 @@ const Button = styled.button`
   }
 `;
 
-const Input = styled.input`
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  font-size: 16px;
-  width: 100%;
-  background-color: #80808012;
-`;
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  width: 100%;
-`;
-
-const Label = styled.label`
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 5px;
-`;
 
 const Footer = styled.div`
   margin-top: 20px;

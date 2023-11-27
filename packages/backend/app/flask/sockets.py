@@ -31,6 +31,9 @@ from .validators import max_empty_output_data, max_url_input_nodes, max_nodes
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
+API_KEYS_FIELD_NAME = "apiKeys"
+ENV_API_KEYS = ["openai_api_key", "stabilityai_api_key", "replicate_api_key"]
+
 def populate_request_global_object(data):
     """
     This function is responsible for initializing individual request objects either from the
@@ -40,18 +43,25 @@ def populate_request_global_object(data):
     Parameters:
         data (dict): A dictionary containing potentially necessary keys: "openai_api_key" and "stabilityai_api_key".
     """
-    use_env = os.getenv("USE_ENV_API_KEYS")
+    use_env = os.getenv("USE_ENV_API_KEYS", "false").lower()
     logging.debug("use_env: %s", use_env)
+
     if use_env == "true":
-        g.session_openai_api_key = os.getenv("OPENAI_API_KEY")
-        g.session_stabilityai_api_key = os.getenv("STABILITYAI_API_KEY")
+        for key in ENV_API_KEYS:
+            env_key = key.upper()
+            value = os.getenv(env_key)
+            if not value:
+                raise Exception(f"Required {env_key} not provided in environment.")
+            setattr(g, f"session_{key}", value)
     else:
-        if "openaiApiKey" in data:
-            g.session_openai_api_key = data["openaiApiKey"]
-        else:
-            raise Exception("No OpenAI API Key provided.")
-        if "stabilityaiApiKey" in data:
-            g.session_stabilityai_api_key = data["stabilityaiApiKey"]
+        if not API_KEYS_FIELD_NAME in data :
+            raise Exception(f"No {API_KEYS_FIELD_NAME} provided in data.")
+        
+        for key, value in data[API_KEYS_FIELD_NAME].items():
+            if value:
+                setattr(g, f"session_{key}", value)
+            else:
+                raise Exception(f"No {key} provided in data.")
 
 def log_in_user(user_access_jwt):
     """

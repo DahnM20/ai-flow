@@ -1,10 +1,10 @@
 import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
 import { io, Socket } from "socket.io-client";
 import { UserContext } from './UserProvider';
+import { APIKeys } from '../popups/configPopup/ApiKeys';
 
 export type WSConfiguration = {
-    openaiApiKey?: string;
-    stabilityaiApiKey?: string;
+    apiKeys?: APIKeys;
 }
 
 interface ISocketContext {
@@ -42,16 +42,14 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             socket.disconnect();
         }
 
-        const storedOpenAIKey = window.localStorage.getItem('openaiApiKey');
-        const storedStabilityAiKey = window.localStorage.getItem('stabilityaiApiKey');
+        const storedApiKeys = window.localStorage.getItem('apiKeys');
 
         const config = {
-            openaiApiKey: !!storedOpenAIKey ? storedOpenAIKey : undefined,
-            stabilityaiApiKey: !!storedStabilityAiKey ? storedStabilityAiKey : undefined,
+            apiKeys: !!storedApiKeys ? JSON.parse(storedApiKeys) : undefined,
         }
 
         // Connect by default only if user got api keys
-        if (!!storedOpenAIKey || !!storedStabilityAiKey || !!user) {
+        if (!!storedApiKeys || !!user) {
             const newSocket = connectSocket(config);
 
             setSocket(newSocket);
@@ -84,7 +82,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             return false;
         }
 
-        if (config.openaiApiKey) {
+        if (config.apiKeys?.openai_api_key) {
             return true;
         }
 

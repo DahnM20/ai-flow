@@ -15,6 +15,7 @@ def max_token_for_model(model_name):
         "gpt-4-0314": 8192,
         "gpt-4-32k-0314": 32768,
         # GPT-3.5 models
+        "gpt-3.5-turbo-1106": 16385,
         "gpt-3.5-turbo": 4097,
         "gpt-3.5-turbo-16k": 16385,
         "gpt-3.5-turbo-instruct": 4097,

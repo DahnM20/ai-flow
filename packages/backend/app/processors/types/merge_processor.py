@@ -14,7 +14,7 @@ class MergeModeEnum(Enum):
 
 class MergeProcessor(APIContextProcessor):
     processor_type = "merger-prompt"
-    DEFAULT_MODEL = "gpt-4"
+    DEFAULT_MODEL = "gpt-4-1106-preview"
 
     def __init__(self, config, api_context_data, custom_llm_factory=None):
         super().__init__(config, api_context_data)
