@@ -31,3 +31,5 @@ class ProcessorContextFlaskRequest(ProcessorContext):
             return g.get("session_anthropic_api_key")
         elif provider == 'stabilityai':
             return g.get("session_stabilityai_api_key")
+        elif provider == 'replicate':
+            return g.get("session_replicate_api_key")

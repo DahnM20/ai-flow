@@ -1,3 +1,4 @@
+import os
 from urllib.parse import urlparse
 from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
@@ -27,8 +28,10 @@ class StableVideoDiffusionReplicaterocessor(APIContextProcessor):
         
         if not self.is_valid_url(input_image_url):
             return "Invalid URL provided."
+        
+        api = replicate.Client(api_token=self.api_context_data.get_api_key_for_provider("replicate"))
 
-        output = replicate.run(
+        output = api.run(
             StableVideoDiffusionReplicaterocessor.stable_video_diffusion_model,
             input={
                 "cond_aug": 0.02,
