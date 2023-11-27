@@ -5,7 +5,7 @@ MAX_URL_INPUT_NODE_IN_LIVE_DEMO = 2
 
 
 def max_nodes(flow_data):
-    if not is_cloud_env:
+    if not is_cloud_env():
         return
 
     if len(flow_data) > MAX_NODES_IN_LIVE_DEMO:
@@ -15,7 +15,7 @@ def max_nodes(flow_data):
 
 
 def max_url_input_nodes(flow_data):
-    if not is_cloud_env:
+    if not is_cloud_env():
         return
 
     count_url_input = sum(
@@ -29,7 +29,7 @@ def max_url_input_nodes(flow_data):
 
 
 def max_empty_output_data(flow_data):
-    if not is_cloud_env:
+    if not is_cloud_env():
         return
 
     count_empty_output_data = sum(1 for node in flow_data if not node.get("outputData"))
