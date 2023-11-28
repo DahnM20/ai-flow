@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { defaultApiKeys } from "./ApiKeys";
 
 interface APIKeyFieldsProps {
     apiKeys: Record<string, string>;
@@ -13,7 +14,7 @@ const APIKeyFields = ({ apiKeys, onApiKeyChange }: APIKeyFieldsProps) => {
 
     return (
         <>
-            {Object.keys(apiKeys).map((key) => (
+            {Object.keys(defaultApiKeys).map((key) => (
                 <Field key={key}>
                     <Label htmlFor={`api-key-${key}`}>{t(key)}</Label>
                     <Input
