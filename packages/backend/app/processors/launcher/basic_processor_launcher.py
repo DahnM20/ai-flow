@@ -91,6 +91,38 @@ class BasicProcessorLauncher(ProcessorLauncher):
             if node.get('name') == node_name:
                 return node
         return None
+    
+    def notify_error(self, processor, e):
+        error_event_data = NodeProcessorEvent(
+                    instance_name=processor.name,
+                    user_id=self.context.get_current_user_id(),
+                    processor=processor,
+                    error=str(e),
+                    session_id=self.context.get_session_id(),
+                )
+        self.notify_observers(
+                    EventType.ERROR.value, error_event_data
+                )
+
+    def notify_progress(self, processor, output):
+        progress_event_data = NodeProcessorEvent(
+                        instance_name=processor.name,
+                        user_id=self.context.get_current_user_id(),
+                        output=output,
+                        processor_type=processor.processor_type,
+                        session_id=self.context.get_session_id(),
+                    )
+        self.notify_observers(EventType.PROGRESS.value, progress_event_data)
+
+    def notify_current_node_running(self, processor):
+        current_node_running_event_data = NodeProcessorEvent(
+                instance_name=processor.name,
+                user_id=self.context.get_current_user_id(),
+                processor=processor,
+                session_id=self.context.get_session_id(),
+            )
+            
+        self.notify_observers(EventType.CURRENT_NODE_RUNNING.value, current_node_running_event_data)
 
     def load_required_processors(self, config_data, node_name):
         """
@@ -162,74 +194,26 @@ class BasicProcessorLauncher(ProcessorLauncher):
 
     def launch_processors(self, processors):
         for processor in processors.values():
-            current_node_running_event_data = NodeProcessorEvent(
-                instance_name=processor.name,
-                user_id=self.context.get_current_user_id(),
-                processor=processor,
-            )
-            
-            self.notify_observers(EventType.CURRENT_NODE_RUNNING.value, current_node_running_event_data)
-
+            self.notify_current_node_running(processor)
             try :
                     output = processor.process()
-                    progress_event_data = NodeProcessorEvent(
-                        instance_name=processor.name,
-                        user_id=self.context.get_current_user_id(),
-                        output=output,
-                        processor_type=processor.processor_type,
-                    )
-                    self.notify_observers(EventType.PROGRESS.value, progress_event_data)
+                    self.notify_progress(processor, output)
                     
             except Exception as e:
-                error_event_data = NodeProcessorEvent(
-                    instance_name=processor.name,
-                    user_id=self.context.get_current_user_id(),
-                    processor=processor,
-                    error=str(e),
-                )
-                self.notify_observers(
-                    EventType.ERROR.value, error_event_data
-                )
+                self.notify_error(processor, e)
                 raise e
 
     def launch_processors_for_node(self, processors, node_name=None):
         for processor in processors.values():
             if processor.get_output() is None or processor.name == node_name:
                 
-                current_node_running_event_data = NodeProcessorEvent(
-                    instance_name=processor.name,
-                    user_id=self.context.get_current_user_id(),
-                    processor=processor,
-                )
-                
-                self.notify_observers(
-                    EventType.CURRENT_NODE_RUNNING.value, current_node_running_event_data
-                )
-                
+                self.notify_current_node_running(processor)
                 try :
                     output = processor.process()
-                    
-                    progress_event_data = NodeProcessorEvent(
-                        instance_name=processor.name,
-                        user_id=self.context.get_current_user_id(),
-                        output=output,
-                        processor_type=processor.processor_type,
-                    )
-                    self.notify_observers(
-                        EventType.PROGRESS.value,
-                        progress_event_data
-                    )
+                    self.notify_progress(processor, output)
                     
                 except Exception as e:
-                    error_event_data = NodeProcessorEvent(
-                        instance_name=processor.name,
-                        user_id=self.context.get_current_user_id(),
-                        processor=processor,
-                        error=str(e),
-                    )
-                    self.notify_observers(
-                        EventType.ERROR.value, error_event_data
-                    )
+                    self.notify_error(processor, e)
                     raise e
 
             if processor.name == node_name:
