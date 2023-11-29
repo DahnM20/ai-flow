@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-from app.flask.app import app
-from app.flask.sockets import socketio
-from app.flask.routes import *
+from app.flask.socketio_init import flask_app, socketio
+import app.flask.sockets
+import app.flask.routes
 
 if __name__ == "__main__":
     host = os.getenv("HOST", "127.0.0.1")
@@ -28,8 +28,10 @@ if __name__ == "__main__":
         keyfile_path = os.getenv("KEYFILE_PATH", "default/key/path")
         certfile_path = os.getenv("CERTFILE_PATH", "default/cert/path")
         socketio.run(
-            app, host=host, port=port, keyfile=keyfile_path, certfile=certfile_path
+            flask_app, host=host, port=port, keyfile=keyfile_path, certfile=certfile_path
         )
     else:
         root_logger.warning("Protocol set to HTTP")
-        socketio.run(app, port=port, host=host)
+        socketio.run(flask_app, port=port, host=host)
+
+

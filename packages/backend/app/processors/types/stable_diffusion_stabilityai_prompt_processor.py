@@ -4,6 +4,7 @@ from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
 from datetime import datetime
 import requests
+
 import os
 
 
@@ -25,8 +26,24 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
         self.api_host = os.getenv(
             "STABLE_DIFFUSION_STABILITYAI_API_HOST", "https://api.stability.ai"
         )
+        
+    def prepare_and_process_response(self, response):
+        if response.status_code != 200:
+            raise Exception("Non-200 response: " + str(response.text))
 
-    def process(self):
+        data = response.json()
+        first_image = data["artifacts"][0]["base64"]
+        image_data = base64.b64decode(first_image)
+
+        storage = self.get_storage()
+        timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")
+        filename = f"{self.name}-{timestamp_str}.png"
+        url = storage.save(filename, image_data)
+
+        self.set_output(url)
+        return self._output
+    
+    def setup_data_to_send(self):
         self.api_key = self.api_context_data.get_api_key_for_provider("stabilityai")
 
         if self.get_input_processor() is not None:
@@ -44,7 +61,13 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
             "samples": self.samples,
             "steps": 30,
         }
+        
+        return data_to_send
+        
 
+    def process(self):
+        data_to_send = self.setup_data_to_send()
+        
         response = requests.post(
             f"{self.api_host}/v1/generation/{self.engine_id}/text-to-image",
             headers={
@@ -55,22 +78,7 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
             json=data_to_send,
         )
 
-        if response.status_code != 200:
-            raise Exception("Non-200 response: " + str(response.text))
-
-        data = response.json()
-        first_image = data["artifacts"][0]["base64"]
-        image_data = base64.b64decode(first_image)
-
-        storage = self.get_storage()
-
-        timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")
-        filename = f"{self.name}-{timestamp_str}.png"
-        url = storage.save(filename, image_data)
-
-        self.set_output(url)
-
-        return self._output
+        return self.prepare_and_process_response(response)
 
     def updateContext(self, data):
         pass

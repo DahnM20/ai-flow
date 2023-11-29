@@ -1,5 +1,6 @@
 from typing import List
 from injector import Injector, Binder, Module
+from .processors.launcher.async_leaf_processor_launcher import AsyncLeafProcessorLauncher
 
 from .llms.factory.llm_factory import LLMFactory
 from .llms.factory.paid_api_llm_factory import PaidAPILLMFactory
@@ -32,7 +33,7 @@ class StorageModule(Module):
 
 class ProcessorLauncherModule(Module):
     def configure(self, binder: Binder):
-        binder.bind(ProcessorLauncher, to=BasicProcessorLauncher)
+        binder.bind(ProcessorLauncher, to=AsyncLeafProcessorLauncher)
         observer_list = [SocketIOEventEmitter()]
         if is_cloud_env():
             from .processors.observer.simple_stats_logger import SimpleStatsLogger
