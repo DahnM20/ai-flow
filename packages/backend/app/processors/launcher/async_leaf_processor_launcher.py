@@ -1,7 +1,6 @@
 import eventlet
 import logging
 from .basic_processor_launcher import BasicProcessorLauncher
-import traceback
 
 class AsyncLeafProcessorLauncher(BasicProcessorLauncher):
     """
@@ -16,22 +15,12 @@ class AsyncLeafProcessorLauncher(BasicProcessorLauncher):
 
         for processor in processors.values():
             if self.can_run_independently(processors, processor):
-                gt = eventlet.spawn(self.run_processor_async, processor)
+                gt = eventlet.spawn(self.run_processor, processor)
                 greenthreads.append((gt, processor))
             else:
-                self.run_processor_sync(processor)
+                self.run_processor(processor)
 
-    def run_processor_async(self, processor):
-        try:
-            self.notify_current_node_running(processor)
-            output = processor.process()
-            self.notify_progress(processor, output)
-        except Exception as e:
-            self.notify_error(processor, e)
-            traceback.print_exc()
-            raise e
-
-    def run_processor_sync(self, processor):
+    def run_processor(self, processor):
         try:
             self.notify_current_node_running(processor)
             output = processor.process()
