@@ -11,7 +11,7 @@ interface NodeContextType {
     getEdgeIndex: (id: string) => Edge | undefined;
     showOnlyOutput?: boolean;
     isRunning: boolean;
-    currentNodeRunning: string;
+    currentNodesRunning: string[];
     errorCount: number;
     onUpdateNodeData: (nodeId: string, data: any) => void;
     onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void;
@@ -26,7 +26,7 @@ export const NodeContext = createContext<NodeContextType>({
     getEdgeIndex: () => (undefined),
     showOnlyOutput: false,
     isRunning: false,
-    currentNodeRunning: '',
+    currentNodesRunning: [],
     errorCount: 0,
     onUpdateNodeData: () => (undefined),
     onUpdateNodes: () => (undefined),
@@ -34,9 +34,9 @@ export const NodeContext = createContext<NodeContextType>({
     edges: [],
 });
 
-export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes, children }
+export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentNodesRunning, errorCount, onUpdateNodeData, onUpdateNodes, children }
     : {
-        nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodeRunning: string; errorCount: number;
+        nodes: Node[]; edges: Edge[]; showOnlyOutput?: boolean; isRunning: boolean; currentNodesRunning: string[]; errorCount: number;
         onUpdateNodeData: (nodeId: string, data: any) => void;
         onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void;
         children: ReactNode
@@ -73,7 +73,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
     }
 
     return (
-        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodeRunning, errorCount, onUpdateNodeData, onUpdateNodes, nodes, edges }}>
+        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodesRunning, errorCount, onUpdateNodeData, onUpdateNodes, nodes, edges }}>
             {children}
         </NodeContext.Provider>
     );

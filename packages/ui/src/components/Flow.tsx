@@ -43,8 +43,16 @@ function Flow(props: FlowProps) {
   const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
-  const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
+  const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
   const [errorCount, setErrorCount] = useState<number>(0);
+
+  useEffect(() => {
+    const areNodesRunning = currentNodesRunning.length > 0
+    if (props.isRunning !== areNodesRunning) {
+      props.onRunChange(areNodesRunning)
+    }
+
+  }, [currentNodesRunning])
 
   const [{ isOver }, dropRef] = useDrop({
     accept: 'NODE',
@@ -61,12 +69,16 @@ function Flow(props: FlowProps) {
     setReactFlowInstance(reactFlowInstance);
   }
 
-  useSocketListeners(onProgress, onError, onRunEnd, onCurrentNodeRunning)
+  useSocketListeners(onProgress, onError, () => { }, onCurrentNodeRunning)
 
 
   function onProgress(data: any) {
     const nodeToUpdate = data.instanceName as string;
     const output = data.output;
+
+    setCurrentNodesRunning((previous) => {
+      return previous.filter((node) => node != nodeToUpdate);
+    })
 
     if (nodeToUpdate && output) {
       setNodes((currentState) => {
@@ -83,18 +95,18 @@ function Flow(props: FlowProps) {
   }
 
   function onError(data: any) {
+    setCurrentNodesRunning((previous) => {
+      return previous.filter((node) => node != data.instanceName);
+    })
     setCurrentUserMessage({ content: data.error, type: MessageType.Error });
-    props.onRunChange(false);
     setErrorCount(prevErrorCount => prevErrorCount + 1);
     setIsPopupOpen(true);
   }
 
-  function onRunEnd() {
-    props.onRunChange(false);
-  }
-
   function onCurrentNodeRunning(data: any) {
-    setCurrentNodeRunning(data.instanceName);
+    setCurrentNodesRunning((previous) => {
+      return [...previous, data.instanceName];
+    });
   }
 
   useEffect(() => {
@@ -213,7 +225,7 @@ function Flow(props: FlowProps) {
 
   return (
     <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput}
-      isRunning={props.isRunning} currentNodeRunning={currentNodeRunning} errorCount={errorCount}
+      isRunning={props.isRunning} currentNodesRunning={currentNodesRunning} errorCount={errorCount}
       onUpdateNodeData={handleUpdateNodeData} onUpdateNodes={handleUpdateNodes}>
       <div style={{ height: '100%' }} onClick={handleNodesClick} ref={dropRef}>
         <div className="reactflow-wrapper" style={{ height: '100%' }} ref={reactFlowWrapper}>

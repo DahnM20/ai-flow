@@ -21,7 +21,7 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
 
     const outputFieldName = "outputData"
 
-    const { nodes, onUpdateNodeData, currentNodeRunning, isRunning } = useContext(NodeContext);
+    const { nodes, onUpdateNodeData, currentNodesRunning, isRunning } = useContext(NodeContext);
     const [popupOpen, setPopupOpen] = useState(false);
     const { t } = useTranslation('flow');
 
@@ -95,7 +95,7 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
         return formFields;
     };
 
-    const isCurrentNodeRunning = (currentNodeRunning === nodeId && isRunning && outputFieldName === fieldName)
+    const isCurrentNodeRunning = (!!nodeId && currentNodesRunning.includes(nodeId) && isRunning && outputFieldName === fieldName)
 
     const renderLoadingIcon = () => {
         return <div className="w-full h-full flex justify-center items-center text-sky-300">

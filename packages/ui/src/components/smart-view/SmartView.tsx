@@ -19,7 +19,7 @@ interface SmartViewProps {
 
 function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRunning, onRunChange }: SmartViewProps) {
 
-    useSocketListeners(onProgress, onError, onRunEnd, onCurrentNodeRunning)
+    useSocketListeners(onProgress, onError, () => { }, onCurrentNodeRunning)
 
     const initialLayout: Layout = {
         type: 'horizontal',
@@ -31,7 +31,7 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
         ],
     };
 
-    const [currentNodeRunning, setCurrentNodeRunning] = useState<string>('');
+    const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
     const [currentLayout, setCurrentLayout] = useState<Layout | null>(!!tabLayout && !layoutIsEmpty(tabLayout) ? tabLayout : initialLayout);
 
     const nodesRef = useRef(nodes);
@@ -43,9 +43,21 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
         }
     }, [currentLayout?.panes])
 
+    useEffect(() => {
+        const areNodesRunning = currentNodesRunning.length > 0
+        if (isRunning !== areNodesRunning) {
+            onRunChange(areNodesRunning)
+        }
+
+    }, [currentNodesRunning])
+
     function onProgress(data: any) {
         const nodeToUpdate = data.instanceName as string;
         const output = data.output;
+
+        setCurrentNodesRunning((previous) => {
+            return previous.filter((node) => node != nodeToUpdate);
+        })
 
         if (nodeToUpdate && output) {
             const nodesUpdated = [...nodesRef.current]
@@ -63,15 +75,16 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
     }
 
     function onError(data: any) {
+        setCurrentNodesRunning((previous) => {
+            return previous.filter((node) => node != data.instanceName);
+        })
         toastInfoMessage("Error")
     }
 
-    function onRunEnd() {
-        onRunChange(false);
-    }
-
     function onCurrentNodeRunning(data: any) {
-        setCurrentNodeRunning(data.instanceName);
+        setCurrentNodesRunning((previous) => {
+            return [...previous, data.instanceName];
+        })
     }
 
 
@@ -145,7 +158,7 @@ function SmartView({ tabLayout, nodes, edges, onFlowChange, onLayoutChange, isRu
             <div className="ml-10 h-full">
                 <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={false}
                     isRunning={isRunning} errorCount={0}
-                    currentNodeRunning={currentNodeRunning}
+                    currentNodesRunning={currentNodesRunning}
                     onUpdateNodeData={handleUpdateNodeData} onUpdateNodes={handleUpdateNodes}>
                     {
                         !!currentLayout

@@ -14,7 +14,7 @@ interface NodePlayButtonProps {
 }
 
 const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onClick, nodeName }) => {
-  const { runNode, isRunning, currentNodeRunning } = useContext(NodeContext);
+  const { runNode, isRunning, currentNodesRunning } = useContext(NodeContext);
   const [isHovered, setHovered] = useState(false);
 
   const handleClick = () => {
@@ -28,7 +28,7 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onCl
   const handleMouseEnter = () => setHovered(true);
   const handleMouseLeave = () => setHovered(false);
 
-  const isCurrentNodeRunning = isRunning && currentNodeRunning === nodeName;
+  const isCurrentNodeRunning = isRunning && currentNodesRunning.includes(nodeName);
   const isDisabled = isCurrentNodeRunning && !isHovered;
 
   const IconComponent = getIconComponent(isPlaying, isCurrentNodeRunning, hasRun, isHovered);
