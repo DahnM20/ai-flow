@@ -1,15 +1,12 @@
-import eventlet
 
-eventlet.monkey_patch(all=False, socket=True)
-
-from app.flask.app import app
+from app.flask.socketio_init import socketio
 import logging
 import json
 
-from flask import g, session
-from flask_socketio import SocketIO, emit
+from flask import g, request, session
+from flask_socketio import emit
 from ..root_injector import root_injector
-from .utils.constants import SESSION_USER_ID_KEY
+from .utils.constants import API_KEYS_FIELD_NAME, ENV_API_KEYS, SESSION_USER_ID_KEY
 
 from ..authentication.verify_user import (
     verify_access_token,
@@ -29,10 +26,7 @@ import os
 from .decorators import with_flow_data_validations
 from .validators import max_empty_output_data, max_url_input_nodes, max_nodes
 
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
-API_KEYS_FIELD_NAME = "apiKeys"
-ENV_API_KEYS = ["openai_api_key", "stabilityai_api_key", "replicate_api_key"]
 
 def populate_request_global_object(data):
     """
@@ -115,7 +109,7 @@ def handle_process_file(data):
         populate_request_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
         launcher = root_injector.get(ProcessorLauncher)
-        launcher.set_context(ProcessorContextFlaskRequest())
+        launcher.set_context(ProcessorContextFlaskRequest(g, session, request.sid))
 
         if flow_data:
             processors = launcher.load_processors(flow_data)
@@ -151,7 +145,7 @@ def handle_run_node(data):
         node_name = data.get("nodeName")
 
         launcher = root_injector.get(ProcessorLauncher)
-        launcher.set_context(ProcessorContextFlaskRequest())
+        launcher.set_context(ProcessorContextFlaskRequest(g, session, request.sid))
         
         if flow_data and node_name:
             processors = launcher.load_processors_for_node(flow_data, node_name)

@@ -18,3 +18,4 @@ class NodeProcessorEvent:
     processor_type: str = field(default=None)
     processor: Processor = field(default=None)
     error: str = field(default=None)
+    session_id: str = field(default=None)
