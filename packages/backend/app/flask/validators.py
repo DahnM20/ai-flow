@@ -1,7 +1,7 @@
 from ..env_config import is_cloud_env
 
-MAX_NODES_IN_LIVE_DEMO = 10
-MAX_URL_INPUT_NODE_IN_LIVE_DEMO = 2
+MAX_NODES_IN_LIVE_DEMO = 15
+MAX_URL_INPUT_NODE_IN_LIVE_DEMO = 5
 
 
 def max_nodes(flow_data):
