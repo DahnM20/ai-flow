@@ -2,7 +2,7 @@ import { NodeConfig } from "./nodeConfig";
 
 
 const stableVideoDiffusionReplicateNodeConfig: NodeConfig = {
-    nodeName: "Stable Video Diffusion",
+    nodeName: "SVD",
     icon: "FaImage",
     hasInputHandle: true,
     inputNames: ["image"],
