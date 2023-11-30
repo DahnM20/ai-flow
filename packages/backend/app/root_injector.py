@@ -15,7 +15,6 @@ from .processors.factory.processor_factory_iter_modules import (
     ProcessorFactoryIterModules,
 )
 from .processors.launcher.processor_launcher import ProcessorLauncher
-from .processors.launcher.basic_processor_launcher import BasicProcessorLauncher
 
 
 class ProcessorFactoryModule(Module):

@@ -1,8 +1,8 @@
 import eventlet
 import logging
-from .basic_processor_launcher import BasicProcessorLauncher
+from .abstract_topological_processor_launcher import AbstractTopologicalProcessorLauncher
 
-class AsyncLeafProcessorLauncher(BasicProcessorLauncher):
+class AsyncLeafProcessorLauncher(AbstractTopologicalProcessorLauncher):
     """
     This launcher extends the Basic Processor Launcher, maintaining the same topological order for processor execution.
     
@@ -19,6 +19,14 @@ class AsyncLeafProcessorLauncher(BasicProcessorLauncher):
                 greenthreads.append((gt, processor))
             else:
                 self.run_processor(processor)
+    
+    def launch_processors_for_node(self, processors, node_name=None):
+        for processor in processors.values():
+            if processor.get_output() is None or processor.name == node_name:
+                self.run_processor(processor)
+
+            if processor.name == node_name:
+                break
 
     def run_processor(self, processor):
         try:
@@ -33,9 +41,11 @@ class AsyncLeafProcessorLauncher(BasicProcessorLauncher):
         processor_list = list(processors.values())
         current_index = processor_list.index(current_processor)
         is_last_processor = current_index + 1 == len(processor_list)
+        
+        if not is_last_processor:
+            for next_processor in processor_list[current_index + 1:]:
+                if current_processor in next_processor.get_input_processors():
+                    return False
 
-        if is_last_processor or current_processor not in processor_list[current_index + 1].get_input_processors():
-            logging.info(f"{current_processor.name} can run independently!")
-            return True
-
-        return False
+        logging.info(f"{current_processor.name} can run independently!")
+        return True
