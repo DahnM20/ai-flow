@@ -22,8 +22,9 @@
 
 <div align="center">
 
-## 🎉🚀 v0.5.1 is Now Available 🚀🎉
+## 🎉🚀 v0.5.2 is Now Available 🚀🎉
 
+ 🚀 **Improved performances** | ⚙️ **Nodes async execution**
 
 🚀 **GPT-4-Turbo** | 👀 **GPT-4-Vision** | 🎨 **Dall-E-3**
 </br>
