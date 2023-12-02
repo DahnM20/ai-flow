@@ -78,10 +78,19 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
     def launch_processors_for_node(self, processors: List[Processor], node_name=None):
         for processor in processors.values():
             if processor.get_output() is None or processor.name == node_name:
-                self.run_node(processor)
+                self.run_processor(processor)
 
             if processor.name == node_name:
                 break
+            
+    def run_processor(self, processor):
+        try:
+            self.notify_current_node_running(processor)
+            output = processor.process()
+            self.notify_progress(processor, output)
+        except Exception as e:
+            self.notify_error(processor, e)
+            raise e
 
     def run_node(self, node: Node):
         try:

@@ -4,7 +4,7 @@ from langchain.document_loaders import PlaywrightURLLoader
 from .shared_ressources import scrapping_task_queue
 
 def scrapping_task_processor():
-    logging.info("Starting background scrapping task processor")
+    logging.info("Starting background thread for Playwright")
     
     loader = PlaywrightURLLoader(urls=[], remove_selectors=["header", "footer"])
     while True:
