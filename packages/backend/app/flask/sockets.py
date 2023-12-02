@@ -122,7 +122,7 @@ def handle_process_file(data):
             emit("error", {"error": "Invalid input or missing configuration file"})
     except Exception as e:
         emit("error", {"error": str(e)})
-        # traceback.print_exc()
+        traceback.print_exc()
         logging.error(f"An error occurred: {str(e)}")
 
 
