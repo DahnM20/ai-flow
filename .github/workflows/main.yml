@@ -19,7 +19,7 @@ jobs:
     - name: Move to docker directory and run docker-compose
       run: |
         cd docker
-        docker-compose up -d
+        docker-compose -f docker-compose.it.yml up -d
 
     - name: Run healthcheck script
       run: |

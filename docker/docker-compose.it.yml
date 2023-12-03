@@ -1,0 +1,28 @@
+version: '3.1'
+services:
+  backend:
+    container_name: ai-flow-backend
+    build:
+      context: ../packages/backend/
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5000
+      - DEPLOYMENT_ENV=LOCAL
+      - LOCAL_STORAGE_FOLDER_NAME=local_storage
+      - USE_MOCK=true
+    volumes:
+      - ./ai-flow-backend-storage:/app/local_storage
+
+  frontend:
+    container_name: ai-flow-frontend
+    build:
+      context: ../packages/ui/
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    environment:
+      - REACT_APP_WS_HOST=localhost
+      - REACT_APP_WS_PORT=5000
