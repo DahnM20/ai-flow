@@ -58,10 +58,19 @@ function getJsonFlowWithMissingInputTextProcessFileData(): ProcessFileData {
     };
 }
 
+function createRequestData(flow: any): ProcessFileData {
+    return {
+        jsonFile: JSON.stringify(flow),
+        apiKeys: {
+            openaiApiKey: "apiKey"
+        },
+    };
+}
 export {
     basicJsonFlow,
     jsonFlowWithMissingInputText,
     getBasicProcessFileData,
     getBasicRunNodeData,
-    getJsonFlowWithMissingInputTextProcessFileData
+    getJsonFlowWithMissingInputTextProcessFileData,
+    createRequestData
 };

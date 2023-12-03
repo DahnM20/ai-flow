@@ -1,8 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { expect } from 'chai';
-import { basicJsonFlow, getBasicProcessFileData, getJsonFlowWithMissingInputTextProcessFileData } from '../utils/requestDatas';
+import { basicJsonFlow, getBasicRunNodeData, getJsonFlowWithMissingInputTextProcessFileData } from '../../utils/requestDatas';
 
-describe('process_file event tests', function () {
+describe('run_node event tests', function () {
     this.timeout(5000);
 
     let socket: Socket;
@@ -23,25 +23,10 @@ describe('process_file event tests', function () {
         socket.disconnect();
     });
 
-    it('process_file should trigger run_end event', function (done) {
-        const processFileData = getBasicProcessFileData();
+    it('run_node should trigger progress event', function (done) {
+        const runNodeData = getBasicRunNodeData();
 
-        socket.emit('process_file', processFileData);
-
-        socket.once('run_end', (data) => {
-            expect(data).to.have.property('output');
-            done();
-        });
-
-        socket.once('error', (error) => {
-            done(new Error(`Error event received: ${JSON.stringify(error)}`));
-        });
-    });
-
-    it('process_file should trigger progress event', function (done) {
-        const processFileData = getBasicProcessFileData();
-
-        socket.emit('process_file', processFileData);
+        socket.emit('run_node', runNodeData);
 
         socket.once('progress', (data) => {
             expect(data).to.have.property('output').to.equal(basicJsonFlow[0].inputText);
@@ -54,10 +39,10 @@ describe('process_file event tests', function () {
         });
     });
 
-    it('process_file should trigger current_node_running event', function (done) {
-        const processFileData = getBasicProcessFileData();
+    it('run_node should trigger current_node_running event', function (done) {
+        const runNodeData = getBasicRunNodeData();
 
-        socket.emit('process_file', processFileData);
+        socket.emit('run_node', runNodeData);
 
         socket.once('current_node_running', (data) => {
             expect(data).to.have.property('instanceName').to.equal(basicJsonFlow[0].name);
@@ -69,10 +54,10 @@ describe('process_file event tests', function () {
         });
     });
 
-    it('process_file with missing input should trigger error event', function (done) {
+    it('run_node with missing input should trigger error event', function (done) {
         const processFileData = getJsonFlowWithMissingInputTextProcessFileData();
 
-        socket.emit('process_file', processFileData);
+        socket.emit('run_node', processFileData);
         socket.once('error', (error) => {
             done();
         });
