@@ -10,7 +10,10 @@ from app.processors.factory.processor_factory_iter_modules  import ProcessorFact
 @singleton
 class ProcessorFactoryMock(ProcessorFactoryIterModules):
     MIN_DELAY = 0.1
-    MAX_DELAY = 3
+    MAX_DELAY = 1
+    
+    NON_MOCKED_PROCESSORS = ["input-text", "input-image"]
+    
     def __init__(self, fake_text_output=None, fake_img_output=None, fake_multiple_output=None, with_delay=False):
         super().__init__()
         self._mock_processors = {}
@@ -18,13 +21,8 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
         self.fake_img_output = fake_img_output
         self.fake_multiple_output = fake_multiple_output
         self.with_delay = with_delay
-
-    def create_processor(self, config, api_context_data=None, storage_strategy=None):
-        processor_type = config["processorType"]
-        processor_class = self._processors.get(processor_type)
-        if not processor_class:
-            raise ValueError(f"Processor type '{processor_type}' not supported")
-
+        
+    def create_mock_processor(self,config, processor_type, processor_class): 
         mock_processor = MagicMock(spec=processor_class)
         
         mock_processor.name = config.get("name", "default_processor_name")
@@ -61,3 +59,17 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
         self._mock_processors[processor_type] = mock_processor
 
         return mock_processor
+
+    def create_processor(self, config, api_context_data=None, storage_strategy=None):
+        processor_type = config["processorType"]
+        processor_class = self._processors.get(processor_type)
+        if not processor_class:
+            raise ValueError(f"Processor type '{processor_type}' not supported")
+        
+        if processor_type in ProcessorFactoryMock.NON_MOCKED_PROCESSORS:
+            processor = processor_class(config=config)
+        else : 
+            processor = self.create_mock_processor(config, processor_type, processor_class)
+        
+        return processor
+        
