@@ -35,7 +35,7 @@ export const useSocketListeners = (
 
     function defaultOnDisconnect(reason: string) {
         if (reason === 'transport close') {
-            toastInfoMessage(t('socketConnectionLost'));
+            toastInfoMessage(t('socketConnectionLost'), 'socket-connection-lost');
         }
     }
 

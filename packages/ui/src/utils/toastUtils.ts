@@ -2,8 +2,9 @@ import { FaGithub } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import { toast } from "react-toastify";
 
-export function toastInfoMessage(message: string) {
+export function toastInfoMessage(message: string, id?: string) {
   toast.info(message, {
+    toastId: id,
     position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,
