@@ -1,5 +1,6 @@
 from typing import List
 from injector import Injector, Binder, Module
+from tests.utils.processor_factory_mock import ProcessorFactoryMock
 from .processors.launcher.async_leaf_processor_launcher import AsyncLeafProcessorLauncher
 from .processors.launcher.async_processor_launcher import AsyncProcessorLauncher
 
@@ -10,7 +11,7 @@ from .processors.observer.observer import Observer
 from .storage.local_storage_strategy import LocalStorageStrategy
 from .storage.s3_storage_strategy import S3StorageStrategy
 from .storage.storage_strategy import StorageStrategy
-from .env_config import is_cloud_env
+from .env_config import is_cloud_env, is_mock_env
 from .processors.factory.processor_factory import ProcessorFactory
 from .processors.factory.processor_factory_iter_modules import (
     ProcessorFactoryIterModules,
@@ -20,7 +21,11 @@ from .processors.launcher.processor_launcher import ProcessorLauncher
 
 class ProcessorFactoryModule(Module):
     def configure(self, binder: Binder):
-        binder.bind(ProcessorFactory, to=ProcessorFactoryIterModules)
+        if is_mock_env() : 
+            fake_factory = ProcessorFactoryMock(with_delay=True)
+            binder.bind(ProcessorFactory, to=fake_factory)
+        else : 
+            binder.bind(ProcessorFactory, to=ProcessorFactoryIterModules)
 
 
 class StorageModule(Module):
