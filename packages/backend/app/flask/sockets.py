@@ -1,4 +1,10 @@
+import eventlet
+eventlet.monkey_patch(all=False, socket=True)
 
+from ..authentication.user_details import UserDetails
+from ..authentication.authenticator import Authenticator
+
+from app.flask.socketio_init import flask_app
 from app.flask.socketio_init import socketio
 import logging
 import json
@@ -8,17 +14,6 @@ from flask_socketio import emit
 from ..root_injector import root_injector
 from .utils.constants import API_KEYS_FIELD_NAME, ENV_API_KEYS, SESSION_USER_ID_KEY
 
-from ..authentication.verify_user import (
-    verify_access_token,
-    verify_id_token,
-)
-
-from ..authentication.cognito_utils import (
-    get_cognito_app_client_id,
-    get_cognito_keys,
-    get_user_details,
-    get_user_id_from_cognito_details,
-)
 from ..processors.launcher.processor_launcher import ProcessorLauncher
 from ..processors.context.processor_context_flask_request import ProcessorContextFlaskRequest
 import traceback
@@ -57,16 +52,15 @@ def populate_request_global_object(data):
             else:
                 raise Exception(f"No {key} provided in data.")
 
-def log_in_user(user_access_jwt):
+def log_in_user(user_details: UserDetails):
     """
     This function is responsible for logging in a user by setting the session context. 
     The session is shared between multiple requests and saved with a client-side (/!\) signed cookie (using the secret_key).
     """
-    user_details = get_user_details(user_access_jwt)
     user = get_or_create_user(user_details)
         
     if user is not None :
-        session[SESSION_USER_ID_KEY] = get_user_id_from_cognito_details(user_details)
+        session[SESSION_USER_ID_KEY] = user_details.get_id()
         logging.info("Logged in")
 
 def reset_session_context():
@@ -81,14 +75,15 @@ def handle_connect():
 @socketio.on("auth")
 def handle_connect(data):
     logging.debug("Auth received")
+    
+    authenticator = root_injector.get(Authenticator)
 
     user_authentication_jwt = data.get("idToken")
     user_access_jwt = data.get("accessToken")
-    keys = get_cognito_keys()
-    app_client_id = get_cognito_app_client_id()
 
-    if verify_id_token(user_authentication_jwt, keys, app_client_id) and verify_access_token(user_access_jwt, keys, app_client_id):
-        log_in_user(user_access_jwt)
+    if authenticator.authenticate_user(user_authentication_jwt, user_access_jwt):
+        user_details = authenticator.get_user_details(user_access_jwt)
+        log_in_user(user_details)
     else:
         reset_session_context()
 
