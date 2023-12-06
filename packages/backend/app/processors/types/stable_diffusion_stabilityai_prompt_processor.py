@@ -8,8 +8,10 @@ import requests
 import os
 
 
+from .processor_type_name_utils import STABLE_DIFFUSION_STABILITYAI_PROMPT
+
 class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
-    processor_type = "stable-diffusion-stabilityai-prompt"
+    processor_type = STABLE_DIFFUSION_STABILITYAI_PROMPT
 
     def __init__(self, config, api_context_data:ProcessorContext):
         super().__init__(config, api_context_data)

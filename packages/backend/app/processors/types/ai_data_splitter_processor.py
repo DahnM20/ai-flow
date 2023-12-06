@@ -5,8 +5,10 @@ from ...root_injector import root_injector
 
 from llama_index.llms.base import ChatMessage
 
+from .processor_type_name_utils import AI_DATA_SPLITTER
+
 class AIDataSplitterProcessor(APIContextProcessor):
-    processor_type = "ai-data-splitter"
+    processor_type = AI_DATA_SPLITTER
     SPLIT_CHAR = ";"
 
     def __init__(self, config, api_context_data:ProcessorContext,custom_llm_factory=None):

@@ -2,8 +2,10 @@ from .llm_prompt_processor import LLMPromptProcessor
 
 from llama_index.llms.base import ChatMessage
 
+
+from .processor_type_name_utils import AI_ACTION
 class AIActionProcessor(LLMPromptProcessor):
-    processor_type = "ai-action"
+    processor_type = AI_ACTION
 
     def __init__(self, config, api_context_data):
         super().__init__(config, api_context_data)

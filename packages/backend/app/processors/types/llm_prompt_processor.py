@@ -4,11 +4,12 @@ from ...llms.prompt_engine.vector_index_prompt_engine import VectorIndexPromptEn
 from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
 
+from .processor_type_name_utils import LLM_PROMPT
 from llama_index.llms.base import ChatMessage
 
 
 class LLMPromptProcessor(APIContextProcessor):
-    processor_type = "llm-prompt"
+    processor_type = LLM_PROMPT
     DEFAULT_MODEL = "gpt-4"
 
     def __init__(self, config, api_context_data: ProcessorContext):

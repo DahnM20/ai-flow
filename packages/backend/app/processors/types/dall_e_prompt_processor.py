@@ -3,9 +3,10 @@ from .processor import APIContextProcessor
 
 from openai import OpenAI
 
+from .processor_type_name_utils import DALLE_PROMPT
 
 class DallEPromptProcessor(APIContextProcessor):
-    processor_type = "dalle-prompt"
+    processor_type = DALLE_PROMPT
     
     DEFAULT_MODEL = "dall-e-3"
     DEFAULT_SIZE = "1024x1024"

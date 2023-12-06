@@ -1,11 +1,11 @@
 from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
-
+from .processor_type_name_utils import GPT_VISION
 from openai import OpenAI
 from urllib.parse import urlparse
 
 class GPTVisionProcessor(APIContextProcessor):
-    processor_type = "gpt-vision"
+    processor_type = GPT_VISION
     DEFAULT_MODEL = "gpt-4-vision-preview"
 
     def __init__(self, config, api_context_data: ProcessorContext):

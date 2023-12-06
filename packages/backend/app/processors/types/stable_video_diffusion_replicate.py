@@ -4,9 +4,10 @@ from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
 import replicate
 
+from .processor_type_name_utils import STABLE_VIDEO_DIFFUSION_REPLICATE
 
 class StableVideoDiffusionReplicaterocessor(APIContextProcessor):
-    processor_type = "stable-video-diffusion-replicate"
+    processor_type = STABLE_VIDEO_DIFFUSION_REPLICATE
     
     stable_video_diffusion_model = "stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438"
 

@@ -3,6 +3,8 @@ import re
 from ...llms.factory.llm_factory import LLMFactory
 from ...root_injector import root_injector
 
+from .processor_type_name_utils import MERGER_PROMPT
+
 from enum import Enum
 
 from llama_index.llms.base import ChatMessage
@@ -13,7 +15,7 @@ class MergeModeEnum(Enum):
 
 
 class MergeProcessor(APIContextProcessor):
-    processor_type = "merger-prompt"
+    processor_type = MERGER_PROMPT
     DEFAULT_MODEL = "gpt-4-1106-preview"
 
     def __init__(self, config, api_context_data, custom_llm_factory=None):

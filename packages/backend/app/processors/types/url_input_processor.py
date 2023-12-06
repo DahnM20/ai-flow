@@ -5,10 +5,11 @@ from .processor import SimpleProcessor
 
 from ...tasks.shared_ressources import scrapping_task_queue
 
+from .processor_type_name_utils import URL_INPUT
 
 class URLInputProcessor(SimpleProcessor):
     WAIT_TIMEOUT = 60
-    processor_type = "url_input"
+    processor_type = URL_INPUT
 
     def __init__(self, config):
         super().__init__(config)
