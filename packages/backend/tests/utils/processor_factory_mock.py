@@ -46,13 +46,17 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
             mock_processor.set_output(output)
             return output
         
+        def fake_process_raise_error(*args, **kwargs):
+            logging.error("MockProcessor - Fake Error")
+            raise Exception("Mock Processor error")
+        
         def fake_add_input_processor(input_processor):
             mock_processor.input_processors.append(input_processor)
         
         def get_input_processors():
             return mock_processor.input_processors
 
-        mock_processor.process = fake_process
+        mock_processor.process = fake_process if config.get("raiseError", False) == False else fake_process_raise_error
         mock_processor.add_input_processor = fake_add_input_processor
         mock_processor.get_input_processors = get_input_processors
         

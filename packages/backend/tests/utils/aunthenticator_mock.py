@@ -8,4 +8,4 @@ class AuthenticatorMock(Authenticator):
         return True
 
     def get_user_details(self, access_token: str) -> Optional[UserDetails]:
-        return UserDetails("1", "test@email.com")
+        return UserDetails("0", "test@email.com")
