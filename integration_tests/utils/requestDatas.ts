@@ -30,6 +30,92 @@ const jsonFlowWithMissingInputText = [
     }
 ];
 
+
+export const flowWithOneNonFreeNode = [
+    {
+        inputs: [],
+        name: "1#stable-diffusion-stabilityai-prompt",
+        processorType: "stable-diffusion-stabilityai-prompt",
+    },
+];
+
+export const sequentialFlow = [
+    {
+        inputs: [],
+        name: "1#llm-prompt",
+        processorType: "llm-prompt",
+        raiseError: false,
+    },
+    {
+        inputs: [
+            {
+                "inputNode": "1#llm-prompt",
+                "inputNodeOutputKey": 0
+            }
+        ],
+        name: "2#llm-prompt",
+        processorType: "llm-prompt",
+        raiseError: false,
+    },
+    {
+        inputs: [
+            {
+                "inputNode": "2#llm-prompt",
+                "inputNodeOutputKey": 0
+            }
+        ],
+        name: "3#stable-diffusion-stabilityai-prompt",
+        processorType: "stable-diffusion-stabilityai-prompt",
+        raiseError: false,
+    }
+];
+
+export const flowWithoutLinks = [
+    {
+        inputs: [],
+        name: "1#llm-prompt",
+        processorType: "llm-prompt",
+        model: "gpt-4",
+        prompt: "hi",
+        raiseError: false,
+    },
+    {
+        inputs: [],
+        name: "2#llm-prompt",
+        processorType: "llm-prompt",
+        model: "gpt-4",
+        prompt: "hi",
+        raiseError: false,
+    },
+    {
+        inputs: [],
+        name: "3#stable-diffusion-stabilityai-prompt",
+        processorType: "stable-diffusion-stabilityai-prompt",
+        raiseError: false,
+    }
+];
+
+export const flowFreeNodesWithoutLink = [
+    {
+        inputs: [],
+        name: "1#input-text",
+        processorType: "input-text",
+        inputText: "fake",
+    },
+    {
+        inputs: [],
+        name: "2#input-text",
+        processorType: "input-text",
+        inputText: "fake",
+    },
+    {
+        inputs: [],
+        name: "3#input-text",
+        processorType: "input-text",
+        inputText: "fake",
+    }
+];
+
 function getBasicProcessFileData(): ProcessFileData {
     return {
         jsonFile: JSON.stringify(basicJsonFlow),

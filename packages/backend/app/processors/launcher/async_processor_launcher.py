@@ -72,7 +72,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
         while nodes:
             for id, node in nodes.items():
                 if node.state == AsyncProcessorLauncher.NodeState.ERROR:
-                    nodes = []
+                    nodes = {}
                     break
                 if (
                     node.state == AsyncProcessorLauncher.NodeState.PENDING
@@ -122,5 +122,5 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
         except Exception as e:
             node.state = AsyncProcessorLauncher.NodeState.ERROR
             self.notify_error(node.get_processor(), e)
-            # traceback.print_exc()
+            traceback.print_exc()
             raise e
