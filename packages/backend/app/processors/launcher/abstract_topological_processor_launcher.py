@@ -98,7 +98,7 @@ class AbstractTopologicalProcessorLauncher(ProcessorLauncher):
                     instance_name=processor.name,
                     user_id=self.context.get_current_user_id(),
                     processor=processor,
-                    error=str(e),
+                    error=e,
                     session_id=self.context.get_session_id(),
                 )
         self.notify_observers(

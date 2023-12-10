@@ -23,6 +23,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
         PENDING = 1
         RUNNING = 2
         COMPLETED = 3
+        ERROR = 4
     
     class Node:
         def __init__(self, id:str, parent_ids:List[str], processor: Processor):
@@ -34,7 +35,13 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
 
         def run(self):
             self.state = AsyncProcessorLauncher.NodeState.RUNNING
-            self.output = self.processor.process()
+            
+            try:
+                self.output = self.processor.process()
+            except Exception as e:
+                self.state = AsyncProcessorLauncher.NodeState.ERROR
+                raise e
+            
             self.state = AsyncProcessorLauncher.NodeState.COMPLETED
             return self.output
         
@@ -68,7 +75,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
             logging.debug(f"Remaining nodes: {[node.id for node in nodes.values()]}")
             
     def remove_completed_nodes(self, nodes:List[Node]):
-        return {id: n for id, n in nodes.items() if n.state != AsyncProcessorLauncher.NodeState.COMPLETED}
+        return {id: n for id, n in nodes.items() if n.state  not in [AsyncProcessorLauncher.NodeState.COMPLETED, AsyncProcessorLauncher.NodeState.ERROR]}
             
     def can_run(self,node: Node, nodes:List[Node]):
         # If parents aren't in the list, then the node can run
@@ -98,6 +105,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
             output = node.run()
             self.notify_progress(node.get_processor(), output)
         except Exception as e:
+            node.state = AsyncProcessorLauncher.NodeState.ERROR
             self.notify_error(node.get_processor(), e)
-            traceback.print_exc()
+            #traceback.print_exc()
             raise e

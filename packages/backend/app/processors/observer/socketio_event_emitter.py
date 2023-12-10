@@ -34,7 +34,7 @@ class SocketIOEventEmitter(Observer):
             json_event["output"] = data.output
             
         if data.error is not None:
-            json_event["error"] = data.error
+            json_event["error"] = str(data.error)
             
         
         try:
