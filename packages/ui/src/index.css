@@ -27,14 +27,16 @@ body,
 
 body.dark-theme {
   --scrollbar-track-color: #2A2A2A;
-  --scrollbar-thumb-color: #555;
+  --scrollbar-thumb-color: rgba(85, 85, 85, 0.431);
   --scrollbar-border-color: #2A2A2A;
   --scrollbar-thumb-hover-color: #666;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
+  height: 5px;
 }
+
 
 ::-webkit-scrollbar-track {
   background-color: var(--scrollbar-track-color);
