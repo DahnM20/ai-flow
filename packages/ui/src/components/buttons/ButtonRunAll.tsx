@@ -25,7 +25,7 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({ onClick, isRunning }) => {
 
                 {
                     !isRunning &&
-                    <div>
+                    <div className="hidden md:flex">
                         RUN ALL
                     </div>
                 }
