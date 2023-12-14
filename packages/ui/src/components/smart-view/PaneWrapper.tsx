@@ -45,8 +45,10 @@ function PaneWrapper({ children, name, fieldName, showTools, onSplitHorizontal, 
                                 </p>
                             }
                         </div>
-                        <div className="absolute right-0 space-x-2 pr-2 bg-[#1E1E1F]/80 rounded-xl
-                    group-hover:opacity-100 invisible group-hover:visible transition-opacity ease-linear duration-200">
+                        <div className={`absolute right-0 space-x-2 px-2 
+                        ${name
+                                ? 'bg-[#1E1E1F] rounded-xl group-hover:opacity-100 invisible group-hover:visible transition-opacity ease-linear duration-200'
+                                : ""}`}>
                             {
                                 name && <NodePlayButton nodeName={name} />
                             }
