@@ -11,6 +11,7 @@ const handleInPrefix = 'handle-in';
 const handleOutPrefix = 'handle-out';
 const handleSeparator = '-';
 const indexKeyHandleOut = 2;
+const indexKeyHandleIn = 2;
 
 export function getConfig() {
   return CONFIG;
@@ -45,6 +46,10 @@ export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   return sortedNodes;
 }
 
+export const getTargetHandleKey: any = (edge: Edge) => {
+  return edge?.targetHandle?.split(handleSeparator)[indexKeyHandleIn];
+}
+
 export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates: boolean): NodeData[] {
   return nodes.map((node: Node) => {
     withCoordinates = true
@@ -53,7 +58,7 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
 
     const inputEdges = edges.filter((edge: any) => edge.target === id);
 
-    const inputs = inputEdges.map((edge: any, index) => {
+    const inputs = inputEdges.map((edge: any) => {
       const inputId = edge?.source || '';
 
       const keySplitted = edge?.sourceHandle?.split(handleSeparator)[indexKeyHandleOut]
@@ -61,8 +66,10 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
 
       const inputNode = nodes.find((node: any) => node.id === inputId)?.data.name || '';
 
+      const targetHandleKey = getTargetHandleKey(edge)
+
       return {
-        inputName: !!node.data.config?.inputNames ? node.data.config.inputNames[index] : undefined,
+        inputName: !!node.data.config?.inputNames ? node.data.config.inputNames[targetHandleKey] : undefined,
         inputNode,
         inputNodeOutputKey,
       }

@@ -52,6 +52,12 @@ body.dark-theme {
   background-color: var(--scrollbar-thumb-hover-color);
 }
 
+.custom-handle.react-flow__handle {
+  top: initial;
+  left: initial;
+  transform: initial;
+}
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';

@@ -60,7 +60,6 @@ export const NodeForm = styled.div`
 export const NodeLabel = styled.label`
   font-size: 14px;
   font-weight: bold;
-  color: ${({ theme }) => theme.text};
 `;
 
 export const NodeTextarea = styled.textarea`
@@ -87,7 +86,6 @@ export const NodeIcon = styled.div`
 `;
 
 export const NodeContainer = styled.div`
-  position: relative;
   width: 450px;
   
   background: ${({ theme }) => theme.nodeGradientBg};

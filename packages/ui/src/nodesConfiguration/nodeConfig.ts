@@ -20,11 +20,17 @@ export interface Option {
 
 export interface Field {
     name: string;
-    type: 'input' | 'textarea' | 'select' | 'option' | 'inputNameBar';
+    type: 'input' | 'textarea' | 'select' | 'option' | 'inputNameBar' | 'boolean' | 'slider';
     label?: string;
     placeholder?: string;
+    defaultValue?: string;
+    max?: number;
+    min?: number;
     options?: Option[];
     hideIfParent?: boolean;
+    optionnal?: boolean;
+    hasHandle?: boolean;
+    isLinked?: boolean;
 }
 
 export interface NodeConfig {

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 interface NodeContextType {
     runNode: (nodeName: string) => boolean;
     hasParent: (id: string) => boolean;
+    getIncomingEdges: (id: string) => Edge[] | undefined;
     getEdgeIndex: (id: string) => Edge | undefined;
     showOnlyOutput?: boolean;
     isRunning: boolean;
@@ -23,6 +24,7 @@ interface NodeContextType {
 export const NodeContext = createContext<NodeContextType>({
     runNode: () => (false),
     hasParent: () => (false),
+    getIncomingEdges: () => (undefined),
     getEdgeIndex: () => (undefined),
     showOnlyOutput: false,
     isRunning: false,
@@ -68,12 +70,16 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
         return !!edges.find(edge => edge.target === id)
     }
 
+    const getIncomingEdges = (id: string) => {
+        return edges.filter(edge => edge.target === id)
+    }
+
     const getEdgeIndex = (id: string) => {
         return edges.find(edge => edge.target === id)
     }
 
     return (
-        <NodeContext.Provider value={{ runNode, hasParent, getEdgeIndex, showOnlyOutput, isRunning, currentNodesRunning, errorCount, onUpdateNodeData, onUpdateNodes, nodes, edges }}>
+        <NodeContext.Provider value={{ runNode, hasParent, getIncomingEdges, getEdgeIndex, showOnlyOutput, isRunning, currentNodesRunning, errorCount, onUpdateNodeData, onUpdateNodes, nodes, edges }}>
             {children}
         </NodeContext.Provider>
     );

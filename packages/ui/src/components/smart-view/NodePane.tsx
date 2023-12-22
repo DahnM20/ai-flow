@@ -52,15 +52,14 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
         }
     };
 
-    const handleNodeDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleNodeDataChange = (fieldName: string, value: any) => {
         if (currentNode && currentNode.data) {
             onUpdateNodeData(currentNode.id, {
                 ...currentNode.data,
-                [event.target.name]: event.target.value,
+                [fieldName]: value,
             });
-
-        }
-    };
+        };
+    }
 
 
     const formFields = useFormFields(

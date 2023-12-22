@@ -6,11 +6,12 @@ import AIDataSplitterNode from "../components/nodes/AIDataSplitterNode";
 import AIActionNode from "../components/nodes/AIActionNode";
 import EaseOut from "../components/shared/motions/EaseOut";
 import NodeWrapper from "../components/shared/NodeWrapper";
+import DynamicFieldsNode from "../components/nodes/DynamicFieldsNode";
 
 /**
  * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
  */
-export const allNodeTypes = ['gpt', 'file-drop', 'url_input', 'dalle-prompt', 'data-splitter', 'ai-data-splitter', 'input-text', 'input-image', 'gpt-prompt', 'youtube_transcript_input', 'llm-prompt', 'ai-action', 'stable-diffusion-stabilityai-prompt', 'merger-prompt', 'gpt-vision', 'stable-video-diffusion-replicate'] as const;
+export const allNodeTypes = ['gpt', 'file-drop', 'url_input', 'dalle-prompt', 'data-splitter', 'ai-data-splitter', 'input-text', 'input-image', 'gpt-prompt', 'youtube_transcript_input', 'llm-prompt', 'ai-action', 'stable-diffusion-stabilityai-prompt', 'merger-prompt', 'gpt-vision', 'stable-video-diffusion-replicate', 'replicate'] as const;
 export type NodeType = typeof allNodeTypes[number];
 
 
@@ -22,6 +23,7 @@ export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> =
   "data-splitter": DataSplitterNode,
   "ai-data-splitter": AIDataSplitterNode,
   "ai-action": AIActionNode,
+  "replicate": DynamicFieldsNode,
 };
 
 /**

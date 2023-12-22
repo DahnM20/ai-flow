@@ -100,7 +100,7 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
   );
 };
 
-const Popup = styled.div<{ isOpen: boolean }>`
+export const Popup = styled.div<{ isOpen: boolean }>`
     position: fixed;
     top: 0;
     left: 0;

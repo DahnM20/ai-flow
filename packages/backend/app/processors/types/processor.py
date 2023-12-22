@@ -34,7 +34,7 @@ class Processor(ABC):
     @abstractmethod
     def updateContext(self, data):
         pass
-    
+
     def get_output(self, input_key=None):
         output = getattr(self, "_output", None)
         if output is not None and isinstance(output, list) and len(output) > 0:
@@ -76,6 +76,11 @@ class Processor(ABC):
             return None
         return [input.get("inputNodeOutputKey") for input in self.inputs]
 
+    def get_input_names(self):
+        if self.inputs is None or len(self.inputs) == 0:
+            return None
+        return [input.get("inputName") for input in self.inputs]
+
     def add_input_processor(self, input_processor):
         self.input_processors.append(input_processor)
 
@@ -98,6 +103,6 @@ class SimpleProcessor(Processor):
 
 
 class APIContextProcessor(Processor):
-    def __init__(self, config, api_context_data:ProcessorContext=None):
+    def __init__(self, config, api_context_data: ProcessorContext = None):
         super().__init__(config)
         self.api_context_data = api_context_data

@@ -88,10 +88,10 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
         updateNodeInternals: updateNodeInternals
     });
 
-    const handleNodeDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleNodeDataChange = (fieldName: string, value: any) => {
         onUpdateNodeData(id, {
             ...data,
-            [event.target.name]: event.target.value,
+            [fieldName]: value,
         });
         updateNodeInternals(id);
     };
