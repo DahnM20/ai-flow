@@ -1,21 +1,25 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react"
-import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import axios from 'axios';
-import { Field } from "../../nodesConfiguration/nodeConfig";
-import { t } from "i18next";
-import HandleWrapper from "../handles/HandleWrapper";
-import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeBand, NodeContent, NodeForm, NodeLogs, NodeLogsText, NodeInput, NodeLabel, InputHandle } from "../shared/Node.styles";
-import NodePlayButton from "../shared/nodes-parts/NodePlayButton";
-import useHandleShowOutput from "../../hooks/useHandleShowOutput";
-import { useRefreshOnAppearanceChange } from "../../hooks/useRefreshOnAppearanceChange";
-import useHandlePositions from "../../hooks/useHandlePositions";
+import { MouseEvent, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useIsPlaying } from "../../hooks/useIsPlaying";
-import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
-import { NodeContext } from "../providers/NodeProvider";
-import { FaCog, FaOldRepublic } from "react-icons/fa";
-import NodePopup from "../popups/NodePopup";
+import { FaOldRepublic } from "react-icons/fa";
+import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { useFormFields } from "../../hooks/useFormFields";
+import useHandlePositions from "../../hooks/useHandlePositions";
+import useHandleShowOutput from "../../hooks/useHandleShowOutput";
+import { useIsPlaying } from "../../hooks/useIsPlaying";
+import { useRefreshOnAppearanceChange } from "../../hooks/useRefreshOnAppearanceChange";
+import { Field } from "../../nodesConfiguration/nodeConfig";
+import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
+import HandleWrapper from "../handles/HandleWrapper";
+import NodePopup from "../popups/NodePopup";
+import { NodeContext } from "../providers/NodeProvider";
+import { NodeBand, NodeContainer, NodeContent, NodeForm, NodeHeader, NodeIcon, NodeLogs, NodeLogsText, NodeTitle } from "../shared/Node.styles";
+import NodePlayButton from "../shared/nodes-parts/NodePlayButton";
+import styled from 'styled-components';
+import { FiCopy } from 'react-icons/fi';
+import ImageUrlOutput from '../shared/nodes-parts/ImageUrlOutput';
+import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
+import VideoUrlOutput from '../shared/nodes-parts/VideoUrlOutput';
 
 interface DynamicFieldsNodeData {
     handles: any;
@@ -36,12 +40,12 @@ interface DynamicFieldsProps extends NodeProps {
 
 export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsProps) {
 
-    const [fields, setFields] = useState<Field[]>(!!data.dynamicValues?.fields ? data.dynamicValues.fields : [])
-    const [model, setModel] = useState<string>(!!data.dynamicValues?.dynamicNodeModel ? data.dynamicValues.dynamicNodeModel : null)
-
-    const { t } = useTranslation('flow');
+    const [fields, setFields] = useState<Field[]>(!!data.config?.fields ? data.config.fields : [])
+    const [model, setModel] = useState<string>(!!data.config?.nodeName ? data.config.nodeName : null)
 
     const { getIncomingEdges, showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);
+
+    const { t } = useTranslation('flow');
 
     const updateNodeInternals = useUpdateNodeInternals();
 
@@ -90,8 +94,8 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         onUpdateNodeData(id, {
             ...data,
             ...fieldsToNullify,
-            dynamicValues: {
-                ...data.dynamicValues,
+            config: {
+                ...data.config,
                 fields: fieldsUpdated
             }
         });
@@ -122,9 +126,11 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         id,
         handleNodeDataChange,
         () => { },
-        () => { },
         undefined,
-        () => { }
+        undefined,
+        undefined,
+        undefined,
+        true,
     );
 
 
@@ -148,7 +154,8 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
 
     function convertOpenAPISchemaToNodeConfig(schema: any) {
-        console.log(schema.properties)
+        const requiredFields = schema.required || [];
+
         return Object.entries(schema.properties).map(([name, prop]: [string, any]) => {
             const field: Field = {
                 name,
@@ -160,6 +167,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                 min: prop.minimum,
                 hasHandle: true,
                 isLinked: false,
+                optionnal: !requiredFields.includes(name),
             };
 
             return field;
@@ -181,7 +189,9 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
         async function configureNode() {
             const schema = await getConfig()
-            const fields = convertOpenAPISchemaToNodeConfig(schema)
+            const fields = convertOpenAPISchemaToNodeConfig(schema.inputSchema)
+            const modelId = schema.modelId
+            setModel(model + ':' + modelId)
             console.log(fields)
             setFields(fields)
         }
@@ -209,12 +219,9 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
             config: {
                 ...data.config,
                 inputNames: fields.map((field) => field.name),
-            },
-            dynamicValues: {
                 fields: fields,
-                dynamicNodeModel: model
+                nodeName: model,
             }
-
         });
     }, [fields])
 
@@ -238,11 +245,66 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         setShowPopup(!showPopup);
     }
 
+    function getOutputType(): string {
+        if (!data.outputData || !data.lastRun) return "mardown"
+
+        let outputData = data.outputData;
+        let output = ""
+
+        if (typeof (output) !== 'string') {
+            output = outputData[0];
+        } else {
+            output = outputData[0];
+        }
+
+
+        const outputType = (output.endsWith(".png") || output.endsWith(".jpg"))
+            ? "imageUrl"
+            : (output.endsWith(".mp4") || output.endsWith(".mov"))
+                ? "videoUrl"
+                : "markdown";
+
+        return outputType
+    }
+
+
+    function getOutputComponent(): any {
+        if (!data.outputData || !data.lastRun) return <></>
+
+        let outputData = data.outputData;
+        let output = ""
+
+        if (typeof (output) !== 'string') {
+            output = outputData[0];
+        } else {
+            output = outputData[0];
+        }
+
+
+        switch (getOutputType()) {
+            case 'imageUrl':
+                return <ImageUrlOutput url={output} name={data.name} />
+            case 'videoUrl':
+                return <VideoUrlOutput url={output} name={data.name} />
+            default:
+                return <MarkdownOutput data={output} />
+        }
+    }
+
+    function handleCopyToClipboard(event: MouseEvent<SVGElement, globalThis.MouseEvent>) {
+
+    }
+
+    const outputType = getOutputType()
+
+    const outputIsMedia = (outputType === 'imageUrl'
+        || outputType === 'imageBase64'
+        || outputType === 'videoUrl') && !!data.outputData;
 
     return (<NodeContainer key={nodeId} ref={nodeRef} >
         <NodeHeader onDoubleClick={toggleCollapsed}>
             <NodeIcon><FaOldRepublic /></NodeIcon>
-            <NodeTitle>{model}</NodeTitle>
+            <NodeTitle className='px-5 overflow-hidden whitespace-nowrap text-ellipsis'>{model}</NodeTitle>
             <HandleWrapper id={outputHandleId} position={
                 !!data?.handles && data.handles[outputHandleId]
                     ? data.handles[outputHandleId]
@@ -265,14 +327,36 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                             >
                                 Click to Select Model
                             </button>
-                            {showPopup && <NodePopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate}>
-                                <div> hi </div>
-                            </NodePopup>
+                            {
+                                showPopup
+                                && <NodePopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate}>
+                                    <div> hi </div>
+                                </NodePopup>
                             }
                         </div>
                 }
             </NodeForm>
         </NodeContent>
+        <NodeLogs
+            showLogs={showLogs}
+            noPadding={outputIsMedia && showLogs}
+            onClick={() => setShowLogs(!showLogs)}
+        >
+            {showLogs && data.outputData && !outputIsMedia
+                && <StyledCopyIcon className="copy-icon hover:text-white" onClick={(event) => {
+                    handleCopyToClipboard(event);
+                }} />}
+            {!showLogs && data.outputData
+                ? <NodeLogsText className='text-center'>{t('ClickToShowOutput')}</NodeLogsText>
+                : getOutputComponent()}
+        </NodeLogs>
     </NodeContainer>)
 }
+
+const StyledCopyIcon = styled(FiCopy)`
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  z-index: 1;
+  `;
 

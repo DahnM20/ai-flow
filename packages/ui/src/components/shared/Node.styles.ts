@@ -240,9 +240,10 @@ export const NodeInput = styled.input`
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 `;
 
-export const InputHandle = styled(Handle)`
+export const InputHandle = styled(Handle) <{ required?: boolean }>`
   z-index: 45;
-  background: #72c8fa;
+  background:  ${({ required }) => required ? "#F09686" : "#72c8fa"};
+  /* background: #72c8fa; */
   width: 10px;
   height: 10px;
   border-radius: 50%;

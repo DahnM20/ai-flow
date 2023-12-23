@@ -45,12 +45,17 @@ def get_model_openapi_schema(model_id):
     if response.status_code != 200:
         raise Exception(f"Failed to fetch model schema: {response.status_code}")
 
-    schema = response.json().get("latest_version").get("openapi_schema", None)
+    version = response.json().get("latest_version")
+    schema = version.get("openapi_schema", None)
 
     if not schema:
         raise Exception("OpenAPI schema not found in the response")
 
     input_schema = schema["components"]["schemas"]["Input"]
     output_schema = schema["components"]["schemas"]["Output"]
-
-    return input_schema
+    
+    return {
+        "inputSchema": input_schema,
+        "outputSchema": output_schema,
+        "modelId": version["id"],
+    }

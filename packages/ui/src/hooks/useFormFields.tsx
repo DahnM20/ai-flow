@@ -8,14 +8,16 @@ import { generateIdForHandle } from "../utils/flowUtils";
 import { Position } from "reactflow";
 
 
-export function useFormFields(data: any,
+export function useFormFields(
+    data: any,
     id: string,
     handleNodeDataChange: (fieldName: string, value: any) => void,
     handleOptionChange: Function,
-    setDefaultOption: Function,
-    textareaRef: any,
-    hasParent: Function,
-    specificField?: string) {
+    setDefaultOption?: Function,
+    textareaRef?: any,
+    hasParent?: Function,
+    specificField?: string,
+    showHandles?: boolean) {
 
     const { t } = useTranslation('flow');
 
@@ -31,6 +33,9 @@ export function useFormFields(data: any,
     }
 
     useEffect(() => {
+
+        if (!setDefaultOption) return;
+
         const fields = getFields()
         fields?.forEach((field: Field) => {
             if (!data[field.name]) {
@@ -53,7 +58,7 @@ export function useFormFields(data: any,
     }
 
     return fields
-        .filter((field: Field) => hasParent(id) && field.hideIfParent != null ? !field.hideIfParent : true)
+        .filter((field: Field) => !!hasParent && hasParent(id) && field.hideIfParent != null ? !field.hideIfParent : true)
         .filter((field: Field) => specificField ? field.name === specificField : true)
         .map((field: Field, index: number) => {
             const renderField = () => {
@@ -150,16 +155,17 @@ export function useFormFields(data: any,
 
             return (
                 <React.Fragment key={`${id}-${field.name}`}>
-                    {field.label && (
+                    {field.label && field.hasHandle && showHandles && (
                         <div className="flex flex-row items-center space-x-5">
                             <InputHandle
-                                className="handle custom-handle"
+                                className={`handle custom-handle`}
+                                required={!field.optionnal}
                                 type="target"
                                 position={Position.Left}
                                 id={generateIdForHandle(index)}
                             />
                             <NodeLabel className={`${field.isLinked ? "text-sky-400" : ""}`}>
-                                {t(field.name)}
+                                {t(field.name) + `${!field.optionnal ? "(required)" : ""}`}
                             </NodeLabel>
                         </div>
                     )}

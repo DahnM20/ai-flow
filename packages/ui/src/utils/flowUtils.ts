@@ -76,19 +76,29 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
 
     });
 
-    const { a, nodeType, output, input, config, ...nodeDataForConfig } = node.data;
+    const { a, nodeType, output, input, config, ...nodeValues } = node.data;
+
+    const { fields, nodeName, ...additionnalConfig } = config
 
     if (withCoordinates) {
       return {
         inputs,
-        ...nodeDataForConfig,
+        ...nodeValues,
+        config: {
+          fields,
+          nodeName
+        },
         x: node.position.x,
         y: node.position.y,
       }
     } else {
       return {
         inputs,
-        ...nodeDataForConfig,
+        ...nodeValues,
+        config: {
+          fields,
+          nodeName
+        },
         // output,
       };
     }

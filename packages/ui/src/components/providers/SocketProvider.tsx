@@ -2,6 +2,7 @@ import React, { createContext, useState, ReactNode, useEffect, useContext } from
 import { io, Socket } from "socket.io-client";
 import { UserContext } from './UserProvider';
 import { APIKeys } from '../popups/configPopup/ApiKeys';
+import { getWsUrl } from '../../utils/config';
 
 export type WSConfiguration = {
     apiKeys?: APIKeys;
@@ -17,12 +18,6 @@ interface ISocketContext {
 interface SocketProviderProps {
     children: ReactNode;
 }
-
-const WS_HOST = process.env.REACT_APP_WS_HOST || 'localhost';
-const WS_PORT = process.env.REACT_APP_WS_PORT || 5000;
-const USE_HTTPS = process.env.REACT_APP_USE_HTTPS || 'false';
-
-const protocol = USE_HTTPS.toLowerCase() === 'true' ? 'https' : 'http';
 
 export const SocketContext = createContext<ISocketContext>({
     socket: null,
@@ -64,7 +59,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     function connectSocket(configuration: WSConfiguration): Socket {
         setConfig(configuration);
 
-        const newSocket = io(`${protocol}://${WS_HOST}:${WS_PORT}`);
+        const newSocket = io(getWsUrl());
 
         if (!!user) {
             const idToken = getUserIDToken();
