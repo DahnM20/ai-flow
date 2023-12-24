@@ -20,6 +20,8 @@ import { FiCopy } from 'react-icons/fi';
 import ImageUrlOutput from '../shared/nodes-parts/ImageUrlOutput';
 import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
 import VideoUrlOutput from '../shared/nodes-parts/VideoUrlOutput';
+import useCachedFetch from '../../hooks/useCachedFetch';
+import { getRestApiUrl } from '../../utils/config';
 
 interface DynamicFieldsNodeData {
     handles: any;
@@ -46,6 +48,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
     const { getIncomingEdges, showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);
 
     const { t } = useTranslation('flow');
+    const { fetchCachedData } = useCachedFetch();
 
     const updateNodeInternals = useUpdateNodeInternals();
 
@@ -149,6 +152,8 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
         if (prop.type === "boolean") return "boolean"
 
+        if (prop.type === "integer") return "inputInt"
+
         return "input"
     }
 
@@ -178,10 +183,8 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
         async function getConfig() {
             try {
-                const url = `http://localhost:5000/node/replicate/config/${model}`;
-                const response = await axios.get(url, { params: { processorType: data.processorType } });
-                console.log(response)
-                return response.data;
+                const url = `${getRestApiUrl()}/node/replicate/config/${model}`;
+                return await fetchCachedData(url, `${model}_config`, 600000, { processorType: data.processorType });
             } catch (error) {
                 console.error('Error fetching configuration:', error);
             }
@@ -301,10 +304,12 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         || outputType === 'imageBase64'
         || outputType === 'videoUrl') && !!data.outputData;
 
+    const modelNameToDisplay = model?.includes(':') ? model.split(':')[0] : model;
+
     return (<NodeContainer key={nodeId} ref={nodeRef} >
         <NodeHeader onDoubleClick={toggleCollapsed}>
             <NodeIcon><FaOldRepublic /></NodeIcon>
-            <NodeTitle className='px-5 overflow-hidden whitespace-nowrap text-ellipsis'>{model}</NodeTitle>
+            <NodeTitle className='px-5 overflow-hidden whitespace-nowrap text-ellipsis'>{modelNameToDisplay}</NodeTitle>
             <HandleWrapper id={outputHandleId} position={
                 !!data?.handles && data.handles[outputHandleId]
                     ? data.handles[outputHandleId]
@@ -329,9 +334,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                             </button>
                             {
                                 showPopup
-                                && <NodePopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate}>
-                                    <div> hi </div>
-                                </NodePopup>
+                                && <NodePopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
                             }
                         </div>
                 }
