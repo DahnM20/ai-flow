@@ -32,6 +32,8 @@ body.dark-theme {
   --scrollbar-thumb-hover-color: #666;
 }
 
+
+/* Custom Slider Styles */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -52,6 +54,7 @@ body.dark-theme {
   background-color: var(--scrollbar-thumb-hover-color);
 }
 
+/* Custom React Flow Handle Style */
 .custom-handle.react-flow__handle {
   top: initial;
   left: initial;

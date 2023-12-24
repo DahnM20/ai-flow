@@ -6,7 +6,8 @@ import React, { useEffect } from "react";
 import Switch from "react-switch";
 import { generateIdForHandle } from "../utils/flowUtils";
 import { Position } from "reactflow";
-
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 export function useFormFields(
     data: any,
@@ -73,6 +74,16 @@ export function useFormFields(
                                 onChange={handleEventNodeDataChange}
                             />
                         );
+                    case 'inputInt':
+                        return (
+                            <NodeInput
+                                name={field.name}
+                                className="nodrag"
+                                defaultValue={data[field.name]}
+                                placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
+                                onChange={(event) => handleNodeDataChange(event.target.name, +event.target.value)}
+                            />
+                        )
                     case 'textarea':
                         return (
                             <NodeTextarea
@@ -120,32 +131,45 @@ export function useFormFields(
                         );
                     case 'slider':
                         return (
-                            <div className="flex flex-row items-center w-full px-4">
-                                <input
-                                    type="range"
-                                    className="w-full nodrag"
-                                    name={field.name}
+                            <div className="flex flex-row items-center w-full justify-center">
+                                <p className="w-1/12 text-left text-blue-200 text-sm">
+                                    {data[field.name]}
+                                </p>
+                                <Slider className="nodrag w-11/12"
                                     defaultValue={data[field.name]}
-                                    onChange={handleEventNodeDataChange}
+                                    onChange={(value) => handleNodeDataChange(field.name, value)}
+                                    onChangeComplete={(value) => handleNodeDataChange(field.name, value)}
+                                    styles={{
+                                        track: {
+                                            backgroundColor: 'rgba(94,209,232,0.85)',
+                                        },
+                                        handle: {
+                                            //borderColor: 'blue',
+                                            borderColor: 'rgba(94,209,232,0.85)',
+                                            backgroundColor: 'rgba(94,209,232,1)',
+                                        },
+                                        rail: {
+                                            backgroundColor: 'rgba(54, 54, 54, 0.8)',
+                                        },
+                                    }}
                                     min={field.min}
                                     max={field.max}
-                                    step={1}
-                                />
+                                    step={1} />
                             </div>
                         )
                     case 'boolean':
                         return (
-                            <div className="flex flex-row items-center w-full px-4">
+                            <div className="flex flex-row items-center w-full">
                                 <Switch onChange={(checked: boolean) => handleNodeDataChange(field.name, checked)} checked={data[field.name]} className="nodrag"
                                     onColor="#86d3ff"
                                     onHandleColor="#2693e6"
-                                    handleDiameter={30}
+                                    handleDiameter={20}
                                     uncheckedIcon={false}
                                     checkedIcon={false}
                                     boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
                                     activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                    height={20}
-                                    width={48} />
+                                    height={15}
+                                    width={30} />
                             </div>
                         )
                     default:
@@ -164,8 +188,10 @@ export function useFormFields(
                                 position={Position.Left}
                                 id={generateIdForHandle(index)}
                             />
-                            <NodeLabel className={`${field.isLinked ? "text-sky-400" : ""}`}>
-                                {t(field.name) + `${!field.optionnal ? "(required)" : ""}`}
+                            <NodeLabel className={`font-md
+                                        ${field.isLinked ? "text-sky-400" : ""}  
+                                        ${!field.optionnal ? "font-bold" : ""}`}>
+                                {t(field.name) + `${!field.optionnal ? " *" : ""}`}
                             </NodeLabel>
                         </div>
                     )}

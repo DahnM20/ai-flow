@@ -20,7 +20,7 @@ export interface Option {
 
 export interface Field {
     name: string;
-    type: 'input' | 'textarea' | 'select' | 'option' | 'inputNameBar' | 'boolean' | 'slider';
+    type: 'input' | 'inputInt' | 'textarea' | 'select' | 'option' | 'inputNameBar' | 'boolean' | 'slider';
     label?: string;
     placeholder?: string;
     defaultValue?: string;

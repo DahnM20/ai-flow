@@ -28,6 +28,7 @@
     "lodash.debounce": "^4.0.8",
     "polished": "^4.2.2",
     "postcss": "^8.4.23",
+    "rc-slider": "^10.5.0",
     "rdndmb-html5-to-touch": "^8.0.3",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",

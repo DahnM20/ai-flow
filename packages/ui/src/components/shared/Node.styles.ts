@@ -58,8 +58,6 @@ export const NodeForm = styled.div`
 `;
 
 export const NodeLabel = styled.label`
-  font-size: 14px;
-  font-weight: bold;
 `;
 
 export const NodeTextarea = styled.textarea`
@@ -248,7 +246,9 @@ export const InputHandle = styled(Handle) <{ required?: boolean }>`
   height: 10px;
   border-radius: 50%;
   border:none;
-  box-shadow: 0 0 10px 2px rgba(114, 200, 250, 0.3);
+  box-shadow: ${({ required }) => required
+    ? "0 0 10px 2px rgba(240, 150, 134, 0.5)"
+    : "0 0 10px 2px rgba(114, 200, 250, 0.3)"};
   transition: background 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {

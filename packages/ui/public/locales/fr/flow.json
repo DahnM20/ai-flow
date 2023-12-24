@@ -37,6 +37,7 @@
     "LLMPrompt": "LLM Prompt",
     "AiDataSplitter": "Data Splitter",
     "MergerNode": "Merge",
+    "ReplicateModel": "Replicate",
     "inputHelp": "Ce noeud sert à saisir du texte.",
     "urlInputHelp": "Saisissez une URL valide et le noeud récupérera les données de cette URL si javascript n'est pas nécessaire pour charger la page.",
     "youtubeTranscriptHelp": "Ce noeud récupère les sous titres d'une vidéo Youtube à partir de son URL",

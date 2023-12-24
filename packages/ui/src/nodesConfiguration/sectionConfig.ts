@@ -34,7 +34,7 @@ function getAllDndNode(): DnDNode[] {
     const nonGenericNodeConfig: DnDNode[] = [
         { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp', section: 'llm' },
         { label: 'AiDataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp', section: 'tools' },
-        { label: 'ReplicateModel', type: 'replicate', helpMessage: 'replicateHelp', section: 'tools' },
+        { label: 'ReplicateModel', type: 'replicate', helpMessage: 'replicateHelp', section: 'llm' },
         //{ label: 'FileDropNode', type: 'file-drop', helpMessage: 'fileDropHelp', section: 'input' },
     ]
     return transformNodeConfigsToDndNode(nodeConfigs).concat(nonGenericNodeConfig);
