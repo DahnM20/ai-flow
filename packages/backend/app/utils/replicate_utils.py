@@ -1,22 +1,27 @@
 import os
 import requests
+from ..env_config import get_replicate_api_key
 import replicate
-from dotenv import load_dotenv
-
-load_dotenv()
+from cachetools import TTLCache, cached
 
 
+lru_short_ttl_cache = TTLCache(maxsize=100, ttl=600)
+lru_long_ttl_cache = TTLCache(maxsize=100, ttl=12000)
+
+REPLICATE_API_URL = "https://api.replicate.com"
+REPLICATE_MODEL_API_URL = f"{REPLICATE_API_URL}/v1/models"
+
+
+@cached(lru_short_ttl_cache)
 def get_replicate_models():
-    api_token = os.getenv("REPLICATE_API_KEY")
+    api_token = get_replicate_api_key()
 
     if not api_token:
         raise Exception("Replicate API token not found in environment variables")
 
-    url = "https://api.replicate.com/v1/models"
-
     headers = {"Authorization": f"Token {api_token}"}
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(REPLICATE_MODEL_API_URL, headers=headers)
 
     if response.status_code != 200:
         raise Exception(f"Failed to fetch models: {response.status_code}")
@@ -26,17 +31,19 @@ def get_replicate_models():
     return models
 
 
+@cached(lru_short_ttl_cache)
 def get_replicate_models_sdk():
-    api_token = os.getenv("REPLICATE_API_KEY")
+    api_token = get_replicate_api_key()
     api = replicate.Client(api_token=api_token)
     tti = api.collections.get("text-to-image").models
 
     return tti
 
 
+@cached(lru_long_ttl_cache)
 def get_model_openapi_schema(model_id):
-    api_token = os.getenv("REPLICATE_API_KEY")
-    url = f"https://api.replicate.com/v1/models/{model_id}"
+    api_token = get_replicate_api_key()
+    url = f"{REPLICATE_MODEL_API_URL}/{model_id}"
 
     headers = {"Authorization": f"Token {api_token}"}
 
@@ -53,7 +60,7 @@ def get_model_openapi_schema(model_id):
 
     input_schema = schema["components"]["schemas"]["Input"]
     output_schema = schema["components"]["schemas"]["Output"]
-    
+
     return {
         "inputSchema": input_schema,
         "outputSchema": output_schema,
