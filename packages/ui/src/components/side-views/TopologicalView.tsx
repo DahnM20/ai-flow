@@ -2,9 +2,9 @@ import React, { memo } from 'react';
 import { Edge, Node } from 'reactflow';
 import { convertFlowToJson, nodesTopologicalSort } from '../../utils/flowUtils';
 import styled from 'styled-components';
-import ImageUrlOutput from '../shared/nodes-parts/ImageUrlOutput';
+import ImageUrlOutput from '../shared/node-output/ImageUrlOutput';
 import { NodeData } from '../../types/node';
-import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
+import MarkdownOutput from '../shared/node-output/MarkdownOutput';
 
 interface TopologicalViewProps {
     nodes: Node[];

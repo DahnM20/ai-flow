@@ -14,14 +14,15 @@ import HandleWrapper from "../handles/HandleWrapper";
 import NodePopup from "../popups/NodePopup";
 import { NodeContext } from "../providers/NodeProvider";
 import { NodeBand, NodeContainer, NodeContent, NodeForm, NodeHeader, NodeIcon, NodeLogs, NodeLogsText, NodeTitle } from "../shared/Node.styles";
-import NodePlayButton from "../shared/nodes-parts/NodePlayButton";
+import NodePlayButton from "../shared/node-button/NodePlayButton";
 import styled from 'styled-components';
 import { FiCopy } from 'react-icons/fi';
-import ImageUrlOutput from '../shared/nodes-parts/ImageUrlOutput';
-import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
-import VideoUrlOutput from '../shared/nodes-parts/VideoUrlOutput';
+import ImageUrlOutput from '../shared/node-output/ImageUrlOutput';
+import MarkdownOutput from '../shared/node-output/MarkdownOutput';
+import VideoUrlOutput from '../shared/node-output/VideoUrlOutput';
 import useCachedFetch from '../../hooks/useCachedFetch';
 import { getRestApiUrl } from '../../utils/config';
+import AudioUrlOutput from '../shared/node-output/AudioUrlOutput';
 
 interface DynamicFieldsNodeData {
     handles: any;
@@ -249,7 +250,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
     }
 
     function getOutputType(): string {
-        if (!data.outputData || !data.lastRun) return "mardown"
+        if (!data.outputData || !data.lastRun) return "markdown"
 
         let outputData = data.outputData;
         let output = ""
@@ -265,7 +266,9 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
             ? "imageUrl"
             : (output.endsWith(".mp4") || output.endsWith(".mov"))
                 ? "videoUrl"
-                : "markdown";
+                : (output.endsWith(".mp3") || output.endsWith(".wav"))
+                    ? "audioUrl"
+                    : "markdown";
 
         return outputType
     }
@@ -289,6 +292,8 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                 return <ImageUrlOutput url={output} name={data.name} />
             case 'videoUrl':
                 return <VideoUrlOutput url={output} name={data.name} />
+            case 'audioUrl':
+                return <AudioUrlOutput url={output} name={data.name} />
             default:
                 return <MarkdownOutput data={output} />
         }
@@ -302,7 +307,8 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
     const outputIsMedia = (outputType === 'imageUrl'
         || outputType === 'imageBase64'
-        || outputType === 'videoUrl') && !!data.outputData;
+        || outputType === 'videoUrl'
+        || outputType === 'audioUrl') && !!data.outputData;
 
     const modelNameToDisplay = model?.includes(':') ? model.split(':')[0] : model;
 

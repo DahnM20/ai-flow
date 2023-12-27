@@ -4,7 +4,7 @@ import { MdOutlineVerticalSplit, MdHorizontalSplit } from 'react-icons/md';
 import { getConfigViaType } from "../../nodesConfiguration/nodeConfig";
 import { NodeType } from "../../utils/mappings";
 import { ICON_MAP } from "../shared/NodeIcons";
-import NodePlayButton from "../shared/nodes-parts/NodePlayButton";
+import NodePlayButton from "../shared/node-button/NodePlayButton";
 
 interface PaneWrapperProps {
     children: JSX.Element;

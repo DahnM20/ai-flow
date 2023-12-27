@@ -6,9 +6,11 @@ import AttachNodeDialog from "./AttachNodeDialog";
 import { Field } from "../../nodesConfiguration/nodeConfig";
 import { useTranslation } from "react-i18next";
 import { useFormFields } from "../../hooks/useFormFields";
-import MarkdownOutput from "../shared/nodes-parts/MarkdownOutput";
-import ImageUrlOutput from "../shared/nodes-parts/ImageUrlOutput";
+import MarkdownOutput from "../shared/node-output/MarkdownOutput";
+import ImageUrlOutput from "../shared/node-output/ImageUrlOutput";
 import { LoadingIcon } from "../shared/Node.styles";
+import VideoUrlOutput from "../shared/node-output/VideoUrlOutput";
+import AudioUrlOutput from "../shared/node-output/AudioUrlOutput";
 
 interface NodePaneProps {
     nodeId?: string;
@@ -81,10 +83,21 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
 
         const isOutputDataField = fieldName === outputFieldName;
         const isImageUrlOutput = currentNode.data?.config?.outputType === "imageUrl";
+        const isVideoUrlOutput = currentNode.data?.config?.outputType === "videoUrl";
+        const isAudioUrlOutput = currentNode.data?.config?.outputType === "audioUrl";
+
         const data = currentNode.data?.[fieldName] || "No output";
 
         if (isOutputDataField && isImageUrlOutput) {
-            return data ? <ImageUrlOutput url={data} name="" /> : <p>No Output</p>;
+            return data ? <ImageUrlOutput url={data} name={fieldName} /> : <p>No Output</p>;
+        }
+
+        if (isOutputDataField && isVideoUrlOutput) {
+            return data ? <VideoUrlOutput url={data} name={fieldName} /> : <p>No Output</p>;
+        }
+
+        if (isOutputDataField && isAudioUrlOutput) {
+            return data ? <AudioUrlOutput url={data} name={fieldName} /> : <p>No Output</p>;
         }
 
         if (isOutputDataField && !isImageUrlOutput) {

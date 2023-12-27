@@ -1,43 +1,45 @@
 import React from 'react';
 import { FaDownload } from 'react-icons/fa';
 import styled from 'styled-components';
+import { getGeneratedFileName } from './outputUtils';
 
-interface VideoUrlOutputProps {
+interface AudioUrlOutputProps {
     url: string;
     name: string;
 }
 
-const VideoUrlOutput: React.FC<VideoUrlOutputProps> = ({ url, name }) => {
+const AudioUrlOutput: React.FC<AudioUrlOutputProps> = ({ url, name }) => {
 
     const handleDownloadClick = (event: React.MouseEvent) => {
         event.stopPropagation();
         const link = document.createElement('a');
         link.href = url;
-        link.download = name + '-output-generated.mp4';
+        link.download = getGeneratedFileName(url, name);
         link.target = '_blank';
         link.click();
     };
 
-    return <OutputVideoContainer>
-        <OutputVideo controls src={url} /> { }
+    return <OutputAudioContainer>
+        <OutputAudio controls src={url} />
         <div
             className='absolute top-2 right-3 px-1 py-1 text-slate-100 text-2xl bg-slate-600/75 hover:bg-sky-600/90 rounded-md'
             onClick={handleDownloadClick}>
             <FaDownload />
         </div>
-    </OutputVideoContainer>
+    </OutputAudioContainer>
 };
 
-const OutputVideoContainer = styled.div`
+const OutputAudioContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   margin-top: 10px;
 `;
 
-const OutputVideo = styled.video`
-  display: block;
+const OutputAudio = styled.audio`
+  min-height: 100px;
   width: 100%;
-  height: auto;
-  border-radius: 8px;
 `;
 
-export default VideoUrlOutput;
+export default AudioUrlOutput;

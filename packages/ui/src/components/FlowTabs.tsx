@@ -17,6 +17,7 @@ import { UserContext } from './providers/UserProvider';
 import SmartView from './smart-view/SmartView';
 import { Layout } from './smart-view/RenderLayout';
 import Tab from './Tab';
+import WelcomePopup from './popups/WelcomePopup';
 
 
 export interface FlowTab {
@@ -230,22 +231,12 @@ const FlowTabs = () => {
           <div className='pr-2'>
             <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
           </div>
-          {/* <ToggleThemeButton onClick={toggleTheme}>
-            {dark ? <FiMoon /> : <FiSun />}
-          </ToggleThemeButton> */}
         </RightControls>
       </TabsContainer>
-      {/* {
-        mode === 'flow' &&
-        <FeedbackIcon className="absolute right-10 top-0 h-24 w-28 
-                              px-6 
-                              bg-sky-950 text-slate-100 
-                              z-10 rounded-b-md sm:invisible md:visible cursor-pointer
-                              flex items-center justify-center
-                              hover:text-slate-50 hover:bg-sky-900" onClick={handleClickFeedback}>
-          <div className='absolute bottom-0 pb-1' > Feedback ? </div>
-        </FeedbackIcon>
-      } */}
+
+      {/* <WelcomePopup show={true} onClose={function (): void {
+        throw new Error("Function not implemented.");
+      }} /> */}
       <FlowWrapper mode={mode} openConfig={openConfig} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)} onChangeMode={handleChangeMode}>
         {
           mode === 'flow' &&

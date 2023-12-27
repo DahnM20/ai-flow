@@ -1,0 +1,21 @@
+{
+    "versionInfo": {
+        "versionNumber": "1.2.3",
+        "description": "🚀 Here's what's new in version 1.2.3"
+    },
+    "features": [
+        {
+            "title": "Feature 1",
+            "description": "Description"
+        },
+        {
+            "title": "Feature 2",
+            "description": "Description 2"
+        },
+        {
+            "title": "Feature 3",
+            "description": "Description 3"
+        }
+    ],
+    "imageSrc": "path/to/english/image.jpg"
+}

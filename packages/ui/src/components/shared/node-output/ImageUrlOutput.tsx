@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaDownload } from 'react-icons/fa';
 import styled from 'styled-components';
+import { getGeneratedFileName } from './outputUtils';
 
 interface ImageUrlOutputProps {
   url: string;
@@ -13,10 +14,11 @@ const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
     event.stopPropagation();
     const link = document.createElement('a');
     link.href = url;
-    link.download = name + '-output-generated.jpg';
+    link.download = getGeneratedFileName(url, name);
     link.target = '_blank';
     link.click();
   };
+
 
   return <OutputImageContainer>
     <OutputImage src={url} alt="Output Image" />

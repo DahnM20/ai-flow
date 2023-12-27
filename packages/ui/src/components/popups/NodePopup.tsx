@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import useCachedFetch from '../../hooks/useCachedFetch';
 import { LoadingIcon } from '../shared/Node.styles';
 import { getRestApiUrl } from '../../utils/config';
+import DefaultPopup from './DefaultPopup';
 
 interface NodePopupProps {
     show: boolean;
@@ -50,17 +50,14 @@ export default function NodePopup({ show, onClose, onValidate }: NodePopupProps)
 
     }, [])
 
-    if (!show) return null;
-
     if (loading) return (
         <LoadingIcon className='ml-5' />
     )
 
 
-    return ReactDOM.createPortal(
-        <div className='flex flex-col fixed bg-black/50 w-full h-full top-0 left-0 justify-center items-center z-50' onClick={onClose}>
-            <div className='bg-zinc-900 shadow text-slate-200 w-4/6 rounded-xl p-5 overflow-auto my-4' onClick={(e) => { e.stopPropagation() }}>
-
+    return (
+        <DefaultPopup onClose={onClose} show={show}>
+            <div className='flex flex-col bg-zinc-900 shadow text-slate-200 w-full rounded-xl p-5 overflow-auto my-4' >
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full'>
                     {
                         models && models.map((model: { modelName: string; coverImage: string; description: string; }) => {
@@ -96,7 +93,5 @@ export default function NodePopup({ show, onClose, onValidate }: NodePopupProps)
                     }
                 </div>
             </div>
-        </div>,
-        document.body
-    );
+        </DefaultPopup>)
 };

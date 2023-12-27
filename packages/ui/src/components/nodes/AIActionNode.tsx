@@ -14,8 +14,8 @@ import { generateIdForHandle } from '../../utils/flowUtils';
 import HandleWrapper from '../handles/HandleWrapper';
 import { NodeContext } from '../providers/NodeProvider';
 import { NodeBand, NodeLogs, NodeLogsText } from '../shared/Node.styles';
-import MarkdownOutput from '../shared/nodes-parts/MarkdownOutput';
-import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
+import MarkdownOutput from '../shared/node-output/MarkdownOutput';
+import NodePlayButton from '../shared/node-button/NodePlayButton';
 
 interface AIActionNodeData extends GenericNodeData {
     inputText: string;

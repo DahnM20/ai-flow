@@ -3,7 +3,7 @@ import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
 import { NodeContext } from '../providers/NodeProvider';
-import NodePlayButton from '../shared/nodes-parts/NodePlayButton';
+import NodePlayButton from '../shared/node-button/NodePlayButton';
 import { generateIdForHandle } from '../../utils/flowUtils';
 import { InputHandle, NodeTitle, OutputHandle } from '../shared/Node.styles';
 import { useIsPlaying } from '../../hooks/useIsPlaying';
