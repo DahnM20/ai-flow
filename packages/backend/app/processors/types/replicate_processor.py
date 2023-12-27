@@ -21,15 +21,22 @@ class ReplicateProcessor(APIContextProcessor):
         self.schema = get_model_openapi_schema(model_name_withouth_version)
 
     def process(self):
-        inputs_processor = self.get_input_processors()
-        inputs_output_keys = self.get_input_node_output_keys()
-        inputs_names = self.get_input_names()
+        input_processors = self.get_input_processors()
+        input_output_keys = self.get_input_node_output_keys()
+        input_names = self.get_input_names()
 
-        for input_processor, input_name, output_key in zip(
-            inputs_processor, inputs_names, inputs_output_keys
-        ):
-            output = input_processor.get_output(output_key)
-            self.config[input_name] = output
+        if input_processors:
+            for processor, name, key in zip(
+                input_processors, input_names, input_output_keys
+            ):
+                output = processor.get_output(key)
+
+                input_type = self._get_nested_input_schema_property(name, "type")
+
+                if input_type == "integer":
+                    output = int(output)
+
+                self.config[name] = output
 
         api = replicate.Client(
             api_token=self.api_context_data.get_api_key_for_provider("replicate")
@@ -49,6 +56,14 @@ class ReplicateProcessor(APIContextProcessor):
 
         self.set_output(output)
         return self._output
+
+    def _get_nested_input_schema_property(self, property_name, nested_key):
+        return (
+            self.schema.get("inputSchema", {})
+            .get("properties", {})
+            .get(property_name, {})
+            .get(nested_key)
+        )
 
     def updateContext(self, data):
         pass
