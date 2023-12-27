@@ -5,34 +5,33 @@ on:
     branches:
       - main
       - develop
-      - multiple-input
+      - dynamic-fields-node
 
 jobs:
   build_and_test:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Move to docker directory and run docker-compose
-      run: |
-        cd docker
-        docker-compose -f docker-compose.it.yml up -d
+      - name: Move to docker directory and run docker-compose
+        run: |
+          cd docker
+          docker-compose -f docker-compose.it.yml up -d
 
-    - name: Run healthcheck script
-      run: |
-        cd docker
-        chmod +x healthcheck.sh
-        ./healthcheck.sh http://localhost:5000/healthcheck
-    
-    - name: Run Python unit tests
-      run: |
-        docker exec ai-flow-backend python -m unittest discover -s tests/unit -p '*test_*.py'
+      - name: Run healthcheck script
+        run: |
+          cd docker
+          chmod +x healthcheck.sh
+          ./healthcheck.sh http://localhost:5000/healthcheck
 
-    - name: Run integration tests
-      run: |
-        cd integration_tests
-        npm i
-        npm run test
+      - name: Run Python unit tests
+        run: |
+          docker exec ai-flow-backend python -m unittest discover -s tests/unit -p '*test_*.py'
+
+      - name: Run integration tests
+        run: |
+          cd integration_tests
+          npm i
+          npm run test

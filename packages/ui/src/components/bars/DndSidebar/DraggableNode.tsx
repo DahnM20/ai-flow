@@ -1,13 +1,22 @@
 import { useDrag } from "react-dnd";
 import { useTranslation } from "react-i18next";
 import { DnDNode } from "../../../nodesConfiguration/sectionConfig";
-import { memo } from "react";
+import { ReactNode, memo } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import styled from "styled-components";
 
 interface DraggableNodeProps {
     node: DnDNode;
 }
+
+interface NodeBadgeProps {
+    children?: ReactNode;
+}
+const NodeBadge = ({ children }: NodeBadgeProps) => (
+    <div className="absolute top-3 left-3 transform -rotate-45 translate-x-[-50%] translate-y-[-50%] bg-sky-700 text-white px-5 text-xs">
+        {children}
+    </div>
+);
 
 const DraggableNode = (props: DraggableNodeProps) => {
 
@@ -25,6 +34,7 @@ const DraggableNode = (props: DraggableNodeProps) => {
             }}
             className='flex flex-row w-full gap-x-1 text-md 
                   text-slate-200 
+                  relative
                   justify-center items-center text-center
                   h-auto py-2 rounded-md 
                   hover:ring-2
@@ -32,6 +42,7 @@ const DraggableNode = (props: DraggableNodeProps) => {
                   font-medium
                   shadow-md
                   cursor-grab
+                  overflow-hidden
                   group'
         >
             {t(props.node.label)}
@@ -44,6 +55,12 @@ const DraggableNode = (props: DraggableNodeProps) => {
                         data-tooltip-content={t(props.node.helpMessage)}
                     />
                 </div>
+            }
+            {
+                props.node.isBeta &&
+                <NodeBadge>
+                    Beta
+                </NodeBadge>
             }
         </Node>
     );
