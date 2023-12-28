@@ -1,6 +1,10 @@
 import logging
 
-from ...utils.replicate_utils import get_model_openapi_schema
+from ...utils.replicate_utils import (
+    get_input_schema_from_open_API_schema,
+    get_model_openapi_schema,
+    get_output_schema_from_open_API_schema,
+)
 from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
 import replicate
@@ -42,7 +46,7 @@ class ReplicateProcessor(APIContextProcessor):
             api_token=self.api_context_data.get_api_key_for_provider("replicate")
         )
 
-        output_schema = self.schema["outputSchema"]
+        output_schema = get_output_schema_from_open_API_schema(self.schema["schema"])
         logging.debug(f"Output schema : {output_schema}")
         output_type = output_schema["type"]
 
@@ -59,7 +63,7 @@ class ReplicateProcessor(APIContextProcessor):
 
     def _get_nested_input_schema_property(self, property_name, nested_key):
         return (
-            self.schema.get("inputSchema", {})
+            get_input_schema_from_open_API_schema(self.schema.get("schema", {}))
             .get("properties", {})
             .get(property_name, {})
             .get(nested_key)

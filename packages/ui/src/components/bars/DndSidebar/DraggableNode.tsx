@@ -36,7 +36,7 @@ const DraggableNode = (props: DraggableNodeProps) => {
                   text-slate-200 
                   relative
                   justify-center items-center text-center
-                  h-auto py-2 rounded-md 
+                  h-auto py-2 px-3 rounded-md 
                   hover:ring-2
                   hover:ring-slate-200/10
                   font-medium

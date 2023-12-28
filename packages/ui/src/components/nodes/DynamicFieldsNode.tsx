@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { MouseEvent, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaOldRepublic } from "react-icons/fa";
@@ -13,7 +12,7 @@ import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
 import HandleWrapper from "../handles/HandleWrapper";
 import NodePopup from "../popups/NodePopup";
 import { NodeContext } from "../providers/NodeProvider";
-import { NodeBand, NodeContainer, NodeContent, NodeForm, NodeHeader, NodeIcon, NodeLogs, NodeLogsText, NodeTitle } from "../shared/Node.styles";
+import { NodeBand, NodeContainer, NodeContent, NodeForm, NodeHeader, NodeIcon, NodeInput, NodeLogs, NodeLogsText, NodeTitle } from "../shared/Node.styles";
 import NodePlayButton from "../shared/node-button/NodePlayButton";
 import styled from 'styled-components';
 import { FiCopy } from 'react-icons/fi';
@@ -23,6 +22,8 @@ import VideoUrlOutput from '../shared/node-output/VideoUrlOutput';
 import useCachedFetch from '../../hooks/useCachedFetch';
 import { getRestApiUrl } from '../../utils/config';
 import AudioUrlOutput from '../shared/node-output/AudioUrlOutput';
+import { toastInfoMessage } from "../../utils/toastUtils";
+import { convertOpenAPISchemaToNodeConfig, getSchemaFromConfig } from "../../utils/openAPIUtils";
 
 interface DynamicFieldsNodeData {
     handles: any;
@@ -45,6 +46,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
     const [fields, setFields] = useState<Field[]>(!!data.config?.fields ? data.config.fields : [])
     const [model, setModel] = useState<string>(!!data.config?.nodeName ? data.config.nodeName : null)
+    const [modelInput, setModelInput] = useState<string>("");
 
     const { getIncomingEdges, showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);
 
@@ -125,11 +127,19 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         updateNodeInternals(id);
     };
 
+    const handleOptionChange = (name: string, value: string) => {
+        onUpdateNodeData(id, {
+            ...data,
+            [name]: value,
+        });
+        updateNodeInternals(id);
+    };
+
     const formFields = useFormFields(
         data,
         id,
         handleNodeDataChange,
-        () => { },
+        handleOptionChange,
         undefined,
         undefined,
         undefined,
@@ -146,39 +156,6 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         setIsPlaying(true);
     };
 
-    const getNodeTypeFrom = (prop: any) => {
-        if (prop.maximum != null && prop.minimum != null) {
-            return "slider"
-        }
-
-        if (prop.type === "boolean") return "boolean"
-
-        if (prop.type === "integer") return "inputInt"
-
-        return "input"
-    }
-
-
-    function convertOpenAPISchemaToNodeConfig(schema: any) {
-        const requiredFields = schema.required || [];
-
-        return Object.entries(schema.properties).map(([name, prop]: [string, any]) => {
-            const field: Field = {
-                name,
-                type: getNodeTypeFrom(prop),
-                label: prop.title,
-                placeholder: prop.description,
-                defaultValue: prop.default,
-                max: prop.maximum,
-                min: prop.minimum,
-                hasHandle: true,
-                isLinked: false,
-                optionnal: !requiredFields.includes(name),
-            };
-
-            return field;
-        }).filter((field) => !!field.label);
-    }
 
     useEffect(() => {
 
@@ -187,17 +164,29 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                 const url = `${getRestApiUrl()}/node/replicate/config/${model}`;
                 return await fetchCachedData(url, `${model}_config`, 600000, { processorType: data.processorType });
             } catch (error) {
+                toastInfoMessage("Error fetching configuration for " + model)
                 console.error('Error fetching configuration:', error);
+                throw error;
             }
         }
 
         async function configureNode() {
-            const schema = await getConfig()
-            const fields = convertOpenAPISchemaToNodeConfig(schema.inputSchema)
-            const modelId = schema.modelId
+            let config;
+            let fields: Field[] = [];
+            try {
+                config = await getConfig()
+                const inputSchema = getSchemaFromConfig(config, "Input")
+                fields = convertOpenAPISchemaToNodeConfig(inputSchema, config)
+            } catch (error) {
+                console.error('Error fetching configuration:', error);
+            }
+            if (!config) return
+            const modelId = config.modelId
             setModel(model + ':' + modelId)
             console.log(fields)
             setFields(fields)
+
+
         }
 
         if (fields.length > 0 || !model) return;
@@ -299,6 +288,10 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         }
     }
 
+    function handleLoadModel() {
+        setModel(modelInput)
+    }
+
     function handleCopyToClipboard(event: MouseEvent<SVGElement, globalThis.MouseEvent>) {
 
     }
@@ -331,17 +324,26 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                 {
                     fields.length > 0
                         ? formFields
-                        : <div className="flex w-full items-center justify-center">
-                            <button
-                                className="bg-slate-600 hover:bg-slate-400 rounded-2xl p-3"
-                                onClick={handleButtonClick}
-                            >
-                                Click to Select Model
-                            </button>
-                            {
-                                showPopup
-                                && <NodePopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
-                            }
+                        : <div className="flex flex-col space-y-2 w-full items-center justify-center">
+                            <div className='flex flex-row w-2/3'>
+                                <button
+                                    className="bg-slate-600 hover:bg-slate-400 rounded-2xl px-3 py-2 w-full"
+                                    onClick={handleButtonClick}
+                                >
+                                    Click to Select Model
+                                </button>
+                                {
+                                    showPopup
+                                    && <NodePopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
+                                }
+                            </div>
+                            <p> OR </p>
+                            <div className='flex flex-row  space-x-2 w-2/3'>
+                                <NodeInput className='text-center'
+                                    placeholder='Enter model name directly'
+                                    onChange={(event) => setModelInput(event.target.value)} />
+                                <button className='bg-sky-500 hover:bg-sky-400 p-2 rounded-lg' onClick={handleLoadModel}> Load </button>
+                            </div>
                         </div>
                 }
             </NodeForm>

@@ -1,8 +1,10 @@
-from flask import Blueprint
+import logging
+from flask import Blueprint, request
 from ...utils.replicate_utils import (
     get_model_openapi_schema,
-    get_replicate_models_sdk,
     get_replicate_models,
+    get_replicate_collections,
+    get_replicate_collection_models,
 )
 
 
@@ -10,8 +12,20 @@ node_blueprint = Blueprint("node_blueprint", __name__)
 
 
 @node_blueprint.route("/node/models")
-def get_models():
-    return get_replicate_models()
+def get_public_models():
+    cursor = request.args.get("cursor", None)
+    return get_replicate_models(cursor=cursor)
+
+
+@node_blueprint.route("/node/collections")
+def get_collections():
+    return get_replicate_collections()
+
+
+@node_blueprint.route("/node/collections/<path:collection>")
+def get_collection_models(collection):
+    cursor = request.args.get("cursor", None)
+    return get_replicate_collection_models(collection, cursor=cursor)
 
 
 @node_blueprint.route("/node/replicate/config/<path:model>")
