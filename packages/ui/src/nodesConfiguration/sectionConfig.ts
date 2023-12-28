@@ -33,10 +33,9 @@ function transformNodeConfigsToDndNode(configs: { [key in NodeType]?: NodeConfig
 
 function getAllDndNode(): DnDNode[] {
     const nonGenericNodeConfig: DnDNode[] = [
-        { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp', section: 'llm' },
+        { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp', section: 'tools' },
         { label: 'AiDataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp', section: 'tools' },
-        { label: 'ReplicateModel', type: 'replicate', helpMessage: 'replicateHelp', section: 'llm', isBeta: true },
-        //{ label: 'FileDropNode', type: 'file-drop', helpMessage: 'fileDropHelp', section: 'input' },
+        { label: 'ReplicateModel', type: 'replicate', helpMessage: 'replicateHelp', section: 'models', isBeta: true },
     ]
     return transformNodeConfigsToDndNode(nodeConfigs).concat(nonGenericNodeConfig);
 }
@@ -49,13 +48,8 @@ export const emptyNodeSections: NodeSection[] = [
     },
     {
         label: 'Models',
-        type: 'llm',
+        type: 'models',
         icon: AiOutlineRobot,
-    },
-    {
-        label: 'ImageGeneration',
-        type: 'image-generation',
-        icon: FaImage,
     },
     {
         label: 'Tools',

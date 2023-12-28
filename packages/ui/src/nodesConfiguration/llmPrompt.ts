@@ -35,6 +35,6 @@ export const llmPromptNodeConfig: NodeConfig = {
     ],
     outputType: 'text',
     hasInputHandle: true,
-    section: 'llm',
+    section: 'models',
     helpMessage: 'llmPromptHelp',
 };

@@ -26,6 +26,6 @@ export const gptVisionNodeConfig: NodeConfig = {
     ],
     outputType: 'text',
     hasInputHandle: true,
-    section: 'llm',
+    section: 'models',
     helpMessage: 'gptVisionPromptHelp',
 };

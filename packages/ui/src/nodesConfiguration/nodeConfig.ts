@@ -10,7 +10,7 @@ import { gptVisionNodeConfig } from "./gptVisionNode";
 import inputImageNodeConfig from "./inputImageNode";
 import stableVideoDiffusionReplicateNodeConfig from "./stableVideoDiffusionNode";
 
-export type SectionType = 'llm' | 'image-generation' | 'tools' | 'input'
+export type SectionType = 'models' | 'image-generation' | 'tools' | 'input'
 
 export interface Option {
     label: string;
