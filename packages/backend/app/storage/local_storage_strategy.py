@@ -1,3 +1,4 @@
+from typing import Any
 from ..storage.storage_strategy import StorageStrategy
 from werkzeug.utils import secure_filename
 import os
@@ -14,7 +15,7 @@ class LocalStorageStrategy(StorageStrategy):
 
     LOCAL_DIR = get_local_storage_folder_path()
 
-    def save(self, filename, data):
+    def save(self, filename: str, data: Any) -> str:
         if not os.path.exists(self.LOCAL_DIR):
             os.makedirs(self.LOCAL_DIR)
 
@@ -25,6 +26,6 @@ class LocalStorageStrategy(StorageStrategy):
 
         return self.get_url(secure_name)
 
-    def get_url(self, filename):
+    def get_url(self, filename: str) -> str:
         port = os.getenv("PORT")
         return f"http://localhost:{port}/image/{filename}"

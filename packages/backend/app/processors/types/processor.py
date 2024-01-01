@@ -1,5 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import List, Union
+from typing import Any, List, Optional, TypedDict, Union, Dict
+
+from .processor_type_name_utils import ProcessorType
+
+from ...storage.storage_strategy import StorageStrategy
 
 from ..context.processor_context import ProcessorContext
 
@@ -12,30 +16,72 @@ class BadKeyInputIndex(Exception):
         super().__init__(self.message)
 
 
-class Processor(ABC):
-    processor_type = None
+class InputItem(TypedDict, total=False):
+    inputName: Optional[str]
+    inputNode: str
+    inputNodeOutputKey: int
 
-    def __init__(self, config):
+
+class Processor(ABC):
+    processor_type: Optional["ProcessorType"] = None
+    """The type of the processor"""
+
+    storage_strategy: Optional["StorageStrategy"]
+    """The storage strategy used by the processor"""
+
+    api_context_data: Optional["ProcessorContext"]
+    """The context data of the processor"""
+
+    name: str
+    """The name of the processor"""
+
+    _output: Optional[Any]
+    """The output of the processor"""
+
+    inputs: Optional[List[InputItem]]
+    """A list of inputs accepted by the processor."""
+
+    input_processors: List["Processor"]
+    """The processors set as inputs"""
+
+    is_finished: bool
+    """Flag indicating if the processor's has produced his output"""
+
+    _has_dynamic_behavior: bool
+    """Flag indicating if the processor's behavior and execution time are unpredictable and subject to change at runtime."""
+
+    def __init__(self, config: Dict[str, Any]) -> None:
         self.name = config["name"]
         self.processor_type = config["processorType"]
-        self.x = config.get("x")
-        self.y = config.get("y")
         self._output = None
+        self.inputs = None
         self.api_context_data = None
         self.input_processors = []
         self.storage_strategy = None
+        self.is_finished = False
+        self._has_dynamic_behavior = False
         if config.get("inputs") is not None and config.get("inputs") != []:
             self.inputs = config.get("inputs")
+
+    def cleanup(self) -> None:
+        self.input_processors = None
+        self.api_context_data = None
+        self._output = None
+        self.storage_strategy = None
 
     @abstractmethod
     def process(self):
         pass
 
     @abstractmethod
-    def updateContext(self, data):
+    def cancel(self) -> None:
         pass
 
-    def get_output(self, input_key=None):
+    @abstractmethod
+    def update_context(self, data: Any) -> None:
+        pass
+
+    def get_output(self, input_key=None) -> Optional[str]:
         output = getattr(self, "_output", None)
         if output is not None and isinstance(output, list) and len(output) > 0:
             if input_key is not None:
@@ -55,48 +101,55 @@ class Processor(ABC):
             self._output = [value]
         else:
             raise TypeError("Value should be either a list or a string.")
+        self.is_finished = True
 
-    def get_input_processor(self):
+    def get_input_processor(self) -> Optional["Processor"]:
         if self.input_processors is None or len(self.input_processors) == 0:
             return None
         return self.input_processors[0]
 
-    def get_input_processors(self):
+    def get_input_processors(self) -> List["Processor"]:
         return self.input_processors
 
-    def get_input_node_output_key(self):
+    def get_input_node_output_key(self) -> Optional[int]:
         if self.inputs is None or len(self.inputs) == 0:
             return None
         if self.inputs[0].get("inputNodeOutputKey") is None:
             return 0
         return self.inputs[0].get("inputNodeOutputKey")
 
-    def get_input_node_output_keys(self):
+    def get_input_node_output_keys(self) -> Optional[List[int]]:
         if self.inputs is None or len(self.inputs) == 0:
             return None
         return [input.get("inputNodeOutputKey") for input in self.inputs]
 
-    def get_input_names(self):
+    def get_input_names(self) -> Optional[List[str]]:
         if self.inputs is None or len(self.inputs) == 0:
             return None
         return [input.get("inputName") for input in self.inputs]
 
-    def add_input_processor(self, input_processor):
+    def add_input_processor(self, input_processor: "Processor") -> None:
         self.input_processors.append(input_processor)
 
-    def set_storage_strategy(self, storage_strategy):
+    def set_storage_strategy(self, storage_strategy: "StorageStrategy") -> None:
         self.storage_strategy = storage_strategy
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Processor(name={self.name}, type={self.processor_type}, x={self.x}, y={self.y})"
 
-    def get_storage(self):
+    def get_storage(self) -> Optional["StorageStrategy"]:
         return self.storage_strategy
+
+    def has_dynamic_behavior(self) -> bool:
+        return self._has_dynamic_behavior
 
 
 class SimpleProcessor(Processor):
     def __init__(self, config):
         super().__init__(config)
+
+    def cancel(self):
+        pass
 
     def get_api_key(self, key_name):
         pass

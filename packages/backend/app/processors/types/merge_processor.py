@@ -3,11 +3,10 @@ import re
 from ...llms.factory.llm_factory import LLMFactory
 from ...root_injector import root_injector
 
-from .processor_type_name_utils import MERGER_PROMPT
-
-from enum import Enum
+from .processor_type_name_utils import ProcessorType, MergeModeEnum
 
 from llama_index.llms.base import ChatMessage
+
 
 class MergeModeEnum(Enum):
     MERGE = 1
@@ -15,7 +14,7 @@ class MergeModeEnum(Enum):
 
 
 class MergeProcessor(APIContextProcessor):
-    processor_type = MERGER_PROMPT
+    processor_type = ProcessorType.MERGER_PROMPT
     DEFAULT_MODEL = "gpt-4-1106-preview"
 
     def __init__(self, config, api_context_data, custom_llm_factory=None):
@@ -27,9 +26,9 @@ class MergeProcessor(APIContextProcessor):
         self.api_key = api_context_data.get_api_key_for_model(self.model)
         if custom_llm_factory is None:
             custom_llm_factory = self._get_default_llm_factory()
-            
+
         self.llm_factory = custom_llm_factory
-        
+
     @staticmethod
     def _get_default_llm_factory():
         return root_injector.get(LLMFactory)
@@ -54,7 +53,7 @@ class MergeProcessor(APIContextProcessor):
             return self.prompt
 
         self.init_context()
-        
+
         llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
         chat_response = llm.chat(self.messages)
         answer = chat_response.message.content
@@ -65,12 +64,14 @@ class MergeProcessor(APIContextProcessor):
     def init_context(self) -> None:
         system_msg = "You are an assistant that provides direct answers to tasks without adding any meta comments or referencing yourself as an AI."
         user_msg_content = self.prompt
-        
+
         self.messages = [
             ChatMessage(role="system", content=system_msg),
-            ChatMessage(role="user", content=user_msg_content)
+            ChatMessage(role="user", content=user_msg_content),
         ]
 
+    def cancel(self):
+        pass
 
-    def updateContext(self, data):
+    def update_context(self, data):
         pass

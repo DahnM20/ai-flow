@@ -3,11 +3,11 @@ import tiktoken
 DEFAULT_MAX_TOKEN = 4097
 
 
-def max_token_for_model(model_name):
+def max_token_for_model(model_name: str) -> int:
     token_data = {
         # GPT-4 models
-        "gpt-4-1106-preview":128000,
-        "gpt-4-vision-preview":128000,
+        "gpt-4-1106-preview": 128000,
+        "gpt-4-vision-preview": 128000,
         "gpt-4": 8192,
         "gpt-4-0613": 8192,
         "gpt-4-32k": 32768,
@@ -31,5 +31,5 @@ def max_token_for_model(model_name):
     return token_data.get(model_name, DEFAULT_MAX_TOKEN)
 
 
-def nb_token_for_input(input, model_name):
+def nb_token_for_input(input: str, model_name: str) -> int:
     return len(tiktoken.encoding_for_model(model_name).encode(input))

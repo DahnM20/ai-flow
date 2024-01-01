@@ -1,17 +1,18 @@
 from .processor import SimpleProcessor
 from langchain.document_loaders import YoutubeLoader
 
-from .processor_type_name_utils import YOUTUBE_TRANSCRIPT_INPUT
+from .processor_type_name_utils import ProcessorType
+
 
 class YoutubeTranscriptInputProcessor(SimpleProcessor):
-    processor_type = YOUTUBE_TRANSCRIPT_INPUT
+    processor_type = ProcessorType.YOUTUBE_TRANSCRIPT_INPUT
 
     def __init__(self, config):
         super().__init__(config)
         self.url = config["url"]
         self.language = config["language"]
 
-    def updateContext(self, data):
+    def update_context(self, data):
         pass
 
     def process(self):

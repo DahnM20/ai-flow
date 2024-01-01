@@ -3,16 +3,17 @@ from .processor import APIContextProcessor
 
 from openai import OpenAI
 
-from .processor_type_name_utils import DALLE_PROMPT
+from .processor_type_name_utils import ProcessorType
+
 
 class DallEPromptProcessor(APIContextProcessor):
-    processor_type = DALLE_PROMPT
-    
+    processor_type = ProcessorType.DALLE_PROMPT
+
     DEFAULT_MODEL = "dall-e-3"
     DEFAULT_SIZE = "1024x1024"
-    DEFAULT_QUALITY="standard"
+    DEFAULT_QUALITY = "standard"
 
-    def __init__(self, config, api_context_data:ProcessorContext):
+    def __init__(self, config, api_context_data: ProcessorContext):
         super().__init__(config, api_context_data)
         self.prompt = config.get("prompt")
         self.size = config.get("size", DallEPromptProcessor.DEFAULT_SIZE)
@@ -30,7 +31,7 @@ class DallEPromptProcessor(APIContextProcessor):
         client = OpenAI(
             api_key=self.api_key,
         )
-        
+
         response = client.images.generate(
             model=DallEPromptProcessor.DEFAULT_MODEL,
             prompt=self.prompt,
@@ -42,5 +43,8 @@ class DallEPromptProcessor(APIContextProcessor):
 
         return self._output
 
-    def updateContext(self, data):
+    def cancel(self):
+        pass
+
+    def update_context(self, data):
         pass

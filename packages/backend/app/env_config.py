@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import List, Optional
 
 ENV_LOCAL = "LOCAL"
 ENV_CLOUD = "CLOUD"
@@ -13,7 +14,7 @@ LOCAL_STORAGE_DIR = os.path.join(
 )
 
 
-def get_static_folder():
+def get_static_folder() -> str:
     if getattr(sys, "frozen", False):
         base_path = sys._MEIPASS
         build_dir = os.path.join(base_path, "build")
@@ -23,29 +24,29 @@ def get_static_folder():
     return build_dir
 
 
-def is_cloud_env():
+def is_cloud_env() -> bool:
     return CURRENT_ENV == ENV_CLOUD
 
 
-def is_local_environment():
+def is_local_environment() -> bool:
     return CURRENT_ENV == ENV_LOCAL
 
 
-def is_mock_env():
+def is_mock_env() -> bool:
     return os.getenv("USE_MOCK") == "true"
 
 
-def is_server_static_files_enabled():
+def is_server_static_files_enabled() -> bool:
     return os.getenv("SERVE_STATIC_FILES") == "true"
 
 
-def get_local_storage_folder_path():
+def get_local_storage_folder_path() -> str:
     return LOCAL_STORAGE_DIR
 
 
-def get_flask_secret_key():
+def get_flask_secret_key() -> Optional[str]:
     return os.getenv("FLASK_SECRET_KEY")
 
 
-def get_replicate_api_key():
+def get_replicate_api_key() -> Optional[str]:
     return os.getenv("REPLICATE_API_KEY")

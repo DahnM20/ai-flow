@@ -54,7 +54,7 @@ class AbstractTopologicalProcessorLauncher(ProcessorLauncher):
 
     def _link_processors(self, processors):
         for processor in processors.values():
-            if hasattr(processor, "inputs"):
+            if hasattr(processor, "inputs") and processor.inputs is not None:
                 for input in processor.inputs:
                     input_processor = processors.get(input.get("inputNode"))
                     if not input_processor:

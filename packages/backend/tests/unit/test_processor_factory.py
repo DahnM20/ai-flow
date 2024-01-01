@@ -11,7 +11,7 @@ class DummyProcessor(SimpleProcessor):
     def process(self):
         pass
 
-    def updateContext(self, data):
+    def update_context(self, data):
         pass
 
 
@@ -25,7 +25,7 @@ class APIDummyProcessor(APIContextProcessor):
     def process(self):
         pass
 
-    def updateContext(self, data):
+    def update_context(self, data):
         pass
 
 

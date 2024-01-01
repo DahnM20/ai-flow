@@ -1,4 +1,5 @@
 import importlib
+import logging
 import pkgutil
 import inspect
 from ..types.processor import Processor
@@ -44,4 +45,7 @@ class ProcessorFactoryIterModules(ProcessorFactory):
             for attribute_name in dir(module):
                 attribute = getattr(module, attribute_name)
                 if isinstance(attribute, type) and issubclass(attribute, Processor):
-                    self.register_processor(attribute.processor_type, attribute)
+                    if attribute.processor_type is not None:
+                        self.register_processor(
+                            attribute.processor_type.value, attribute
+                        )

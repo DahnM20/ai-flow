@@ -1,11 +1,12 @@
 from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
-from .processor_type_name_utils import GPT_VISION
+from .processor_type_name_utils import ProcessorType
 from openai import OpenAI
 from urllib.parse import urlparse
 
+
 class GPTVisionProcessor(APIContextProcessor):
-    processor_type = GPT_VISION
+    processor_type = ProcessorType.GPT_VISION
     DEFAULT_MODEL = "gpt-4-vision-preview"
 
     def __init__(self, config, api_context_data: ProcessorContext):
@@ -21,16 +22,16 @@ class GPTVisionProcessor(APIContextProcessor):
             input_image_url = self.get_input_processor().get_output(
                 self.get_input_node_output_key()
             )
-        
+
         if self.prompt is None or len(self.prompt) == 0:
             return "No prompt provided."
-            
-        if input_image_url is None :
+
+        if input_image_url is None:
             return "No image provided."
-        
+
         if not self.is_valid_url(input_image_url):
             return "Invalid URL provided."
-        
+
         client = OpenAI(
             api_key=self.api_key,
         )
@@ -53,12 +54,12 @@ class GPTVisionProcessor(APIContextProcessor):
             ],
             max_tokens=300,
         )
-        
+
         answer = response.choices[0]
         messageContent = answer.message.content
         self.set_output(messageContent)
         return messageContent
-    
+
     def is_valid_url(self, url):
         try:
             result = urlparse(url)
@@ -66,5 +67,8 @@ class GPTVisionProcessor(APIContextProcessor):
         except Exception:
             return False
 
-    def updateContext(self, data):
+    def cancel(self):
+        pass
+
+    def update_context(self, data):
         pass

@@ -1,4 +1,4 @@
-from ..launcher.event_type import EventType
+from ..launcher.event_type import EventType, NodeProcessorEvent
 from .observer import Observer
 import logging
 
@@ -12,13 +12,19 @@ class SimpleStatsLogger(Observer):
     Logs stats about processor instances and events
     """
 
-    def __init__(self):
+    processor_counts: dict[str, int]
+    event_counts: dict[EventType, int]
+    notification_count: int
+
+    DEFAULT_EVENT_THRESHOLD = 10
+
+    def __init__(self) -> None:
         self.processor_counts = {}
         self.event_counts = {}
         self.notification_count = 0
-        self.log_interval = 10
+        self.event_threshold = self.DEFAULT_EVENT_THRESHOLD
 
-    def notify(self, event, data):
+    def notify(self, event: EventType, data: NodeProcessorEvent) -> None:
         if event in self.event_counts:
             self.event_counts[event] += 1
         else:
@@ -36,10 +42,10 @@ class SimpleStatsLogger(Observer):
                 self.processor_counts[processor_type] = 1
 
         self.notification_count += 1
-        if self.notification_count % self.log_interval == 0:
+        if self.notification_count % self.event_threshold == 0:
             self.print_stats()
 
-    def print_stats(self):
+    def print_stats(self) -> None:
         logging.info("===== Simple Stats Logger =====")
         logging.info("Event Stats:")
         for event, count in self.event_counts.items():

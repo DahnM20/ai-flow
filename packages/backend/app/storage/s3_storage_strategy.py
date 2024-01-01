@@ -1,3 +1,4 @@
+from typing import Any
 from ..storage.storage_strategy import StorageStrategy
 import boto3
 import os
@@ -20,7 +21,7 @@ class S3StorageStrategy(StorageStrategy):
             region_name=os.getenv("AWS_REGION_NAME"),
         )
 
-    def save(self, filename, data):
+    def save(self, filename: str, data: Any) -> str:
         self.s3_client.put_object(Bucket=self.BUCKET_NAME, Key=filename, Body=data)
 
         url = self.s3_client.generate_presigned_url(
@@ -31,6 +32,6 @@ class S3StorageStrategy(StorageStrategy):
 
         return url
 
-    def get_url(self, filename):
+    def get_url(self, filename: str) -> str:
         """The URL is only given when the image is saved"""
         pass

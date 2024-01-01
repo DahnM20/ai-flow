@@ -8,12 +8,13 @@ import requests
 import os
 
 
-from .processor_type_name_utils import STABLE_DIFFUSION_STABILITYAI_PROMPT
+from .processor_type_name_utils import ProcessorType
+
 
 class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
-    processor_type = STABLE_DIFFUSION_STABILITYAI_PROMPT
+    processor_type = ProcessorType.STABLE_DIFFUSION_STABILITYAI_PROMPT
 
-    def __init__(self, config, api_context_data:ProcessorContext):
+    def __init__(self, config, api_context_data: ProcessorContext):
         super().__init__(config, api_context_data)
         self.prompt = config.get("prompt")
 
@@ -28,7 +29,7 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
         self.api_host = os.getenv(
             "STABLE_DIFFUSION_STABILITYAI_API_HOST", "https://api.stability.ai"
         )
-        
+
     def prepare_and_process_response(self, response):
         if response.status_code != 200:
             raise Exception("Non-200 response: " + str(response.text))
@@ -44,7 +45,7 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
 
         self.set_output(url)
         return self._output
-    
+
     def setup_data_to_send(self):
         self.api_key = self.api_context_data.get_api_key_for_provider("stabilityai")
 
@@ -63,13 +64,12 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
             "samples": self.samples,
             "steps": 30,
         }
-        
+
         return data_to_send
-        
 
     def process(self):
         data_to_send = self.setup_data_to_send()
-        
+
         response = requests.post(
             f"{self.api_host}/v1/generation/{self.engine_id}/text-to-image",
             headers={
@@ -82,5 +82,8 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
 
         return self.prepare_and_process_response(response)
 
-    def updateContext(self, data):
+    def cancel(self):
+        pass
+
+    def update_context(self, data):
         pass
