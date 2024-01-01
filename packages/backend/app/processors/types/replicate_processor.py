@@ -9,14 +9,15 @@ from ..context.processor_context import ProcessorContext
 from .processor import APIContextProcessor
 import replicate
 
-from .processor_type_name_utils import REPLICATE
+from .processor_type_name_utils import ProcessorType
 
 
 class ReplicateProcessor(APIContextProcessor):
-    processor_type = REPLICATE
+    processor_type = ProcessorType.REPLICATE
 
     def __init__(self, config, api_context_data: ProcessorContext):
         super().__init__(config, api_context_data)
+        self.has_dynamic_behavior = True
 
         self.config = config
         self.model = config.get("config").get("nodeName")
@@ -50,10 +51,20 @@ class ReplicateProcessor(APIContextProcessor):
         logging.debug(f"Output schema : {output_schema}")
         output_type = output_schema["type"]
 
-        output = api.run(
-            self.model,
-            input=self.config,
-        )
+        rest, version_id = self.model.split(":")
+
+        self.prediction = api.predictions.create(version=version_id, input=self.config)
+
+        self.prediction.wait()
+
+        if self.prediction.status != "succeeded":
+            exception = Exception(
+                f"Replicate prediction failed with status : {self.prediction.status}"
+            )
+            exception.rollback_not_needed = True
+            raise exception
+
+        output = self.prediction.output
 
         if output_type == "array":
             output = "".join(output)
@@ -69,5 +80,11 @@ class ReplicateProcessor(APIContextProcessor):
             .get(nested_key)
         )
 
-    def updateContext(self, data):
+    def cancel(self):
+        api = replicate.Client(
+            api_token=self.api_context_data.get_api_key_for_provider("replicate")
+        )
+        api.predictions.cancel(id=self.prediction.id)
+
+    def update_context(self, data):
         pass
