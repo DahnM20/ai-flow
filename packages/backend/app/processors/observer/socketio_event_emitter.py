@@ -27,10 +27,6 @@ class SocketIOEventEmitter(Observer):
             logging.error(f"Cannot notify without session ID")
             return
 
-        if event is EventType.MONITORING:
-            raise Exception("Cannot emit monitoring event")
-            return
-
         json_event = {}
 
         json_event["instanceName"] = data.instance_name

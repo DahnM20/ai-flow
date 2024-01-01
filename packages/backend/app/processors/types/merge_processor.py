@@ -8,11 +8,6 @@ from .processor_type_name_utils import ProcessorType, MergeModeEnum
 from llama_index.llms.base import ChatMessage
 
 
-class MergeModeEnum(Enum):
-    MERGE = 1
-    MERGE_AND_PROMPT = 2
-
-
 class MergeProcessor(APIContextProcessor):
     processor_type = ProcessorType.MERGER_PROMPT
     DEFAULT_MODEL = "gpt-4-1106-preview"
