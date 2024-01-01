@@ -14,6 +14,9 @@ class DummyProcessor(SimpleProcessor):
     def update_context(self, data):
         pass
 
+    def cancel(self):
+        pass
+
 
 class APIDummyProcessor(APIContextProcessor):
     processor_type = "api_dummy_processor"
@@ -26,6 +29,9 @@ class APIDummyProcessor(APIContextProcessor):
         pass
 
     def update_context(self, data):
+        pass
+
+    def cancel(self):
         pass
 
 
