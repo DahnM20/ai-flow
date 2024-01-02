@@ -1,20 +1,20 @@
 import os
 import requests
 from ..env_config import get_replicate_api_key
-import replicate
 from cachetools import TTLCache, cached
 import logging
 
 
-lru_short_ttl_cache = TTLCache(maxsize=100, ttl=600)
-lru_long_ttl_cache = TTLCache(maxsize=100, ttl=12000)
+short_ttl_cache = 600
+long_ttl_cache = 12000
+very_long_ttl_cache = 120000
 
 REPLICATE_API_URL = "https://api.replicate.com"
 REPLICATE_MODEL_API_URL = f"{REPLICATE_API_URL}/v1/models"
 REPLICATE_COLLECTION_API_URL = f"{REPLICATE_API_URL}/v1/collections"
 
 
-@cached(lru_short_ttl_cache)
+@cached(TTLCache(maxsize=100, ttl=600))
 def get_replicate_models(cursor=None):
     api_token = get_replicate_api_key()
 
@@ -33,21 +33,18 @@ def get_replicate_models(cursor=None):
     if response.status_code != 200:
         raise Exception(f"Failed to fetch models: {response.status_code}")
 
-    models = response.json()
+    data = response.json()
 
-    return models
+    for model in data["results"]:
+        if "latest_version" in model:
+            del model["latest_version"]
+        if "default_example" in model:
+            del model["default_example"]
 
-
-@cached(lru_short_ttl_cache)
-def get_replicate_models_sdk():
-    api_token = get_replicate_api_key()
-    api = replicate.Client(api_token=api_token)
-    tti = api.collections.get("text-to-image").models
-
-    return tti
+    return data
 
 
-@cached(lru_long_ttl_cache)
+@cached(TTLCache(maxsize=100, ttl=long_ttl_cache))
 def get_replicate_collections():
     api_token = get_replicate_api_key()
 
@@ -66,7 +63,7 @@ def get_replicate_collections():
     return collections
 
 
-@cached(lru_long_ttl_cache)
+@cached(TTLCache(maxsize=100, ttl=long_ttl_cache))
 def get_replicate_collection_models(collection_slug, cursor=None):
     api_token = get_replicate_api_key()
 
@@ -85,12 +82,63 @@ def get_replicate_collection_models(collection_slug, cursor=None):
     if response.status_code != 200:
         raise Exception(f"Failed to fetch collections: {response.status_code}")
 
-    models = response.json()
+    data = response.json()
 
-    return models
+    for model in data["models"]:
+        if "latest_version" in model:
+            del model["latest_version"]
+        if "default_example" in model:
+            del model["default_example"]
+
+    return data
 
 
-@cached(lru_long_ttl_cache)
+@cached(TTLCache(maxsize=100, ttl=very_long_ttl_cache))
+def get_highlighted_models_info():
+    models_str = os.getenv("REPLICATE_MODELS_HIGHLIGHTED", None)
+
+    models = []
+    if models_str:
+        models = models_str.split(",")
+        models = [model.strip() for model in models]
+    else:
+        return None
+    models_info = []
+
+    for model in models:
+        try:
+            info = get_model_info(model)
+            models_info.append(info)
+        except Exception as e:
+            logging.error(f"Failed to fetch model info for {model}: {e}")
+            continue
+
+    return models_info
+
+
+@cached(TTLCache(maxsize=100, ttl=long_ttl_cache))
+def get_model_info(model_id):
+    api_token = get_replicate_api_key()
+    url = f"{REPLICATE_MODEL_API_URL}/{model_id}"
+
+    headers = {"Authorization": f"Token {api_token}"}
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code != 200:
+        raise Exception(f"Failed to fetch model info: {response.status_code}")
+
+    model = response.json()
+
+    if "latest_version" in model:
+        del model["latest_version"]
+    if "default_example" in model:
+        del model["default_example"]
+
+    return model
+
+
+@cached(TTLCache(maxsize=100, ttl=long_ttl_cache))
 def get_model_openapi_schema(model_id):
     api_token = get_replicate_api_key()
     url = f"{REPLICATE_MODEL_API_URL}/{model_id}"
@@ -107,9 +155,6 @@ def get_model_openapi_schema(model_id):
 
     if not schema:
         raise Exception("OpenAPI schema not found in the response")
-
-    input_schema = schema["components"]["schemas"]["Input"]
-    output_schema = schema["components"]["schemas"]["Output"]
 
     return {
         "schema": schema,
