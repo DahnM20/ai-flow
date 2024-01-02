@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { LoadingIcon } from '../shared/Node.styles';
 
 interface DefaultPopupProps {
     show: boolean;
@@ -14,7 +13,7 @@ export default function DefaultPopup({ show, onClose, children }: DefaultPopupPr
 
     return ReactDOM.createPortal(
         <div className='flex flex-col fixed bg-black/50 w-full h-full top-0 left-0 justify-center items-center z-50' onClick={onClose}>
-            <div className='flex flex-col justify-center items-center w-4/6 max-h-full' onClick={(e) => { e.stopPropagation() }}>
+            <div className='flex flex-col w-4/6 max-h-full mb-auto' onClick={(e) => { e.stopPropagation() }}>
                 {children}
             </div>
         </div >,

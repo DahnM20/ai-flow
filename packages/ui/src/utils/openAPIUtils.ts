@@ -1,4 +1,4 @@
-import { Field } from "../nodesConfiguration/nodeConfig";
+import { Field, fieldHasHandle } from "../nodesConfiguration/nodeConfig";
 
 export interface OpenApiSchema {
     components: {
@@ -18,7 +18,7 @@ export function getSchemaFromConfig(config: Config, schemaName: string) {
 }
 
 
-const getNodeTypeFrom: (prop: any) => Field["type"] = (prop: any) => {
+const getNodeFieldTypeFromProp: (prop: any) => Field["type"] = (prop: any) => {
     if (prop.allOf != null) {
         return 'select'
     }
@@ -70,15 +70,17 @@ export function convertOpenAPISchemaToNodeConfig(schema: any, config?: Config) {
 
         }
 
+        const fieldType = getNodeFieldTypeFromProp(prop);
+
         const field: Field = {
             name,
-            type: getNodeTypeFrom(prop),
+            type: fieldType,
             label: name,
             placeholder: prop.description,
             defaultValue: prop.default,
             max: prop.maximum,
             min: prop.minimum,
-            hasHandle: true,
+            hasHandle: fieldHasHandle(fieldType),
             isLinked: false,
             optionnal: !requiredFields.includes(name),
             options: options,
