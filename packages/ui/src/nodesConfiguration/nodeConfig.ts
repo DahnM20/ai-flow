@@ -11,6 +11,9 @@ import inputImageNodeConfig from "./inputImageNode";
 import stableVideoDiffusionReplicateNodeConfig from "./stableVideoDiffusionNode";
 
 export type SectionType = 'models' | 'image-generation' | 'tools' | 'input'
+export type FieldType = 'input' | 'inputInt' | 'textarea' | 'select' | 'option' | 'inputNameBar' | 'boolean' | 'slider'
+
+const fieldTypeWithoutHandle: FieldType[] = ['select', 'option', 'boolean', 'slider']
 
 export interface Option {
     label: string;
@@ -20,7 +23,7 @@ export interface Option {
 
 export interface Field {
     name: string;
-    type: 'input' | 'inputInt' | 'textarea' | 'select' | 'option' | 'inputNameBar' | 'boolean' | 'slider';
+    type: FieldType;
     label?: string;
     placeholder?: string;
     defaultValue?: string;
@@ -62,4 +65,8 @@ export const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
 }
 export const getConfigViaType = (type: NodeType): NodeConfig | undefined => {
     return nodeConfigs[type];
+}
+
+export const fieldHasHandle = (fieldType: FieldType): boolean => {
+    return !fieldTypeWithoutHandle.includes(fieldType)
 }

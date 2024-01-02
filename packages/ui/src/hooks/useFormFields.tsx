@@ -18,7 +18,8 @@ export function useFormFields(
     textareaRef?: any,
     hasParent?: Function,
     specificField?: string,
-    showHandles?: boolean) {
+    showHandles?: boolean,
+    showOnlyConnectedFields?: boolean) {
 
     const { t } = useTranslation('flow');
 
@@ -51,6 +52,121 @@ export function useFormFields(
         handleNodeDataChange(event.target.name, event.target.value);
     };
 
+    const renderField = (field: Field, index: number) => {
+        switch (field.type) {
+            case 'input':
+                return (
+                    <NodeInput
+                        name={field.name}
+                        className="nodrag"
+                        defaultValue={data[field.name]}
+                        placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
+                        onChange={handleEventNodeDataChange}
+                    />
+                );
+            case 'inputInt':
+                return (
+                    <NodeInput
+                        name={field.name}
+                        className="nodrag"
+                        defaultValue={data[field.name]}
+                        placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
+                        onChange={(event) => handleNodeDataChange(event.target.name, +event.target.value)}
+                    />
+                )
+            case 'textarea':
+                return (
+                    <NodeTextarea
+                        key={`${id}-${field.name}`}
+                        ref={textareaRef}
+                        name={field.name}
+                        className="nodrag"
+                        defaultValue={data[field.name]}
+                        placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
+                        onChange={handleEventNodeDataChange}
+                    />
+                );
+            case 'select':
+                return (
+                    <NodeSelect
+                        onChange={(e) => handleOptionChange(field.name, e.target.value)}
+                        defaultValue={data[field.name]}
+                    >
+                        {field.options?.map(option => (
+                            <NodeSelectOption key={`${id}-${option.value}`}>
+                                {t(option.label)}
+                            </NodeSelectOption>
+                        ))}
+                    </NodeSelect>
+                );
+            case 'option':
+                return (
+                    <div className="flex w-full items-center justify-center my-1">
+                        <OptionSelector key={`${id}-${field.name}`}>
+                            {field.options?.map(option => (
+                                <OptionButton
+                                    key={`${id}-${option.value}`}
+                                    selected={data[field.name] === option.value}
+                                    onClick={() => handleOptionChange(field.name, option.value)}
+                                >
+                                    {t(option.label)}
+                                </OptionButton>
+                            ))}
+                        </OptionSelector>
+                    </div>
+                );
+            case 'inputNameBar':
+                return (
+                    data.config.inputNames && <InputNameBar key={`${id}-${field.name}`} inputNames={data.config.inputNames} textareaRef={textareaRef} />
+                );
+            case 'slider':
+                return (
+                    <div className="flex flex-row items-center w-full justify-center">
+                        <p className="w-1/12 text-left text-blue-200 text-sm">
+                            {data[field.name]}
+                        </p>
+                        <Slider className="nodrag w-11/12"
+                            defaultValue={data[field.name]}
+                            onChange={(value) => handleNodeDataChange(field.name, value)}
+                            onChangeComplete={(value) => handleNodeDataChange(field.name, value)}
+                            styles={{
+                                track: {
+                                    backgroundColor: 'rgba(94,209,232,0.85)',
+                                },
+                                handle: {
+                                    //borderColor: 'blue',
+                                    borderColor: 'rgba(94,209,232,0.85)',
+                                    backgroundColor: 'rgba(94,209,232,1)',
+                                },
+                                rail: {
+                                    backgroundColor: 'rgba(54, 54, 54, 0.8)',
+                                },
+                            }}
+                            min={field.min}
+                            max={field.max}
+                            step={1} />
+                    </div>
+                )
+            case 'boolean':
+                return (
+                    <div className="flex flex-row items-center w-full">
+                        <Switch onChange={(checked: boolean) => handleNodeDataChange(field.name, checked)} checked={data[field.name]} className="nodrag"
+                            onColor="#86d3ff"
+                            onHandleColor="#2693e6"
+                            handleDiameter={20}
+                            uncheckedIcon={false}
+                            checkedIcon={false}
+                            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                            height={15}
+                            width={30} />
+                    </div>
+                )
+            default:
+                return null;
+        }
+    };
+
 
     const fields = getFields()
 
@@ -62,132 +178,25 @@ export function useFormFields(
         .filter((field: Field) => !!hasParent && hasParent(id) && field.hideIfParent != null ? !field.hideIfParent : true)
         .filter((field: Field) => specificField ? field.name === specificField : true)
         .map((field: Field, index: number) => {
-            const renderField = () => {
-                switch (field.type) {
-                    case 'input':
-                        return (
-                            <NodeInput
-                                name={field.name}
-                                className="nodrag"
-                                defaultValue={data[field.name]}
-                                placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-                                onChange={handleEventNodeDataChange}
-                            />
-                        );
-                    case 'inputInt':
-                        return (
-                            <NodeInput
-                                name={field.name}
-                                className="nodrag"
-                                defaultValue={data[field.name]}
-                                placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-                                onChange={(event) => handleNodeDataChange(event.target.name, +event.target.value)}
-                            />
-                        )
-                    case 'textarea':
-                        return (
-                            <NodeTextarea
-                                key={`${id}-${field.name}`}
-                                ref={textareaRef}
-                                name={field.name}
-                                className="nodrag"
-                                defaultValue={data[field.name]}
-                                placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-                                onChange={handleEventNodeDataChange}
-                            />
-                        );
-                    case 'select':
-                        return (
-                            <NodeSelect
-                                onChange={(e) => handleOptionChange(field.name, e.target.value)}
-                                defaultValue={data[field.name]}
-                            >
-                                {field.options?.map(option => (
-                                    <NodeSelectOption key={`${id}-${option.value}`}>
-                                        {t(option.label)}
-                                    </NodeSelectOption>
-                                ))}
-                            </NodeSelect>
-                        );
-                    case 'option':
-                        return (
-                            <div className="flex w-full items-center justify-center my-1">
-                                <OptionSelector key={`${id}-${field.name}`}>
-                                    {field.options?.map(option => (
-                                        <OptionButton
-                                            key={`${id}-${option.value}`}
-                                            selected={data[field.name] === option.value}
-                                            onClick={() => handleOptionChange(field.name, option.value)}
-                                        >
-                                            {t(option.label)}
-                                        </OptionButton>
-                                    ))}
-                                </OptionSelector>
-                            </div>
-                        );
-                    case 'inputNameBar':
-                        return (
-                            data.config.inputNames && <InputNameBar key={`${id}-${field.name}`} inputNames={data.config.inputNames} textareaRef={textareaRef} />
-                        );
-                    case 'slider':
-                        return (
-                            <div className="flex flex-row items-center w-full justify-center">
-                                <p className="w-1/12 text-left text-blue-200 text-sm">
-                                    {data[field.name]}
-                                </p>
-                                <Slider className="nodrag w-11/12"
-                                    defaultValue={data[field.name]}
-                                    onChange={(value) => handleNodeDataChange(field.name, value)}
-                                    onChangeComplete={(value) => handleNodeDataChange(field.name, value)}
-                                    styles={{
-                                        track: {
-                                            backgroundColor: 'rgba(94,209,232,0.85)',
-                                        },
-                                        handle: {
-                                            //borderColor: 'blue',
-                                            borderColor: 'rgba(94,209,232,0.85)',
-                                            backgroundColor: 'rgba(94,209,232,1)',
-                                        },
-                                        rail: {
-                                            backgroundColor: 'rgba(54, 54, 54, 0.8)',
-                                        },
-                                    }}
-                                    min={field.min}
-                                    max={field.max}
-                                    step={1} />
-                            </div>
-                        )
-                    case 'boolean':
-                        return (
-                            <div className="flex flex-row items-center w-full">
-                                <Switch onChange={(checked: boolean) => handleNodeDataChange(field.name, checked)} checked={data[field.name]} className="nodrag"
-                                    onColor="#86d3ff"
-                                    onHandleColor="#2693e6"
-                                    handleDiameter={20}
-                                    uncheckedIcon={false}
-                                    checkedIcon={false}
-                                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                    height={15}
-                                    width={30} />
-                            </div>
-                        )
-                    default:
-                        return null;
-                }
-            };
+
+
+            if (showOnlyConnectedFields && !field.isLinked) {
+                return <></>
+            }
 
             return (
                 <React.Fragment key={`${id}-${field.name}`}>
-                    {field.label && field.hasHandle && showHandles && (
+                    {field.label && showHandles && (
                         <div className="flex flex-row items-center space-x-5">
-                            <InputHandle
-                                className={`handle custom-handle`}
-                                required={!field.optionnal}
-                                type="target"
-                                position={Position.Left}
-                                id={generateIdForHandle(index)}
-                            />
+                            {field.hasHandle &&
+                                <InputHandle
+                                    className={`handle custom-handle`}
+                                    required={!field.optionnal}
+                                    type="target"
+                                    position={Position.Left}
+                                    id={generateIdForHandle(index)}
+                                />
+                            }
                             <NodeLabel className={`font-md
                                         ${field.isLinked ? "text-sky-400" : ""}  
                                         ${!field.optionnal ? "font-bold" : ""}`}>
@@ -195,7 +204,7 @@ export function useFormFields(
                             </NodeLabel>
                         </div>
                     )}
-                    {!field.isLinked && renderField()}
+                    {!field.isLinked && renderField(field, index)}
                 </React.Fragment>
             );
         });

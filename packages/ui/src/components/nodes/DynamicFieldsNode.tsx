@@ -10,7 +10,7 @@ import { useRefreshOnAppearanceChange } from "../../hooks/useRefreshOnAppearance
 import { Field } from "../../nodesConfiguration/nodeConfig";
 import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
 import HandleWrapper from "../handles/HandleWrapper";
-import NodePopup from "../popups/NodePopup";
+import SelectModelPopup from "../popups/selectModelPopup/SelectModelPopup";
 import { NodeContext } from "../providers/NodeProvider";
 import { NodeBand, NodeContainer, NodeContent, NodeForm, NodeHeader, NodeIcon, NodeInput, NodeLogs, NodeLogsText, NodeTitle } from "../shared/Node.styles";
 import NodePlayButton from "../shared/node-button/NodePlayButton";
@@ -145,6 +145,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         undefined,
         undefined,
         true,
+        !collapsed
     );
 
 
@@ -325,7 +326,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                     fields.length > 0
                         ? formFields
                         : <div className="flex flex-col space-y-2 w-full items-center justify-center">
-                            <div className='flex flex-row w-2/3'>
+                            <div className='flex flex-row w-2/3 items-center'>
                                 <button
                                     className="bg-slate-600 hover:bg-slate-400 rounded-2xl px-3 py-2 w-full"
                                     onClick={handleButtonClick}
@@ -334,7 +335,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                                 </button>
                                 {
                                     showPopup
-                                    && <NodePopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
+                                    && <SelectModelPopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
                                 }
                             </div>
                             <p> OR </p>
