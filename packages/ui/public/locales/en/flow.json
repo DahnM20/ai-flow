@@ -49,5 +49,12 @@
     "stableVideoDiffusionPromptHelp": "This node uses Replicate to launch Stable Video Diffusion.",
     "aiActionPromptHelp": "This node uses GPT-4 to perform simple action, without having to write a prompt.",
     "dataSplitterHelp": "This node is used to split data into several parts. You can specify upstream how many parts you want to create. You can also run it individually so that it finds the exact number of outputs to generate.",
-    "socketConnectionLost": "The connection has been lost. \n\n You can try again later or install the application locally to avoid this kind of issue in the future."
+    "socketConnectionLost": "The connection has been lost. \n\n You can try again later or install the application locally to avoid this kind of issue in the future.",
+    "ClickToSelectModel": "Click to select model",
+    "Or": "OR",
+    "EnterModelNameDirectly": "Enter model name directly",
+    "Load": "Load",
+    "LoadMore": "Load more",
+    "SpotlightModels": "Spotlight Models",
+    "AllModels": "All Models"
 }

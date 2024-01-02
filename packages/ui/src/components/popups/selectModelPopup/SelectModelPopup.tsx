@@ -6,6 +6,7 @@ import DefaultPopup from '../DefaultPopup';
 import ModelsGrid from './ModelsGrid';
 import CollectionGrid from './CollectionGrid';
 import LoadMoreButton from './LoadMoreButton';
+import { useTranslation } from 'react-i18next';
 
 interface SelectModelPopupProps {
     show: boolean;
@@ -14,6 +15,7 @@ interface SelectModelPopupProps {
 }
 
 export default function SelectModelPopup({ show, onClose, onValidate }: SelectModelPopupProps) {
+    const { t } = useTranslation('flow');
 
     const [models, setModels] = useState<any>()
     const [highlitedModels, setHighlightedModels] = useState<any>()
@@ -162,8 +164,8 @@ export default function SelectModelPopup({ show, onClose, onValidate }: SelectMo
         if (!selectedCollection) {
             return (
                 <>
-                    <ModelsSection title="Spotlight Models" models={highlitedModels} onValidate={onValidate} />
-                    <ModelsSection title="All Models" models={models} onValidate={onValidate} />
+                    <ModelsSection title={t('SpotlightModels')} models={highlitedModels} onValidate={onValidate} />
+                    <ModelsSection title={t('AllModels')} models={models} onValidate={onValidate} />
                 </>
             );
         }
@@ -197,7 +199,7 @@ export default function SelectModelPopup({ show, onClose, onValidate }: SelectMo
 
 
 interface ModelSectionProps {
-    title?: string;
+    title?: string | null;
     models: any;
     onValidate: (data: any) => void;
 }

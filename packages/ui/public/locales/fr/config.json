@@ -10,5 +10,6 @@
     "validateButtonLabel": "Valider",
     "likeProjectPrompt": "Si vous aimez ce projet, vous pouvez ajouter une étoile sur:",
     "supportProjectPrompt": "Envisagez de soutenir l'avenir du projet sur:",
-    "leonardoKeyFieldLabel": "Clé API Leonardo (Facultatif):"
+    "leonardoKeyFieldLabel": "Clé API Leonardo (Facultatif):",
+    "Logout": "Se déconnecter"
 }

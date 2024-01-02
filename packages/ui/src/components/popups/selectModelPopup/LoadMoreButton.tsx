@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { LoadingIcon } from "../../shared/Node.styles"
 
 interface LoadMoreButtonProps {
@@ -7,6 +8,7 @@ interface LoadMoreButtonProps {
 }
 
 export default function LoadMoreButton({ loading, cursor, onLoadMore }: LoadMoreButtonProps) {
+    const { t } = useTranslation('flow');
     return (
         <div className='flex w-full justify-center'>
             {loading
@@ -15,7 +17,7 @@ export default function LoadMoreButton({ loading, cursor, onLoadMore }: LoadMore
                     {
                         cursor != null && cursor != "" &&
                         <div className='bg-zinc-950/70 hover:bg-zinc-950/50 text-center text-md text-slate-200 w-1/4 py-1' onClick={onLoadMore}>
-                            Load more
+                            {t('LoadMore')}
                         </div>
                     }
                 </>

@@ -48,5 +48,12 @@
     "stableVideoDiffusionPromptHelp": "Ce noeud utilise Replicate pour lancer le modèle Stable Video Diffusion.",
     "aiActionPromptHelp": "Ce noeud permet de réaliser des actions simples avec GPT-4 sans préciser de prompt.",
     "dataSplitterHelp": "Ce noeud sert à diviser les données en plusieurs parties. Vous pouvez spécifier en amont combien de parties vous voulez créer. Vous pouvez également le lancer unitairement pour qu'il trouve le nombre exact de sorties à générer.",
-    "socketConnectionLost": "La connexion a été perdue. \n\n Vous pouvez réessayer plus tard ou installer l'application localement pour éviter ce type de problème à l'avenir."
+    "socketConnectionLost": "La connexion a été perdue. \n\n Vous pouvez réessayer plus tard ou installer l'application localement pour éviter ce type de problème à l'avenir.",
+    "ClickToSelectModel": "Cliquez pour sélectionner un modèle",
+    "Or": "OU",
+    "EnterModelNameDirectly": "Entrez directement le nom du modèle",
+    "Load": "Charger",
+    "LoadMore": "Charger plus",
+    "SpotlightModels": "Modèles Vedettes",
+    "AllModels": "Tous les Modèles"
 }

@@ -331,19 +331,19 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                                     className="bg-slate-600 hover:bg-slate-400 rounded-2xl px-3 py-2 w-full"
                                     onClick={handleButtonClick}
                                 >
-                                    Click to Select Model
+                                    {t('ClickToSelectModel')}
                                 </button>
                                 {
                                     showPopup
                                     && <SelectModelPopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
                                 }
                             </div>
-                            <p> OR </p>
+                            <p> {t('Or')} </p>
                             <div className='flex flex-row  space-x-2 w-2/3'>
                                 <NodeInput className='text-center'
-                                    placeholder='Enter model name directly'
+                                    placeholder={t('EnterModelNameDirectly') ?? ''}
                                     onChange={(event) => setModelInput(event.target.value)} />
-                                <button className='bg-sky-500 hover:bg-sky-400 p-2 rounded-lg' onClick={handleLoadModel}> Load </button>
+                                <button className='bg-sky-500 hover:bg-sky-400 p-2 rounded-lg' onClick={handleLoadModel}> {t('Load')} </button>
                             </div>
                         </div>
                 }

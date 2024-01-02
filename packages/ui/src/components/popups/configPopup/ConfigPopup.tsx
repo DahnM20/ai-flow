@@ -74,7 +74,7 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
               </>
               : <>
                 <UserProfile user={user} />
-                <Button className='bg-[#F09686] my-2' onClick={handleLogout}> Logout </Button>
+                <Button className='bg-[#F09686] my-2' onClick={handleLogout}> {t('Logout')} </Button>
               </>
 
           }
