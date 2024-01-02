@@ -18,6 +18,7 @@ import SmartView from './smart-view/SmartView';
 import { Layout } from './smart-view/RenderLayout';
 import Tab from './Tab';
 import WelcomePopup from './popups/WelcomePopup';
+import EdgeTypeButton from './buttons/EdgeTypeButton';
 
 
 export interface FlowTab {
@@ -52,6 +53,7 @@ const FlowTabs = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [openConfig, setOpenConfig] = useState(false)
   const [mode, setMode] = useState<ApplicationMode>('flow')
+  const [selectedEdgeType, setSelectedEdgeType] = useState('default')
   const useAuth = process.env.REACT_APP_USE_AUTH === 'true';
 
   const handleToggleOutput = () => {
@@ -213,7 +215,15 @@ const FlowTabs = () => {
         <AddTabButton onClick={addFlowTab} className='text-lg text-slate-200 hover:text-slate-50 hover:ring-2 ring-slate-200 rounded-lg py-1 px-1'>
           <FaPlus />
         </AddTabButton>
-        <RightControls>
+        <div className='flex flex-row ml-auto items-center space-x-1'>
+
+          <div className='w-6 h-auto'>
+            <EdgeTypeButton
+              edgeType={selectedEdgeType}
+              onChangeEdgeType={(newEdgeType) => setSelectedEdgeType(newEdgeType)}
+            />
+          </div>
+
           <div className='px-2 py-2'>
             <FaEye className='text-slate-400 hover:text-slate-50'
               onClick={handleToggleOutput} />
@@ -227,11 +237,11 @@ const FlowTabs = () => {
             </>
           }
 
-          <div className='border-l-2 border-l-slate-500/50 h-6 pl-3'></div>
+          <div className='border-l-2 border-l-slate-500/50 h-6 pl-2'></div>
           <div className='pr-2'>
             <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
           </div>
-        </RightControls>
+        </div>
       </TabsContainer>
 
       {/* <WelcomePopup show={true} onClose={function (): void {
@@ -248,6 +258,7 @@ const FlowTabs = () => {
             showOnlyOutput={showOnlyOutput}
             isRunning={isRunning}
             onRunChange={handleChangeRun}
+            selectedEdgeType={selectedEdgeType}
           />
         }
         {

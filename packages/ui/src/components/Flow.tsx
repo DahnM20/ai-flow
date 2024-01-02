@@ -30,12 +30,14 @@ export interface FlowProps {
   showOnlyOutput?: boolean;
   isRunning: boolean;
   onRunChange: (isRunning: boolean) => void;
+  selectedEdgeType?: string;
 }
 
 function Flow(props: FlowProps) {
   const { t } = useTranslation('flow');
 
   const reactFlowWrapper = useRef(null);
+
   const nodeTypes = useMemo(() => getAllNodeWithEaseOut(), []);
 
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
@@ -45,6 +47,7 @@ function Flow(props: FlowProps) {
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
   const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
   const [errorCount, setErrorCount] = useState<number>(0);
+
 
   useEffect(() => {
     const areNodesRunning = currentNodesRunning.length > 0
@@ -129,9 +132,9 @@ function Flow(props: FlowProps) {
       if (isHandleAlreadyTargeted(connection, eds)) {
         return eds;
       }
-      return addEdge({ ...connection, type: 'smoothstep', markerEnd: 'arrowClosed' }, eds);
+      return addEdge({ ...connection, type: props.selectedEdgeType ?? 'default', markerEnd: 'arrowClosed' }, eds);
     }),
-    [setEdges]
+    [setEdges, props.selectedEdgeType]
   );
 
   const onDragOver = useCallback((event: any) => {
