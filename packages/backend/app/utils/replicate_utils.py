@@ -140,7 +140,6 @@ def get_model_info(model_id: str):
 
 @cached(TTLCache(maxsize=100, ttl=long_ttl_cache))
 def get_model_openapi_schema(model_id: str):
-    logging.info("hiu")
     api_token = get_replicate_api_key()
     url = f"{REPLICATE_MODEL_API_URL}/{model_id}"
 

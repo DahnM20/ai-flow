@@ -17,12 +17,11 @@ class ReplicateProcessor(APIContextProcessor):
 
     def __init__(self, config, api_context_data: ProcessorContext):
         super().__init__(config, api_context_data)
-        self.has_dynamic_behavior = True
+        self._has_dynamic_behavior = True
 
         self.config = config
         self.model = config.get("config").get("nodeName")
         model_name_withouth_version = self.model.split(":")[0]
-        logging.info(f"Model : {model_name_withouth_version}")
         self.schema = get_model_openapi_schema(model_name_withouth_version)
 
     def process(self):
@@ -59,7 +58,7 @@ class ReplicateProcessor(APIContextProcessor):
 
         if self.prediction.status != "succeeded":
             exception = Exception(
-                f"Replicate prediction failed with status : {self.prediction.status}"
+                f" Replicate prediction failed with status : {self.prediction.status}"
             )
             exception.rollback_not_needed = True
             raise exception
