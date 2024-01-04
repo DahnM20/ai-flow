@@ -204,11 +204,16 @@ interface ModelSectionProps {
     onValidate: (data: any) => void;
 }
 
-const ModelsSection = ({ title, models, onValidate }: ModelSectionProps) => (
-    <>
-        {
-            title && <h2>{title}</h2>
-        }
-        <ModelsGrid models={models} onValidate={onValidate} />
-    </>
-);
+const ModelsSection = ({ title, models, onValidate }: ModelSectionProps) => {
+    if (!models || models.length == 0)
+        return null
+
+    return (
+        <>
+            {
+                title && <h2>{title}</h2>
+            }
+            <ModelsGrid models={models} onValidate={onValidate} />
+        </>
+    );
+}

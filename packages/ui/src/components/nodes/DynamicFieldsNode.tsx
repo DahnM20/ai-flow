@@ -22,8 +22,9 @@ import VideoUrlOutput from '../shared/node-output/VideoUrlOutput';
 import useCachedFetch from '../../hooks/useCachedFetch';
 import { getRestApiUrl } from '../../utils/config';
 import AudioUrlOutput from '../shared/node-output/AudioUrlOutput';
-import { toastInfoMessage } from "../../utils/toastUtils";
+import { toastFastInfoMessage, toastInfoMessage } from "../../utils/toastUtils";
 import { convertOpenAPISchemaToNodeConfig, getSchemaFromConfig } from "../../utils/openAPIUtils";
+import { copyToClipboard } from "../../utils/navigatorUtils";
 
 interface DynamicFieldsNodeData {
     handles: any;
@@ -55,7 +56,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
     const updateNodeInternals = useUpdateNodeInternals();
 
-    const [collapsed, setCollapsed] = useState<boolean>(true);
+    const [collapsed, setCollapsed] = useState<boolean>(false);
     const [showLogs, setShowLogs] = useState<boolean>(true);
     const [nodeId, setNodeId] = useState<string>(`${data.name}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
@@ -145,7 +146,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         undefined,
         undefined,
         true,
-        !collapsed
+        collapsed
     );
 
 
@@ -294,6 +295,11 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
     }
 
     function handleCopyToClipboard(event: MouseEvent<SVGElement, globalThis.MouseEvent>) {
+        event.stopPropagation();
+        if (data.outputData && data.outputData.length > 0) {
+            copyToClipboard(data.outputData[0]);
+            toastFastInfoMessage(t('copiedToClipboard'));
+        }
 
     }
 
@@ -305,6 +311,8 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
         || outputType === 'audioUrl') && !!data.outputData;
 
     const modelNameToDisplay = model?.includes(':') ? model.split(':')[0] : model;
+
+    const hasFieldToDisplay = formFields?.some((field: any) => field != null)
 
     return (<NodeContainer key={nodeId} ref={nodeRef} >
         <NodeHeader onDoubleClick={toggleCollapsed}>
@@ -320,35 +328,37 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
             <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />
         </NodeHeader>
         <NodeBand />
-        <NodeContent>
-            <NodeForm>
-                {
-                    fields.length > 0
-                        ? formFields
-                        : <div className="flex flex-col space-y-2 w-full items-center justify-center">
-                            <div className='flex flex-row w-2/3 items-center'>
-                                <button
-                                    className="bg-slate-600 hover:bg-slate-400 rounded-2xl px-3 py-2 w-full"
-                                    onClick={handleButtonClick}
-                                >
-                                    {t('ClickToSelectModel')}
-                                </button>
-                                {
-                                    showPopup
-                                    && <SelectModelPopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
-                                }
+        {(!collapsed || hasFieldToDisplay) &&
+            <NodeContent>
+                <NodeForm>
+                    {
+                        fields.length > 0
+                            ? formFields
+                            : <div className="flex flex-col space-y-2 w-full items-center justify-center">
+                                <div className='flex flex-row w-2/3 items-center'>
+                                    <button
+                                        className="bg-slate-600 hover:bg-slate-400 rounded-2xl px-3 py-2 w-full"
+                                        onClick={handleButtonClick}
+                                    >
+                                        {t('ClickToSelectModel')}
+                                    </button>
+                                    {
+                                        showPopup
+                                        && <SelectModelPopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
+                                    }
+                                </div>
+                                <p> {t('Or')} </p>
+                                <div className='flex flex-row  space-x-2 w-2/3'>
+                                    <NodeInput className='text-center'
+                                        placeholder={t('EnterModelNameDirectly') ?? ''}
+                                        onChange={(event) => setModelInput(event.target.value)} />
+                                    <button className='bg-sky-500 hover:bg-sky-400 p-2 rounded-lg' onClick={handleLoadModel}> {t('Load')} </button>
+                                </div>
                             </div>
-                            <p> {t('Or')} </p>
-                            <div className='flex flex-row  space-x-2 w-2/3'>
-                                <NodeInput className='text-center'
-                                    placeholder={t('EnterModelNameDirectly') ?? ''}
-                                    onChange={(event) => setModelInput(event.target.value)} />
-                                <button className='bg-sky-500 hover:bg-sky-400 p-2 rounded-lg' onClick={handleLoadModel}> {t('Load')} </button>
-                            </div>
-                        </div>
-                }
-            </NodeForm>
-        </NodeContent>
+                    }
+                </NodeForm>
+            </NodeContent>
+        }
         <NodeLogs
             showLogs={showLogs}
             noPadding={outputIsMedia && showLogs}

@@ -15,7 +15,7 @@ REPLICATE_COLLECTION_API_URL = f"{REPLICATE_API_URL}/v1/collections"
 
 
 @cached(TTLCache(maxsize=100, ttl=600))
-def get_replicate_models(cursor=None):
+def get_replicate_models(cursor: str = None):
     api_token = get_replicate_api_key()
 
     if not api_token:
@@ -64,7 +64,7 @@ def get_replicate_collections():
 
 
 @cached(TTLCache(maxsize=100, ttl=long_ttl_cache))
-def get_replicate_collection_models(collection_slug, cursor=None):
+def get_replicate_collection_models(collection_slug: str, cursor=None):
     api_token = get_replicate_api_key()
 
     if not api_token:
@@ -117,7 +117,7 @@ def get_highlighted_models_info():
 
 
 @cached(TTLCache(maxsize=100, ttl=long_ttl_cache))
-def get_model_info(model_id):
+def get_model_info(model_id: str):
     api_token = get_replicate_api_key()
     url = f"{REPLICATE_MODEL_API_URL}/{model_id}"
 
@@ -139,7 +139,8 @@ def get_model_info(model_id):
 
 
 @cached(TTLCache(maxsize=100, ttl=long_ttl_cache))
-def get_model_openapi_schema(model_id):
+def get_model_openapi_schema(model_id: str):
+    logging.info("hiu")
     api_token = get_replicate_api_key()
     url = f"{REPLICATE_MODEL_API_URL}/{model_id}"
 

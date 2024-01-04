@@ -171,7 +171,7 @@ export function useFormFields(
     const fields = getFields()
 
     if (!data || !data.config || !fields) {
-        return <></>
+        return null
     }
 
     return fields
@@ -181,7 +181,7 @@ export function useFormFields(
 
 
             if (showOnlyConnectedFields && !field.isLinked) {
-                return <></>
+                return null
             }
 
             return (

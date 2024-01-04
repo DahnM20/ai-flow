@@ -39,7 +39,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
 
     const updateNodeInternals = useUpdateNodeInternals();
 
-    const [collapsed, setCollapsed] = useState<boolean>(true);
+    const [collapsed, setCollapsed] = useState<boolean>(false);
     const [showLogs, setShowLogs] = useState<boolean>(data.config.defaultHideOutput == null ? true : !data.config.defaultHideOutput);
     const [nodeId, setNodeId] = useState<string>(`${data.name}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
