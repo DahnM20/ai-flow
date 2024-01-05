@@ -50,11 +50,9 @@ export const getTargetHandleKey: any = (edge: Edge) => {
   return edge?.targetHandle?.split(handleSeparator)[indexKeyHandleIn];
 }
 
-export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates: boolean): NodeData[] {
+export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates?: boolean, withConfig?: boolean): NodeData[] {
   return nodes.map((node: Node) => {
-    withCoordinates = true
     const { id, ...rest } = node;
-
 
     const inputEdges = edges.filter((edge: any) => edge.target === id);
 
@@ -78,16 +76,19 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
 
     const { a, nodeType, output, input, config, ...nodeValues } = node.data;
 
-    const { fields, nodeName, ...additionnalConfig } = config
+    const fields = config?.fields;
+    const nodeName = config?.nodeName;
+
+    const configEssentials = {
+      fields,
+      nodeName
+    }
 
     if (withCoordinates) {
       return {
         inputs,
         ...nodeValues,
-        config: {
-          fields,
-          nodeName
-        },
+        config: withConfig ? configEssentials : undefined,
         x: node.position.x,
         y: node.position.y,
       }
@@ -95,11 +96,7 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates:
       return {
         inputs,
         ...nodeValues,
-        config: {
-          fields,
-          nodeName
-        },
-        // output,
+        config: withConfig ? configEssentials : undefined,
       };
     }
   });

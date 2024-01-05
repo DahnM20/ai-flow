@@ -55,7 +55,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
         }
 
         const nodesSorted = nodesTopologicalSort(nodes, edges);
-        const flowFile = convertFlowToJson(nodesSorted, edges, true);
+        const flowFile = convertFlowToJson(nodesSorted, edges, false);
         socket?.emit('run_node',
             {
                 jsonFile: JSON.stringify(flowFile),

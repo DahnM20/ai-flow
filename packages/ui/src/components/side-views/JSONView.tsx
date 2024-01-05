@@ -1,4 +1,4 @@
-import React, { useContext, memo } from 'react';
+import React, { useContext, memo, useState } from 'react';
 import { FiCrosshair, FiDownload, FiUpload } from 'react-icons/fi';
 import { Edge, Node } from 'reactflow';
 import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../../utils/flowUtils';
@@ -6,21 +6,23 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { NodeContext } from '../providers/NodeProvider';
 import { FaExclamationTriangle } from 'react-icons/fa';
+import DefaultSwitch from '../buttons/DefaultSwitch';
 
 interface JSONViewProps {
     nodes: Node[];
     edges: Edge[];
-    withCoordinates: boolean;
     onChangeFlow: (nodes: Node[], edges: Edge[]) => void;
 }
 
-const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onChangeFlow }) => {
+const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
 
     const { t } = useTranslation('flow');
     const { onUpdateNodes } = useContext(NodeContext);
+    const [showFieldsConfig, setShowFieldsConfig] = useState(false);
+    const [showCoordinates, setShowCoordinates] = useState(true);
 
     nodes = nodesTopologicalSort(nodes, edges);
-    const data = convertFlowToJson(nodes, edges, withCoordinates);
+    const data = convertFlowToJson(nodes, edges, showCoordinates, showFieldsConfig);
 
 
     const handleUploadClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,7 +50,8 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
     };
 
     const handleDownloadClick = () => {
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const fullData = convertFlowToJson(nodes, edges, true, true);
+        const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -91,8 +94,18 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, withCoordinates, onCh
                     {t('Delete All')}
                 </JSONViewButton>
             </JSONViewButtons>
+            <div className='flex flex-col mt-2'>
+                <div className='flex flex-row items-center space-x-2'>
+                    <DefaultSwitch onChange={(checked: boolean) => setShowFieldsConfig(checked)} checked={showFieldsConfig} />
+                    <p className='text-sm'>Show field config</p>
+                </div>
+                <div className='flex flex-row items-center space-x-2'>
+                    <DefaultSwitch onChange={(checked: boolean) => setShowCoordinates(checked)} checked={showCoordinates} />
+                    <p className='text-sm'>Show coordinates</p>
+                </div>
+            </div >
             <JSONViewContent className='mt-5'>{JSON.stringify(data, null, 2)}</JSONViewContent>
-        </JSONViewContainer>
+        </JSONViewContainer >
     );
 
 };
@@ -133,7 +146,7 @@ const JSONViewContent = styled.pre`
 `;
 
 function arePropsEqual(prevProps: JSONViewProps, nextProps: JSONViewProps) {
-    return prevProps.nodes === nextProps.nodes && prevProps.edges === nextProps.edges && prevProps.withCoordinates === nextProps.withCoordinates;
+    return prevProps.nodes === nextProps.nodes && prevProps.edges === nextProps.edges;
 }
 
 export default memo(JSONView, arePropsEqual);

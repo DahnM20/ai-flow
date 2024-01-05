@@ -146,7 +146,7 @@ const FlowTabs = () => {
     const edges = flowTabs.tabs[currentTab].edges;
 
     const nodesSorted = nodesTopologicalSort(nodes, edges);
-    const flowFile = convertFlowToJson(nodesSorted, edges, true);
+    const flowFile = convertFlowToJson(nodesSorted, edges, false);
     socket?.emit('process_file',
       {
         jsonFile: JSON.stringify(flowFile),

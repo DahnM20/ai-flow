@@ -1,6 +1,6 @@
 import { MouseEvent, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaOldRepublic } from "react-icons/fa";
+import { FaWaveSquare } from "react-icons/fa";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { useFormFields } from "../../hooks/useFormFields";
 import useHandlePositions from "../../hooks/useHandlePositions";
@@ -316,7 +316,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
     return (<NodeContainer key={nodeId} ref={nodeRef} >
         <NodeHeader onDoubleClick={toggleCollapsed}>
-            <NodeIcon><FaOldRepublic /></NodeIcon>
+            <NodeIcon><FaWaveSquare /></NodeIcon>
             <NodeTitle className='px-5 overflow-hidden whitespace-nowrap text-ellipsis'>{modelNameToDisplay}</NodeTitle>
             <HandleWrapper id={outputHandleId} position={
                 !!data?.handles && data.handles[outputHandleId]

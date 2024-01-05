@@ -44,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
         }
         {
           show && activeTab === 'json' &&
-          <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} withCoordinates />
+          <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} />
         }
       </SidebarContainer>
       {!show && <div className="sidebar-overlay" onClick={toggleShow} />}
