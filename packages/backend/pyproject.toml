@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "gpt-abstract-back"
-version = "0.5.2"
+name = "ai-flow-back"
+version = "0.6.0"
 description = ""
 authors = ["DahnM20 <you@example.com>"]
 readme = "README.md"

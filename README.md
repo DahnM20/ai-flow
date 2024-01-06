@@ -24,7 +24,7 @@
 
 ## 🎉🚀 v0.6.0 is Now Available 🚀🎉
 
-🚀 **New Replicate Node** | ✨ **Access to a lot of open-source models </br> (LLama, Mistral, Face Swap, MusicGen)**
+🚀 **New Replicate Node** | ✨ **Access to a lot of open-source models </br> (LLama, Mistral, Face Swap, MusicGen, ...)**
 </br>
 🌟 **New Edge Type Button** | 🎵 **Support for audio output**
 
@@ -68,6 +68,12 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 ## Other basic use cases
 
+#### Run a diverse range of open-source models through the Replicate API
+
+LLaMA, Mistral, Stable Video Diffusion, Music-gen, and many more.
+
+![replicate](assets/replicate-models.png)
+
 #### Summarize web pages & youtube transcript
 
 ![image-summary](assets/summary.png)
@@ -85,11 +91,12 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 ![ai-vision](assets/gpt-vision.png)
 
+
 #### Create a custom layout for your flow
 
 When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting parts.
 
-Here is an example of layout, the underlying flow retrieve a youtube transcript and ask GPT for a markdown summary and interesting quotes : 
+Here is an example of layout : 
 
 ![layout-view](assets/layout.png)
 
@@ -98,7 +105,7 @@ Here is an example of layout, the underlying flow retrieve a youtube transcript 
 
 For a quick local setup, grab the .exe from the [repository's releases section](https://github.com/DahnM20/ai-flow/releases).
 
-You'll have to update REPLICATE_API_KEY in the .env to be able to use the Replicate Node. This api key is only used to fetch models data.
+You'll need to update the REPLICATE_API_KEY in the .env file to use the Replicate Node. This API key is used exclusively for fetching model data.
 
 ## Installation (without Docker)
 
@@ -129,7 +136,7 @@ Before getting started, make sure you have the following dependencies installed 
 
 ## Usage
 
-You'll have to update REPLICATE_API_KEY in the .env to be able to use the Replicate Node. This api key is only used to fetch models data.
+You'll need to update the REPLICATE_API_KEY in the .env file to use the Replicate Node. This API key is used exclusively for fetching model data.
 
 1. Start the backend server: `cd backend && poetry run python server.py`
 2. Start the ui application: `cd ui && npm start`
@@ -145,7 +152,7 @@ You'll have to update REPLICATE_API_KEY in the .env to be able to use the Replic
 ### Docker Compose
 
 1. Go to the docker directory: `cd ./docker`
-2. You'll have to update REPLICATE_API_KEY in the .yml to be able to use the Replicate Node. This api key is only used to fetch models data.
+2. You'll need to update the REPLICATE_API_KEY in the .yml file to use the Replicate Node. This API key is used exclusively for fetching model data.
 3. Launch `docker-compose up` or `docker-compose up -d`
 4. Open your browser and navigate to `http://localhost:80`
 5. Use `docker-compose stop` when you want to stop the app. 
