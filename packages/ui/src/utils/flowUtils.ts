@@ -1,5 +1,5 @@
 import { Node, Edge } from "reactflow";
-import { getConfigViaType } from "../nodesConfiguration/nodeConfig";
+import { Field, getConfigViaType } from "../nodesConfiguration/nodeConfig";
 import { NodeData } from "../types/node";
 import { FlowTab } from "../components/FlowTabs";
 
@@ -81,7 +81,8 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates?
 
     const configEssentials = {
       fields,
-      nodeName
+      nodeName,
+      outputType: config?.outputType
     }
 
     if (withCoordinates) {
@@ -119,7 +120,7 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
       position: { x, y },
       data: {
         ...nodeData,
-        config: getConfigViaType(nodeData.processorType),
+        config: !!nodeData.config ? nodeData.config : getConfigViaType(nodeData.processorType),
       },
     });
   });
@@ -128,10 +129,15 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
   json.forEach((node: any) => {
     if (node.inputs) {
       node.inputs.forEach((input: any, index: number) => {
+        let targetHandleIndex = index
+        const fields: Field[] = node.config?.fields;
+        if (!!fields) {
+          targetHandleIndex = fields.findIndex((field) => field.name === input.inputName)
+        }
         edges.push({
           id: `${input.inputNode}-to-${node.name}`,
           sourceHandle: generateIdForHandle(input.inputNodeOutputKey ?? 0, true),
-          targetHandle: generateIdForHandle(index),
+          targetHandle: generateIdForHandle(targetHandleIndex),
           target: node.name,
           source: input.inputNode,
           type: 'smoothstep',
