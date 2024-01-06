@@ -21,8 +21,8 @@ services:
     build:
       context: ../packages/ui/
       dockerfile: Dockerfile
+      args:
+        REACT_APP_WS_HOST: localhost
+        REACT_APP_WS_PORT: 5000
     ports:
       - 80:80
-    environment:
-      - REACT_APP_WS_HOST=localhost
-      - REACT_APP_WS_PORT=5000
