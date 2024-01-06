@@ -54,7 +54,6 @@ const FlowTabs = () => {
   const [openConfig, setOpenConfig] = useState(false)
   const [mode, setMode] = useState<ApplicationMode>('flow')
   const [selectedEdgeType, setSelectedEdgeType] = useState('default')
-  const [showWelcomePopup, setShowWelcomePopup] = useState(false)
   const useAuth = process.env.REACT_APP_USE_AUTH === 'true';
 
   const handleToggleOutput = () => {
@@ -245,7 +244,6 @@ const FlowTabs = () => {
         </div>
       </TabsContainer>
 
-      <WelcomePopup show={showWelcomePopup} onClose={() => setShowWelcomePopup(false)} />
       <FlowWrapper mode={mode} openConfig={openConfig} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)} onChangeMode={handleChangeMode}>
         {
           mode === 'flow' &&
@@ -279,16 +277,11 @@ const FlowTabs = () => {
   );
 };
 
-const FeedbackIcon = styled.div`
-`;
-
 const FlowManagerContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
 `;
-
-const buttonPaddingValue = "8px 12px";
 
 const TabsContainer = styled.div`
   font-family: Roboto;
@@ -302,27 +295,7 @@ const Tabs = styled.div`
   max-width: 60%;
 `;
 
-
-
 const AddTabButton = styled.div`
-`;
-
-const RightControls = styled.div`
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-`;
-
-const ToggleThemeButton = styled.button`
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  color: ${({ theme }) => theme.accentText};
-  margin-right: 10px;
-
-  :hover {
-    color:${({ theme }) => theme.text};
-  }
 `;
 
 export default FlowTabs;

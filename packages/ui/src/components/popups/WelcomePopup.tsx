@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import DefaultPopup from './DefaultPopup';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
@@ -20,12 +21,25 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
 
     const { t } = useTranslation('version');
 
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
+
     const versionInfo = t('versionInfo', { returnObjects: true }) as VersionInfo;
     const features = t('features', { returnObjects: true }) as Feature[];
     const imageSrc = t('imageSrc');
 
+    useEffect(() => {
+        if (imageSrc) {
+            const img = new Image();
+            img.onload = () => setIsImageLoaded(true);
+            img.src = imageSrc;
+        } else {
+            setIsImageLoaded(true);
+        }
+    }, [imageSrc]);
 
-    return (
+    const shouldShowPopup = show && (isImageLoaded || !imageSrc);
+
+    return shouldShowPopup ? (
         <DefaultPopup onClose={onClose} show={show} centered>
             <div className='flex flex-col relative bg-zinc-900 shadow text-slate-200 rounded-xl p-10 overflow-auto my-15'>
                 <div className='absolute top-0 right-0 p-4 text-2xl'>
@@ -45,10 +59,14 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
                 {
                     imageSrc && (
                         <div className='flex justify-center mb-4'>
-                            <img src={imageSrc} alt="Version Updates" className="rounded-md max-w-full h-auto" />
+                            <img
+                                src={imageSrc}
+                                alt="Version Updates"
+                                className="rounded-md max-w-full h-auto"
+                            />
                         </div>
                     )
                 }
             </div >
-        </DefaultPopup >)
+        </DefaultPopup >) : null;
 };
