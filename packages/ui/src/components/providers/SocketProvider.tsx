@@ -1,6 +1,5 @@
 import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
 import { io, Socket } from "socket.io-client";
-import { UserContext } from './UserProvider';
 import { APIKeys } from '../popups/configPopup/ApiKeys';
 import { getWsUrl } from '../../utils/config';
 
@@ -30,8 +29,6 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [config, setConfig] = useState<WSConfiguration | null>(null);
 
-    const { user, getUserIDToken, getUserAccessToken } = useContext(UserContext);
-
     useEffect(() => {
         if (socket) {
             socket.disconnect();
@@ -44,7 +41,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         }
 
         // Connect by default only if user got api keys
-        if (!!storedApiKeys || !!user) {
+        if (!!storedApiKeys) {
             const newSocket = connectSocket(config);
 
             setSocket(newSocket);
@@ -54,18 +51,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             };
         }
 
-    }, [user]);
+    }, []);
 
     function connectSocket(configuration: WSConfiguration): Socket {
         setConfig(configuration);
 
         const newSocket = io(getWsUrl());
-
-        if (!!user) {
-            const idToken = getUserIDToken();
-            const accessToken = getUserAccessToken()
-            newSocket.emit('auth', { idToken, accessToken });
-        }
 
         setSocket(newSocket);
 

@@ -5,7 +5,6 @@ import { SocketContext, WSConfiguration } from '../../providers/SocketProvider';
 import { useTranslation } from 'react-i18next';
 import UserProfile from '../../login/UserProfile';
 import { Auth } from '@aws-amplify/auth';
-import { UserContext } from '../../providers/UserProvider';
 import APIKeyFields from './APIKeyFields';
 import { APIKeys, defaultApiKeys } from './ApiKeys';
 
@@ -20,7 +19,6 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
   const { t } = useTranslation('config');
 
   const { config, connectSocket } = useContext(SocketContext);
-  const { user } = useContext(UserContext);
 
   const [apiKeys, setApiKeys] = useState<APIKeys>(structuredClone(defaultApiKeys));
 
@@ -65,19 +63,11 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
           <Header>
             <Title>{t('configurationTitle')}</Title>
           </Header>
-          {
-            !user
-              ? <>
-                <SoftMessage>{t('openSourceDisclaimer')}</SoftMessage>
-                <SoftMessage>{t('apiKeyDisclaimer')}</SoftMessage>
-                <SoftMessage>{t('apiKeyRevokeReminder')}</SoftMessage>
-              </>
-              : <>
-                <UserProfile user={user} />
-                <Button className='bg-[#F09686] my-2' onClick={handleLogout}> {t('Logout')} </Button>
-              </>
-
-          }
+          <>
+            <SoftMessage>{t('openSourceDisclaimer')}</SoftMessage>
+            <SoftMessage>{t('apiKeyDisclaimer')}</SoftMessage>
+            <SoftMessage>{t('apiKeyRevokeReminder')}</SoftMessage>
+          </>
 
           <APIKeyFields apiKeys={apiKeys} onApiKeyChange={onApiKeyChange} />
           <Actions>

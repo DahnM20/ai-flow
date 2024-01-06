@@ -13,7 +13,6 @@ import ButtonRunAll from './buttons/ButtonRunAll';
 import { SocketContext } from './providers/SocketProvider';
 import LoginButton from './login/LoginButton';
 import FlowWrapper from './FlowWrapper';
-import { UserContext } from './providers/UserProvider';
 import SmartView from './smart-view/SmartView';
 import { Layout } from './smart-view/RenderLayout';
 import Tab from './Tab';
@@ -49,7 +48,6 @@ const FlowTabs = () => {
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
   const { dark, toggleTheme } = useContext(ThemeContext);
   const { socket, verifyConfiguration, config } = useContext(SocketContext);
-  const { user, setLoggedUser } = useContext(UserContext);
   const [isRunning, setIsRunning] = useState(false);
   const [openConfig, setOpenConfig] = useState(false)
   const [mode, setMode] = useState<ApplicationMode>('flow')
@@ -228,14 +226,6 @@ const FlowTabs = () => {
             <FaEye className='text-slate-400 hover:text-slate-50'
               onClick={handleToggleOutput} />
           </div>
-
-          {
-            useAuth
-            && <>
-              <div className='border-l-2 border-l-slate-500/50 h-6'></div>
-              <LoginButton user={user} onClickProfile={handleClickProfile} />
-            </>
-          }
 
           <div className='border-l-2 border-l-slate-500/50 h-6 pl-2'></div>
           <div className='pr-2'>

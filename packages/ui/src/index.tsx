@@ -12,12 +12,6 @@ import { ToastContainer } from 'react-toastify';
 import App from './components/App';
 import "allotment/dist/style.css";
 
-import configureAmplify from "./configureAmplify";
-import { UserProvider } from './components/providers/UserProvider';
-
-
-configureAmplify();
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -25,16 +19,14 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <GlobalStyle />
-    <UserProvider>
-      <SocketProvider>
-        <ThemeProvider>
-          <Suspense fallback={<Fallback />}>
-            <ToastContainer />
-            <App />
-          </Suspense>
-        </ThemeProvider>
-      </SocketProvider>
-    </UserProvider>
+    <SocketProvider>
+      <ThemeProvider>
+        <Suspense fallback={<Fallback />}>
+          <ToastContainer />
+          <App />
+        </Suspense>
+      </ThemeProvider>
+    </SocketProvider>
   </React.StrictMode>
 );
 
