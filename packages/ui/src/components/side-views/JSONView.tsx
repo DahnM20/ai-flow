@@ -97,7 +97,7 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
             <div className='flex flex-col mt-2'>
                 <div className='flex flex-row items-center space-x-2'>
                     <DefaultSwitch onChange={(checked: boolean) => setShowFieldsConfig(checked)} checked={showFieldsConfig} />
-                    <p className='text-sm'>Show field config</p>
+                    <p className='text-sm'>Show nodes config</p>
                 </div>
                 <div className='flex flex-row items-center space-x-2'>
                     <DefaultSwitch onChange={(checked: boolean) => setShowCoordinates(checked)} checked={showCoordinates} />

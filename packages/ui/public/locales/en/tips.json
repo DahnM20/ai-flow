@@ -11,7 +11,7 @@
         "Our software is in early development. You might encounter some bugs.",
         "Access your flow in JSON format via the sidebar with the black indicator on the right. Save and upload your flow there.",
         "Data is sent only to APIs you interact with, such as OpenAI. All other operations are local (for users with the local app version).",
-        "DALL-E images are only available during a few hours, so do not forget to save them.",
+        "Generally, images are only available during one hour, so do not forget to save them.",
         "If you're using the cloud version, we save your Stable Diffusion images for up to 12 hours for your access."
     ],
     "docAvailable": "Full documentation is available here : ",

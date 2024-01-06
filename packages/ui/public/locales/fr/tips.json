@@ -12,7 +12,7 @@
         "Accédez à votre flux au format JSON via la barre latérale avec l'indicateur noir sur la droite. Sauvegardez et téléchargez votre flux depuis cet endroit.",
         "Les données sont envoyées uniquement aux API avec lesquelles vous interagissez, comme OpenAI. Toutes les autres opérations sont locales (pour les utilisateurs avec la version locale de l'application).",
         "Nous ne stockons ni n'utilisons jamais vos données.",
-        "Les images générées par DALL-E ne sont disponibles que quelques heures, pensez à les sauvegarder.",
+        "Les images générées sont disponibles environ une heure, pensez à les sauvegarder.",
         "Si vous utilisez la version cloud, nous conservons vos images Stable Diffusion pendant 12 heures pour que vous puissiez y accéder."
     ],
     "docAvailable": "La documentation complète est disponible ici : ",

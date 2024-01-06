@@ -56,5 +56,6 @@
     "LoadMore": "Charger plus",
     "SpotlightModels": "Modèles Vedettes",
     "AllModels": "Tous les Modèles",
-    "EdgeType": "Type d'arête"
+    "EdgeType": "Type d'arête",
+    "CannotChangeTabWhileRunning": "Vous ne pouvez pas changer d'onglet quand un lancement est en cours."
 }

@@ -1,21 +1,21 @@
 {
     "versionInfo": {
-        "versionNumber": "1.2.3",
-        "description": "🚀 Here's what's new in version 1.2.3"
+        "versionNumber": "v0.6.0",
+        "description": " 🚀 Voici les nouveautés de la v0.6.0"
     },
     "features": [
         {
-            "title": "Feature 1",
-            "description": "Description"
+            "title": "NOUVEAU Nœud Replicate",
+            "description": "Découvrez une gamme variée de modèles open-source avec le nouveau Nœud Replicate, comprenant des modèles open-source populaires tels que Llama, Mistral, Stable Video Diffusion, Music-gen, SDXL personnalisé, et bien d'autres."
         },
         {
-            "title": "Feature 2",
-            "description": "Description 2"
+            "title": "Sélection du Type de Bordure",
+            "description": "Nouveau bouton en haut à droite pour sélectionner et utiliser différents types d'arêtes'."
         },
         {
-            "title": "Feature 3",
-            "description": "Description 3"
+            "title": "Informations Supplémentaires",
+            "description": "En raison de la vaste gamme de modèles disponibles via Replicate, certains peuvent ne pas être encore pris en charge. De plus, comme les coûts de l'API Replicate sont basés sur le temps de traitement et le type de matériel, les prix peuvent varier considérablement entre les modèles."
         }
     ],
-    "imageSrc": "path/to/english/image.jpg"
+    "imageSrc": "./gif-new-version.gif"
 }

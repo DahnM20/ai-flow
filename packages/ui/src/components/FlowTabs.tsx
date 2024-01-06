@@ -54,6 +54,7 @@ const FlowTabs = () => {
   const [openConfig, setOpenConfig] = useState(false)
   const [mode, setMode] = useState<ApplicationMode>('flow')
   const [selectedEdgeType, setSelectedEdgeType] = useState('default')
+  const [showWelcomePopup, setShowWelcomePopup] = useState(false)
   const useAuth = process.env.REACT_APP_USE_AUTH === 'true';
 
   const handleToggleOutput = () => {
@@ -146,7 +147,7 @@ const FlowTabs = () => {
     const edges = flowTabs.tabs[currentTab].edges;
 
     const nodesSorted = nodesTopologicalSort(nodes, edges);
-    const flowFile = convertFlowToJson(nodesSorted, edges, false);
+    const flowFile = convertFlowToJson(nodesSorted, edges, false, true);
     socket?.emit('process_file',
       {
         jsonFile: JSON.stringify(flowFile),
@@ -244,9 +245,7 @@ const FlowTabs = () => {
         </div>
       </TabsContainer>
 
-      {/* <WelcomePopup show={true} onClose={function (): void {
-        throw new Error("Function not implemented.");
-      }} /> */}
+      <WelcomePopup show={showWelcomePopup} onClose={() => setShowWelcomePopup(false)} />
       <FlowWrapper mode={mode} openConfig={openConfig} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)} onChangeMode={handleChangeMode}>
         {
           mode === 'flow' &&

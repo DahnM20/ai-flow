@@ -1,21 +1,21 @@
 {
     "versionInfo": {
-        "versionNumber": "1.2.3",
-        "description": " 🚀 Here's what's new in version 1.2.3"
+        "versionNumber": "v0.6.0",
+        "description": " 🚀 Here's what's new in v0.6.0"
     },
     "features": [
         {
-            "title": "Feature 1",
-            "description": "Description"
+            "title": "NEW Replicate Node",
+            "description": "Experience a diverse range of open-source models with the new Replicate Node, featuring popular models Llama, Mistral, Stable Video Diffusion, Music-gen, custom SDXL, and many more."
         },
         {
-            "title": "Feature 2",
-            "description": "Description 2"
+            "title": "Edge Type Selection",
+            "description": "New top-right UI button for selecting and using different Edge Types."
         },
         {
-            "title": "Feature 3",
-            "description": "Description 3"
+            "title": "Additional Information",
+            "description": "Due to the extensive range of models available via Replicate, some may not be supported yet. Also, as the Replicate API costs are based on processing time and hardware type, pricing may vary greatly between models."
         }
     ],
-    "imageSrc": "path/to/english/image.jpg"
+    "imageSrc": "./gif-new-version.gif"
 }

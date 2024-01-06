@@ -57,5 +57,6 @@
     "LoadMore": "Load more",
     "SpotlightModels": "Spotlight Models",
     "AllModels": "All Models",
-    "EdgeType": "Edge type"
+    "EdgeType": "Edge type",
+    "CannotChangeTabWhileRunning": "Cannot change tab while running"
 }
