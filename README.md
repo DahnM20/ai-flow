@@ -2,7 +2,7 @@
   <img src="assets/logo.png" alt="AI-Flow Logo"/>
 </p>
 <p align="center">
-  <em>Open-source tool to seamlessly connect multiple AI models in repeatable flow.</em>
+  <em>Open-source tool to seamlessly connect multiple AI model APIs in repeatable flow.</em>
 </p>
 <p align="center">
     <a href="https://docs.ai-flow.net/"> <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"> </a>
@@ -17,18 +17,16 @@
 </p>
 
 <p align="center">
-<em>While a live demo is available for convenience, for the best experience we recommend running the application directly on your local machine.</em>
+<em>While a live version is available for convenience, for the best experience we recommend running the application directly on your local machine.</em>
 </p>
 
 <div align="center">
 
-## 🎉🚀 v0.5.2 is Now Available 🚀🎉
+## 🎉🚀 v0.6.0 is Now Available 🚀🎉
 
- 🚀 **Improved performances** | ⚙️ **Nodes async execution**
-
-🚀 **GPT-4-Turbo** | 👀 **GPT-4-Vision** | 🎨 **Dall-E-3**
+🚀 **New Replicate Node** | ✨ **Access to a lot of open-source models </br> (LLama, Mistral, Face Swap, MusicGen)**
 </br>
-🌟 **UI Enhancements** | ↔️ **New Layout View** | 🤖 **New Merge Node** | ✨ **Support for large input**
+🌟 **New Edge Type Button** | 🎵 **Support for audio output**
 
 
 </div>
@@ -100,6 +98,8 @@ Here is an example of layout, the underlying flow retrieve a youtube transcript 
 
 For a quick local setup, grab the .exe from the [repository's releases section](https://github.com/DahnM20/ai-flow/releases).
 
+You'll have to update REPLICATE_API_KEY in the .env to be able to use the Replicate Node. This api key is only used to fetch models data.
+
 ## Installation (without Docker)
 
 ### Prerequisites
@@ -129,6 +129,8 @@ Before getting started, make sure you have the following dependencies installed 
 
 ## Usage
 
+You'll have to update REPLICATE_API_KEY in the .env to be able to use the Replicate Node. This api key is only used to fetch models data.
+
 1. Start the backend server: `cd backend && poetry run python server.py`
 2. Start the ui application: `cd ui && npm start`
 3. Open your browser and navigate to `http://localhost:3000`
@@ -143,7 +145,7 @@ Before getting started, make sure you have the following dependencies installed 
 ### Docker Compose
 
 1. Go to the docker directory: `cd ./docker`
-2. Update the .yml if needed for the PORTS
+2. You'll have to update REPLICATE_API_KEY in the .yml to be able to use the Replicate Node. This api key is only used to fetch models data.
 3. Launch `docker-compose up` or `docker-compose up -d`
 4. Open your browser and navigate to `http://localhost:80`
 5. Use `docker-compose stop` when you want to stop the app. 
