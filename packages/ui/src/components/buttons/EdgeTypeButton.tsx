@@ -33,7 +33,7 @@ export default function EdgeTypeButton({ edgeType, onChangeEdgeType }: EdgeTypeB
 
 
     return (
-        <div className='ring-slate-400/30 ring-1 rounded-lg items-center'
+        <div className='ring-slate-400/30 ring-1 rounded-lg items-center overflow-hidden'
             onClick={handleChangeEdgeType}
             data-tooltip-id={`edge-type-button-tooltip`}
             data-tooltip-content={t("EdgeType")}>
