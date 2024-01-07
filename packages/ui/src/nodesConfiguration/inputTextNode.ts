@@ -2,7 +2,7 @@ import { NodeConfig } from "./nodeConfig";
 
 
 const inputTextNodeConfig: NodeConfig = {
-  nodeName: "Input",
+  nodeName: "Text",
   icon: "FaUserCircle",
   fields: [
     {
