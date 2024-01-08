@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import FlowTabs from "./FlowTabs"
+import FlowTabs from "./layout/main-layout/AppLayout"
 import { ThemeContext } from "./providers/ThemeProvider";
 import '@aws-amplify/ui-react/styles.css';
 import { DndProvider } from 'react-dnd'
 import { MultiBackend } from 'react-dnd-multi-backend'
 import { HTML5toTouch } from 'rdndmb-html5-to-touch'
-import WelcomePopup from "./popups/WelcomePopup";
+import WelcomePopup from "./components/popups/WelcomePopup";
 const App = () => {
 
     const { dark } = useContext(ThemeContext);

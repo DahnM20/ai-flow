@@ -1,4 +1,4 @@
-import { Field, fieldHasHandle } from "../nodesConfiguration/nodeConfig";
+import { Field, fieldHasHandle } from "../nodes-configuration/nodeConfig";
 
 export interface OpenApiSchema {
     components: {

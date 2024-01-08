@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { FaCheck, FaPlay, FaStop } from 'react-icons/fa';
-import { NodeContext } from '../../providers/NodeProvider';
+import { NodeContext } from '../../../providers/NodeProvider';
 import TapScale from '../motions/TapScale';
 import { LoadingIcon } from '../Node.styles';
 

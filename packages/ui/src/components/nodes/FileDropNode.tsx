@@ -4,7 +4,7 @@ import { FaFileAlt, FaCheckCircle } from 'react-icons/fa';
 import { NodeProps, Handle, Position, useUpdateNodeInternals } from 'reactflow';
 import HandleWrapper from '../handles/HandleWrapper';
 import { generateIdForHandle } from '../../utils/flowUtils';
-import { NodeContext } from '../providers/NodeProvider';
+import { NodeContext } from '../../providers/NodeProvider';
 import { useIsPlaying } from '../../hooks/useIsPlaying';
 import NodePlayButton from '../shared/node-button/NodePlayButton';
 

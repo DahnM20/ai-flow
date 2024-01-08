@@ -1,7 +1,7 @@
 import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 import { MdOutlineVerticalSplit, MdHorizontalSplit } from 'react-icons/md';
-import { getConfigViaType } from "../../nodesConfiguration/nodeConfig";
+import { getConfigViaType } from "../../nodes-configuration/nodeConfig";
 import { NodeType } from "../../utils/mappings";
 import { ICON_MAP } from "../shared/NodeIcons";
 import NodePlayButton from "../shared/node-button/NodePlayButton";

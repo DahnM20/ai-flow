@@ -4,7 +4,7 @@ import { Edge, Node } from 'reactflow';
 import { convertFlowToJson, convertJsonToFlow, nodesTopologicalSort } from '../../utils/flowUtils';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { NodeContext } from '../providers/NodeProvider';
+import { NodeContext } from '../../providers/NodeProvider';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import DefaultSwitch from '../buttons/DefaultSwitch';
 

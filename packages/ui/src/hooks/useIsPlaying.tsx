@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { NodeContext } from "../components/providers/NodeProvider";
+import { NodeContext } from "../providers/NodeProvider";
 
 export const useIsPlaying = (): [boolean, React.Dispatch<React.SetStateAction<boolean>>] => {
   const { errorCount } = useContext(NodeContext);

@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { SocketContext } from '../components/providers/SocketProvider';
+import { SocketContext } from '../providers/SocketProvider';
 import { useTranslation } from 'react-i18next';
 import { toastInfoMessage } from '../utils/toastUtils';
 

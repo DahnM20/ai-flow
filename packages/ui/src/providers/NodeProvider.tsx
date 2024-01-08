@@ -1,9 +1,9 @@
 import React, { ReactNode, createContext, useContext, useState } from 'react';
 import { Node, Edge } from 'reactflow';
-import { nodesTopologicalSort, convertFlowToJson } from '../../utils/flowUtils';
+import { nodesTopologicalSort, convertFlowToJson } from '../utils/flowUtils';
 import { SocketContext } from './SocketProvider';
-import { toastInfoMessage } from '../../utils/toastUtils';
 import { useTranslation } from 'react-i18next';
+import { toastInfoMessage } from '../utils/toastUtils';
 
 interface NodeContextType {
     runNode: (nodeName: string) => boolean;

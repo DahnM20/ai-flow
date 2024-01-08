@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { FaColumns, FaProjectDiagram } from "react-icons/fa";
-import { ApplicationMode } from "../FlowTabs";
+import { ApplicationMode } from "../AppLayout";
 
 interface ModeBarProps {
     onChangeMode: (mode: ApplicationMode) => void;

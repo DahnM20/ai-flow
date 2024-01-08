@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Tooltip } from 'react-tooltip';
-import { nodeSectionMapping } from '../../../nodesConfiguration/sectionConfig';
+import { nodeSectionMapping } from '../../../nodes-configuration/sectionConfig';
 import { memo, useState } from 'react';
 import DraggableNode from './DraggableNode';
 

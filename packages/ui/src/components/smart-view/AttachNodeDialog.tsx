@@ -1,9 +1,9 @@
 import { useContext, useState } from 'react'
 import { Combobox, Dialog } from '@headlessui/react'
-import { NodeContext } from '../providers/NodeProvider';
+import { NodeContext } from '../../providers/NodeProvider'
 import { Node } from 'reactflow';
 import { FiChevronDown } from 'react-icons/fi';
-import { Field } from '../../nodesConfiguration/nodeConfig';
+import { Field } from '../../nodes-configuration/nodeConfig';
 import { useTranslation } from 'react-i18next';
 
 interface AttachNodeDialogProps {

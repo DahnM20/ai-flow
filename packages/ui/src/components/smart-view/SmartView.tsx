@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import RenderLayout, { BasicPane, Layout, LayoutIndex } from "./RenderLayout";
 import { Node, Edge } from 'reactflow';
-import { NodeProvider } from "../providers/NodeProvider";
+import { NodeProvider } from "../../providers/NodeProvider";
 import { useSocketListeners } from "../../hooks/useFlowSocketListeners";
 import { toastInfoMessage } from "../../utils/toastUtils";
 import { attachNode, splitPane, deletePane, layoutIsEmpty, updateLayoutSize } from "./layoutUtils";

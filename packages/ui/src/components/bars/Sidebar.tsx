@@ -5,7 +5,7 @@ import JSONView from '../side-views/JSONView';
 import styled, { css } from 'styled-components';
 import TopologicalView from '../side-views/TopologicalView';
 import { useTranslation } from 'react-i18next';
-import { TabButton } from '../Tab';
+import { TabButton } from '../../layout/main-layout/header/Tab';
 
 interface SidebarProps {
   nodes: Node[];

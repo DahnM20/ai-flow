@@ -1,11 +1,11 @@
 import { ReactNode, memo, useCallback, useState } from "react";
 import { FiHelpCircle } from "react-icons/fi";
-import ConfigPopup from "./popups/configPopup/ConfigPopup";
-import HelpPopup from "./popups/HelpPopup";
-import DnDSidebar from "./bars/DndSidebar/DnDSidebar";
-import RightIconButton from './buttons/ConfigurationButton';
-import ModeBar from "./bars/ModeBar";
-import { ApplicationMode } from "./FlowTabs";
+import ConfigPopup from "../../../components/popups/configPopup/ConfigPopup";
+import HelpPopup from "../../../components/popups/HelpPopup";
+import DnDSidebar from "../../../components/bars/DndSidebar/DnDSidebar";
+import RightIconButton from '../../../components/buttons/ConfigurationButton';
+import ModeBar from "../sidebar/ModeBar";
+import { ApplicationMode } from "../AppLayout";
 
 interface FlowWrapperProps {
     children?: ReactNode;

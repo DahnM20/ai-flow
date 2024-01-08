@@ -1,7 +1,7 @@
 import { FaGithub, FaXTwitter } from 'react-icons/fa6';
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { SocketContext, WSConfiguration } from '../../providers/SocketProvider';
+import { SocketContext, WSConfiguration } from '../../../providers/SocketProvider';
 import { useTranslation } from 'react-i18next';
 import UserProfile from '../../login/UserProfile';
 import { Auth } from '@aws-amplify/auth';

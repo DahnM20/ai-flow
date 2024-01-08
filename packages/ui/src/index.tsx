@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from './components/providers/ThemeProvider';
+import { ThemeProvider } from './providers/ThemeProvider';
 import { GlobalStyle } from './components/shared/Node.styles';
-import { SocketProvider } from './components/providers/SocketProvider';
+import { SocketProvider } from './providers/SocketProvider';
 import { Fallback } from './components/tools/Fallback';
 import './i18n';
 import { ToastContainer } from 'react-toastify';
-import App from './components/App';
+import App from './App';
 import "allotment/dist/style.css";
 
 const root = ReactDOM.createRoot(

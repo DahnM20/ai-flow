@@ -1,7 +1,7 @@
 import { Node, Edge } from "reactflow";
-import { Field, getConfigViaType } from "../nodesConfiguration/nodeConfig";
+import { Field, getConfigViaType } from "../nodes-configuration/nodeConfig";
 import { NodeData } from "../types/node";
-import { FlowTab } from "../components/FlowTabs";
+import { FlowTab } from "../layout/main-layout/AppLayout";
 
 const CONFIG = {
   FLOW_VERSION: "1.0.0",

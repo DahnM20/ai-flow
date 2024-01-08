@@ -1,7 +1,7 @@
 import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
 import { io, Socket } from "socket.io-client";
-import { APIKeys } from '../popups/configPopup/ApiKeys';
-import { getWsUrl } from '../../utils/config';
+import { getWsUrl } from '../config/config';
+import { APIKeys } from '../components/popups/configPopup/ApiKeys';
 
 export type WSConfiguration = {
     apiKeys?: APIKeys;

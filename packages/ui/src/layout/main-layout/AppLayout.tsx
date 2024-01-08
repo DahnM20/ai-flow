@@ -1,23 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Flow from './Flow';
+import Flow from '../../components/Flow';
 import { FiSun, FiMoon, FiMail } from 'react-icons/fi';
 import { Node, Edge } from 'reactflow';
-import { ThemeContext } from './providers/ThemeProvider';
+import { ThemeContext } from '../../providers/ThemeProvider';
 import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaPlus } from 'react-icons/fa';
-import { convertFlowToJson, convertJsonToFlow, isCompatibleConfigVersion, migrateConfig, nodesTopologicalSort } from '../utils/flowUtils';
-import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../utils/toastUtils';
-import ButtonRunAll from './buttons/ButtonRunAll';
-import { SocketContext } from './providers/SocketProvider';
-import LoginButton from './login/LoginButton';
-import FlowWrapper from './FlowWrapper';
-import SmartView from './smart-view/SmartView';
-import { Layout } from './smart-view/RenderLayout';
-import Tab from './Tab';
-import WelcomePopup from './popups/WelcomePopup';
-import EdgeTypeButton from './buttons/EdgeTypeButton';
+import { convertFlowToJson, convertJsonToFlow, isCompatibleConfigVersion, migrateConfig, nodesTopologicalSort } from '../../utils/flowUtils';
+import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../../utils/toastUtils';
+import ButtonRunAll from '../../components/buttons/ButtonRunAll';
+import { SocketContext } from '../../providers/SocketProvider';
+import LoginButton from '../../components/login/LoginButton';
+import FlowWrapper from './wrapper/FlowWrapper';
+import SmartView from '../../components/smart-view/SmartView';
+import { Layout } from '../../components/smart-view/RenderLayout';
+import EdgeTypeButton from '../../components/buttons/EdgeTypeButton';
+import TabHeader from './header/TabHeader';
 
 
 export interface FlowTab {
@@ -194,27 +193,8 @@ const FlowTabs = () => {
 
   return (
     <FlowManagerContainer className='bg-app-dark-gradient'>
-      <TabsContainer className='flex flex-row items-center justify-center h-16 py-2  border-b-sky-950/50 z-30'>
-        <div className='ml-4 mx-auto flex flex-row text-center align-middle justify-center'>
-          <img src="logo.png" className='w-16' alt="Logo"></img>
-        </div>
-        <Tabs>
-          {flowTabs.tabs.map((tab, index) => (
-            <Tab
-              key={index}
-              index={index}
-              active={index === currentTab}
-              onChangeTab={handleChangeTab}
-              onDeleteFlow={handleDeleteFlow}>
-              {t('Flow')} {index + 1}
-            </Tab>
-          ))}
-        </Tabs>
-        <AddTabButton onClick={addFlowTab} className='text-lg text-slate-200 hover:text-slate-50 hover:ring-2 ring-slate-200 rounded-lg py-1 px-1'>
-          <FaPlus />
-        </AddTabButton>
+      <TabHeader currentTab={currentTab} tabs={flowTabs.tabs} onDeleteTab={handleDeleteFlow} onAddFlowTab={addFlowTab} onChangeTab={handleChangeTab} tabPrefix={t('Flow')}>
         <div className='flex flex-row ml-auto items-center space-x-1'>
-
           <div className='w-6 h-auto'>
             <EdgeTypeButton
               edgeType={selectedEdgeType}
@@ -232,7 +212,7 @@ const FlowTabs = () => {
             <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
           </div>
         </div>
-      </TabsContainer>
+      </TabHeader>
 
       <FlowWrapper mode={mode} openConfig={openConfig} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)} onChangeMode={handleChangeMode}>
         {
@@ -273,19 +253,5 @@ const FlowManagerContainer = styled.div`
   height: 100vh;
 `;
 
-const TabsContainer = styled.div`
-  font-family: Roboto;
-`;
-
-const Tabs = styled.div`
-  white-space: nowrap;
-  overflow-y: hidden;
-  overflow-x: auto;
-  padding-bottom: 3px;
-  max-width: 60%;
-`;
-
-const AddTabButton = styled.div`
-`;
 
 export default FlowTabs;

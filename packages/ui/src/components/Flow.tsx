@@ -13,10 +13,10 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
-import { NodeProvider } from './providers/NodeProvider';
+import { NodeProvider } from '../providers/NodeProvider';
 import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
-import { getConfigViaType } from '../nodesConfiguration/nodeConfig';
+import { getConfigViaType } from '../nodes-configuration/nodeConfig';
 import { getAllNodeWithEaseOut } from '../utils/mappings';
 import { useTranslation } from 'react-i18next';
 import { toastInfoMessage } from '../utils/toastUtils';

@@ -6,11 +6,11 @@ interface TabProps {
     index: number;
     active: boolean;
     onChangeTab: (index: number) => void;
-    onDeleteFlow: (index: number) => void;
+    onDeleteTab: (index: number) => void;
     children: React.ReactNode;
 };
 
-const Tab = ({ index, active, onChangeTab, onDeleteFlow, children }: TabProps) => {
+const Tab = ({ index, active, onChangeTab, onDeleteTab, children }: TabProps) => {
     return (
         <TabButton
             active={active}
@@ -29,7 +29,7 @@ const Tab = ({ index, active, onChangeTab, onDeleteFlow, children }: TabProps) =
                     className="absolute  top-1/2 right-0 transform -translate-y-1/2 translate-x-3 hidden group-hover:block text-red-300 hover:text-red-500"
                     onClick={(e) => {
                         e.stopPropagation();
-                        onDeleteFlow(index);
+                        onDeleteTab(index);
                     }}
                 >
                     <AiOutlineClose />

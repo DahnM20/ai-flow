@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import styled from 'styled-components';
 import ReactTooltip, { Tooltip } from 'react-tooltip';
-import { NodeContext } from '../providers/NodeProvider';
+import { NodeContext } from '../../providers/NodeProvider';
 import NodePlayButton from '../shared/node-button/NodePlayButton';
 import { generateIdForHandle } from '../../utils/flowUtils';
 import { InputHandle, NodeTitle, OutputHandle } from '../shared/Node.styles';

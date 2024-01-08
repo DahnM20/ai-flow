@@ -1,9 +1,9 @@
 import { FiPlus } from "react-icons/fi";
 import { LayoutIndex } from "./RenderLayout";
 import { useContext, useMemo, useState } from "react";
-import { NodeContext } from "../providers/NodeProvider";
+import { NodeContext } from "../../providers/NodeProvider";
 import AttachNodeDialog from "./AttachNodeDialog";
-import { Field } from "../../nodesConfiguration/nodeConfig";
+import { Field } from "../../nodes-configuration/nodeConfig";
 import { useTranslation } from "react-i18next";
 import { useFormFields } from "../../hooks/useFormFields";
 import MarkdownOutput from "../shared/node-output/MarkdownOutput";

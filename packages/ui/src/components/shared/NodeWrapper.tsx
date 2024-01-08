@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import { NodeContext } from '../providers/NodeProvider';
+import { NodeContext } from '../../providers/NodeProvider';
 
 type NodeWrapperProps = {
     children: React.ReactNode;
