@@ -101,8 +101,8 @@ export const NodeLogsText = styled.p`
 
 export const NodeLogs = styled.div<{ showLogs: boolean, noPadding?: boolean }>`
   border-radius: 0 0 8px 8px;
-  font-size: 0.9em;
-  line-height: 20px;
+  font-size: 1.1em;
+  line-height: 1.4em;
   padding: ${({ noPadding }) => noPadding ? '0px' : '10px 16px'};
   overflow: hidden;
   word-break: break-word;

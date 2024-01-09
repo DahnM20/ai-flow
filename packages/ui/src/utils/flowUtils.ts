@@ -140,7 +140,7 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
           targetHandle: generateIdForHandle(targetHandleIndex),
           target: node.name,
           source: input.inputNode,
-          type: 'smoothstep',
+          type: 'buttonedge',
         });
       });
     }
@@ -152,7 +152,7 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
         sourceHandle: !!node.inputKey ? generateIdForHandle(node.inputKey) : undefined,
         source: node.input,
         target: node.name,
-        type: 'smoothstep',
+        type: 'buttonedge',
       });
     }
   });

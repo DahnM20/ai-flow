@@ -15,7 +15,9 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({ data }) => {
     if (!data) return <p> </p>
 
     const stringifiedData = typeof data === 'string' ? data : JSON.stringify(data);
-    return <EaseOut><StyledReactMarkdown remarkPlugins={[remarkGfm]} children={stringifiedData} className="markdown-body px-8" /></EaseOut>;
+    return <EaseOut><StyledReactMarkdown remarkPlugins={[remarkGfm]}
+        children={stringifiedData}
+        className="markdown-body px-8 text-lg" /></EaseOut>;
 };
 
 const StyledReactMarkdown = styled(ReactMarkdown)`
