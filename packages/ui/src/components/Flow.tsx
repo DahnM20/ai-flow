@@ -14,7 +14,7 @@ import {
 import 'reactflow/dist/style.css';
 import SideBar from './bars/Sidebar';
 import { NodeProvider } from '../providers/NodeProvider';
-import { MiniMapStyled, ReactFlowStyled } from './shared/Node.styles';
+import { MiniMapStyled, ReactFlowStyled } from './nodes/Node.styles';
 import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
 import { getConfigViaType } from '../nodes-configuration/nodeConfig';
 import { getAllNodeWithEaseOut } from '../utils/mappings';

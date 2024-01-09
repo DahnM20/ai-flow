@@ -1,4 +1,4 @@
-import { Layout, LayoutIndex, BasicPane } from "./RenderLayout";
+import { Layout, LayoutIndex, BasicPane } from "../RenderLayout";
 
 const INDEX_SPLIT_CHAR = '-'
 

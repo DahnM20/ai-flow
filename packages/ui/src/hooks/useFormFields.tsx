@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { NodeLabel, NodeInput, NodeTextarea, NodeSelect, NodeSelectOption, OptionSelector, OptionButton, InputHandle } from "../components/shared/Node.styles";
-import InputNameBar from "../components/shared/node-button/InputNameBar";
+import { NodeLabel, NodeInput, NodeTextarea, NodeSelect, NodeSelectOption, OptionSelector, OptionButton, InputHandle } from "../components/nodes/Node.styles";
+import InputNameBar from "../components/nodes/node-button/InputNameBar";
 import { Field } from "../nodes-configuration/nodeConfig";
 import React, { useEffect } from "react";
 import Switch from "react-switch";

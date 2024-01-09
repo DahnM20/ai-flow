@@ -1,6 +1,6 @@
 import { Allotment } from "allotment";
-import PaneWrapper from "./PaneWrapper";
-import NodePane from "./NodePane";
+import PaneWrapper from "./pane/PaneWrapper";
+import NodePane from "./pane/NodePane";
 import React, { useCallback } from 'react';
 import debounce from 'lodash.debounce';
 

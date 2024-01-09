@@ -1,5 +1,5 @@
-import { NodeConfig } from "../nodes-configuration/nodeConfig";
-import { NodeType } from "../utils/mappings";
+import { NodeConfig } from "../../../nodes-configuration/nodeConfig";
+import { NodeType } from "../../../utils/mappings";
 
 export interface NodeData {
     id: string;

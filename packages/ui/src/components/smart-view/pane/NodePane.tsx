@@ -1,16 +1,16 @@
 import { FiPlus } from "react-icons/fi";
-import { LayoutIndex } from "./RenderLayout";
+import { LayoutIndex } from "../RenderLayout";
 import { useContext, useMemo, useState } from "react";
-import { NodeContext } from "../../providers/NodeProvider";
-import AttachNodeDialog from "./AttachNodeDialog";
-import { Field } from "../../nodes-configuration/nodeConfig";
+import { NodeContext } from "../../../providers/NodeProvider";
+import AttachNodeDialog from "../AttachNodeDialog";
+import { Field } from "../../../nodes-configuration/nodeConfig";
 import { useTranslation } from "react-i18next";
-import { useFormFields } from "../../hooks/useFormFields";
-import MarkdownOutput from "../shared/node-output/MarkdownOutput";
-import ImageUrlOutput from "../shared/node-output/ImageUrlOutput";
-import { LoadingIcon } from "../shared/Node.styles";
-import VideoUrlOutput from "../shared/node-output/VideoUrlOutput";
-import AudioUrlOutput from "../shared/node-output/AudioUrlOutput";
+import { useFormFields } from "../../../hooks/useFormFields";
+import MarkdownOutput from "../../nodes/node-output/MarkdownOutput";
+import ImageUrlOutput from "../../nodes/node-output/ImageUrlOutput";
+import { LoadingIcon } from "../../nodes/Node.styles";
+import VideoUrlOutput from "../../nodes/node-output/VideoUrlOutput";
+import AudioUrlOutput from "../../nodes/node-output/AudioUrlOutput";
 
 interface NodePaneProps {
     nodeId?: string;

@@ -5,7 +5,7 @@ import GenericNode from "../components/nodes/GenericNode";
 import AIDataSplitterNode from "../components/nodes/AIDataSplitterNode";
 import AIActionNode from "../components/nodes/AIActionNode";
 import EaseOut from "../components/shared/motions/EaseOut";
-import NodeWrapper from "../components/shared/NodeWrapper";
+import NodeWrapper from "../components/nodes/NodeWrapper";
 import DynamicFieldsNode from "../components/nodes/DynamicFieldsNode";
 
 /**

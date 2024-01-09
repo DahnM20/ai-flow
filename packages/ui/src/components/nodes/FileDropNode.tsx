@@ -6,7 +6,7 @@ import HandleWrapper from '../handles/HandleWrapper';
 import { generateIdForHandle } from '../../utils/flowUtils';
 import { NodeContext } from '../../providers/NodeProvider';
 import { useIsPlaying } from '../../hooks/useIsPlaying';
-import NodePlayButton from '../shared/node-button/NodePlayButton';
+import NodePlayButton from './node-button/NodePlayButton';
 
 
 const FileDropNode: React.FC<NodeProps> = ({ data, id, selected }) => {

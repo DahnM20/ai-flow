@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import remarkGfm from "remark-gfm";
-import EaseOut from '../motions/EaseOut';
+import EaseOut from '../../shared/motions/EaseOut';
 import ReactMarkdown from "react-markdown";
 import styled from 'styled-components';
 

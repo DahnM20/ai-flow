@@ -4,7 +4,7 @@ import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from './providers/ThemeProvider';
-import { GlobalStyle } from './components/shared/Node.styles';
+import { GlobalStyle } from './components/nodes/Node.styles';
 import { SocketProvider } from './providers/SocketProvider';
 import { Fallback } from './components/tools/Fallback';
 import './i18n';

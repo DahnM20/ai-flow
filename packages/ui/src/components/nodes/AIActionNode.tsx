@@ -9,13 +9,13 @@ import useHandleShowOutput from '../../hooks/useHandleShowOutput';
 import { useIsPlaying } from '../../hooks/useIsPlaying';
 import { useRefreshOnAppearanceChange } from '../../hooks/useRefreshOnAppearanceChange';
 import { actions } from "../../nodes-configuration/data/aiAction";
-import { GenericNodeData } from '../../types/node';
+import { GenericNodeData } from './types/node';
 import { generateIdForHandle } from '../../utils/flowUtils';
 import HandleWrapper from '../handles/HandleWrapper';
 import { NodeContext } from '../../providers/NodeProvider';
-import { NodeBand, NodeLogs, NodeLogsText } from '../shared/Node.styles';
-import MarkdownOutput from '../shared/node-output/MarkdownOutput';
-import NodePlayButton from '../shared/node-button/NodePlayButton';
+import { NodeBand, NodeLogs, NodeLogsText } from './Node.styles';
+import MarkdownOutput from './node-output/MarkdownOutput';
+import NodePlayButton from './node-button/NodePlayButton';
 
 interface AIActionNodeData extends GenericNodeData {
     inputText: string;

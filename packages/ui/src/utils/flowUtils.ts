@@ -1,6 +1,6 @@
 import { Node, Edge } from "reactflow";
 import { Field, getConfigViaType } from "../nodes-configuration/nodeConfig";
-import { NodeData } from "../types/node";
+import { NodeData } from "../components/nodes/types/node";
 import { FlowTab } from "../layout/main-layout/AppLayout";
 
 const CONFIG = {

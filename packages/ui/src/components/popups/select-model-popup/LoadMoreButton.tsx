@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { LoadingIcon } from "../../shared/Node.styles"
+import { LoadingIcon } from "../../nodes/Node.styles"
 
 interface LoadMoreButtonProps {
     loading: boolean

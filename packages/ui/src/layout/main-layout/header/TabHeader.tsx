@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaPlus, FaEye } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import styled from 'styled-components';
 import Tab from './Tab';
 

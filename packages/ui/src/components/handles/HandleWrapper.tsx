@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 import styled, { CSSProperties } from "styled-components";
-import { InputHandle, OutputHandle } from "../shared/Node.styles";
+import { InputHandle, OutputHandle } from "../nodes/Node.styles";
 import { useMemo, useRef, useState } from "react";
 import { Position } from "reactflow";
 import React from "react";

@@ -4,7 +4,7 @@ import { Node, Edge } from 'reactflow';
 import { NodeProvider } from "../../providers/NodeProvider";
 import { useSocketListeners } from "../../hooks/useFlowSocketListeners";
 import { toastInfoMessage } from "../../utils/toastUtils";
-import { attachNode, splitPane, deletePane, layoutIsEmpty, updateLayoutSize } from "./layoutUtils";
+import { attachNode, splitPane, deletePane, layoutIsEmpty, updateLayoutSize } from "./utils/layoutUtils";
 
 
 interface SmartViewProps {

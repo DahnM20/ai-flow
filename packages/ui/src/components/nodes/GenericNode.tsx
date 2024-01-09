@@ -1,29 +1,29 @@
 import React, { useState, useEffect, useContext, useRef, memo, useMemo } from 'react';
 import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { NodeResizer } from '@reactflow/node-resizer';
-import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle, NodeSelect, NodeSelectOption } from '../shared/Node.styles';
+import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle, NodeSelect, NodeSelectOption } from './Node.styles';
 import useHandleShowOutput from '../../hooks/useHandleShowOutput';
 import { useRefreshOnAppearanceChange } from '../../hooks/useRefreshOnAppearanceChange';
 import { generateIdForHandle } from '../../utils/flowUtils';
-import { ICON_MAP } from '../shared/NodeIcons';
+import { ICON_MAP } from './utils/NodeIcons';
 import { Field } from '../../nodes-configuration/nodeConfig';
-import MarkdownOutput from '../shared/node-output/MarkdownOutput';
+import MarkdownOutput from './node-output/MarkdownOutput';
 import { NodeContext } from '../../providers/NodeProvider';
-import NodePlayButton from '../shared/node-button/NodePlayButton';
+import NodePlayButton from './node-button/NodePlayButton';
 import { useTranslation } from 'react-i18next';
 import { FiCopy } from 'react-icons/fi';
 import styled from 'styled-components';
 import { copyToClipboard } from '../../utils/navigatorUtils';
 import { useIsPlaying } from '../../hooks/useIsPlaying';
-import ImageUrlOutput from '../shared/node-output/ImageUrlOutput';
-import ImageBase64Output from '../shared/node-output/ImageBase64Output';
-import { GenericNodeData } from '../../types/node';
+import ImageUrlOutput from './node-output/ImageUrlOutput';
+import ImageBase64Output from './node-output/ImageBase64Output';
+import { GenericNodeData } from './types/node';
 import HandleWrapper from '../handles/HandleWrapper';
 import { toastFastInfoMessage } from '../../utils/toastUtils';
-import InputNameBar from '../shared/node-button/InputNameBar';
+import InputNameBar from './node-button/InputNameBar';
 import useHandlePositions from '../../hooks/useHandlePositions';
 import { useFormFields } from '../../hooks/useFormFields';
-import VideoUrlOutput from '../shared/node-output/VideoUrlOutput';
+import VideoUrlOutput from './node-output/VideoUrlOutput';
 
 interface GenericNodeProps {
     data: GenericNodeData;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import useCachedFetch, { CACHE_PREFIX, DISPENSABLE_CACHE_PREFIX } from '../../../hooks/useCachedFetch';
-import { LoadingIcon } from '../../shared/Node.styles';
+import { LoadingIcon } from '../../nodes/Node.styles';
 import { getRestApiUrl } from '../../../config/config';
 import DefaultPopup from '../DefaultPopup';
 import ModelsGrid from './ModelsGrid';

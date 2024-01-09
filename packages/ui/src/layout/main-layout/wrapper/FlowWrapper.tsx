@@ -1,8 +1,8 @@
 import { ReactNode, memo, useCallback, useState } from "react";
 import { FiHelpCircle } from "react-icons/fi";
-import ConfigPopup from "../../../components/popups/configPopup/ConfigPopup";
+import ConfigPopup from "../../../components/popups/config-popup/ConfigPopup";
 import HelpPopup from "../../../components/popups/HelpPopup";
-import DnDSidebar from "../../../components/bars/DndSidebar/DnDSidebar";
+import DnDSidebar from "../../../components/bars/dnd-sidebar/DnDSidebar";
 import RightIconButton from '../../../components/buttons/ConfigurationButton';
 import ModeBar from "../sidebar/ModeBar";
 import { ApplicationMode } from "../AppLayout";

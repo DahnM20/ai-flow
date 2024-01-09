@@ -2,8 +2,8 @@ import React, { useContext, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { FaCheck, FaPlay, FaStop } from 'react-icons/fa';
 import { NodeContext } from '../../../providers/NodeProvider';
-import TapScale from '../motions/TapScale';
-import { LoadingIcon } from '../Node.styles';
+import TapScale from '../../shared/motions/TapScale';
+import * as NodeStyles from '../Node.styles';
 
 
 interface NodePlayButtonProps {
@@ -49,7 +49,7 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onCl
 
 
 function getIconComponent(isPlaying: boolean | undefined, isCurrentNodeRunning: boolean, hasRun: boolean | undefined, isHovered: boolean) {
-  if (isPlaying || isCurrentNodeRunning) return LoadingIcon;
+  if (isPlaying || isCurrentNodeRunning) return NodeStyles.LoadingIcon;
 
   if (hasRun && !isHovered) return CheckIcon;
 

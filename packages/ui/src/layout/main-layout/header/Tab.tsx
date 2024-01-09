@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiOutlineClose } from 'react-icons/ai'; // Importing an icon for the delete button
+import { AiOutlineClose } from 'react-icons/ai';
 import styled from 'styled-components';
 
 interface TabProps {
