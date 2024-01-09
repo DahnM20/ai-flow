@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { toastInfoMessage } from '../utils/toastUtils';
 import { useDrop } from 'react-dnd';
 import { useSocketListeners } from '../hooks/useFlowSocketListeners';
+import ButtonEdge from './edges/buttonEdge';
 
 export interface FlowProps {
   nodes?: Node[];
@@ -38,7 +39,12 @@ function Flow(props: FlowProps) {
 
   const reactFlowWrapper = useRef(null);
 
+  function getAllEdgeTypes() {
+    return { buttonedge: ButtonEdge };
+
+  }
   const nodeTypes = useMemo(() => getAllNodeWithEaseOut(), []);
+  const edgeTypes = useMemo(() => getAllEdgeTypes(), []);
 
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
   const [nodes, setNodes] = useState<Node[]>(props.nodes ? props.nodes : []);
@@ -132,7 +138,7 @@ function Flow(props: FlowProps) {
       if (isHandleAlreadyTargeted(connection, eds)) {
         return eds;
       }
-      return addEdge({ ...connection, type: props.selectedEdgeType ?? 'default', markerEnd: 'arrowClosed' }, eds);
+      return addEdge({ ...connection, type: 'buttonedge', markerEnd: 'arrowClosed', data: { pathType: props.selectedEdgeType } }, eds);
     }),
     [setEdges, props.selectedEdgeType]
   );
@@ -235,6 +241,7 @@ function Flow(props: FlowProps) {
           <ReactFlowStyled
             nodes={nodes}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             onNodesChange={onNodesChange}
             edges={edges}
             onEdgesChange={onEdgesChange}
