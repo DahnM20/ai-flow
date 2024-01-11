@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
-import DefaultPopup from './DefaultPopup';
+import DefaultPopupWrapper from './DefaultPopup';
 
 interface HelpPopupProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
   const tips: string[] = t('tips', { returnObjects: true });
 
   return (
-    <DefaultPopup onClose={onClose} show={isOpen} centered>
+    <DefaultPopupWrapper onClose={onClose} show={isOpen} centered>
       <PopupHeader>
         <div>Help</div>
         <div onClick={onClose} className='text-slate-300 hover:text-slate-50'>
@@ -38,7 +38,7 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
           ))}
         </ul>
       </PopupContent>
-    </DefaultPopup>
+    </DefaultPopupWrapper>
   );
 };
 

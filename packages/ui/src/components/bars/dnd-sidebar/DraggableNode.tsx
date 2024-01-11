@@ -32,6 +32,9 @@ const DraggableNode = (props: DraggableNodeProps) => {
             onClick={(e) => {
                 e.stopPropagation();
             }}
+            onTouchEnd={(e) => {
+                e.stopPropagation();
+            }}
             className='flex flex-row w-full gap-x-1 text-md 
                   text-slate-200 
                   relative

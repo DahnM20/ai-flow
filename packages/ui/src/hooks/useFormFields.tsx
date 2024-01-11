@@ -108,6 +108,7 @@ export function useFormFields(
                                     key={`${id}-${option.value}`}
                                     selected={data[field.name] === option.value}
                                     onClick={() => handleOptionChange(field.name, option.value)}
+                                    onTouchEnd={() => handleOptionChange(field.name, option.value)}
                                 >
                                     {t(option.label)}
                                 </OptionButton>

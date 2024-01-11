@@ -3,10 +3,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { SocketContext, WSConfiguration } from '../../../providers/SocketProvider';
 import { useTranslation } from 'react-i18next';
-import UserProfile from '../../login/UserProfile';
-import { Auth } from '@aws-amplify/auth';
 import APIKeyFields from './APIKeyFields';
 import { APIKeys, defaultApiKeys } from './ApiKeys';
+import DefaultPopupWrapper from '../DefaultPopup';
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -52,14 +51,10 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
     onClose();
   };
 
-  const handleLogout = () => {
-    Auth.signOut();
-  }
-
   return (
     isOpen ?
-      <Popup isOpen={isOpen}>
-        <Content>
+      <DefaultPopupWrapper show={isOpen} onClose={onClose} centered>
+        <Content onClick={(e) => { e.stopPropagation() }} className='bg-slate-100 rounded-2xl md:h-fit overflow-auto p-5 flex flex-col justify-between my-2'>
           <Header>
             <Title>{t('configurationTitle')}</Title>
           </Header>
@@ -85,7 +80,7 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
             </Icons>
           </Footer>
         </Content>
-      </Popup>
+      </DefaultPopupWrapper>
       : <></>
   );
 };

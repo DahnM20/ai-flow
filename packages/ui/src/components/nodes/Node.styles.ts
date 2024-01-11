@@ -241,9 +241,14 @@ export const NodeInput = styled.input`
 export const InputHandle = styled(Handle) <{ required?: boolean }>`
   z-index: 45;
   background:  ${({ required }) => required ? "#F09686" : "#72c8fa"};
-  /* background: #72c8fa; */
-  width: 10px;
-  height: 10px;
+  width: .75em;
+  height: .75em;
+
+  @media (max-width: 600px) { 
+    width: 1.25em;
+    height: 1.25em;
+  }
+
   border-radius: 50%;
   border:none;
   box-shadow: ${({ required }) => required

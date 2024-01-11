@@ -303,6 +303,10 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
     }
 
+    function handleClosePopup() {
+        setShowPopup(false);
+    }
+
     const outputType = getOutputType()
 
     const outputIsMedia = (outputType === 'imageUrl'
@@ -344,7 +348,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
                                     </button>
                                     {
                                         showPopup
-                                        && <SelectModelPopup show={showPopup} onClose={() => { setShowPopup(false) }} onValidate={handleValidate} />
+                                        && <SelectModelPopup show={showPopup} onClose={handleClosePopup} onValidate={handleValidate} />
                                     }
                                 </div>
                                 <p> {t('Or')} </p>

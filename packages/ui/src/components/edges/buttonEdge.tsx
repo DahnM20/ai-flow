@@ -109,7 +109,7 @@ export default function ButtonEdge({
                     bg-slate-400 hover:bg-slate-300
                     transition-all duration-300 ease-in-out
                     flex items-center justify-center leading-none
-                    rounded-full cursor-pointer border-slate-300 " onClick={onEdgeClick}>
+                    rounded-full cursor-pointer border-slate-300 " onClick={onEdgeClick} onTouchEnd={onEdgeClick}>
                         ×
                     </button>
                 </div>

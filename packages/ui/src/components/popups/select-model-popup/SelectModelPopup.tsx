@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useCachedFetch, { CACHE_PREFIX, DISPENSABLE_CACHE_PREFIX } from '../../../hooks/useCachedFetch';
 import { LoadingIcon } from '../../nodes/Node.styles';
 import { getRestApiUrl } from '../../../config/config';
-import DefaultPopup from '../DefaultPopup';
+import DefaultPopupWrapper from '../DefaultPopup';
 import ModelsGrid from './ModelsGrid';
 import CollectionGrid from './CollectionGrid';
 import LoadMoreButton from './LoadMoreButton';
@@ -181,7 +181,7 @@ export default function SelectModelPopup({ show, onClose, onValidate }: SelectMo
 
 
     return (
-        <DefaultPopup onClose={onClose} show={show}>
+        <DefaultPopupWrapper onClose={onClose} show={show}>
             <div className='flex flex-col bg-zinc-900 shadow text-slate-200 w-full rounded-xl p-5 overflow-auto my-4 space-y-3' >
 
                 <CollectionGrid
@@ -194,7 +194,7 @@ export default function SelectModelPopup({ show, onClose, onValidate }: SelectMo
 
                 <LoadMoreButton loading={loading} cursor={cursor} onLoadMore={handleLoadMore} />
             </div>
-        </DefaultPopup>)
+        </DefaultPopupWrapper>)
 };
 
 

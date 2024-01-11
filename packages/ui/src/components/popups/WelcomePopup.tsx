@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import DefaultPopup from './DefaultPopup';
+import DefaultPopupWrapper from './DefaultPopup';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 
@@ -40,7 +40,7 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
     const shouldShowPopup = show && (isImageLoaded || !imageSrc);
 
     return shouldShowPopup ? (
-        <DefaultPopup onClose={onClose} show={show} centered>
+        <DefaultPopupWrapper onClose={onClose} show={show} centered>
             <div className='flex flex-col relative bg-zinc-900 shadow text-slate-200 rounded-xl p-10 overflow-auto my-15'>
                 <div className='absolute top-0 right-0 p-4 text-2xl'>
                     <button onClick={onClose} className='hover:text-red-500'>
@@ -68,5 +68,5 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
                     )
                 }
             </div >
-        </DefaultPopup >) : null;
+        </DefaultPopupWrapper >) : null;
 };
