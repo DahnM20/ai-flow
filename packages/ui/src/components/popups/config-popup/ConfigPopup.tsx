@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import APIKeyFields from './APIKeyFields';
 import { APIKeys, defaultApiKeys } from './ApiKeys';
 import DefaultPopupWrapper from '../DefaultPopup';
+import { FiMail } from 'react-icons/fi';
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -70,13 +71,12 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
             <Button onClick={handleValidate} className='bg-[#72CCA5]'>{t('validateButtonLabel')}</Button>
           </Actions>
           <Footer>
-            <MessageContainer>
-              <Message>{t('likeProjectPrompt')}</Message>
-              <Icon href="https://github.com/DahnM20/ai-flow" target="_blank" rel="noopener noreferrer"><FaGithub /></Icon>
-            </MessageContainer>
+
             <Message>{t('supportProjectPrompt')}</Message>
             <Icons>
+              <Icon href="https://github.com/DahnM20/ai-flow" target="_blank" rel="noopener noreferrer"><FaGithub /></Icon>
               <Icon href="https://twitter.com/DahnM20" target="_blank" rel="noopener noreferrer"><FaXTwitter /></Icon>
+              <Icon href='mailto:support@ai-flow.net'><FiMail /></Icon>
             </Icons>
           </Footer>
         </Content>

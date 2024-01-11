@@ -9,7 +9,7 @@
     "closeButtonLabel": "Close",
     "validateButtonLabel": "Validate",
     "likeProjectPrompt": "If you like this project, you can add a star on:",
-    "supportProjectPrompt": "Consider supporting the future of the project on:",
+    "supportProjectPrompt": "You can support the future of the project and contact us through :",
     "leonardoKeyFieldLabel": "Leonardo API Key (Optional):",
     "Logout": "Logout"
 }
