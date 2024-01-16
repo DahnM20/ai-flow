@@ -27,12 +27,19 @@ const HandleWrapper: React.FC<HandleWrapperProps> = ({ id, position, onChangeHan
     const [popupCoords, setPopupCoords] = useState<{ x: number; y: number } | null>(null);
     const ref = useRef<HTMLDivElement | null>(null);
     const closeTimeout = useRef<NodeJS.Timeout | null>(null);
+    const openTimeout = useRef<NodeJS.Timeout | null>(null);
+    const isHoveredRef = useRef(false);
 
     const handleMouseEnter = (event: React.MouseEvent) => {
         if (ref.current) {
             const rect = ref.current.getBoundingClientRect();
             setPopupCoords({ x: rect.left + rect.width / 2, y: rect.top - POPUP_DEFAULT_TOP_OFFSET });
-            setShowPopup(true);
+            isHoveredRef.current = true;
+
+            openTimeout.current = setTimeout(() => {
+                if (!isHoveredRef.current) return;
+                setShowPopup(true);
+            }, 1000)
         }
     };
 
@@ -44,6 +51,7 @@ const HandleWrapper: React.FC<HandleWrapperProps> = ({ id, position, onChangeHan
     };
 
     const startClose = () => {
+        isHoveredRef.current = false;
         closeTimeout.current = setTimeout(() => {
             setShowPopup(false);
         }, 500);
