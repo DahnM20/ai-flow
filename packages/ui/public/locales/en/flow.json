@@ -58,5 +58,7 @@
     "SpotlightModels": "Spotlight Models",
     "AllModels": "All Models",
     "EdgeType": "Edge type",
-    "CannotChangeTabWhileRunning": "Cannot change tab while running"
+    "CannotChangeTabWhileRunning": "Cannot change tab while running",
+    "Transition": "Transition",
+    "transitionHelp": "This node can be used to organize the flow."
 }

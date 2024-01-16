@@ -36,6 +36,7 @@ function getAllDndNode(): DnDNode[] {
         { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp', section: 'tools' },
         { label: 'AiDataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp', section: 'tools' },
         { label: 'ReplicateModel', type: 'replicate', helpMessage: 'replicateHelp', section: 'models', isBeta: true },
+        { label: 'Transition', type: 'transition', helpMessage: 'transitionHelp', section: 'tools' },
     ]
     return transformNodeConfigsToDndNode(nodeConfigs).concat(nonGenericNodeConfig);
 }

@@ -57,5 +57,7 @@
     "SpotlightModels": "Modèles Vedettes",
     "AllModels": "Tous les Modèles",
     "EdgeType": "Type d'arête",
-    "CannotChangeTabWhileRunning": "Vous ne pouvez pas changer d'onglet quand un lancement est en cours."
+    "CannotChangeTabWhileRunning": "Vous ne pouvez pas changer d'onglet quand un lancement est en cours.",
+    "Transition": "Transition",
+    "transitionHelp": "Ce noeud sert uniquement à organiser le flow."
 }

@@ -89,7 +89,7 @@ function Flow(props: FlowProps) {
       return previous.filter((node) => node != nodeToUpdate);
     })
 
-    if (nodeToUpdate && output) {
+    if (nodeToUpdate) {
       setNodes((currentState) => {
         return [...currentState.map((node: Node) => {
           if (node.data.name == nodeToUpdate) {

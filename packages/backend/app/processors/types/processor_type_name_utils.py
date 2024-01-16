@@ -20,3 +20,4 @@ class ProcessorType(Enum):
     MERGER_PROMPT = "merger-prompt"
     AI_DATA_SPLITTER = "ai-data-splitter"
     AI_ACTION = "ai-action"
+    TRANSITION = "transition"
