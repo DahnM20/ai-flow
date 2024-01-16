@@ -61,11 +61,11 @@ const FlowTabs = () => {
     const savedFlowTabsJson = localStorage.getItem('flowTabs');
     if (savedFlowTabsJson) {
       const savedFlowTabs = JSON.parse(savedFlowTabsJson) as FlowManagerState;
-      savedFlowTabs.tabs.forEach((tab) => {
-        if (!isCompatibleConfigVersion(tab.metadata?.version)) {
-          migrateConfig(tab)
-        }
-      })
+      // savedFlowTabs.tabs.forEach((tab) => {
+      //   if (!isCompatibleConfigVersion(tab.metadata?.version)) {
+      //     migrateConfig(tab)
+      //   }
+      // })
       setFlowTabs(savedFlowTabs);
       setRefresh(true);
     }
