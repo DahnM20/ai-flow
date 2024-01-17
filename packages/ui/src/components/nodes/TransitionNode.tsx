@@ -1,12 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { generateIdForHandle } from '../../utils/flowUtils';
-import { InputHandle, NodeTitle, OutputHandle } from './Node.styles';
 import { NodeContext } from '../../providers/NodeProvider';
 import { useIsPlaying } from '../../hooks/useIsPlaying';
 import NodePlayButton from './node-button/NodePlayButton';
+import HandleWrapper from '../handles/HandleWrapper';
+import useHandlePositions from '../../hooks/useHandlePositions';
 
 interface TransitionNodeData {
+    handles: any;
     id: string;
     name: string;
     processorType: string;
@@ -21,16 +23,21 @@ interface TransitionNodeProps extends NodeProps {
     data: TransitionNodeData;
 }
 
-const TransitionNode: React.FC<TransitionNodeProps> = React.memo(({ data, id, selected }) => {
+const TransitionNode: React.FC<TransitionNodeProps> = React.memo(({ data, id }) => {
 
 
-    const { isRunning } = useContext(NodeContext);
+    const { onUpdateNodeData } = useContext(NodeContext);
     const [nodeId, setNodeId] = useState<string>(`${data.name}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
     const updateNodeInternals = useUpdateNodeInternals();
 
+
+    const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
+    const inputHandleId = useMemo(() => generateIdForHandle(0), []);
+
+    const { allHandlePositions } = useHandlePositions(data, 1, outputHandleId);
+
     useEffect(() => {
-        console.log("has been run")
         setNodeId(`${data.name}-${Date.now()}`);
         setIsPlaying(false);
         updateNodeInternals(id);
@@ -40,20 +47,40 @@ const TransitionNode: React.FC<TransitionNodeProps> = React.memo(({ data, id, se
         setIsPlaying(true);
     };
 
+    const handleChangeHandlePosition = (newPosition: Position, handleId: string) => {
+        onUpdateNodeData(id, {
+            ...data,
+            handles: {
+                ...data.handles,
+                [handleId]: newPosition
+            }
+        });
+        updateNodeInternals(id);
+    }
+
+
     return (
         <div key={id} className='flex flex-col justify-between items-center 
                     bg-gray-800 text-white 
                     shadow-lg rounded-lg p-4 
                     border border-green-500 hover:bg-gray-700 
                     transition duration-300 ease-in-out'>
-            <InputHandle className="handle" type="target" position={Position.Left} />
+            <HandleWrapper id={inputHandleId} position={
+                !!data?.handles && data.handles[inputHandleId]
+                    ? data.handles[inputHandleId]
+                    : Position.Left}
+                linkedHandlePositions={allHandlePositions}
+                onChangeHandlePosition={handleChangeHandlePosition} />
+
             <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />
-            <OutputHandle
-                key={generateIdForHandle(0, true)}
-                type="source"
-                id={generateIdForHandle(0, true)}
-                position={Position.Right}
-            />
+
+            <HandleWrapper id={outputHandleId} position={
+                !!data?.handles && data.handles[outputHandleId]
+                    ? data.handles[outputHandleId]
+                    : Position.Right}
+                linkedHandlePositions={allHandlePositions}
+                onChangeHandlePosition={handleChangeHandlePosition}
+                isOutput />
         </div>
     );
 });
