@@ -48,7 +48,7 @@ class ReplicateProcessor(APIContextProcessor):
 
         output_schema = get_output_schema_from_open_API_schema(self.schema["schema"])
         logging.debug(f"Output schema : {output_schema}")
-        output_type = output_schema["type"]
+        output_type = output_schema.get("type")
 
         rest, version_id = self.model.split(":")
 
@@ -67,6 +67,8 @@ class ReplicateProcessor(APIContextProcessor):
 
         if output_type == "array":
             output = "".join(output)
+        else:
+            output = str(output)
 
         self.set_output(output)
         return self._output
