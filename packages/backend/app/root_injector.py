@@ -4,7 +4,6 @@ from .authentication.authenticator import Authenticator
 from .authentication.cognito_authenticator import CognitoAuthenticator
 from tests.utils.processor_factory_mock import ProcessorFactoryMock
 from tests.utils.aunthenticator_mock import AuthenticatorMock
-from .processors.launcher.async_leaf_processor_launcher import AsyncLeafProcessorLauncher
 from .processors.launcher.async_processor_launcher import AsyncProcessorLauncher
 
 from .llms.factory.llm_factory import LLMFactory
@@ -21,19 +20,21 @@ from .processors.factory.processor_factory_iter_modules import (
 )
 from .processors.launcher.processor_launcher import ProcessorLauncher
 
+
 class AuthenticatorModule(Module):
     def configure(self, binder: Binder):
-        if is_mock_env() : 
+        if is_mock_env():
             binder.bind(Authenticator, to=AuthenticatorMock)
-        else : 
+        else:
             binder.bind(Authenticator, to=CognitoAuthenticator)
+
 
 class ProcessorFactoryModule(Module):
     def configure(self, binder: Binder):
-        if is_mock_env() : 
+        if is_mock_env():
             fake_factory = ProcessorFactoryMock(with_delay=True)
             binder.bind(ProcessorFactory, to=fake_factory)
-        else : 
+        else:
             binder.bind(ProcessorFactory, to=ProcessorFactoryIterModules)
 
 
@@ -51,19 +52,26 @@ class ProcessorLauncherModule(Module):
         observer_list = [SocketIOEventEmitter()]
         if is_cloud_env():
             from .processors.observer.simple_stats_logger import SimpleStatsLogger
-            
+
             observer_list.append(SimpleStatsLogger())
-            
+
         binder.multibind(List[Observer], to=observer_list)
 
 
 class LLMFactoryModule(Module):
     def configure(self, binder: Binder):
-         binder.bind(LLMFactory, to=PaidAPILLMFactory)
-         
+        binder.bind(LLMFactory, to=PaidAPILLMFactory)
+
+
 def create_application_injector() -> Injector:
     injector = Injector(
-        [AuthenticatorModule(), ProcessorFactoryModule(), StorageModule(), ProcessorLauncherModule(), LLMFactoryModule()],
+        [
+            AuthenticatorModule(),
+            ProcessorFactoryModule(),
+            StorageModule(),
+            ProcessorLauncherModule(),
+            LLMFactoryModule(),
+        ],
         auto_bind=True,
     )
     return injector
