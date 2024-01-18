@@ -58,7 +58,6 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const [showLogs, setShowLogs] = useState<boolean>(true);
-    const [nodeId, setNodeId] = useState<string>(`${data.name}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
     const [showPopup, setShowPopup] = useState(false);
 
@@ -75,8 +74,8 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
     const { allHandlePositions } = useHandlePositions(data, nbInput, outputHandleId);
 
     useEffect(() => {
-        setNodeId(`${data.name}-${Date.now()}`);
-        setIsPlaying(false);
+        if (data.isDone) setIsPlaying(false);
+
         updateNodeInternals(id);
     }, [data.lastRun]);
 
@@ -318,7 +317,7 @@ export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsP
 
     const hasFieldToDisplay = formFields?.some((field: any) => field != null)
 
-    return (<NodeContainer key={nodeId} ref={nodeRef} >
+    return (<NodeContainer key={id} ref={nodeRef} >
         <NodeHeader onDoubleClick={toggleCollapsed}>
             <NodeIcon><FaWaveSquare /></NodeIcon>
             <NodeTitle className='px-5 overflow-hidden whitespace-nowrap text-ellipsis'>{modelNameToDisplay}</NodeTitle>

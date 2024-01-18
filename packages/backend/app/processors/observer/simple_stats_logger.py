@@ -1,4 +1,5 @@
-from ..launcher.event_type import EventType, NodeProcessorEvent
+from ..launcher.event_type import EventType
+from ..launcher.processor_launcher_event import ProcessorLauncherEvent
 from .observer import Observer
 import logging
 
@@ -24,7 +25,7 @@ class SimpleStatsLogger(Observer):
         self.notification_count = 0
         self.event_threshold = self.DEFAULT_EVENT_THRESHOLD
 
-    def notify(self, event: EventType, data: NodeProcessorEvent) -> None:
+    def notify(self, event: EventType, data: ProcessorLauncherEvent) -> None:
         if event in self.event_counts:
             self.event_counts[event] += 1
         else:

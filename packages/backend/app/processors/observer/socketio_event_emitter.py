@@ -1,4 +1,6 @@
-from ..launcher.event_type import NodeProcessorEvent, EventType
+from ..launcher.event_type import EventType
+from ..launcher.processor_launcher_event import ProcessorLauncherEvent
+
 from .observer import Observer
 import logging
 from ...flask.socketio_init import socketio
@@ -22,7 +24,7 @@ class SocketIOEventEmitter(Observer):
                             gracefully and logs emission details.
     """
 
-    def notify(self, event: EventType, data: NodeProcessorEvent):
+    def notify(self, event: EventType, data: ProcessorLauncherEvent):
         if data.session_id is None:
             logging.error(f"Cannot notify without session ID")
             return
@@ -33,6 +35,9 @@ class SocketIOEventEmitter(Observer):
 
         if data.output is not None:
             json_event["output"] = data.output
+
+        if data.isDone is not None:
+            json_event["isDone"] = data.isDone
 
         if data.error is not None:
             json_event["error"] = str(data.error)

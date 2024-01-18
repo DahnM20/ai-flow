@@ -29,6 +29,7 @@ class VectorIndexPromptEngine(PromptEngine):
     @staticmethod
     def _hash_init_data(init_data):
         import hashlib
+
         return hashlib.sha256(init_data.encode()).hexdigest()
 
     def __init__(self, model, api_key, init_data, custom_llm_factory=None):
@@ -107,3 +108,6 @@ class VectorIndexPromptEngine(PromptEngine):
         chat_response = chat_engine.query(messages)
         # print("Nodes : ", chat_response.source_nodes)
         return chat_response.response
+
+    def prompt_stream(self, messages):
+        pass

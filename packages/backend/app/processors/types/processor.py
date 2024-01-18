@@ -1,5 +1,11 @@
 from abc import ABC, abstractmethod
+import logging
 from typing import Any, List, Optional, TypedDict, Union, Dict
+
+from ..launcher.processor_event import ProcessorEvent
+from ..launcher.event_type import EventType
+
+from ..observer.observer import Observer
 
 from .processor_type_name_utils import ProcessorType
 
@@ -25,6 +31,9 @@ class InputItem(TypedDict, total=False):
 class Processor(ABC):
     processor_type: Optional["ProcessorType"] = None
     """The type of the processor"""
+
+    observers: List[Observer] = []
+    """The observers of the processor"""
 
     storage_strategy: Optional["StorageStrategy"]
     """The storage strategy used by the processor"""
@@ -53,6 +62,7 @@ class Processor(ABC):
     def __init__(self, config: Dict[str, Any]) -> None:
         self.name = config["name"]
         self.processor_type = config["processorType"]
+        self.observers = []
         self._output = None
         self.inputs = None
         self.api_context_data = None
@@ -80,6 +90,19 @@ class Processor(ABC):
     @abstractmethod
     def update_context(self, data: Any) -> None:
         pass
+
+    def add_observer(self, observer):
+        self.observers.append(observer)
+
+    def remove_observer(self, observer):
+        self.observers.remove(observer)
+        if len(self.observers) == 0:
+            self.observers = None
+        return self.observers
+
+    def notify(self, event: EventType, data: ProcessorEvent):
+        for observer in self.observers:
+            observer.notify(event, data)
 
     def get_output(self, input_key=None) -> Optional[str]:
         output = getattr(self, "_output", None)

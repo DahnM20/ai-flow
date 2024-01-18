@@ -5,13 +5,19 @@ import traceback
 from typing import List
 from enum import Enum
 
+from .processor_event import ProcessorEvent
+
+from .event_type import EventType
+
+from ..observer.observer import Observer
+
 from ..types.processor import Processor
 from .abstract_topological_processor_launcher import (
     AbstractTopologicalProcessorLauncher,
 )
 
 
-class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
+class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
     """
     AsyncProcessorLauncher extends the functionality of the Basic Processor Launcher.
 
@@ -65,6 +71,9 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
         return nodes
 
     def launch_processors(self, processors: List[Processor]):
+        for processor in processors.values():
+            processor.add_observer(self)
+
         nodes = self.convert_processors_to_node_dict(processors)
 
         pool = eventlet.GreenPool(AsyncProcessorLauncher.GREENTHREAD_POOL_SIZE)
@@ -100,6 +109,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
     def launch_processors_for_node(self, processors: List[Processor], node_name=None):
         for processor in processors.values():
             if processor.get_output() is None or processor.name == node_name:
+                processor.add_observer(self)
                 self.run_processor(processor)
 
             if processor.name == node_name:
@@ -109,7 +119,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
         try:
             self.notify_current_node_running(processor)
             output = processor.process()
-            self.notify_progress(processor, output)
+            self.notify_progress(processor, output, isDone=True)
         except Exception as e:
             self.notify_error(processor, e)
             raise e
@@ -124,3 +134,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher):
             self.notify_error(node.get_processor(), e)
             traceback.print_exc()
             raise e
+
+    def notify(self, event: EventType, data: ProcessorEvent):
+        if event == EventType.PROGRESS:
+            self.notify_progress(data.source, data.output)

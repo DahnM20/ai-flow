@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext, useRef, memo, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
 import { Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
-import { NodeResizer } from '@reactflow/node-resizer';
-import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeLabel, NodeTextarea, NodeBand, NodeLogs, NodeLogsText, OptionButton, OptionSelector, NodeInput, InputHandle, OutputHandle, NodeSelect, NodeSelectOption } from './Node.styles';
+import { NodeContainer, NodeHeader, NodeIcon, NodeTitle, NodeContent, NodeForm, NodeBand, NodeLogs, NodeLogsText } from './Node.styles';
 import useHandleShowOutput from '../../hooks/useHandleShowOutput';
 import { useRefreshOnAppearanceChange } from '../../hooks/useRefreshOnAppearanceChange';
 import { generateIdForHandle } from '../../utils/flowUtils';
@@ -20,7 +19,6 @@ import ImageBase64Output from './node-output/ImageBase64Output';
 import { GenericNodeData } from './types/node';
 import HandleWrapper from '../handles/HandleWrapper';
 import { toastFastInfoMessage } from '../../utils/toastUtils';
-import InputNameBar from './node-button/InputNameBar';
 import useHandlePositions from '../../hooks/useHandlePositions';
 import { useFormFields } from '../../hooks/useFormFields';
 import VideoUrlOutput from './node-output/VideoUrlOutput';
@@ -35,13 +33,12 @@ interface GenericNodeProps {
 const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => {
     const { t } = useTranslation('flow');
 
-    const { hasParent, showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);
+    const { hasParent, showOnlyOutput, onUpdateNodeData } = useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
 
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const [showLogs, setShowLogs] = useState<boolean>(data.config.defaultHideOutput == null ? true : !data.config.defaultHideOutput);
-    const [nodeId, setNodeId] = useState<string>(`${data.name}-${Date.now()}`);
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
     const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
@@ -58,15 +55,16 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const { allInputHandleIds, allHandlePositions } = useHandlePositions(data, nbInput, outputHandleId);
 
     useEffect(() => {
-        setNodeId(`${data.name}-${Date.now()}`);
-        setIsPlaying(false);
+        if (data.isDone) setIsPlaying(false);
+
         if (!data.config.defaultHideOutput) {
             setShowLogs(true);
         } else {
             setShowLogs(false);
         }
+
         updateNodeInternals(id);
-    }, [data.lastRun]);
+    }, [data.lastRun, data.outputData]);
 
     useEffect(() => {
         if (textareaRef.current) {
@@ -182,7 +180,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(({ data, id, selected }) => 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
     return (
-        <NodeContainer key={nodeId} >
+        <NodeContainer key={id} >
             <NodeHeader onDoubleClick={toggleCollapsed}>
                 {
                     data.config.hasInputHandle &&

@@ -2,10 +2,10 @@ from ..factory.llm_factory import LLMFactory
 from .prompt_engine import PromptEngine
 from ...root_injector import root_injector
 
+
 class SimplePromptEngine(PromptEngine):
     llm_factory: LLMFactory
-    
-    
+
     def __init__(self, model, api_key, custom_llm_factory=None):
         self.model = model
         self.api_key = api_key
@@ -21,4 +21,9 @@ class SimplePromptEngine(PromptEngine):
     def prompt(self, messages):
         llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
         chat_response = llm.chat(messages)
-        return chat_response.message.content
+        return chat_response
+
+    def prompt_stream(self, messages):
+        llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
+        chat_response = llm.stream_chat(messages)
+        return chat_response

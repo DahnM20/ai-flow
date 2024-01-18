@@ -93,7 +93,7 @@ function Flow(props: FlowProps) {
       setNodes((currentState) => {
         return [...currentState.map((node: Node) => {
           if (node.data.name == nodeToUpdate) {
-            node.data = { ...node.data, outputData: output, lastRun: new Date() };
+            node.data = { ...node.data, outputData: output, lastRun: new Date(), isDone: data.isDone };
           }
 
           return node;

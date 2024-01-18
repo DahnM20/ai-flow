@@ -1,3 +1,5 @@
+from ..launcher.processor_event import ProcessorEvent
+from ..launcher.event_type import EventType
 from ...llms.utils.max_token_for_model import max_token_for_model, nb_token_for_input
 from ...llms.prompt_engine.simple_prompt_engine import SimplePromptEngine
 from ...llms.prompt_engine.vector_index_prompt_engine import VectorIndexPromptEngine
@@ -32,14 +34,18 @@ class LLMPromptProcessor(APIContextProcessor):
             prompt_engine = VectorIndexPromptEngine(
                 model=self.model, api_key=self.api_key, init_data=input_data
             )
-            answer = prompt_engine.prompt(self.prompt)
+            awnser = prompt_engine.prompt(self.prompt)
         else:
             self.init_context(input_data)
             prompt_engine = SimplePromptEngine(model=self.model, api_key=self.api_key)
-            answer = prompt_engine.prompt(self.messages)
-
-        self.set_output(answer)
-        return answer
+            stream_chat_response = prompt_engine.prompt_stream(self.messages)
+            awnser = ""
+            for r in stream_chat_response:
+                awnser += r.delta
+                event = ProcessorEvent(self, awnser)
+                self.notify(EventType.PROGRESS, event)
+        self.set_output(awnser)
+        return awnser
 
     def init_context(self, input_data: str) -> None:
         """
