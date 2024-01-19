@@ -5,13 +5,9 @@ from llama_index.llms.base import ChatResponse
 
 from typing import (
     Any,
-    AsyncGenerator,
-    Callable,
-    Generator,
     List,
-    Optional,
     Sequence,
-    cast,
+    Union,
 )
 
 
@@ -21,7 +17,7 @@ class MockedStreamObject:
 
 
 class LLMMock(LLM):
-    expected_response: str | List[str]
+    expected_response: Union[str, List[str]]
 
     def __init__(self, expected_response=None, **data):
         if expected_response is None:
