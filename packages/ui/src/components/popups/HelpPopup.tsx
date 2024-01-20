@@ -43,10 +43,10 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
 };
 
 const PopupHeader = styled.div.attrs({
-  className: "flex flex-row h-10 items-center justify-between py-2 px-4 text-xl text-slate-100 bg-[#8FB0A1]/95 border-b-2 border-[#86F0C2] rounded-t-md",
+  className: "flex flex-row h-10 w-full items-center justify-between py-2 px-4 text-xl text-slate-100 bg-[#8FB0A1]/95 border-b-2 border-[#86F0C2] rounded-t-md",
 })``
 const PopupContent = styled.div.attrs({
-  className: "bg-zinc-900 text-slate-300 py-3 px-4 overflow-auto text-lg max-h-96",
+  className: "bg-zinc-900 text-slate-300 py-3 px-4 overflow-auto text-lg max-h-96 w-full",
 })``
 
 export default HelpPopup;

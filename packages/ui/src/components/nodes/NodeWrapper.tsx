@@ -39,7 +39,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
     }
 
     return (
-        <div className={`relative group ${currentNodeIsMissingFields ? "border-red-500/80 rounded-lg border-2" : ""}`}
+        <div className={`relative group transition-all p-1 ${currentNodeIsMissingFields ? "border-red-500/80 rounded-lg border-2 border-dashed" : ""}`}
             onClick={showIconWithDelay}
             onMouseLeave={hideIconWithDelay}>
             {children}

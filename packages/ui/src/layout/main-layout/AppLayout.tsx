@@ -151,6 +151,7 @@ const FlowTabs = () => {
     if (nodesInError.length > 0) {
       let errorMessage = createErrorMessageForMissingFields(nodesInError, t);
       toastErrorMessage(errorMessage);
+      setFlowTabs({ ...flowTabs })
       return;
     }
 

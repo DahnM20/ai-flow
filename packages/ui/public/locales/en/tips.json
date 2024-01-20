@@ -6,11 +6,8 @@
         "Double-click on node headers to collapse or expand them.",
         "Click on the left sidebar to hide it.",
         "Additional tools are available on the right sidebar.",
-        "Each node can have only one input.",
         "Remember, GPT models have token limits. Overly large inputs might cause errors.",
-        "Our software is in early development. You might encounter some bugs.",
         "Access your flow in JSON format via the sidebar with the black indicator on the right. Save and upload your flow there.",
-        "Data is sent only to APIs you interact with, such as OpenAI. All other operations are local (for users with the local app version).",
         "Generally, images are only available during one hour, so do not forget to save them.",
         "If you're using the cloud version, we save your Stable Diffusion images for up to 12 hours for your access."
     ],
