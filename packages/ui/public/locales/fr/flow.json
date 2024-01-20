@@ -59,5 +59,8 @@
     "EdgeType": "Type d'arête",
     "CannotChangeTabWhileRunning": "Vous ne pouvez pas changer d'onglet quand un lancement est en cours.",
     "Transition": "Transition",
-    "transitionHelp": "Ce noeud sert uniquement à organiser le flow."
+    "transitionHelp": "Ce noeud sert uniquement à organiser le flow.",
+    "MissingFieldsMessage": "Des champs nécessaires sont manquants",
+    "Node": "Noeud",
+    "MissingFields": "Champ manquant"
 }

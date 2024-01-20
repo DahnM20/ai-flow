@@ -60,5 +60,8 @@
     "EdgeType": "Edge type",
     "CannotChangeTabWhileRunning": "Cannot change tab while running",
     "Transition": "Transition",
-    "transitionHelp": "This node can be used to organize the flow."
+    "transitionHelp": "This node can be used to organize the flow.",
+    "MissingFieldsMessage": "Required fields are missing",
+    "Node": "Node",
+    "MissingFields": "Missing fields"
 }

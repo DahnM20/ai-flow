@@ -7,6 +7,7 @@ export const youtubeTranscriptNodeConfig: NodeConfig = {
     {
       name: 'url',
       type: 'input',
+      required: true,
       placeholder: "URLPlaceholder",
     },
     {

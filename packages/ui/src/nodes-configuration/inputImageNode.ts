@@ -8,6 +8,7 @@ const inputImageNodeConfig: NodeConfig = {
     {
       type: "textarea",
       name: "inputText",
+      required: true,
       placeholder: 'InputImagePlaceholder',
     },
   ],

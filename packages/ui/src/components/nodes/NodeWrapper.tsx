@@ -10,6 +10,10 @@ type NodeWrapperProps = {
 function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
     const [showIcon, setShowIcon] = useState(false);
     const { onUpdateNodes, nodes, edges } = useContext(NodeContext);
+
+    const currentNode = nodes.find((node) => node.id === nodeId);
+    const currentNodeIsMissingFields = currentNode?.data?.missingFields?.length > 0
+
     let hideIconTimeout: ReturnType<typeof setTimeout>;
 
 
@@ -35,7 +39,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
     }
 
     return (
-        <div className={`relative group`}
+        <div className={`relative group ${currentNodeIsMissingFields ? "border-red-500/80 rounded-lg border-2" : ""}`}
             onClick={showIconWithDelay}
             onMouseLeave={hideIconWithDelay}>
             {children}

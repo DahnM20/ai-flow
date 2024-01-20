@@ -28,7 +28,7 @@ export const llmPromptNodeConfig: NodeConfig = {
         {
             name: 'prompt',
             type: 'textarea',
-            //label: 'Prompt',
+            required: true,
             placeholder: 'PromptPlaceholder',
         },
 

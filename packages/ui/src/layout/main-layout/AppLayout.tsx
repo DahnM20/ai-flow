@@ -8,7 +8,7 @@ import { darken, lighten } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaPlus } from 'react-icons/fa';
 import { convertFlowToJson, convertJsonToFlow, isCompatibleConfigVersion, migrateConfig, nodesTopologicalSort } from '../../utils/flowUtils';
-import { toastCustomIconInfoMessage, toastFastInfoMessage, toastInfoMessage } from '../../utils/toastUtils';
+import { toastCustomIconInfoMessage, toastErrorMessage, toastFastInfoMessage, toastInfoMessage } from '../../utils/toastUtils';
 import ButtonRunAll from '../../components/buttons/ButtonRunAll';
 import { SocketContext } from '../../providers/SocketProvider';
 import LoginButton from '../../components/login/LoginButton';
@@ -17,6 +17,7 @@ import SmartView from '../../components/smart-view/SmartView';
 import { Layout } from '../../components/smart-view/RenderLayout';
 import EdgeTypeButton from '../../components/buttons/EdgeTypeButton';
 import TabHeader from './header/TabHeader';
+import { createErrorMessageForMissingFields, getNodeInError } from '../../utils/flowCheckUtils';
 
 
 export interface FlowTab {
@@ -144,11 +145,23 @@ const FlowTabs = () => {
 
     const nodesSorted = nodesTopologicalSort(nodes, edges);
     const flowFile = convertFlowToJson(nodesSorted, edges, false, true);
+
+    const nodesInError = getNodeInError(flowFile, nodesSorted);
+
+    if (nodesInError.length > 0) {
+      let errorMessage = createErrorMessageForMissingFields(nodesInError, t);
+      toastErrorMessage(errorMessage);
+      return;
+    }
+
+
     socket?.emit('process_file',
       {
         jsonFile: JSON.stringify(flowFile),
         apiKeys: config?.apiKeys
-      });
+      }
+    );
+
     setIsRunning(true);
   }
 

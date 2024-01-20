@@ -82,7 +82,7 @@ export function convertOpenAPISchemaToNodeConfig(schema: any, config?: Config) {
             min: prop.minimum,
             hasHandle: fieldHasHandle(fieldType),
             isLinked: false,
-            optionnal: !requiredFields.includes(name),
+            required: requiredFields.includes(name),
             options: options,
         };
 

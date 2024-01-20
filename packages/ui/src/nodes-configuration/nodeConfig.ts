@@ -8,7 +8,6 @@ import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
 import { mergerPromptNode } from "./mergerPromptNode";
 import { gptVisionNodeConfig } from "./gptVisionNode";
 import inputImageNodeConfig from "./inputImageNode";
-import stableVideoDiffusionReplicateNodeConfig from "./stableVideoDiffusionNode";
 
 export type SectionType = 'models' | 'image-generation' | 'tools' | 'input'
 export type FieldType = 'input' | 'inputInt' | 'textarea' | 'select' | 'option' | 'inputNameBar' | 'boolean' | 'slider'
@@ -31,7 +30,7 @@ export interface Field {
     min?: number;
     options?: Option[];
     hideIfParent?: boolean;
-    optionnal?: boolean;
+    required?: boolean;
     hasHandle?: boolean;
     isLinked?: boolean;
 }
@@ -59,7 +58,6 @@ export const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
     'youtube_transcript_input': youtubeTranscriptNodeConfig,
     'dalle-prompt': dallENodeConfig,
     'stable-diffusion-stabilityai-prompt': stableDiffusionStabilityAiNodeConfig,
-    'stable-video-diffusion-replicate': stableVideoDiffusionReplicateNodeConfig,
     'merger-prompt': mergerPromptNode,
     // add other configs here...
 }

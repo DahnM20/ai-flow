@@ -25,18 +25,10 @@ import AudioUrlOutput from './node-output/AudioUrlOutput';
 import { toastFastInfoMessage, toastInfoMessage } from "../../utils/toastUtils";
 import { convertOpenAPISchemaToNodeConfig, getSchemaFromConfig } from "../../utils/openAPIUtils";
 import { copyToClipboard } from "../../utils/navigatorUtils";
+import { NodeData } from "./types/node";
 
-interface DynamicFieldsNodeData {
-    handles: any;
-    id: string;
-    name: string;
+interface DynamicFieldsNodeData extends NodeData {
     schema: any;
-    processorType: string;
-    input: string;
-    input_key: string;
-    outputData?: string[];
-    lastRun: string;
-    [key: string]: any;
 }
 
 interface DynamicFieldsProps extends NodeProps {
@@ -46,7 +38,7 @@ interface DynamicFieldsProps extends NodeProps {
 export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsProps) {
 
     const [fields, setFields] = useState<Field[]>(!!data.config?.fields ? data.config.fields : [])
-    const [model, setModel] = useState<string>(!!data.config?.nodeName ? data.config.nodeName : null)
+    const [model, setModel] = useState<string | undefined>(!!data.config?.nodeName ? data.config.nodeName : undefined)
     const [modelInput, setModelInput] = useState<string>("");
 
     const { getIncomingEdges, showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);

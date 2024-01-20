@@ -3,7 +3,8 @@ import { Node, Edge } from 'reactflow';
 import { nodesTopologicalSort, convertFlowToJson } from '../utils/flowUtils';
 import { SocketContext } from './SocketProvider';
 import { useTranslation } from 'react-i18next';
-import { toastInfoMessage } from '../utils/toastUtils';
+import { toastErrorMessage, toastInfoMessage } from '../utils/toastUtils';
+import { createErrorMessageForMissingFields, getNodeInError } from '../utils/flowCheckUtils';
 
 interface NodeContextType {
     runNode: (nodeName: string) => boolean;
@@ -47,6 +48,7 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
     const { t } = useTranslation('flow');
     const { socket, config, verifyConfiguration } = useContext(SocketContext);
 
+
     const runNode = (name: string) => {
 
         if (!verifyConfiguration()) {
@@ -56,6 +58,15 @@ export const NodeProvider = ({ nodes, edges, showOnlyOutput, isRunning, currentN
 
         const nodesSorted = nodesTopologicalSort(nodes, edges);
         const flowFile = convertFlowToJson(nodesSorted, edges, false, true);
+
+        const nodesInError = getNodeInError(flowFile, nodesSorted, name);
+
+        if (nodesInError.length > 0) {
+            let errorMessage = createErrorMessageForMissingFields(nodesInError, t);
+            toastErrorMessage(errorMessage);
+            return false;
+        }
+
         socket?.emit('run_node',
             {
                 jsonFile: JSON.stringify(flowFile),

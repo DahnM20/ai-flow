@@ -7,7 +7,6 @@ export const gptVisionNodeConfig: NodeConfig = {
     fields: [
         {
             name: 'model',
-
             type: 'option',
             options: [
                 {
@@ -20,6 +19,7 @@ export const gptVisionNodeConfig: NodeConfig = {
         {
             name: 'prompt',
             type: 'textarea',
+            required: true,
             placeholder: 'VisionPromptPlaceholder',
         },
 

@@ -192,7 +192,7 @@ export function useFormFields(
                             {field.hasHandle &&
                                 <InputHandle
                                     className={`handle custom-handle`}
-                                    required={!field.optionnal}
+                                    required={field.required}
                                     type="target"
                                     position={Position.Left}
                                     id={generateIdForHandle(index)}
@@ -200,8 +200,8 @@ export function useFormFields(
                             }
                             <NodeLabel className={`font-md
                                         ${field.isLinked ? "text-sky-400" : ""}  
-                                        ${!field.optionnal ? "font-bold" : ""}`}>
-                                {t(field.name) + `${!field.optionnal ? " *" : ""}`}
+                                        ${field.required ? "font-bold" : ""}`}>
+                                {t(field.name) + `${field.required ? " *" : ""}`}
                             </NodeLabel>
                         </div>
                     )}

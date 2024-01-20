@@ -8,7 +8,7 @@ const inputTextNodeConfig: NodeConfig = {
     {
       type: "textarea",
       name: "inputText",
-      //label: "Input",
+      required: true,
       placeholder: 'InputPlaceholder',
     },
   ],
