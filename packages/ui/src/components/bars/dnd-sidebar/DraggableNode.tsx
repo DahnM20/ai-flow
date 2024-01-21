@@ -1,8 +1,9 @@
 import { useDrag } from "react-dnd";
 import { useTranslation } from "react-i18next";
 import { DnDNode } from "../../../nodes-configuration/sectionConfig";
-import { ReactNode, memo } from "react";
+import { ReactNode, memo, useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import styled from "styled-components";
 
 interface DraggableNodeProps {
@@ -21,21 +22,28 @@ const NodeBadge = ({ children }: NodeBadgeProps) => (
 const DraggableNode = (props: DraggableNodeProps) => {
 
     const { t } = useTranslation('flow');
-    const [, ref] = useDrag({
+
+    const [{ isDragging }, drag,] = useDrag({
         type: 'NODE',
-        item: { nodeType: props.node.type }
+        item: { nodeType: props.node.type },
+        collect: (monitor) => {
+            const result = {
+                isDragging: monitor.isDragging(),
+            }
+            return result
+        },
     });
 
     return (
         <Node
-            ref={ref}
+            ref={drag}
             onClick={(e) => {
                 e.stopPropagation();
             }}
             onTouchEnd={(e) => {
                 e.stopPropagation();
             }}
-            className='flex flex-row w-full gap-x-1 text-md 
+            className={`flex flex-row w-full gap-x-1 text-md 
                   text-slate-200 
                   relative
                   justify-center items-center text-center
@@ -46,11 +54,12 @@ const DraggableNode = (props: DraggableNodeProps) => {
                   shadow-md
                   cursor-grab
                   overflow-hidden
-                  group'
+                  transition-all duration-200 ease-in-out
+                  group ${isDragging ? "opacity-10" : ""}`}
         >
             {t(props.node.label)}
             {
-                props.node.helpMessage &&
+                props.node.helpMessage && !isDragging &&
                 <div className="absolute left-5 flex items-center">
                     <StyledInfoIcon
                         className="opacity-0 group-hover:opacity-100"
