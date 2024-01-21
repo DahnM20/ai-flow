@@ -63,5 +63,6 @@
     "transitionHelp": "This node can be used to organize the flow.",
     "MissingFieldsMessage": "Required fields are missing",
     "Node": "Node",
-    "MissingFields": "Missing fields"
+    "MissingFields": "Missing fields",
+    "CannotDeleteLastFlow": "Cannot delete the last flow"
 }

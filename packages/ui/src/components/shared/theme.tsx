@@ -55,7 +55,7 @@ export const theme = {
     controlsBorder: '#676768',
     helpButtonBg: '#555',
     optionButtonBg: '#555',
-    optionButtonBgSelected: 'rgba(73, 179, 201, 0.86)',
+    optionButtonBgSelected: 'rgb(72 159 159)',
     optionButtonBgHover: '#676768',
     optionButtonColor: '#dddddd',
     optionButtonColorSelected: '#f7f7f7',

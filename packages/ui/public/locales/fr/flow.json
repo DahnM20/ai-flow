@@ -62,5 +62,6 @@
     "transitionHelp": "Ce noeud sert uniquement à organiser le flow.",
     "MissingFieldsMessage": "Des champs nécessaires sont manquants",
     "Node": "Noeud",
-    "MissingFields": "Champ manquant"
+    "MissingFields": "Champ manquant",
+    "CannotDeleteLastFlow": "Impossible de supprimer le dernier Flow"
 }
