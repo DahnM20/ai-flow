@@ -4,6 +4,10 @@ FROM python:3.9
 ENV HOST=0.0.0.0
 ENV PORT=5000
 
+
+WORKDIR /app
+
+# System dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -14,20 +18,27 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+
+# Playwright
+ARG PLAYWRIGHT_VERSION=1.39
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+RUN pip install playwright==$PLAYWRIGHT_VERSION && \
+    playwright install chromium && \
+    playwright install-deps chromium
+
+# Poetry & Dependencies
+RUN pip install --upgrade poetry \
+    && poetry config virtualenvs.create false
 
 COPY poetry.lock pyproject.toml /app/
+
+RUN poetry install --no-interaction
+
+# The rest of the app
 COPY app /app/app/
 COPY tests/ /app/tests/
 COPY server.py README.md /app/
-
-RUN pip install --upgrade poetry
-#RUN poetry update
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-interaction
-RUN pip install playwright
-RUN python -m playwright install chromium
-RUN playwright install-deps
 
 EXPOSE 5000
 
