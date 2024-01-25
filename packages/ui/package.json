@@ -80,6 +80,8 @@
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.2",
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "prettier": "^3.2.4",
+    "prettier-plugin-tailwindcss": "^0.5.11"
   }
 }

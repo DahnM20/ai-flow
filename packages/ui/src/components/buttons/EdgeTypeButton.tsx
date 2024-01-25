@@ -12,34 +12,47 @@ interface EdgeTypeButtonProps {
     onChangeEdgeType: (newEdgeType: string) => void;
 }
 
-export default function EdgeTypeButton({ edgeType, onChangeEdgeType }: EdgeTypeButtonProps) {
-    const { t } = useTranslation('flow');
+export default function EdgeTypeButton({
+    edgeType,
+    onChangeEdgeType,
+}: EdgeTypeButtonProps) {
+    const { t } = useTranslation("flow");
 
-    const edgeTypeIconsMapping = useMemo<EdgeTypeIconEntry[]>(() => [
-        { src: `./curve-edge.svg`, edgeType: 'default' },
-        { src: `./smooth-step-edge.svg`, edgeType: 'smoothstep' },
-        { src: `./straight-edge.svg`, edgeType: 'straight' },
-        { src: `./step-edge.svg`, edgeType: 'step' },
-    ], []);
-
+    const edgeTypeIconsMapping = useMemo<EdgeTypeIconEntry[]>(
+        () => [
+            { src: `./curve-edge.svg`, edgeType: "default" },
+            { src: `./smooth-step-edge.svg`, edgeType: "smoothstep" },
+            { src: `./straight-edge.svg`, edgeType: "straight" },
+            { src: `./step-edge.svg`, edgeType: "step" },
+        ],
+        [],
+    );
 
     const handleChangeEdgeType = () => {
-        const currentIndex = edgeTypeIconsMapping.findIndex(et => et.edgeType === edgeType);
+        const currentIndex = edgeTypeIconsMapping.findIndex(
+            (et) => et.edgeType === edgeType,
+        );
         const nextIndex = (currentIndex + 1) % edgeTypeIconsMapping.length;
         onChangeEdgeType(edgeTypeIconsMapping[nextIndex].edgeType);
     };
 
-    const currentEdgeType = edgeTypeIconsMapping.find(et => et.edgeType === edgeType)
-
+    const currentEdgeType = edgeTypeIconsMapping.find(
+        (et) => et.edgeType === edgeType,
+    );
 
     return (
-        <div className='ring-slate-400/30 ring-1 rounded-lg items-center overflow-hidden'
+        <div
+            className="items-center overflow-hidden rounded-lg ring-1 ring-slate-400/30"
             onClick={handleChangeEdgeType}
             data-tooltip-id={`edge-type-button-tooltip`}
-            data-tooltip-content={t("EdgeType")}>
-            <img className="h-full w-full" src={currentEdgeType?.src} alt={currentEdgeType?.edgeType} />
+            data-tooltip-content={t("EdgeType")}
+        >
+            <img
+                className="h-full w-full"
+                src={currentEdgeType?.src}
+                alt={currentEdgeType?.edgeType}
+            />
             <Tooltip id={`edge-type-button-tooltip`} style={{ zIndex: 100 }} />
         </div>
-    )
-
+    );
 }

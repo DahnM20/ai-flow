@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { FiChevronsRight, FiChevronsLeft } from 'react-icons/fi';
-import { Edge, Node } from 'reactflow';
-import JSONView from '../side-views/JSONView';
-import styled, { css } from 'styled-components';
-import TopologicalView from '../side-views/TopologicalView';
-import { useTranslation } from 'react-i18next';
-import { TabButton } from '../../layout/main-layout/header/Tab';
+import React, { useState } from "react";
+import { FiChevronsRight, FiChevronsLeft } from "react-icons/fi";
+import { Edge, Node } from "reactflow";
+import JSONView from "../side-views/JSONView";
+import styled, { css } from "styled-components";
+import TopologicalView from "../side-views/TopologicalView";
+import { useTranslation } from "react-i18next";
+import { TabButton } from "../../layout/main-layout/header/Tab";
 
 interface SidebarProps {
   nodes: Node[];
@@ -14,11 +14,10 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
-
-  const { t } = useTranslation('flow');
+  const { t } = useTranslation("flow");
 
   const [show, setShow] = useState(false);
-  const [activeTab, setActiveTab] = useState('json');
+  const [activeTab, setActiveTab] = useState("json");
   const toggleShow = () => setShow(!show);
 
   return (
@@ -29,23 +28,28 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
         </ToggleIcon>
       </SidebarToggle>
       <SidebarContainer show={show}>
-
         <HeaderContainer>
-          <TabButton active={activeTab === 'json'} onClick={() => setActiveTab('json')} className='hover:text-slate-50 text-md px-1 py-2'>
-            <Title>{t('JsonView')}</Title>
+          <TabButton
+            active={activeTab === "json"}
+            onClick={() => setActiveTab("json")}
+            className="text-md px-1 py-2 hover:text-slate-50"
+          >
+            <Title>{t("JsonView")}</Title>
           </TabButton>
-          <TabButton active={activeTab === 'topological'} onClick={() => setActiveTab('topological')} className='hover:text-slate-50 text-md px-1 py-2'>
-            <Title>{t('TopologicalView')}</Title>
+          <TabButton
+            active={activeTab === "topological"}
+            onClick={() => setActiveTab("topological")}
+            className="text-md px-1 py-2 hover:text-slate-50"
+          >
+            <Title>{t("TopologicalView")}</Title>
           </TabButton>
         </HeaderContainer>
-        {
-          show && activeTab === 'topological' &&
+        {show && activeTab === "topological" && (
           <TopologicalView nodes={nodes} edges={edges} />
-        }
-        {
-          show && activeTab === 'json' &&
+        )}
+        {show && activeTab === "json" && (
           <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} />
-        }
+        )}
       </SidebarContainer>
       {!show && <div className="sidebar-overlay" onClick={toggleShow} />}
     </>
@@ -55,8 +59,8 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
 const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 10px;;
-`
+  padding: 10px;
+`;
 
 const Title = styled.div`
   font-weight: bold;
@@ -70,16 +74,18 @@ const SidebarContainer = styled.div<{ show: boolean }>`
   bottom: 0;
   width: 30%;
   color: ${({ theme }) => theme.text};
-  background-color:  ${({ theme }) => theme.bg};
+  background-color: ${({ theme }) => theme.bg};
   box-shadow: -3px 0 3px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   transform: translateX(100%);
   transition: transform 0.2s ease-in-out;
   z-index: 9999;
 
-  ${({ show }) => show && css`
-    transform: translateX(0);
-  `}
+  ${({ show }) =>
+    show &&
+    css`
+      transform: translateX(0);
+    `}
 `;
 
 const SidebarToggle = styled.div<{ show: boolean }>`
@@ -95,9 +101,11 @@ const SidebarToggle = styled.div<{ show: boolean }>`
   transition: width 0.2s ease-in-out;
   z-index: 1;
 
-  ${({ show }) => show && css`
-    width: 31.5%;
-  `}
+  ${({ show }) =>
+    show &&
+    css`
+      width: 31.5%;
+    `}
 
   @media screen and (max-width: 768px) {
     display: none;
@@ -111,7 +119,7 @@ const ToggleIcon = styled.div`
   top: 50%;
   transform: translateY(-50%);
 
-  :hover{
+  :hover {
     color: #ffffff;
   }
 `;
