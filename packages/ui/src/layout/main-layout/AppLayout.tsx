@@ -1,24 +1,37 @@
-import { useContext, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Flow from '../../components/Flow';
-import { FiSun, FiMoon, FiMail } from 'react-icons/fi';
-import { Node, Edge } from 'reactflow';
-import { ThemeContext } from '../../providers/ThemeProvider';
-import { darken, lighten } from 'polished';
-import { useTranslation } from 'react-i18next';
-import { FaEye, FaPlus } from 'react-icons/fa';
-import { convertFlowToJson, convertJsonToFlow, isCompatibleConfigVersion, migrateConfig, nodesTopologicalSort } from '../../utils/flowUtils';
-import { toastCustomIconInfoMessage, toastErrorMessage, toastFastInfoMessage, toastInfoMessage } from '../../utils/toastUtils';
-import ButtonRunAll from '../../components/buttons/ButtonRunAll';
-import { SocketContext } from '../../providers/SocketProvider';
-import LoginButton from '../../components/login/LoginButton';
-import FlowWrapper from './wrapper/FlowWrapper';
-import SmartView from '../../components/smart-view/SmartView';
-import { Layout } from '../../components/smart-view/RenderLayout';
-import EdgeTypeButton from '../../components/buttons/EdgeTypeButton';
-import TabHeader from './header/TabHeader';
-import { createErrorMessageForMissingFields, getNodeInError } from '../../utils/flowCheckUtils';
-
+import { useContext, useEffect, useState } from "react";
+import styled from "styled-components";
+import Flow from "../../components/Flow";
+import { FiSun, FiMoon, FiMail } from "react-icons/fi";
+import { Node, Edge } from "reactflow";
+import { ThemeContext } from "../../providers/ThemeProvider";
+import { darken, em, lighten } from "polished";
+import { useTranslation } from "react-i18next";
+import { FaEye, FaPlus } from "react-icons/fa";
+import {
+  convertFlowToJson,
+  convertJsonToFlow,
+  isCompatibleConfigVersion,
+  migrateConfig,
+  nodesTopologicalSort,
+} from "../../utils/flowUtils";
+import {
+  toastCustomIconInfoMessage,
+  toastErrorMessage,
+  toastFastInfoMessage,
+  toastInfoMessage,
+} from "../../utils/toastUtils";
+import ButtonRunAll from "../../components/buttons/ButtonRunAll";
+import { FlowEvent, SocketContext } from "../../providers/SocketProvider";
+import LoginButton from "../../components/login/LoginButton";
+import FlowWrapper from "./wrapper/FlowWrapper";
+import SmartView from "../../components/smart-view/SmartView";
+import { Layout } from "../../components/smart-view/RenderLayout";
+import EdgeTypeButton from "../../components/buttons/EdgeTypeButton";
+import TabHeader from "./header/TabHeader";
+import {
+  createErrorMessageForMissingFields,
+  getNodeInError,
+} from "../../utils/flowCheckUtils";
 
 export interface FlowTab {
   nodes: Node[];
@@ -27,39 +40,39 @@ export interface FlowTab {
   metadata?: FlowMetadata;
 }
 
-
 interface FlowMetadata {
   version: string;
 }
-
 
 interface FlowManagerState {
   tabs: FlowTab[];
 }
 
-export type ApplicationMode = 'flow' | 'view'
+export type ApplicationMode = "flow" | "view";
 
 const FlowTabs = () => {
-  const { t } = useTranslation('flow');
+  const { t } = useTranslation("flow");
 
-  const [flowTabs, setFlowTabs] = useState<FlowManagerState>({ tabs: [{ nodes: [], edges: [] }] });
+  const [flowTabs, setFlowTabs] = useState<FlowManagerState>({
+    tabs: [{ nodes: [], edges: [] }],
+  });
   const [currentTab, setCurrentTab] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
   const { dark, toggleTheme } = useContext(ThemeContext);
-  const { socket, verifyConfiguration, config } = useContext(SocketContext);
+  const { emitEvent } = useContext(SocketContext);
   const [isRunning, setIsRunning] = useState(false);
-  const [openConfig, setOpenConfig] = useState(false)
-  const [mode, setMode] = useState<ApplicationMode>('flow')
-  const [selectedEdgeType, setSelectedEdgeType] = useState('default')
-  const useAuth = process.env.REACT_APP_USE_AUTH === 'true';
+  const [openConfig, setOpenConfig] = useState(false);
+  const [mode, setMode] = useState<ApplicationMode>("flow");
+  const [selectedEdgeType, setSelectedEdgeType] = useState("default");
+  const useAuth = process.env.REACT_APP_USE_AUTH === "true";
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);
   };
 
   useEffect(() => {
-    const savedFlowTabsJson = localStorage.getItem('flowTabs');
+    const savedFlowTabsJson = localStorage.getItem("flowTabs");
     if (savedFlowTabsJson) {
       const savedFlowTabs = JSON.parse(savedFlowTabsJson) as FlowManagerState;
       // savedFlowTabs.tabs.forEach((tab) => {
@@ -74,29 +87,29 @@ const FlowTabs = () => {
 
   useEffect(() => {
     if (flowTabs.tabs.length >= 1 && flowTabs.tabs[0].nodes.length !== 0) {
-      localStorage.setItem('flowTabs', JSON.stringify(flowTabs));
+      localStorage.setItem("flowTabs", JSON.stringify(flowTabs));
     }
   }, [flowTabs]);
 
   useEffect(() => {
     const loadIntroFile = async () => {
-      const firstVisit = localStorage.getItem('firstVisit') !== 'false';
-      const savedFlowTabs = localStorage.getItem('flowTabs');
+      const firstVisit = localStorage.getItem("firstVisit") !== "false";
+      const savedFlowTabs = localStorage.getItem("flowTabs");
 
       if (firstVisit && !savedFlowTabs) {
         try {
-          const response = await fetch('/samples/intro.json');
+          const response = await fetch("/samples/intro.json");
           if (!response.ok) {
-            throw new Error('Failed to fetch intro file');
+            throw new Error("Failed to fetch intro file");
           }
           const jsonData = await response.json();
-          const newFlowTab: FlowManagerState = { tabs: [] }
-          newFlowTab.tabs.push(convertJsonToFlow(jsonData))
+          const newFlowTab: FlowManagerState = { tabs: [] };
+          newFlowTab.tabs.push(convertJsonToFlow(jsonData));
 
           setFlowTabs(newFlowTab);
           setRefresh(true);
 
-          localStorage.setItem('firstVisit', 'false');
+          localStorage.setItem("firstVisit", "false");
         } catch (error) {
           console.error("Cannot load sample file :", error);
         }
@@ -107,8 +120,12 @@ const FlowTabs = () => {
   }, []);
 
   const addFlowTab = () => {
-    const newFlowTab = { ...flowTabs }
-    newFlowTab.tabs.push({ nodes: [], edges: [], metadata: { version: '1.0.0' } })
+    const newFlowTab = { ...flowTabs };
+    newFlowTab.tabs.push({
+      nodes: [],
+      edges: [],
+      metadata: { version: "1.0.0" },
+    });
     setFlowTabs(newFlowTab);
   };
 
@@ -132,14 +149,9 @@ const FlowTabs = () => {
     });
     const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
     setFlowTabs(updatedFlowTabs);
-  }
+  };
 
   const handleRunAllCurrentFlow = () => {
-    if (!verifyConfiguration()) {
-      toastInfoMessage(t('ApiKeyRequiredMessage'));
-      return;
-    }
-
     const nodes = flowTabs.tabs[currentTab].nodes;
     const edges = flowTabs.tabs[currentTab].edges;
 
@@ -151,86 +163,101 @@ const FlowTabs = () => {
     if (nodesInError.length > 0) {
       let errorMessage = createErrorMessageForMissingFields(nodesInError, t);
       toastErrorMessage(errorMessage);
-      setFlowTabs({ ...flowTabs })
+      setFlowTabs({ ...flowTabs });
       return;
     }
 
-
-    socket?.emit('process_file',
-      {
+    const event: FlowEvent = {
+      name: "process_file",
+      data: {
         jsonFile: JSON.stringify(flowFile),
-        apiKeys: config?.apiKeys
-      }
-    );
+      },
+    };
+    emitEvent(event);
 
     setIsRunning(true);
-  }
+  };
 
   const handleChangeRun = (runStatus: boolean) => {
     setIsRunning(runStatus);
-  }
+  };
 
   const handleChangeTab = (index: number) => {
     if (!isRunning) {
       setCurrentTab(index);
     } else {
-      toastFastInfoMessage(t('CannotChangeTabWhileRunning'));
+      toastFastInfoMessage(t("CannotChangeTabWhileRunning"));
     }
-  }
-
-  const handleClickFeedback = () => {
-    toastCustomIconInfoMessage('You can send me a DM on X/Twitter, or open an Issue on Github :) My links are at the bottom of the configuration menu', FiMail)
-  }
+  };
 
   const handleClickProfile = () => {
     setOpenConfig(true);
-  }
+  };
 
   const handleChangeMode = (mode: ApplicationMode) => {
     setMode(mode);
-  }
+  };
 
   const handleDeleteFlow = (index: number) => {
     if (flowTabs.tabs.length === 1) {
-      toastInfoMessage(t('CannotDeleteLastFlow'));
+      toastInfoMessage(t("CannotDeleteLastFlow"));
       return;
     }
 
-    let updatedTabs = structuredClone(flowTabs.tabs)
+    let updatedTabs = structuredClone(flowTabs.tabs);
     updatedTabs = updatedTabs.filter((_: FlowTab, i: number) => i !== index);
 
     const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
     setFlowTabs(updatedFlowTabs);
     setCurrentTab(index - 1 > 0 ? index - 1 : 0);
     setRefresh(!refresh);
-  }
+  };
 
   return (
-    <FlowManagerContainer className='bg-app-dark-gradient'>
-      <TabHeader currentTab={currentTab} tabs={flowTabs.tabs} onDeleteTab={handleDeleteFlow} onAddFlowTab={addFlowTab} onChangeTab={handleChangeTab} tabPrefix={t('Flow')}>
-        <div className='flex flex-row ml-auto items-center space-x-1'>
-          <div className='w-6 h-auto'>
+    <FlowManagerContainer className="bg-app-dark-gradient">
+      <TabHeader
+        currentTab={currentTab}
+        tabs={flowTabs.tabs}
+        onDeleteTab={handleDeleteFlow}
+        onAddFlowTab={addFlowTab}
+        onChangeTab={handleChangeTab}
+        tabPrefix={t("Flow")}
+      >
+        <div className="ml-auto flex flex-row items-center space-x-1">
+          <div className="h-auto w-6">
             <EdgeTypeButton
               edgeType={selectedEdgeType}
-              onChangeEdgeType={(newEdgeType) => setSelectedEdgeType(newEdgeType)}
+              onChangeEdgeType={(newEdgeType) =>
+                setSelectedEdgeType(newEdgeType)
+              }
             />
           </div>
 
-          <div className='px-2 py-2'>
-            <FaEye className='text-slate-400 hover:text-slate-50'
-              onClick={handleToggleOutput} />
+          <div className="px-2 py-2">
+            <FaEye
+              className="text-slate-400 hover:text-slate-50"
+              onClick={handleToggleOutput}
+            />
           </div>
 
-          <div className='border-l-2 border-l-slate-500/50 h-6 pl-2'></div>
-          <div className='pr-2'>
-            <ButtonRunAll onClick={handleRunAllCurrentFlow} isRunning={isRunning} />
+          <div className="h-6 border-l-2 border-l-slate-500/50 pl-2"></div>
+          <div className="pr-2">
+            <ButtonRunAll
+              onClick={handleRunAllCurrentFlow}
+              isRunning={isRunning}
+            />
           </div>
         </div>
       </TabHeader>
 
-      <FlowWrapper mode={mode} openConfig={openConfig} onCloseConfig={() => setOpenConfig(false)} onOpenConfig={() => setOpenConfig(true)} onChangeMode={handleChangeMode}>
-        {
-          mode === 'flow' &&
+      <FlowWrapper
+        mode={mode}
+        openConfig={openConfig}
+        onCloseConfig={() => setOpenConfig(false)}
+        onOpenConfig={() => setOpenConfig(true)}
+        onChangeMode={handleChangeMode}
+      >
+        {mode === "flow" && (
           <Flow
             key={`flow-${currentTab}-${refresh}`}
             nodes={flowTabs.tabs[currentTab].nodes}
@@ -241,9 +268,8 @@ const FlowTabs = () => {
             onRunChange={handleChangeRun}
             selectedEdgeType={selectedEdgeType}
           />
-        }
-        {
-          mode === 'view' &&
+        )}
+        {mode === "view" && (
           <SmartView
             key={`smartview-${currentTab}-${refresh}`}
             nodes={flowTabs.tabs[currentTab].nodes}
@@ -254,8 +280,7 @@ const FlowTabs = () => {
             onFlowChange={handleFlowChange}
             onRunChange={handleChangeRun}
           />
-        }
-
+        )}
       </FlowWrapper>
     </FlowManagerContainer>
   );
@@ -266,6 +291,5 @@ const FlowManagerContainer = styled.div`
   flex-direction: column;
   height: 100vh;
 `;
-
 
 export default FlowTabs;
