@@ -82,9 +82,7 @@ export const NodeProvider = ({
         nodeName: name,
       },
     };
-    emitEvent(event);
-
-    return true;
+    return emitEvent(event);
   };
 
   const hasParent = (id: string) => {

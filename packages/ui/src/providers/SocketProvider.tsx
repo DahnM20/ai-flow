@@ -25,7 +25,7 @@ interface ISocketContext {
   socket: Socket | null;
   config: WSConfiguration | null;
   updateConfig: (config: WSConfiguration) => void;
-  emitEvent: (event: FlowEvent) => void;
+  emitEvent: (event: FlowEvent) => boolean;
 }
 
 interface SocketProviderProps {
@@ -36,7 +36,7 @@ export const SocketContext = createContext<ISocketContext>({
   socket: null,
   config: null,
   updateConfig: (config: WSConfiguration) => {},
-  emitEvent: (event: FlowEvent) => {},
+  emitEvent: (event: FlowEvent) => false,
 });
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
@@ -90,10 +90,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     return newSocket;
   }
 
-  function emitEvent(event: FlowEvent) {
+  function emitEvent(event: FlowEvent): boolean {
     if (!verifyConfiguration()) {
       toastInfoMessage(t("ApiKeyRequiredMessage"));
-      return;
+      return false;
     }
 
     const activeSocket = getActiveSocket();
@@ -103,7 +103,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         ...event.data,
         apiKeys: config?.apiKeys,
       });
+
+      return true;
     }
+
+    return false;
   }
 
   function verifyConfiguration(): boolean {
