@@ -1,11 +1,26 @@
-import { t } from "i18next";
 import { NodeData } from "../components/nodes/types/node";
 import { Field } from "../nodes-configuration/nodeConfig";
-import { Node, Edge } from 'reactflow';
+import { Node } from 'reactflow';
 
 const isFieldLinkedToAnotherNode = (field: Field, nodeData: NodeData) => {
     const nodeFieldsWithSameName = nodeData.inputs?.find(input => input.inputName === field.name);
     return nodeFieldsWithSameName?.inputNode;
+}
+
+export const getRequiredNodesForLaunch = (flowFile: NodeData[], nodeName: string, requiredNodes?: string[]) => {
+    if(!requiredNodes) requiredNodes = []
+
+    const currentNode = flowFile.find(node => node.name === nodeName);
+    const nodesLinked = currentNode?.inputs?.map(input => input.inputNode);
+
+    nodesLinked?.forEach((node) => {
+        getRequiredNodesForLaunch(flowFile, node, requiredNodes)
+    })
+
+    requiredNodes.push(nodeName)
+
+
+    return requiredNodes;
 }
 
 const getNodeMissingFields = (nodeData: NodeData) => {
@@ -18,20 +33,6 @@ const getNodeMissingFields = (nodeData: NodeData) => {
     });
 
     return missingFields;
-}
-
-const getNodeToCheckForCurrentNode = (flowFile: NodeData[], nodeIndex: number) => {
-    let nodesToCheckForCurrentNode = []
-
-    if (!flowFile[nodeIndex].inputs || flowFile[nodeIndex].inputs.length === 0) {
-        nodesToCheckForCurrentNode.push(flowFile[nodeIndex].name);
-
-    } else {
-        nodesToCheckForCurrentNode = [...flowFile].slice(0, nodeIndex + 1).map((node) => node.name);
-    }
-
-    return nodesToCheckForCurrentNode;
-
 }
 
 export function createErrorMessageForMissingFields(nodesInError: Node[], t: any) {
@@ -54,13 +55,12 @@ export function createErrorMessageForMissingFields(nodesInError: Node[], t: any)
 export function getNodeInError(flowFile: NodeData[], nodesSorted: Node[], name?: string,) {
     let nodesToCheck = flowFile.map((node) => node.name)
     if (!!name) {
-        const currentNodeIndex = flowFile.findIndex((data) => data.name === name);
-        nodesToCheck = getNodeToCheckForCurrentNode(flowFile, currentNodeIndex);
+        nodesToCheck = getRequiredNodesForLaunch(flowFile, name);
     }
 
-    const nodeToUpdate = nodesSorted.filter(node => nodesToCheck.includes(node.data.name));
+    const nodesToUpdate = nodesSorted.filter(node => nodesToCheck.includes(node.data.name));
 
-    const nodesInError = nodeToUpdate
+    const nodesInError = nodesToUpdate
         .map(node => {
             const flowFileCurrentNodeData = flowFile.find((data) => data.name === node.data.name);
             if (flowFileCurrentNodeData) {
