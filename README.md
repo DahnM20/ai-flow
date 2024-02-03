@@ -14,12 +14,9 @@
 
 <p align="center">
 <a href="https://ai-flow.net/">🔗 Website</a>
+<span> | </span>
+<a href="https://docs.ai-flow.net/">📚 Documentation</a>
 </p>
-
-<p align="center">
-<em>While a live version is available for convenience, for the best experience we recommend running the application directly on your local machine.</em>
-</p>
-
 <div align="center">
 
 ## 🎉🚀 v0.6.1 is Now Available 🚀🎉
@@ -34,7 +31,7 @@
 
 ![image-scenario-1-1](assets/presentation.png)
 
-**AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of multiples AI APIs such as OpenAI, StabilityAI and Replicate. This unique tool paves the way to creating interactive networks of different AI models, fostering a multi-perspective response to various prompts.
+**AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of multiples AI APIs such as OpenAI, StabilityAI and Replicate.
 
 ## Features
 
@@ -42,7 +39,7 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 - 🎨 It offers a drag-and-drop interface to design these workflows
 - 📊 Monitors their execution in real-time
-- Nodes are launched in parallel whenever it's possible
+- 🚀 Nodes are launched in parallel whenever possible
 - 🗂️ AI models can be conveniently managed and organized
 - 💾 Workflows can be exported or imported for sharing or backup purposes
 
