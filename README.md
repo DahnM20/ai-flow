@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="AI-Flow Logo"/>
+  <img src="assets/header.png" alt="AI-Flow Logo"/>
 </p>
 <p align="center">
   <em>Open-source tool to seamlessly connect multiple AI model APIs in repeatable flow.</em>
@@ -22,12 +22,11 @@
 
 <div align="center">
 
-## 🎉🚀 v0.6.0 is Now Available 🚀🎉
+## 🎉🚀 v0.6.1 is Now Available 🚀🎉
 
 🚀 **New Replicate Node** | ✨ **Access to a lot of open-source models </br> (LLama, Mistral, Face Swap, MusicGen, ...)**
 </br>
 🌟 **New Edge Type Button** | 🎵 **Support for audio output**
-
 
 </div>
 
@@ -35,27 +34,7 @@
 
 ![image-scenario-1-1](assets/presentation.png)
 
-**AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of **ChatGPT**. This unique tool paves the way to creating interactive networks of different AI models, fostering a multi-perspective response to various prompts.
-
-
-Imagine setting up a simple workflow where:
-
-- One node generates a poem
-- One node gives a review of the poem
-- One node creates a prompt for the cover of the poem
-- One node makes the cover with Stable Diffusion
-
-![image-scenario-1-1](assets/scenario-1-1.png)
-
-If we want to change the idea of the poem, we can edit the first node, and keep the same flow. 
-
-This flow logic can then be applied to different inputs, yielding varied results for similar subject matter. 
-
-**AI Flow is particularly useful for content creation.** By enabling different LLM to adopt different roles, AI Flow orchestrates the creation and evaluation of digital content, from social media threads to blog articles. 
-
-With AI Flow, you utilize your own OpenAI keys, giving you full authority over your budget. Importantly, the software runs locally on your machine, assuring you of privacy and control over your data and operations.
-
-⚠️ Please note that very large input _(for example the transcript of a 1 hour podcast)_ may incur additionnal costs, because for this type of entry the default behavior is to split the input into chunks, create embeddings **(with the OpenAI API)**, and then use a similarity search to find the right items to answer the prompt. 
+**AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of multiples AI APIs such as OpenAI, StabilityAI and Replicate. This unique tool paves the way to creating interactive networks of different AI models, fostering a multi-perspective response to various prompts.
 
 ## Features
 
@@ -63,6 +42,7 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 
 - 🎨 It offers a drag-and-drop interface to design these workflows
 - 📊 Monitors their execution in real-time
+- Nodes are launched in parallel whenever it's possible
 - 🗂️ AI models can be conveniently managed and organized
 - 💾 Workflows can be exported or imported for sharing or backup purposes
 
@@ -78,12 +58,11 @@ LLaMA, Mistral, Stable Video Diffusion, Music-gen, and many more.
 
 ![image-summary](assets/summary.png)
 
-
 #### Use pre-made prompts to build quickly
 
 ![image-ai-actions](assets/predefined-prompts.png)
 
-#### Split input with AI 
+#### Split input with AI
 
 ![image-summary](assets/split-input.png)
 
@@ -91,15 +70,13 @@ LLaMA, Mistral, Stable Video Diffusion, Music-gen, and many more.
 
 ![ai-vision](assets/gpt-vision.png)
 
-
 #### Create a custom layout for your flow
 
 When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting parts.
 
-Here is an example of layout : 
+Here is an example of layout :
 
 ![layout-view](assets/layout.png)
-
 
 ## Installation (Windows executable)
 
@@ -123,14 +100,17 @@ Before getting started, make sure you have the following dependencies installed 
 2. Change to the project directory: `cd ai-flow`
 
 ### UI Dependencies
+
 1. Go to the UI directory: `cd packages/ui`
 2. Install dependencies: `npm install`
 
 ### Backend Dependencies
+
 1. Go to the backend directory: `cd packages/backend`
 2. Install Python dependencies: `poetry install`
-   
+
 ### For Windows only
+
 3. Launch poetry shell : `poetry shell`
 4. Install the windows requirements in the poetry shell : `pip install -r requirements_windows.txt`
 
@@ -146,7 +126,6 @@ You'll need to update the REPLICATE_API_KEY in the .env file to use the Replicat
 6. Click "Run" to execute the AI workflow
 7. Monitor the execution progress and results in real-time
 
-
 ## 🐳 Docker
 
 ### Docker Compose
@@ -155,7 +134,7 @@ You'll need to update the REPLICATE_API_KEY in the .env file to use the Replicat
 2. You'll need to update the REPLICATE_API_KEY in the .yml file to use the Replicate Node. This API key is used exclusively for fetching model data.
 3. Launch `docker-compose up` or `docker-compose up -d`
 4. Open your browser and navigate to `http://localhost:80`
-5. Use `docker-compose stop` when you want to stop the app. 
+5. Use `docker-compose stop` when you want to stop the app.
 
 ## Contributing
 
