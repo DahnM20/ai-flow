@@ -5,17 +5,17 @@
   <em>Open-source tool to seamlessly connect multiple AI model APIs in repeatable flow.</em>
 </p>
 <p align="center">
-    <a href="https://docs.ai-flow.net/"> <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"> </a>
-    <a href="https://docs.ai-flow.net/"> <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French"> </a>
+    <a href="https://docs.ai-flow.net/?ref=github"> <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"> </a>
+    <a href="https://docs.ai-flow.net/?ref=github"> <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French"> </a>
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
     <img src="https://img.shields.io/github/v/release/DahnM20/ai-flow">
     <a href="https://twitter.com/DahnM20"><img src="https://img.shields.io/twitter/follow/AI-Flow?style=social"></a>
 </p>
 
 <p align="center">
-<a href="https://ai-flow.net/">🔗 Website</a>
+<a href="https://ai-flow.net/?ref=github">🔗 Website</a>
 <span> | </span>
-<a href="https://docs.ai-flow.net/">📚 Documentation</a>
+<a href="https://docs.ai-flow.net/?ref=github">📚 Documentation</a>
 </p>
 <div align="center">
 
