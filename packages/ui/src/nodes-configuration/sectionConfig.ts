@@ -34,6 +34,7 @@ function transformNodeConfigsToDndNode(configs: { [key in NodeType]?: NodeConfig
 function getAllDndNode(): DnDNode[] {
     const nonGenericNodeConfig: DnDNode[] = [
         { label: 'AiAction', type: 'ai-action', helpMessage: 'aiActionPromptHelp', section: 'tools' },
+        { label: 'FileUpload', type: 'file-upload', helpMessage: 'fileUploadHelp', section: 'tools' },
         { label: 'AiDataSplitter', type: 'ai-data-splitter', helpMessage: 'dataSplitterHelp', section: 'tools' },
         { label: 'ReplicateModel', type: 'replicate', helpMessage: 'replicateHelp', section: 'models', isBeta: true },
         { label: 'Transition', type: 'transition', helpMessage: 'transitionHelp', section: 'tools' },
