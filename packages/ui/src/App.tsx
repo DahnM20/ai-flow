@@ -11,7 +11,7 @@ import { AppTour } from "./components/tour/AppTour";
 const App = () => {
   const { dark } = useContext(ThemeContext);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
-  const [runTour, setRunTour] = useState(true);
+  const [runTour, setRunTour] = useState(false);
 
   useEffect(() => {
     if (dark) {
@@ -26,6 +26,10 @@ const App = () => {
 
     const currentAppVersion = process.env.REACT_APP_VERSION;
     if (!!currentAppVersion && storedVersion !== currentAppVersion) {
+      if (!!currentAppVersion) {
+        setRunTour(true);
+      }
+
       setShowWelcomePopup(true);
       localStorage.setItem("appVersion", currentAppVersion);
     }
@@ -35,7 +39,7 @@ const App = () => {
     <DndProvider backend={MultiBackend} options={HTML5toTouch}>
       {runTour && <AppTour run={runTour} setRun={setRunTour} />}
       <FlowTabs />
-      {showWelcomePopup && (
+      {showWelcomePopup && !runTour && (
         <WelcomePopup show onClose={() => setShowWelcomePopup(false)} />
       )}
     </DndProvider>
