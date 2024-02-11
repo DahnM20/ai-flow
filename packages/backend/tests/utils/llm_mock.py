@@ -66,6 +66,10 @@ class LLMMock(BaseLLM):
         """Async streaming completion endpoint for LLM."""
         pass
 
+    async def _as_query_component(self, prompt: str, **kwargs: Any):
+        """Async streaming completion endpoint for LLM."""
+        pass
+
     def class_name(cls) -> str:
         """
         Get the class name, used as a unique ID in serialization.
