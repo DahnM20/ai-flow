@@ -35,13 +35,14 @@ const DraggableNode = (props: DraggableNodeProps) => {
   return (
     <Node
       ref={drag}
+      id={props.node.type}
       onClick={(e) => {
         e.stopPropagation();
       }}
       onTouchEnd={(e) => {
         e.stopPropagation();
       }}
-      className={`text-md group relative flex h-auto w-full 
+      className={`sidebar-dnd-node text-md group relative flex h-auto w-full 
                   cursor-grab
                   flex-row items-center justify-center
                   gap-x-1 overflow-hidden rounded-md px-3 py-2
