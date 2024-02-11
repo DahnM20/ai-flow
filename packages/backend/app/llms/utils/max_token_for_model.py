@@ -6,6 +6,7 @@ DEFAULT_MAX_TOKEN = 4097
 def max_token_for_model(model_name: str) -> int:
     token_data = {
         # GPT-4 models
+        "gpt-4-turbo-preview": 128000,
         "gpt-4-1106-preview": 128000,
         "gpt-4-vision-preview": 128000,
         "gpt-4": 8192,
@@ -15,8 +16,8 @@ def max_token_for_model(model_name: str) -> int:
         "gpt-4-0314": 8192,
         "gpt-4-32k-0314": 32768,
         # GPT-3.5 models
+        "gpt-3.5-turbo": 16385,
         "gpt-3.5-turbo-1106": 16385,
-        "gpt-3.5-turbo": 4097,
         "gpt-3.5-turbo-16k": 16385,
         "gpt-3.5-turbo-instruct": 4097,
         "gpt-3.5-turbo-0613": 4097,
@@ -27,7 +28,6 @@ def max_token_for_model(model_name: str) -> int:
         "text-davinci-002": 4097,
         "code-davinci-002": 8001,
     }
-
     return token_data.get(model_name, DEFAULT_MAX_TOKEN)
 
 

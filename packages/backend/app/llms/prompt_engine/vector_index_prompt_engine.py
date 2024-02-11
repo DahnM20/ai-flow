@@ -1,7 +1,7 @@
 import logging
 import tiktoken
 from llama_index import Document, OpenAIEmbedding, ServiceContext, VectorStoreIndex
-from llama_index.text_splitter.token_splitter import TokenTextSplitter
+from llama_index.node_parser import TokenTextSplitter
 from llama_index.indices.postprocessor import SentenceEmbeddingOptimizer
 from llama_index.indices.postprocessor import LongContextReorder
 from llama_index.indices.postprocessor import SimilarityPostprocessor
