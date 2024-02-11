@@ -120,7 +120,7 @@ export default function SelectModelPopup({ show, onClose, onValidate }: SelectMo
                 runCount: result.run_count,
             };
         }).filter((model: any) => {
-            return !!model && model.description != null && model.coverImage != null;
+            return !!model && model.coverImage != null;
         });
     }
 
