@@ -214,7 +214,7 @@ const FlowTabs = () => {
   };
 
   return (
-    <FlowManagerContainer className="bg-app-dark-gradient">
+    <FlowManagerContainer>
       <TabHeader
         currentTab={currentTab}
         tabs={flowTabs.tabs}

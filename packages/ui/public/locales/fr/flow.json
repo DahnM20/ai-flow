@@ -68,5 +68,7 @@
     "MissingFieldsMessage": "Des champs nécessaires sont manquants",
     "Node": "Noeud",
     "MissingFields": "Champ manquant",
-    "CannotDeleteLastFlow": "Impossible de supprimer le dernier Flow"
+    "CannotDeleteLastFlow": "Impossible de supprimer le dernier Flow",
+    "HideSidebar": "Cacher la barre",
+    "ShowSidebar": "Afficher la barre"
 }

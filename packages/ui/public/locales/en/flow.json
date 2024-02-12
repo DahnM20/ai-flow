@@ -69,5 +69,7 @@
     "MissingFieldsMessage": "Required fields are missing",
     "Node": "Node",
     "MissingFields": "Missing fields",
-    "CannotDeleteLastFlow": "Cannot delete the last flow"
+    "CannotDeleteLastFlow": "Cannot delete the last flow",
+    "HideSidebar": "Hide sidebar",
+    "ShowSidebar": "Show sidebar"
 }
