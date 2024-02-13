@@ -18,7 +18,7 @@ function ModeBar({ onChangeMode, currentMode }: ModeBarProps) {
   };
 
   return (
-    <div className="z-10 flex h-full w-10 flex-col space-y-2 border-r-2 border-r-sky-900/10 p-2 pt-4">
+    <div className="z-10 flex h-full min-w-[2.5rem] flex-col space-y-2 border-r-2 border-r-sky-900/10 p-2 pt-4">
       {modes.map((mode, index) => {
         const Icon = mode.icon;
         return (
