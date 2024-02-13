@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Joyride, { ACTIONS, EVENTS, STATUS, Step } from "react-joyride";
 import { theme } from "../shared/theme";
 import { useTranslation } from "react-i18next";
@@ -14,11 +14,29 @@ const classToObserve = new Set([
   "react-flow__pane",
 ]);
 
+const imageUrls: string[] = [
+  "./tour-assets/tour-step-drag-and-drop.gif",
+  "./tour-assets/tour-step-run-node.gif",
+  "./tour-assets/tour-step-connect-nodes.gif",
+  "./tour-assets/tour-step-replicate-node.gif",
+];
+
+function preloadImages(urls: string[]) {
+  urls.forEach((url) => {
+    const img = new Image();
+    img.src = url;
+  });
+}
+
 export function AppTour({ run, setRun }: AppTourProps) {
   const [joyrideKey, setJoyrideKey] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
 
   const { t } = useTranslation("tour");
+
+  useEffect(() => {
+    preloadImages(imageUrls);
+  }, []);
 
   const [tourSteps, setTourSteps] = useState<Array<Step>>([
     {
@@ -62,7 +80,7 @@ export function AppTour({ run, setRun }: AppTourProps) {
         <div className="space-y-2">
           <p className="text-base">{t("addNodesWithDragAndDrop")}</p>
           <img
-            src="./tour-assets/tour-step-drag-and-drop.gif"
+            src={imageUrls[0]}
             className="rounded-lg shadow-lg"
             alt={t("dragAndDrop") ?? "drag and drop"}
           ></img>
@@ -77,14 +95,14 @@ export function AppTour({ run, setRun }: AppTourProps) {
       title: t("addingNodes"),
     },
     {
-      target: ".node-wrapper",
-      isFixed: true,
+      target: ".node-play-button",
       hideCloseButton: true,
+      placement: "right",
       content: (
         <div className="space-y-2">
           <p className="text-base">{t("executeSingleNode")}</p>
           <img
-            src="./tour-assets/tour-step-run-node.gif"
+            src={imageUrls[1]}
             className="rounded-lg shadow-lg"
             alt={"run nodes"}
           ></img>
@@ -101,7 +119,7 @@ export function AppTour({ run, setRun }: AppTourProps) {
         <div className="space-y-2">
           <p className="text-base">{t("handlesExplanation")}</p>
           <img
-            src="./tour-assets/tour-step-connect-nodes.gif"
+            src={imageUrls[2]}
             className="rounded-lg shadow-lg"
             alt={"connect-nodes"}
           ></img>
@@ -127,7 +145,7 @@ export function AppTour({ run, setRun }: AppTourProps) {
         <div className="space-y-2">
           <p className="text-base">{t("replicateNodeDescription")}</p>
           <img
-            src="./tour-assets/tour-step-replicate-node.gif"
+            src={imageUrls[3]}
             className="rounded-lg shadow-lg"
             alt={"replicate-node"}
           ></img>
