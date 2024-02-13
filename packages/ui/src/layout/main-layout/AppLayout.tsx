@@ -214,7 +214,7 @@ const FlowTabs = () => {
   };
 
   return (
-    <FlowManagerContainer>
+    <FlowManagerContainer className="relative flex h-screen flex-col">
       <TabHeader
         currentTab={currentTab}
         tabs={flowTabs.tabs}
@@ -286,10 +286,6 @@ const FlowTabs = () => {
   );
 };
 
-const FlowManagerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-`;
+const FlowManagerContainer = styled.div``;
 
 export default FlowTabs;

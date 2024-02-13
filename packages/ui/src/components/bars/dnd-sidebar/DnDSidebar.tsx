@@ -31,58 +31,51 @@ const DnDSidebar = () => {
   return (
     <>
       <div
-        className={`transform transition-transform duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out ${!isOpen ? "-translate-x-full" : "translate-x-0"}`}
+        className={`relative flex w-1/2
+        transform
+        transition-transform md:w-full duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out ${!isOpen ? "-translate-x-full" : "translate-x-0"}`}
       >
         <div
-          className={`absolute left-full top-1/2 z-50 translate-x-2 transform 
-          text-2xl font-bold text-slate-300
-          hover:font-extrabold hover:text-slate-100`}
+          className={`absolute left-full top-1/2 z-50 flex translate-x-2 transform 
+          text-2xl font-bold
+          text-slate-300 hover:font-extrabold hover:text-slate-100`}
           onClick={() => setOpen(!isOpen)}
-          onTouchEnd={() => setOpen(!isOpen)}
           data-tooltip-id={`dnd-tooltip`}
           data-tooltip-content={`${isOpen ? t("HideSidebar") : t("ShowSidebar")}`}
           data-tooltip-place="right"
         >
           {!isOpen ? <FiChevronRight /> : <FiChevronLeft />}
         </div>
-        <DnDSidebarContainer
-          isOpen={isOpen}
-          className={` transform overflow-hidden border-r-sky-900/50  bg-zinc-950/10 px-3 py-2 shadow-md hover:overflow-y-auto`}
-        >
-          {contentVisible
-            ? nodeSectionMapping.map((section, index) => (
-                <Section
-                  key={index}
-                  className={`mb-5 flex flex-col gap-y-2 ${!isOpen ? "opacity-0" : ""} 
+        {contentVisible && (
+          <DnDSidebarContainer
+            className={` font-sm md:font-md flex transform flex-col overflow-hidden  border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md hover:overflow-y-auto`}
+          >
+            {contentVisible
+              ? nodeSectionMapping.map((section, index) => (
+                  <Section
+                    key={index}
+                    className={`mb-5 flex flex-col gap-y-2 ${!isOpen ? "opacity-0" : ""} 
                   transition-opacity duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out`}
-                >
-                  <SectionTitle className="text-md ml-1 flex flex-row items-center gap-x-2 border-b-2 border-b-slate-500/20 py-1 text-slate-300">
-                    {section.icon && <section.icon />}
-                    {t(section.label)}
-                  </SectionTitle>
-                  {section.nodes?.map((node, nodeIndex) => (
-                    <DraggableNode key={nodeIndex} node={node} />
-                  ))}
-                </Section>
-              ))
-            : undefined}
-        </DnDSidebarContainer>
+                  >
+                    <SectionTitle className="text-md ml-1 flex flex-row items-center gap-x-2 border-b-2 border-b-slate-500/20 py-1 text-slate-300">
+                      {section.icon && <section.icon />}
+                      {t(section.label)}
+                    </SectionTitle>
+                    {section.nodes?.map((node, nodeIndex) => (
+                      <DraggableNode key={nodeIndex} node={node} />
+                    ))}
+                  </Section>
+                ))
+              : undefined}
+          </DnDSidebarContainer>
+        )}
       </div>
       <Tooltip id={`dnd-tooltip`} style={{ zIndex: 100 }} />
     </>
   );
 };
 
-const DnDSidebarContainer = styled.div<{ isOpen: boolean }>`
-  height: 95%;
-  z-index: 1;
-
-  @media screen and (max-width: 768px) {
-    width: 70%;
-    font-size: 0.9em;
-    padding: 50px 5px;
-  }
-`;
+const DnDSidebarContainer = styled.div``;
 
 const Section = styled.div``;
 

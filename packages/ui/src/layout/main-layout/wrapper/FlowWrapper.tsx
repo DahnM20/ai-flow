@@ -37,11 +37,12 @@ function FlowWrapper({
   return (
     <>
       <div
-        className="fixed left-0 top-0 
-                            z-10
-                            mt-16 flex
-                            h-full
-                            flex-row"
+        className="fixed left-0 
+                          z-10
+                          flex
+                          h-full
+                          flex-row
+                          pt-16"
       >
         <ModeBar currentMode={mode} onChangeMode={onChangeMode} />
         {mode === "flow" && <DnDSidebar />}
