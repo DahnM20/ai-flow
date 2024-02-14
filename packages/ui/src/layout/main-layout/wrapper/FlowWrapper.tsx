@@ -55,9 +55,7 @@ function FlowWrapper({
         icon={<FiHelpCircle />}
       />
       <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
-      {isHelpOpen && (
-        <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
-      )}
+      <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
       {children}
     </>
   );
