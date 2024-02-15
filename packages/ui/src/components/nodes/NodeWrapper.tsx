@@ -1,11 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { NodeContext } from "../../providers/NodeProvider";
+import { FaCopy, FaEraser } from "react-icons/fa";
+import { createUniqNodeId } from "../../utils/nodeUtils";
 
 type NodeWrapperProps = {
   children: React.ReactNode;
   nodeId: string;
 };
+
+const DUPLICATED_NODE_OFFSET = 100;
 
 function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   const [showIcon, setShowIcon] = useState(false);
@@ -39,6 +43,50 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
     onUpdateNodes(nodesUpdated, edgesUpdated);
   }
 
+  function handleDuplicateNode(nodeId: string): void {
+    const nodeToDuplicate = nodes.find((node) => node.id === nodeId);
+    if (nodeToDuplicate) {
+      const newNodeId = createUniqNodeId(nodeToDuplicate.data.processorType);
+
+      const newNode = {
+        ...nodeToDuplicate,
+        id: newNodeId,
+        data: {
+          ...nodeToDuplicate.data,
+          name: newNodeId,
+          isDone: false,
+          lastRun: undefined,
+        },
+        position: {
+          x: nodeToDuplicate.position.x + DUPLICATED_NODE_OFFSET,
+          y: nodeToDuplicate.position.y + DUPLICATED_NODE_OFFSET,
+        },
+      };
+      const nodesUpdated = [...nodes, newNode];
+      const edgesUpdated = [...edges];
+      onUpdateNodes(nodesUpdated, edgesUpdated);
+    }
+  }
+
+  function handleClearOutput(nodeId: string): void {
+    const nodeToUpdate = nodes.find((node) => node.id === nodeId);
+    if (nodeToUpdate) {
+      const nodesUpdated = nodes.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              outputData: undefined,
+            },
+          };
+        }
+        return node;
+      });
+      onUpdateNodes(nodesUpdated, edges);
+    }
+  }
+
   return (
     <div
       className={`group relative p-1 transition-all ${currentNodeIsMissingFields ? "rounded-lg border-2 border-dashed border-red-500/80" : ""}`}
@@ -46,8 +94,44 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       onMouseLeave={hideIconWithDelay}
     >
       {children}
-      <span
-        className="absolute right-1/2 top-0 -translate-y-14 translate-x-1/2 cursor-pointer 
+      <div
+        className={`absolute right-1/2 top-0 flex -translate-y-14 translate-x-1/2 flex-row gap-x-2 
+      transition-all duration-300 ease-in-out  ${showIcon ? "opacity-100" : "opacity-0"}`}
+      >
+        <span
+          className="cursor-pointer 
+                        rounded-full bg-slate-200/10
+                        p-2
+                        text-xl
+                        text-stone-100
+                        hover:bg-slate-200/20
+                        hover:text-blue-400
+                        "
+          onClick={() => handleDuplicateNode(nodeId)}
+          onMouseEnter={clearHideIconTimeout}
+          onMouseLeave={hideIconWithDelay}
+          style={{ display: showIcon ? "block" : "none" }}
+        >
+          <FaCopy />
+        </span>
+        <span
+          className=" cursor-pointer 
+                        rounded-full bg-slate-200/10
+                        p-2
+                        text-xl
+                        text-stone-100
+                        hover:bg-slate-200/20
+                        hover:text-slate-50
+                        "
+          onClick={() => handleClearOutput(nodeId)}
+          onMouseEnter={clearHideIconTimeout}
+          onMouseLeave={hideIconWithDelay}
+          style={{ display: showIcon ? "block" : "none" }}
+        >
+          <FaEraser />
+        </span>
+        <span
+          className=" cursor-pointer 
                         rounded-full bg-slate-200/10
                         p-2
                         text-xl
@@ -55,13 +139,14 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
                         hover:bg-slate-200/20
                         hover:text-red-400
                         "
-        onClick={() => handleRemoveNode(nodeId)}
-        onMouseEnter={clearHideIconTimeout}
-        onMouseLeave={hideIconWithDelay}
-        style={{ display: showIcon ? "block" : "none" }}
-      >
-        <AiOutlineClose />
-      </span>
+          onClick={() => handleRemoveNode(nodeId)}
+          onMouseEnter={clearHideIconTimeout}
+          onMouseLeave={hideIconWithDelay}
+          style={{ display: showIcon ? "block" : "none" }}
+        >
+          <AiOutlineClose />
+        </span>
+      </div>
     </div>
   );
 }

@@ -174,14 +174,6 @@ function Flow(props: FlowProps) {
     }
   }, []);
 
-  const generatedIdIdentifier = "#";
-
-  const createUniqNodeId = (suffix: string) => {
-    return (
-      Math.random().toString(36).substr(2, 9) + generatedIdIdentifier + suffix
-    );
-  };
-
   const onDrop = useCallback(
     (item: any, monitor?: any) => {
       if (
