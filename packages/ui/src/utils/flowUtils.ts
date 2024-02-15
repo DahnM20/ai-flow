@@ -46,6 +46,42 @@ export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   return sortedNodes;
 }
 
+
+
+export function findParents(node: Node, edges: Edge[]) {
+  return edges
+    .filter((edge) => edge.target === node.id)
+    .map((edge) => edge.source);
+}
+
+export function formatFlow(nodes: Node[], edges: Edge[]){
+  const nodesSorted = nodesTopologicalSort(nodes, edges);
+
+  const levelDict: any = {};
+
+  nodesSorted.forEach((node) => {
+    const parents = findParents(node, edges);
+    if (parents.length === 0) {
+      levelDict[node.id] = 0;
+    } else {
+      let maxParentLevel = Math.max(
+        ...parents.map((parent) => levelDict[parent]),
+      );
+      levelDict[node.id] = maxParentLevel + 1;
+    }
+  });
+
+  nodes.forEach((node) => {
+    node.position.x = 700 * levelDict[node.id];
+    node.position.y = 400 *
+        Object.keys(levelDict)
+          .filter((n: string) => levelDict[n] === levelDict[node.id])
+          .indexOf(node.id);
+  });
+
+  return nodes;
+}
+
 export const getTargetHandleKey: any = (edge: Edge) => {
   return edge?.targetHandle?.split(handleSeparator)[indexKeyHandleIn];
 }
