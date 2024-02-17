@@ -209,20 +209,24 @@ export default function SelectModelPopup({
 
   return (
     <DefaultPopupWrapper onClose={onClose} show={show}>
-      <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow">
-        <CollectionGrid
-          collections={collections}
-          selectedCollection={selectedCollection}
-          handleSelectCollection={handleSelectCollection}
-        />
+      <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow lg:flex-row">
+        <div className="flex lg:w-1/4">
+          <CollectionGrid
+            collections={collections}
+            selectedCollection={selectedCollection}
+            handleSelectCollection={handleSelectCollection}
+          />
+        </div>
 
-        {renderModelSections()}
+        <div className="flex flex-col lg:w-3/4">
+          {renderModelSections()}
 
-        <LoadMoreButton
-          loading={loading}
-          cursor={cursor}
-          onLoadMore={handleLoadMore}
-        />
+          <LoadMoreButton
+            loading={loading}
+            cursor={cursor}
+            onLoadMore={handleLoadMore}
+          />
+        </div>
       </div>
     </DefaultPopupWrapper>
   );
