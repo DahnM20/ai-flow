@@ -7,3 +7,6 @@ class TemplateProvider:
 
     def get_template_by_id(self, template_id: int) -> Optional[Dict]:
         pass
+
+    def save_template(self, template_data: Dict):
+        pass

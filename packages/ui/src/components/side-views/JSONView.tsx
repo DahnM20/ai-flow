@@ -1,5 +1,5 @@
 import React, { useContext, memo, useState } from "react";
-import { FiCrosshair, FiDownload, FiUpload } from "react-icons/fi";
+import { FiCrosshair, FiDownload, FiSave, FiUpload } from "react-icons/fi";
 import { Edge, Node } from "reactflow";
 import {
   convertFlowToJson,
@@ -11,6 +11,10 @@ import { useTranslation } from "react-i18next";
 import { NodeContext } from "../../providers/NodeProvider";
 import { FaExclamationTriangle } from "react-icons/fa";
 import DefaultSwitch from "../buttons/DefaultSwitch";
+import axios from "axios";
+import { getRestApiUrl } from "../../config/config";
+import { toastInfoMessage } from "../../utils/toastUtils";
+import AddTemplatePopup, { TemplateFormData } from "../popups/AddTemplatePopup";
 
 interface JSONViewProps {
   nodes: Node[];
@@ -23,6 +27,7 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
   const { onUpdateNodes } = useContext(NodeContext);
   const [showFieldsConfig, setShowFieldsConfig] = useState(false);
   const [showCoordinates, setShowCoordinates] = useState(true);
+  const [showAddTemplatePopup, setShowAddTemplatePopup] = useState(false);
 
   nodes = nodesTopologicalSort(nodes, edges);
   const data = convertFlowToJson(
@@ -83,46 +88,86 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
     onUpdateNodes([], []);
   };
 
+  const handleSaveAsTemplate = async (data: TemplateFormData) => {
+    const flowData = convertFlowToJson(nodes, edges, true, true);
+    const template = {
+      title: data.title,
+      description: data.description,
+      template: flowData,
+    };
+
+    let url = `${getRestApiUrl()}/template`;
+
+    const response = await axios.post(url, template);
+    console.log(response);
+    if (response.status === 200) {
+      toastInfoMessage("Template saved");
+      setShowAddTemplatePopup(false);
+    } else {
+      toastInfoMessage("Error saving template");
+    }
+  };
+
+  const openAddTemplatePopup = () => {
+    setShowAddTemplatePopup(true);
+  };
+
   return (
-    <JSONViewContainer>
-      <JSONViewButtons>
-        <JSONViewButton onClick={handleUploadClick}>
-          <FiUpload />
-          {t("Upload")}
-        </JSONViewButton>
-        <JSONViewButton onClick={handleDownloadClick}>
-          <FiDownload />
-          {t("Download")}
-        </JSONViewButton>
-        <JSONViewButton onClick={handleDeleteOutput} dangerous>
-          <FiCrosshair />
-          {t("Delete Output")}
-        </JSONViewButton>
-        <JSONViewButton onClick={handleDeleteAll} dangerous>
-          <FaExclamationTriangle />
-          {t("Delete All")}
-        </JSONViewButton>
-      </JSONViewButtons>
-      <div className="mt-2 flex flex-col">
-        <div className="flex flex-row items-center space-x-2">
-          <DefaultSwitch
-            onChange={(checked: boolean) => setShowFieldsConfig(checked)}
-            checked={showFieldsConfig}
-          />
-          <p className="text-sm">Show nodes config</p>
+    <>
+      <JSONViewContainer className="space-y-2">
+        <JSONViewButtons>
+          <JSONViewButton onClick={handleUploadClick}>
+            <FiUpload />
+            {t("Upload")}
+          </JSONViewButton>
+          <JSONViewButton onClick={handleDownloadClick}>
+            <FiDownload />
+            {t("Download")}
+          </JSONViewButton>
+          <JSONViewButton onClick={handleDeleteOutput} dangerous>
+            <FiCrosshair />
+            {t("Delete Output")}
+          </JSONViewButton>
+          <JSONViewButton onClick={handleDeleteAll} dangerous>
+            <FaExclamationTriangle />
+            {t("Delete All")}
+          </JSONViewButton>
+        </JSONViewButtons>
+        <JSONViewButtons>
+          <button
+            onClick={openAddTemplatePopup}
+            className="flex flex-row items-center justify-center space-x-1 rounded-md bg-teal-500/80 px-2 py-1 text-sm transition-all duration-300 ease-in-out hover:bg-teal-500"
+          >
+            <FiSave />
+            <p>{t("Save as template")}</p>
+          </button>
+        </JSONViewButtons>
+        <div className="mt-2 flex flex-col">
+          <div className="flex flex-row items-center space-x-2">
+            <DefaultSwitch
+              onChange={(checked: boolean) => setShowFieldsConfig(checked)}
+              checked={showFieldsConfig}
+            />
+            <p className="text-sm">Show nodes config</p>
+          </div>
+          <div className="flex flex-row items-center space-x-2">
+            <DefaultSwitch
+              onChange={(checked: boolean) => setShowCoordinates(checked)}
+              checked={showCoordinates}
+            />
+            <p className="text-sm">Show coordinates</p>
+          </div>
         </div>
-        <div className="flex flex-row items-center space-x-2">
-          <DefaultSwitch
-            onChange={(checked: boolean) => setShowCoordinates(checked)}
-            checked={showCoordinates}
-          />
-          <p className="text-sm">Show coordinates</p>
-        </div>
-      </div>
-      <JSONViewContent className="mt-5">
-        {JSON.stringify(data, null, 2)}
-      </JSONViewContent>
-    </JSONViewContainer>
+        <JSONViewContent className="mt-5">
+          {JSON.stringify(data, null, 2)}
+        </JSONViewContent>
+      </JSONViewContainer>
+      <AddTemplatePopup
+        show={showAddTemplatePopup}
+        onClose={() => setShowAddTemplatePopup(false)}
+        onValidate={handleSaveAsTemplate}
+      />
+    </>
   );
 };
 
@@ -131,7 +176,7 @@ const JSONViewContainer = styled.div`
 `;
 
 const JSONViewButtons = styled.div.attrs({
-  className: "flex space-x-1",
+  className: "flex space-x-1 justify-center",
 })``;
 
 const JSONViewButton = styled.button<{ dangerous?: boolean }>`

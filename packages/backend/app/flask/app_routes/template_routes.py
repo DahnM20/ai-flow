@@ -24,3 +24,12 @@ def get_template_by_id(template_id):
     template = template_provider.get_template_by_id(template_id)
 
     return template
+
+
+@template_blueprint.route("/template", methods=["POST"])
+def save_template():
+    template_data = request.json
+    template_provider = root_injector.get(TemplateProvider)
+
+    template_provider.save_template(template_data)
+    return "Template saved successfully."
