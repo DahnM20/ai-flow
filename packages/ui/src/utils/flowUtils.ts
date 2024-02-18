@@ -7,9 +7,9 @@ const CONFIG = {
   FLOW_VERSION: "1.0.0",
 };
 
-const handleInPrefix = 'handle-in';
-const handleOutPrefix = 'handle-out';
-const handleSeparator = '-';
+const handleInPrefix = "handle-in";
+const handleOutPrefix = "handle-out";
+const handleSeparator = "-";
 const indexKeyHandleOut = 2;
 const indexKeyHandleIn = 2;
 
@@ -21,7 +21,10 @@ export function isCompatibleConfigVersion(fileVersion: string | undefined) {
   return fileVersion === CONFIG.FLOW_VERSION;
 }
 
-export const generateIdForHandle = (key: number, isOutput?: boolean) => !isOutput ? `${handleInPrefix}${handleSeparator}${key}` : `${handleOutPrefix}${handleSeparator}${key}`;
+export const generateIdForHandle = (key: number, isOutput?: boolean) =>
+  !isOutput
+    ? `${handleInPrefix}${handleSeparator}${key}`
+    : `${handleOutPrefix}${handleSeparator}${key}`;
 
 export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   const visited = new Set<string>();
@@ -46,15 +49,13 @@ export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   return sortedNodes;
 }
 
-
-
 export function findParents(node: Node, edges: Edge[]) {
   return edges
     .filter((edge) => edge.target === node.id)
     .map((edge) => edge.source);
 }
 
-export function formatFlow(nodes: Node[], edges: Edge[]){
+export function formatFlow(nodes: Node[], edges: Edge[]) {
   const nodesSorted = nodesTopologicalSort(nodes, edges);
 
   const levelDict: any = {};
@@ -73,10 +74,11 @@ export function formatFlow(nodes: Node[], edges: Edge[]){
 
   nodes.forEach((node) => {
     node.position.x = 700 * levelDict[node.id];
-    node.position.y = 400 *
-        Object.keys(levelDict)
-          .filter((n: string) => levelDict[n] === levelDict[node.id])
-          .indexOf(node.id);
+    node.position.y =
+      400 *
+      Object.keys(levelDict)
+        .filter((n: string) => levelDict[n] === levelDict[node.id])
+        .indexOf(node.id);
   });
 
   return nodes;
@@ -84,42 +86,55 @@ export function formatFlow(nodes: Node[], edges: Edge[]){
 
 export const getTargetHandleKey: any = (edge: Edge) => {
   return edge?.targetHandle?.split(handleSeparator)[indexKeyHandleIn];
-}
+};
 
-export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates?: boolean, withConfig?: boolean): NodeData[] {
+export function convertFlowToJson(
+  nodes: Node[],
+  edges: Edge[],
+  withCoordinates?: boolean,
+  withConfig?: boolean,
+): NodeData[] {
   return nodes.map((node: Node) => {
     const { id, ...rest } = node;
 
     const inputEdges = edges.filter((edge: any) => edge.target === id);
 
     const inputs = inputEdges.map((edge: any) => {
-      const inputId = edge?.source || '';
+      const inputId = edge?.source || "";
 
-      const keySplitted = edge?.sourceHandle?.split(handleSeparator)[indexKeyHandleOut]
-      const inputNodeOutputKey = !keySplitted || isNaN(+keySplitted) ? undefined : +keySplitted;
+      const keySplitted =
+        edge?.sourceHandle?.split(handleSeparator)[indexKeyHandleOut];
+      const inputNodeOutputKey =
+        !keySplitted || isNaN(+keySplitted) ? undefined : +keySplitted;
 
-      const inputNode = nodes.find((node: any) => node.id === inputId)?.data.name || '';
+      const inputNode =
+        nodes.find((node: any) => node.id === inputId)?.data.name || "";
 
-      const targetHandleKey = getTargetHandleKey(edge)
+      const targetHandleKey = getTargetHandleKey(edge);
 
       return {
-        inputName: !!node.data.config?.inputNames ? node.data.config.inputNames[targetHandleKey] : undefined,
+        inputName: !!node.data.config?.inputNames
+          ? node.data.config.inputNames[targetHandleKey]
+          : undefined,
         inputNode,
         inputNodeOutputKey,
-      }
-
+      };
     });
 
     const { a, nodeType, output, input, config, ...nodeValues } = node.data;
 
     const fields = config?.fields;
     const nodeName = config?.nodeName;
+    const inputNames = config?.inputNames;
+    const hasInputHandle = config?.hasInputHandle;
 
     const configEssentials = {
       fields,
       nodeName,
-      outputType: config?.outputType
-    }
+      inputNames,
+      hasInputHandle,
+      outputType: config?.outputType,
+    };
 
     if (withCoordinates) {
       return {
@@ -128,7 +143,7 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates?
         config: withConfig ? configEssentials : undefined,
         x: node.position.x,
         y: node.position.y,
-      }
+      };
     } else {
       return {
         inputs,
@@ -138,10 +153,9 @@ export function convertFlowToJson(nodes: Node[], edges: Edge[], withCoordinates?
     }
   });
 }
-export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } {
+export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[] } {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
-
 
   // Create nodes
   json.forEach((node: any) => {
@@ -156,7 +170,9 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
       position: { x, y },
       data: {
         ...nodeData,
-        config: !!nodeData.config ? nodeData.config : getConfigViaType(nodeData.processorType),
+        config: !!nodeData.config
+          ? nodeData.config
+          : getConfigViaType(nodeData.processorType),
       },
     });
   });
@@ -165,18 +181,26 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
   json.forEach((node: any) => {
     if (node.inputs) {
       node.inputs.forEach((input: any, index: number) => {
-        let targetHandleIndex = index
+        let targetHandleIndex = index;
         const fields: Field[] = node.config?.fields;
         if (!!fields) {
-          targetHandleIndex = fields.findIndex((field) => field.name === input.inputName)
+          targetHandleIndex = fields.findIndex(
+            (field) => field.name === input.inputName,
+          );
+          if (targetHandleIndex === -1) {
+            targetHandleIndex = index;
+          }
         }
         edges.push({
           id: `${input.inputNode}-to-${node.name}`,
-          sourceHandle: generateIdForHandle(input.inputNodeOutputKey ?? 0, true),
+          sourceHandle: generateIdForHandle(
+            input.inputNodeOutputKey ?? 0,
+            true,
+          ),
           targetHandle: generateIdForHandle(targetHandleIndex),
           target: node.name,
           source: input.inputNode,
-          type: 'buttonedge',
+          type: "buttonedge",
         });
       });
     }
@@ -185,10 +209,12 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
     if (node.input && !node.inputs) {
       edges.push({
         id: `${node.input}-to-${node.name}`,
-        sourceHandle: !!node.inputKey ? generateIdForHandle(node.inputKey) : undefined,
+        sourceHandle: !!node.inputKey
+          ? generateIdForHandle(node.inputKey)
+          : undefined,
         source: node.input,
         target: node.name,
-        type: 'buttonedge',
+        type: "buttonedge",
       });
     }
   });
@@ -197,13 +223,13 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[]; } 
 }
 
 function arrangeOldFields(nodeData: any) {
-  if (nodeData.processorType === 'gpt-no-context-prompt') {
+  if (nodeData.processorType === "gpt-no-context-prompt") {
     nodeData.processorType = "llm-prompt";
     nodeData.model = nodeData.gptVersion;
     nodeData.prompt = nodeData.inputText;
   }
 
-  if (nodeData.processorType === 'ai-action') {
+  if (nodeData.processorType === "ai-action") {
     if (!!nodeData.inputText) {
       nodeData.model = nodeData.gptVersion;
       nodeData.prompt = nodeData.inputText;
@@ -215,7 +241,7 @@ function arrangeOldFields(nodeData: any) {
 }
 
 function arrangeOldType(node: any) {
-  if (node.type === 'gpt-no-context-prompt') {
+  if (node.type === "gpt-no-context-prompt") {
     node.type = "llm-prompt";
     node.data.config = getConfigViaType(node.type);
   }
@@ -224,8 +250,8 @@ function arrangeOldType(node: any) {
 export function migrateConfig(oldConfig: FlowTab) {
   if (!oldConfig.metadata) {
     oldConfig.nodes.forEach((node) => {
-      arrangeOldType(node)
-      arrangeOldFields(node.data)
-    })
+      arrangeOldType(node);
+      arrangeOldFields(node.data);
+    });
   }
 }
