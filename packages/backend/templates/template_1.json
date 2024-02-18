@@ -1,0 +1,96 @@
+{
+  "title": "Summarize Youtube Video",
+  "description": "Summarize youtube video with GPT",
+  "image": "https://example.com/path/to/template-image.jpg",
+  "tags": ["productivity", "text", "image", "sound", "web"],
+  "template": [
+    {
+      "inputs": [],
+      "isDone": true,
+      "language": "en",
+      "lastRun": "2024-02-18T14:06:43.986Z",
+      "missingFields": [],
+      "name": "rdrtw3a1x#youtube_transcript_input",
+      "processorType": "youtube_transcript_input",
+      "url": "",
+      "config": {
+        "fields": [
+          {
+            "name": "url",
+            "placeholder": "URLPlaceholder",
+            "required": true,
+            "type": "input"
+          },
+          {
+            "name": "language",
+            "options": [
+              {
+                "default": true,
+                "label": "EN",
+                "value": "en"
+              },
+              {
+                "label": "FR",
+                "value": "fr"
+              },
+              {
+                "label": "ES",
+                "value": "es"
+              }
+            ],
+            "type": "option"
+          }
+        ],
+        "nodeName": "YoutubeTranscriptNodeName",
+        "outputType": "text"
+      },
+      "x": -1550.5528724386616,
+      "y": 782.1274233734509
+    },
+    {
+      "inputs": [
+        {
+          "inputName": "initData",
+          "inputNode": "rdrtw3a1x#youtube_transcript_input",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "8615bsvpg#llm-prompt",
+      "processorType": "llm-prompt",
+      "model": "gpt-4-turbo-preview",
+      "prompt": "Summarize this video script. Use markdown and emojis to format. ",
+      "config": {
+        "fields": [
+          {
+            "name": "model",
+            "label": "",
+            "type": "option",
+            "options": [
+              {
+                "label": "GPT3.5",
+                "value": "gpt-3.5-turbo",
+                "default": true
+              },
+              {
+                "label": "GPT4",
+                "value": "gpt-4-turbo-preview"
+              }
+            ]
+          },
+          {
+            "name": "prompt",
+            "type": "textarea",
+            "required": true,
+            "placeholder": "PromptPlaceholder"
+          }
+        ],
+        "nodeName": "LLMPrompt",
+        "inputNames": ["initData"],
+        "hasInputHandle": true,
+        "outputType": "text"
+      },
+      "x": -768.9731152025034,
+      "y": 943.4281294155979
+    }
+  ]
+}

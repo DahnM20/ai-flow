@@ -10,8 +10,10 @@ def healthcheck():
 
 
 from .app_routes.node_routes import node_blueprint
+from .app_routes.template_routes import template_blueprint
 
 flask_app.register_blueprint(node_blueprint)
+flask_app.register_blueprint(template_blueprint)
 
 if is_server_static_files_enabled():
     from .app_routes.static_routes import static_blueprint

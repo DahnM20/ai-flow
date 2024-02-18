@@ -1,0 +1,72 @@
+{
+  "title": "Summarize web page content",
+  "description": "Summarize a web page using GPT.",
+  "image": "https://example.com/path/to/template-image.jpg",
+  "tags": ["productivity", "text"],
+  "template": [
+    {
+      "inputs": [],
+      "name": "17wxrfpaj#url_input",
+      "processorType": "url_input",
+      "config": {
+        "fields": [
+          {
+            "name": "url",
+            "type": "input",
+            "required": true,
+            "placeholder": "URLPlaceholder"
+          }
+        ],
+        "nodeName": "EnterURL",
+        "outputType": "text"
+      },
+      "x": -1387.1108448582127,
+      "y": 892.1280522803233
+    },
+    {
+      "inputs": [
+        {
+          "inputName": "initData",
+          "inputNode": "17wxrfpaj#url_input",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "8615bsvpg#llm-prompt",
+      "processorType": "llm-prompt",
+      "model": "gpt-4-turbo-preview",
+      "prompt": "Summarize this web page",
+      "config": {
+        "fields": [
+          {
+            "name": "model",
+            "label": "",
+            "type": "option",
+            "options": [
+              {
+                "label": "GPT3.5",
+                "value": "gpt-3.5-turbo",
+                "default": true
+              },
+              {
+                "label": "GPT4",
+                "value": "gpt-4-turbo-preview"
+              }
+            ]
+          },
+          {
+            "name": "prompt",
+            "type": "textarea",
+            "required": true,
+            "placeholder": "PromptPlaceholder"
+          }
+        ],
+        "nodeName": "LLMPrompt",
+        "inputNames": ["initData"],
+        "hasInputHandle": true,
+        "outputType": "text"
+      },
+      "x": -768.9731152025034,
+      "y": 943.4281294155979
+    }
+  ]
+}

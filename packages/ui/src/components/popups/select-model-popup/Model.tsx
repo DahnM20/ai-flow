@@ -1,4 +1,4 @@
-import { ModelData } from "./ModelsGrid";
+import { ModelData } from "./SelectModelPopup";
 
 interface ModelProps {
   model: ModelData;

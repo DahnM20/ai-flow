@@ -1,0 +1,244 @@
+{
+  "title": "Stable Video Diffusion",
+  "description": "Text-to-video using Stable Video Diffusion",
+  "image": "https://example.com/path/to/template-image.jpg",
+  "tags": ["productivity", "text"],
+  "template": [
+    {
+      "inputs": [],
+      "name": "h5qznxkky#input-text",
+      "processorType": "input-text",
+      "config": {
+        "fields": [
+          {
+            "type": "textarea",
+            "name": "inputText",
+            "required": true,
+            "placeholder": "InputPlaceholder"
+          }
+        ],
+        "nodeName": "Text",
+        "outputType": "text"
+      },
+      "x": 557.0628662660416,
+      "y": 371.72681644161884
+    },
+    {
+      "inputs": [
+        {
+          "inputName": "prompt",
+          "inputNode": "h5qznxkky#input-text",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "z21068rma#stable-diffusion-stabilityai-prompt",
+      "processorType": "stable-diffusion-stabilityai-prompt",
+      "size": "1024x1024",
+      "config": {
+        "fields": [
+          {
+            "type": "textarea",
+            "name": "prompt",
+            "placeholder": "DallEPromptPlaceholder",
+            "hideIfParent": true
+          },
+          {
+            "type": "select",
+            "name": "size",
+            "placeholder": "StableDiffusionSizePlaceholder",
+            "options": [
+              {
+                "label": "1024x1024",
+                "value": "1024x1024",
+                "default": true
+              },
+              {
+                "label": "1152x896",
+                "value": "1152x896"
+              },
+              {
+                "label": "1216x832",
+                "value": "1216x832"
+              },
+              {
+                "label": "1344x768",
+                "value": "1344x768"
+              },
+              {
+                "label": "1536x640",
+                "value": "1536x640"
+              },
+              {
+                "label": "640x1536",
+                "value": "640x1536"
+              },
+              {
+                "label": "768x1344",
+                "value": "768x1344"
+              },
+              {
+                "label": "832x1216",
+                "value": "832x1216"
+              },
+              {
+                "label": "896x1152",
+                "value": "896x1152"
+              }
+            ]
+          }
+        ],
+        "nodeName": "Stable Diffusion",
+        "inputNames": ["prompt"],
+        "hasInputHandle": true,
+        "outputType": "imageUrl"
+      },
+      "x": 1155.561487658708,
+      "y": 161.9008158008993
+    },
+    {
+      "inputs": [
+        {
+          "inputName": "input_image",
+          "inputNode": "z21068rma#stable-diffusion-stabilityai-prompt",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "h291nwghc#replicate",
+      "processorType": "replicate",
+      "cond_aug": 0.02,
+      "decoding_t": 14,
+      "frames_per_second": 6,
+      "motion_bucket_id": 127,
+      "sizing_strategy": "maintain_aspect_ratio",
+      "video_length": "14_frames_with_svd",
+      "config": {
+        "fields": [
+          {
+            "name": "cond_aug",
+            "type": "input",
+            "label": "cond_aug",
+            "placeholder": "Amount of noise to add to input image",
+            "defaultValue": 0.02,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "decoding_t",
+            "type": "inputInt",
+            "label": "decoding_t",
+            "placeholder": "Number of frames to decode at a time",
+            "defaultValue": 14,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "frames_per_second",
+            "type": "slider",
+            "label": "frames_per_second",
+            "placeholder": "Frames per second",
+            "defaultValue": 6,
+            "max": 30,
+            "min": 5,
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "input_image",
+            "type": "input",
+            "label": "input_image",
+            "placeholder": "Input image",
+            "hasHandle": true,
+            "isLinked": true,
+            "required": true
+          },
+          {
+            "name": "motion_bucket_id",
+            "type": "slider",
+            "label": "motion_bucket_id",
+            "placeholder": "Increase overall motion in the generated video",
+            "defaultValue": 127,
+            "max": 255,
+            "min": 1,
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "seed",
+            "type": "inputInt",
+            "label": "seed",
+            "placeholder": "Random seed. Leave blank to randomize the seed",
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "sizing_strategy",
+            "type": "select",
+            "label": "sizing_strategy",
+            "placeholder": "Decide how to resize the input image",
+            "defaultValue": "maintain_aspect_ratio",
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false,
+            "options": [
+              {
+                "label": "maintain_aspect_ratio",
+                "value": "maintain_aspect_ratio",
+                "default": true
+              },
+              {
+                "label": "crop_to_16_9",
+                "value": "crop_to_16_9",
+                "default": false
+              },
+              {
+                "label": "use_image_dimensions",
+                "value": "use_image_dimensions",
+                "default": false
+              }
+            ]
+          },
+          {
+            "name": "video_length",
+            "type": "select",
+            "label": "video_length",
+            "placeholder": "Use svd to generate 14 frames or svd_xt for 25 frames",
+            "defaultValue": "14_frames_with_svd",
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false,
+            "options": [
+              {
+                "label": "14_frames_with_svd",
+                "value": "14_frames_with_svd",
+                "default": true
+              },
+              {
+                "label": "25_frames_with_svd_xt",
+                "value": "25_frames_with_svd_xt",
+                "default": false
+              }
+            ]
+          }
+        ],
+        "nodeName": "stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438",
+        "inputNames": [
+          "cond_aug",
+          "decoding_t",
+          "frames_per_second",
+          "input_image",
+          "motion_bucket_id",
+          "seed",
+          "sizing_strategy",
+          "video_length"
+        ]
+      },
+      "x": 1725.345235970366,
+      "y": 160.1974851819317
+    }
+  ]
+}

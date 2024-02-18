@@ -51,6 +51,7 @@ interface FlowManagerState {
 }
 
 export type ApplicationMode = "flow" | "view";
+export type ApplicationMenu = "template" | "config" | "help";
 
 const FlowTabs = () => {
   const { t } = useTranslation("flow");
@@ -225,6 +226,11 @@ const FlowTabs = () => {
     setRefresh(!refresh);
   };
 
+  const handleAddNewFlow = (flowData: any) => {
+    flowTabs.tabs.push(flowData);
+    setCurrentTab(flowTabs.tabs.length - 1);
+  };
+
   return (
     <FlowManagerContainer className="relative flex h-screen flex-col">
       <TabHeader
@@ -270,6 +276,7 @@ const FlowTabs = () => {
         onCloseConfig={() => setOpenConfig(false)}
         onOpenConfig={() => setOpenConfig(true)}
         onChangeMode={handleChangeMode}
+        onAddNewFlow={handleAddNewFlow}
       >
         {mode === "flow" && (
           <Flow

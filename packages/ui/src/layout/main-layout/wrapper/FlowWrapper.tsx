@@ -5,7 +5,8 @@ import HelpPopup from "../../../components/popups/HelpPopup";
 import DnDSidebar from "../../../components/bars/dnd-sidebar/DnDSidebar";
 import RightIconButton from "../../../components/buttons/ConfigurationButton";
 import ModeBar from "../sidebar/ModeBar";
-import { ApplicationMode } from "../AppLayout";
+import { ApplicationMenu, ApplicationMode } from "../AppLayout";
+import TemplatePopup from "../../../components/popups/TemplatePopup";
 
 interface FlowWrapperProps {
   children?: ReactNode;
@@ -14,7 +15,12 @@ interface FlowWrapperProps {
   onCloseConfig: () => void;
   onOpenConfig: () => void;
   onChangeMode: (newMode: ApplicationMode) => void;
+  onAddNewFlow: (flowData: any) => void;
 }
+
+type MenuStateType = {
+  [key in ApplicationMenu]: boolean;
+};
 
 function FlowWrapper({
   openConfig,
@@ -22,9 +28,12 @@ function FlowWrapper({
   onCloseConfig,
   onOpenConfig,
   onChangeMode,
+  onAddNewFlow,
   children,
 }: FlowWrapperProps) {
-  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
+  const [menuState, setMenuState] = useState<MenuStateType>(
+    {} as MenuStateType,
+  );
 
   const handleConfigClose = useCallback(() => {
     onCloseConfig();
@@ -32,6 +41,11 @@ function FlowWrapper({
 
   const handleOpenConfig = useCallback(() => {
     onOpenConfig();
+  }, []);
+
+  const handleMenuChange = useCallback((menu: ApplicationMenu) => {
+    menuState[menu] = !menuState[menu];
+    setMenuState({ ...menuState });
   }, []);
 
   return (
@@ -44,18 +58,30 @@ function FlowWrapper({
                           flex-row
                           pt-16"
       >
-        <ModeBar currentMode={mode} onChangeMode={onChangeMode} />
+        <ModeBar
+          currentMode={mode}
+          onChangeMode={onChangeMode}
+          onOpenMenu={handleMenuChange}
+        />
         {mode === "flow" && <DnDSidebar />}
       </div>
       <RightIconButton onClick={handleOpenConfig} />
       <RightIconButton
-        onClick={() => setIsHelpOpen(true)}
+        onClick={() => handleMenuChange("help")}
         color="#7fcce38f"
         bottom="80px"
         icon={<FiHelpCircle />}
       />
       <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
-      <HelpPopup isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
+      <HelpPopup
+        isOpen={menuState["help"]}
+        onClose={() => handleMenuChange("help")}
+      />
+      <TemplatePopup
+        isOpen={menuState["template"]}
+        onValidate={onAddNewFlow}
+        onClose={() => handleMenuChange("template")}
+      />
       {children}
     </>
   );

@@ -6,10 +6,11 @@ import useCachedFetch, {
 import { LoadingIcon } from "../../nodes/Node.styles";
 import { getRestApiUrl } from "../../../config/config";
 import DefaultPopupWrapper from "../DefaultPopup";
-import ModelsGrid from "./ModelsGrid";
-import CollectionGrid from "./CollectionGrid";
-import LoadMoreButton from "./LoadMoreButton";
+import FilterGrid from "../shared/FilterGrid";
+import LoadMoreButton from "../shared/LoadMoreButton";
 import { useTranslation } from "react-i18next";
+import Grid from "../shared/Grid";
+import { Model } from "./Model";
 
 interface SelectModelPopupProps {
   show: boolean;
@@ -211,10 +212,10 @@ export default function SelectModelPopup({
     <DefaultPopupWrapper onClose={onClose} show={show}>
       <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow lg:flex-row">
         <div className="flex lg:w-1/4">
-          <CollectionGrid
-            collections={collections}
-            selectedCollection={selectedCollection}
-            handleSelectCollection={handleSelectCollection}
+          <FilterGrid
+            filters={collections}
+            selectedFilter={selectedCollection}
+            onSelectFilter={handleSelectCollection}
           />
         </div>
 
@@ -238,13 +239,29 @@ interface ModelSectionProps {
   onValidate: (data: any) => void;
 }
 
+export interface ModelData {
+  modelName: string;
+  coverImage: string;
+  description: string;
+  runCount: number;
+}
+
 const ModelsSection = ({ title, models, onValidate }: ModelSectionProps) => {
   if (!models || models.length == 0) return null;
+
+  const renderModelItem = (
+    model: ModelData,
+    onValidate: (modelName: string) => void,
+  ) => <Model model={model} onValidate={onValidate} />;
 
   return (
     <>
       {title && <h2>{title}</h2>}
-      <ModelsGrid models={models} onValidate={onValidate} />
+      <Grid
+        items={models}
+        onValidate={onValidate}
+        renderItem={renderModelItem}
+      />
     </>
   );
 };

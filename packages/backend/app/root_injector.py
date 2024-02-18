@@ -1,5 +1,7 @@
 from typing import List
 from injector import Injector, Binder, Module
+from .providers.template.template_provider import TemplateProvider
+from .providers.template.static_template_provider import StaticTemplateProvider
 from .authentication.authenticator import Authenticator
 from .authentication.cognito_authenticator import CognitoAuthenticator
 from tests.utils.processor_factory_mock import ProcessorFactoryMock
@@ -46,6 +48,11 @@ class StorageModule(Module):
             binder.bind(StorageStrategy, to=LocalStorageStrategy)
 
 
+class ProviderModule(Module):
+    def configure(self, binder: Binder):
+        binder.bind(TemplateProvider, to=StaticTemplateProvider)
+
+
 class ProcessorLauncherModule(Module):
     def configure(self, binder: Binder):
         binder.bind(ProcessorLauncher, to=AsyncProcessorLauncher)
@@ -71,6 +78,7 @@ def create_application_injector() -> Injector:
             StorageModule(),
             ProcessorLauncherModule(),
             LLMFactoryModule(),
+            ProviderModule(),
         ],
         auto_bind=True,
     )
