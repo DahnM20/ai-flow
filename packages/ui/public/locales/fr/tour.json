@@ -1,0 +1,26 @@
+{
+    "firstTimeHere": "Première visite ?",
+    "discoverApp": "Découvrez l'application en 30 secondes !",
+    "iKnowTheApp": "Je connais l'application",
+    "letsStart": "Commençons !",
+    "welcomeToAIFLOW": "Bienvenue sur AI-FLOW",
+    "addNodesWithDragAndDrop": "Ajoutez facilement des nœuds à votre canevas avec un simple glisser-déposer.",
+    "dragAndDrop": "Glisser-Déposer",
+    "addingNodes": "Ajouter un Nœud",
+    "runningANode": "Exécuter un Nœud",
+    "connectingNodes": "Connecter des Nœuds",
+    "runEverything": "Tout Exécuter",
+    "exploringMoreModels": "Explorer Plus de Modèles",
+    "youveGotTheBasics": "Vous avez les bases !",
+    "executeSingleNode": "Vous pouvez exécuter un seul nœud en cliquant sur le bouton d'exécution.",
+    "runNode": "Exécuter un Nœud",
+    "handlesExplanation": "Les poignées bleues sont pour les entrées, et les poignées oranges pour les sorties. Pour les Nœuds GPT, les entrées ajoutent du contexte à vos invites.",
+    "connectNodes": "Connecter les Nœuds",
+    "executeAllNodesDescription": "Ce bouton exécute tous les nœuds dans votre flux, en écrasant les sorties précédentes.",
+    "replicateNodeDescription": "Étendez vos capacités avec le Nœud Replicate, offrant un accès à une large gamme de modèles pour des cas d'usage avancés.",
+    "replicateNode": "Replicate",
+    "checkHelpForAdvanced": "Pour des cas d'usage avancés, consultez la section Aide en bas à gauche.",
+    "configDescription": "Vous pouvez ajouter vos clés APIs via ce menu pour utiliser l'application.",
+    "config": "Configuration"
+  }
+  

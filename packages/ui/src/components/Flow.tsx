@@ -1,4 +1,11 @@
-import { useState, useCallback, useMemo, useEffect, useContext, useRef } from 'react';
+import {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useContext,
+  useRef,
+} from "react";
 import {
   Node,
   Edge,
@@ -10,19 +17,23 @@ import {
   addEdge,
   Connection,
   ReactFlowInstance,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
-import SideBar from './bars/Sidebar';
-import { NodeProvider } from '../providers/NodeProvider';
-import { MiniMapStyled, ReactFlowStyled } from './nodes/Node.styles';
-import UserMessagePopup, { MessageType, UserMessage } from './popups/UserMessagePopup';
-import { getConfigViaType } from '../nodes-configuration/nodeConfig';
-import { getAllNodeWithEaseOut } from '../utils/mappings';
-import { useTranslation } from 'react-i18next';
-import { toastInfoMessage } from '../utils/toastUtils';
-import { useDrop } from 'react-dnd';
-import { useSocketListeners } from '../hooks/useFlowSocketListeners';
-import ButtonEdge from './edges/buttonEdge';
+} from "reactflow";
+import "reactflow/dist/style.css";
+import SideBar from "./bars/Sidebar";
+import { NodeProvider } from "../providers/NodeProvider";
+import { MiniMapStyled, ReactFlowStyled } from "./nodes/Node.styles";
+import UserMessagePopup, {
+  MessageType,
+  UserMessage,
+} from "./popups/UserMessagePopup";
+import { getConfigViaType } from "../nodes-configuration/nodeConfig";
+import { getAllNodeWithEaseOut } from "../utils/mappings";
+import { useTranslation } from "react-i18next";
+import { toastInfoMessage } from "../utils/toastUtils";
+import { useDrop } from "react-dnd";
+import { useSocketListeners } from "../hooks/useFlowSocketListeners";
+import ButtonEdge from "./edges/buttonEdge";
+import { createUniqNodeId } from "../utils/nodeUtils";
 
 export interface FlowProps {
   nodes?: Node[];
@@ -35,36 +46,37 @@ export interface FlowProps {
 }
 
 function Flow(props: FlowProps) {
-  const { t } = useTranslation('flow');
+  const { t } = useTranslation("flow");
 
   const reactFlowWrapper = useRef(null);
 
   function getAllEdgeTypes() {
     return { buttonedge: ButtonEdge };
-
   }
   const nodeTypes = useMemo(() => getAllNodeWithEaseOut(), []);
   const edgeTypes = useMemo(() => getAllEdgeTypes(), []);
 
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | undefined>(undefined);
+  const [reactFlowInstance, setReactFlowInstance] = useState<
+    ReactFlowInstance | undefined
+  >(undefined);
   const [nodes, setNodes] = useState<Node[]>(props.nodes ? props.nodes : []);
   const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
-  const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({ content: '' });
+  const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({
+    content: "",
+  });
   const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
   const [errorCount, setErrorCount] = useState<number>(0);
 
-
   useEffect(() => {
-    const areNodesRunning = currentNodesRunning.length > 0
+    const areNodesRunning = currentNodesRunning.length > 0;
     if (props.isRunning !== areNodesRunning) {
-      props.onRunChange(areNodesRunning)
+      props.onRunChange(areNodesRunning);
     }
-
-  }, [currentNodesRunning])
+  }, [currentNodesRunning]);
 
   const [{ isOver }, dropRef] = useDrop({
-    accept: 'NODE',
+    accept: "NODE",
     drop: (item, monitor) => {
       onDrop(item, monitor);
     },
@@ -73,13 +85,11 @@ function Flow(props: FlowProps) {
     }),
   });
 
-
   const onInit = (reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(reactFlowInstance);
-  }
+  };
 
-  useSocketListeners(onProgress, onError, () => { }, onCurrentNodeRunning)
-
+  useSocketListeners(onProgress, onError, () => {}, onCurrentNodeRunning);
 
   function onProgress(data: any) {
     const nodeToUpdate = data.instanceName as string;
@@ -87,28 +97,34 @@ function Flow(props: FlowProps) {
 
     setCurrentNodesRunning((previous) => {
       return previous.filter((node) => node != nodeToUpdate);
-    })
+    });
 
     if (nodeToUpdate) {
       setNodes((currentState) => {
-        return [...currentState.map((node: Node) => {
-          if (node.data.name == nodeToUpdate) {
-            node.data = { ...node.data, outputData: output, lastRun: new Date(), isDone: data.isDone };
-          }
+        return [
+          ...currentState.map((node: Node) => {
+            if (node.data.name == nodeToUpdate) {
+              node.data = {
+                ...node.data,
+                outputData: output,
+                lastRun: new Date(),
+                isDone: data.isDone,
+              };
+            }
 
-          return node;
-        })]
-      }
-      );
+            return node;
+          }),
+        ];
+      });
     }
   }
 
   function onError(data: any) {
     setCurrentNodesRunning((previous) => {
       return previous.filter((node) => node != data.instanceName);
-    })
+    });
     setCurrentUserMessage({ content: data.error, type: MessageType.Error });
-    setErrorCount(prevErrorCount => prevErrorCount + 1);
+    setErrorCount((prevErrorCount) => prevErrorCount + 1);
     setIsPopupOpen(true);
   }
 
@@ -126,44 +142,53 @@ function Flow(props: FlowProps) {
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [setNodes]
+    [setNodes],
   );
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [setEdges]
+    [setEdges],
   );
 
   const onConnect: OnConnect = useCallback(
-    (connection) => setEdges((eds) => {
-      if (isHandleAlreadyTargeted(connection, eds)) {
-        return eds;
-      }
-      return addEdge({ ...connection, type: 'buttonedge', markerEnd: 'arrowClosed', data: { pathType: props.selectedEdgeType } }, eds);
-    }),
-    [setEdges, props.selectedEdgeType]
+    (connection) =>
+      setEdges((eds) => {
+        if (isHandleAlreadyTargeted(connection, eds)) {
+          return eds;
+        }
+        return addEdge(
+          {
+            ...connection,
+            type: "buttonedge",
+            markerEnd: "arrowClosed",
+            data: { pathType: props.selectedEdgeType },
+          },
+          eds,
+        );
+      }),
+    [setEdges, props.selectedEdgeType],
   );
 
   const onDragOver = useCallback((event: any) => {
     event.preventDefault();
     if (!!event.dataTransfert) {
-      event.dataTransfer.dropEffect = 'move';
+      event.dataTransfer.dropEffect = "move";
     }
   }, []);
 
-  const generatedIdIdentifier = '#';
-
-  const createUniqNodeId = (suffix: string) => {
-    return Math.random().toString(36).substr(2, 9) + generatedIdIdentifier + suffix;
-  }
-
   const onDrop = useCallback(
     (item: any, monitor?: any) => {
-      if (!!reactFlowWrapper && !!reactFlowInstance && !!reactFlowWrapper.current) {
-        const reactFlowBounds = (reactFlowWrapper.current as any).getBoundingClientRect();
+      if (
+        !!reactFlowWrapper &&
+        !!reactFlowInstance &&
+        !!reactFlowWrapper.current
+      ) {
+        const reactFlowBounds = (
+          reactFlowWrapper.current as any
+        ).getBoundingClientRect();
         const type = item.nodeType;
 
         // check if the dropped element is valid
-        if (typeof type === 'undefined' || !type) {
+        if (typeof type === "undefined" || !type) {
           return;
         }
 
@@ -189,24 +214,33 @@ function Flow(props: FlowProps) {
         setNodes((nds) => nds.concat(newNode));
       }
     },
-    [reactFlowInstance]
+    [reactFlowInstance],
   );
 
   const isHandleAlreadyTargeted = (connection: Connection, eds: Edge[]) => {
-    if (eds.filter(edge => edge.targetHandle === connection.targetHandle && edge.target === connection.target).length > 0) {
+    if (
+      eds.filter(
+        (edge) =>
+          edge.targetHandle === connection.targetHandle &&
+          edge.target === connection.target,
+      ).length > 0
+    ) {
       return true;
     }
     return false;
-  }
+  };
 
-  const handleNodesClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    // Check if clicked on an existing node
-    if (event.target !== event.currentTarget) {
-      return;
-    }
+  const handleNodesClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      // Check if clicked on an existing node
+      if (event.target !== event.currentTarget) {
+        return;
+      }
 
-    setIsPopupOpen(true);
-  }, []);
+      setIsPopupOpen(true);
+    },
+    [],
+  );
 
   const handlePopupClose = useCallback(() => {
     setIsPopupOpen(false);
@@ -225,19 +259,30 @@ function Flow(props: FlowProps) {
       return node;
     });
     setNodes(updatedNodes);
-  }
+  };
 
   const handleUpdateNodes = (updatedNodes: Node[], updatesEdges: Edge[]) => {
     setNodes(updatedNodes);
     setEdges(updatesEdges);
-  }
+  };
 
   return (
-    <NodeProvider nodes={nodes} edges={edges} showOnlyOutput={props.showOnlyOutput}
-      isRunning={props.isRunning} currentNodesRunning={currentNodesRunning} errorCount={errorCount}
-      onUpdateNodeData={handleUpdateNodeData} onUpdateNodes={handleUpdateNodes}>
-      <div style={{ height: '100%' }} onClick={handleNodesClick} ref={dropRef}>
-        <div className="reactflow-wrapper" style={{ height: '100%' }} ref={reactFlowWrapper}>
+    <NodeProvider
+      nodes={nodes}
+      edges={edges}
+      showOnlyOutput={props.showOnlyOutput}
+      isRunning={props.isRunning}
+      currentNodesRunning={currentNodesRunning}
+      errorCount={errorCount}
+      onUpdateNodeData={handleUpdateNodeData}
+      onUpdateNodes={handleUpdateNodes}
+    >
+      <div style={{ height: "100%" }} onClick={handleNodesClick} ref={dropRef}>
+        <div
+          className="reactflow-wrapper"
+          style={{ height: "100%" }}
+          ref={reactFlowWrapper}
+        >
           <ReactFlowStyled
             nodes={nodes}
             nodeTypes={nodeTypes}
@@ -252,17 +297,20 @@ function Flow(props: FlowProps) {
             onInit={onInit}
             fitView
             minZoom={0.2}
-            maxZoom={2}
+            maxZoom={1.5}
           >
-            <MiniMapStyled style={{ right: '4vw' }} />
+            <MiniMapStyled style={{ right: "4vw" }} />
           </ReactFlowStyled>
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />
-        <UserMessagePopup isOpen={isPopupOpen} onClose={handlePopupClose} message={currentUserMessage} />
+        <UserMessagePopup
+          isOpen={isPopupOpen}
+          onClose={handlePopupClose}
+          message={currentUserMessage}
+        />
       </div>
     </NodeProvider>
   );
 }
 
 export default Flow;
-

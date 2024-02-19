@@ -7,14 +7,6 @@
         {
             "title": "NEW Replicate Node",
             "description": "Experience a diverse range of open-source models with the new Replicate Node, featuring popular models Llama, Mistral, Stable Video Diffusion, Music-gen, custom SDXL, and many more."
-        },
-        {
-            "title": "Edge Type Selection",
-            "description": "New top-right UI button for selecting and using different Edge Types."
-        },
-        {
-            "title": "Additional Information",
-            "description": "Due to the extensive range of models available via Replicate, some may not be supported yet. Also, as the Replicate API costs are based on processing time and hardware type, pricing may vary greatly between models."
         }
     ],
     "imageSrc": "./gif-new-version.gif"

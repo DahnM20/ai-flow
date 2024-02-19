@@ -1,0 +1,74 @@
+{
+  "title": "🎨🔄 DALL-E 3 - 4 Variations",
+  "description": "Generate four variations of the same prompt using DALL-E 3",
+  "image": "https://example.com/path/to/template-image.jpg",
+  "tags": ["image"],
+  "template": [
+    {
+      "inputs": [],
+      "name": "nx0vd01pd#input-text",
+      "processorType": "input-text",
+      "x": -1467.3147442591821,
+      "y": 833.6458276610462
+    },
+    {
+      "inputs": [
+        {
+          "inputNode": "nx0vd01pd#input-text",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "0xyo5bgqe#dalle-prompt",
+      "processorType": "dalle-prompt",
+      "quality": "standard",
+      "size": "1024x1024",
+      "x": -895.0359292919691,
+      "y": 351.08982257875255
+    },
+    {
+      "inputs": [
+        {
+          "inputNode": "nx0vd01pd#input-text",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "iybh74ih1#dalle-prompt",
+      "processorType": "dalle-prompt",
+      "quality": "standard",
+      "isDone": false,
+      "size": "1024x1024",
+      "x": -865.7038157115519,
+      "y": 1328.8581172950398
+    },
+    {
+      "inputs": [
+        {
+          "inputNode": "nx0vd01pd#input-text",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "q09fls0yh#dalle-prompt",
+      "processorType": "dalle-prompt",
+      "quality": "standard",
+      "isDone": false,
+      "size": "1024x1024",
+      "x": -299.3519323647646,
+      "y": 1053.586585104848
+    },
+    {
+      "inputs": [
+        {
+          "inputNode": "nx0vd01pd#input-text",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "o459idrxg#dalle-prompt",
+      "processorType": "dalle-prompt",
+      "quality": "standard",
+      "isDone": false,
+      "size": "1024x1024",
+      "x": -296.2839501723944,
+      "y": 556.574247275197
+    }
+  ]
+}

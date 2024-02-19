@@ -1,10 +1,9 @@
-import React, { useContext, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
-import { FaCheck, FaPlay, FaStop } from 'react-icons/fa';
-import { NodeContext } from '../../../providers/NodeProvider';
-import TapScale from '../../shared/motions/TapScale';
-import * as NodeStyles from '../Node.styles';
-
+import React, { useContext, useState } from "react";
+import styled, { css, keyframes } from "styled-components";
+import { FaCheck, FaPlay, FaStop } from "react-icons/fa";
+import { NodeContext } from "../../../providers/NodeProvider";
+import TapScale from "../../shared/motions/TapScale";
+import * as NodeStyles from "../Node.styles";
 
 interface NodePlayButtonProps {
   isPlaying?: boolean;
@@ -13,7 +12,12 @@ interface NodePlayButtonProps {
   nodeName: string;
 }
 
-const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onClick, nodeName }) => {
+const NodePlayButton: React.FC<NodePlayButtonProps> = ({
+  isPlaying,
+  hasRun,
+  onClick,
+  nodeName,
+}) => {
   const { runNode, isRunning, currentNodesRunning } = useContext(NodeContext);
   const [isHovered, setHovered] = useState(false);
 
@@ -23,7 +27,7 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onCl
         onClick();
       }
     }
-  }
+  };
 
   const handleMouseEnter = () => setHovered(true);
   const handleMouseLeave = () => setHovered(false);
@@ -31,10 +35,16 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onCl
   const isCurrentNodeRunning = currentNodesRunning.includes(nodeName);
   const isDisabled = isCurrentNodeRunning && !isHovered;
 
-  const IconComponent = getIconComponent(isPlaying, isCurrentNodeRunning, hasRun, isHovered);
+  const IconComponent = getIconComponent(
+    isPlaying,
+    isCurrentNodeRunning,
+    hasRun,
+    isHovered,
+  );
 
   return (
     <NodePlayButtonContainer
+      className="node-play-button"
       onClick={handleClick}
       disabled={isDisabled}
       onMouseEnter={handleMouseEnter}
@@ -47,8 +57,12 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({ isPlaying, hasRun, onCl
   );
 };
 
-
-function getIconComponent(isPlaying: boolean | undefined, isCurrentNodeRunning: boolean, hasRun: boolean | undefined, isHovered: boolean) {
+function getIconComponent(
+  isPlaying: boolean | undefined,
+  isCurrentNodeRunning: boolean,
+  hasRun: boolean | undefined,
+  isHovered: boolean,
+) {
   if (isPlaying || isCurrentNodeRunning) return NodeStyles.LoadingIcon;
 
   if (hasRun && !isHovered) return CheckIcon;
@@ -56,17 +70,16 @@ function getIconComponent(isPlaying: boolean | undefined, isCurrentNodeRunning: 
   return isCurrentNodeRunning ? NodeStopButtonIcon : NodePlayButtonIcon;
 }
 
-
 const NodePlayButtonContainer = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
   border: none;
   padding: 0;
   margin: 0;
   cursor: pointer;
-  color: ${props => props.disabled ? '#888' : '#7bb380'};
+  color: ${(props) => (props.disabled ? "#888" : "#7bb380")};
 
   &:hover {
-    color: ${props => props.disabled ? '#888' : '#57ff2d'};
+    color: ${(props) => (props.disabled ? "#888" : "#57ff2d")};
   }
 `;
 
@@ -84,6 +97,5 @@ const CheckIcon = styled(FaCheck)`
   transition: transform 0.3s ease-in-out;
   font-size: 16px;
 `;
-
 
 export default NodePlayButton;

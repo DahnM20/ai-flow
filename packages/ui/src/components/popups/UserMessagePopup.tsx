@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled from "styled-components";
+import DefaultPopupWrapper from "./DefaultPopup";
 
 export enum MessageType {
   Error,
@@ -17,53 +18,31 @@ interface PopupProps {
 }
 
 function UserMessagePopup(props: PopupProps) {
-  return (
-    props.isOpen ?
-      <PopupContainer>
-        <PopupInner>
-          <PopupHeader>
-            <h3>{props.message?.type === MessageType.Error ? "Error" : "Info"}</h3>
-            <CloseButton onClick={props.onClose}>X</CloseButton>
-          </PopupHeader>
-          <PopupBody>
-            {props.message?.content}
-          </PopupBody>
-        </PopupInner>
-      </PopupContainer>
-      : <></>
+  return props.isOpen ? (
+    <DefaultPopupWrapper onClose={props.onClose} centered show={props.isOpen}>
+      <div className="flex h-full flex-col bg-zinc-900 p-6 text-slate-200">
+        <PopupHeader>
+          <h3 className="text-xl">
+            {props.message?.type === MessageType.Error ? "Error" : "Info"}
+          </h3>
+          <CloseButton onClick={props.onClose}>X</CloseButton>
+        </PopupHeader>
+        <PopupBody className="mt-2 text-slate-300">
+          {props.message?.content}
+        </PopupBody>
+      </div>
+    </DefaultPopupWrapper>
+  ) : (
+    <></>
   );
 }
-
-
-const PopupContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-`;
-
-const PopupInner = styled.div`
-  background-color: ${({ theme }) => theme.popupBg};
-  color: ${({ theme }) => theme.text};
-  box-shadow: ${({ theme }) => theme.boxShadow};
-  padding: 20px;
-  border-radius: 10px;
-  width: 50%;
-`;
-
 const PopupHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-const PopupBody = styled.div`
-  margin-top: 20px;
-`;
+const PopupBody = styled.div``;
 
 const CloseButton = styled.button`
   background-color: transparent;

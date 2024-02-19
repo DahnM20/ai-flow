@@ -27,7 +27,7 @@ const TabHeader = ({
       <div className="mx-auto ml-4 flex w-10 flex-row justify-center pr-2 text-center align-middle">
         <img src="logo.svg" alt="Logo"></img>
       </div>
-      <Tabs>
+      <Tabs className="overflow-hidden hover:overflow-x-auto">
         {tabs.map((tab: any, index: number) => (
           <Tab
             key={index}
@@ -58,7 +58,6 @@ const TabsContainer = styled.div`
 const Tabs = styled.div`
   white-space: nowrap;
   overflow-y: hidden;
-  overflow-x: auto;
   padding-bottom: 3px;
   max-width: 60%;
 `;

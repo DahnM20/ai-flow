@@ -1,0 +1,150 @@
+{
+  "title": "📝🎥 Youtube Transcription with Whisper",
+  "description": "Generate transcript from youtube URL",
+  "image": "https://example.com/path/to/template-image.jpg",
+  "tags": ["productivity", "text"],
+  "template": [
+    {
+      "inputs": [],
+      "name": "lfxll8j9f#input-text",
+      "processorType": "input-text",
+      "inputText": "-- Enter URL here --",
+      "config": {
+        "fields": [
+          {
+            "type": "textarea",
+            "name": "inputText",
+            "required": true,
+            "placeholder": "InputPlaceholder"
+          }
+        ],
+        "nodeName": "Text",
+        "outputType": "text"
+      },
+      "x": -237.3078817860345,
+      "y": 550.0473447841591
+    },
+    {
+      "inputs": [
+        {
+          "inputName": "url",
+          "inputNode": "lfxll8j9f#input-text",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "9kz9tith3#replicate",
+      "processorType": "replicate",
+      "batch_size": 64,
+      "diarise_audio": false,
+      "task": "transcribe",
+      "timestamp": "chunk",
+      "config": {
+        "fields": [
+          {
+            "name": "audio",
+            "type": "input",
+            "label": "audio",
+            "placeholder": "Audio file. Either this or url must be provided.",
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "batch_size",
+            "type": "inputInt",
+            "label": "batch_size",
+            "placeholder": "Number of parallel batches you want to compute. Reduce if you face OOMs. (default: 64).",
+            "defaultValue": 64,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "diarise_audio",
+            "type": "boolean",
+            "label": "diarise_audio",
+            "placeholder": "Use Pyannote.audio to diarise the audio clips. You will need to provide hf_token below too.",
+            "defaultValue": false,
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "hf_token",
+            "type": "input",
+            "label": "hf_token",
+            "placeholder": "Provide a hf.co/settings/token for Pyannote.audio to diarise the audio clips. You need to agree to the terms in 'https://huggingface.co/pyannote/speaker-diarization-3.1' and 'https://huggingface.co/pyannote/segmentation-3.0' first.",
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "language",
+            "type": "input",
+            "label": "language",
+            "placeholder": "Optional. Language spoken in the audio, specify None to perform language detection.",
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "task",
+            "type": "select",
+            "label": "task",
+            "placeholder": "Task to perform: transcribe or translate to another language. (default: transcribe).",
+            "defaultValue": "transcribe",
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false,
+            "options": [
+              {
+                "label": "transcribe",
+                "value": "transcribe",
+                "default": true
+              },
+              {
+                "label": "translate",
+                "value": "translate",
+                "default": false
+              }
+            ]
+          },
+          {
+            "name": "timestamp",
+            "type": "select",
+            "label": "timestamp",
+            "placeholder": "Whisper supports both chunked as well as word level timestamps. (default: chunk).",
+            "defaultValue": "chunk",
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false,
+            "options": [
+              {
+                "label": "chunk",
+                "value": "chunk",
+                "default": true
+              },
+              {
+                "label": "word",
+                "value": "word",
+                "default": false
+              }
+            ]
+          },
+          {
+            "name": "url",
+            "type": "input",
+            "label": "url",
+            "placeholder": "Video URL for yt-dlp to download the audio from. Either this or audio must be provided.",
+            "hasHandle": true,
+            "isLinked": true,
+            "required": false
+          }
+        ],
+        "nodeName": "turian/insanely-fast-whisper-with-video:4f41e90243af171da918f04da3e526b2c247065583ea9b757f2071f573965408"
+      },
+      "x": 400.60401466561655,
+      "y": 226.73448753045983
+    }
+  ]
+}

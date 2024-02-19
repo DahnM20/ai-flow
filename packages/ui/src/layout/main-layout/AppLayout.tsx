@@ -6,10 +6,12 @@ import { Node, Edge } from "reactflow";
 import { ThemeContext } from "../../providers/ThemeProvider";
 import { darken, em, lighten } from "polished";
 import { useTranslation } from "react-i18next";
-import { FaEye, FaPlus } from "react-icons/fa";
+import { FaEye, FaSitemap } from "react-icons/fa";
 import {
   convertFlowToJson,
   convertJsonToFlow,
+  findParents,
+  formatFlow,
   isCompatibleConfigVersion,
   migrateConfig,
   nodesTopologicalSort,
@@ -49,6 +51,7 @@ interface FlowManagerState {
 }
 
 export type ApplicationMode = "flow" | "view";
+export type ApplicationMenu = "template" | "config" | "help";
 
 const FlowTabs = () => {
   const { t } = useTranslation("flow");
@@ -213,8 +216,23 @@ const FlowTabs = () => {
     setRefresh(!refresh);
   };
 
+  const handleFormatFlow = () => {
+    const nodes = flowTabs.tabs[currentTab].nodes;
+    const edges = flowTabs.tabs[currentTab].edges;
+
+    const nodesFormatted = formatFlow(nodes, edges);
+
+    handleFlowChange(nodesFormatted, edges);
+    setRefresh(!refresh);
+  };
+
+  const handleAddNewFlow = (flowData: any) => {
+    flowTabs.tabs.push(flowData);
+    setCurrentTab(flowTabs.tabs.length - 1);
+  };
+
   return (
-    <FlowManagerContainer className="bg-app-dark-gradient">
+    <FlowManagerContainer className="relative flex h-screen flex-col">
       <TabHeader
         currentTab={currentTab}
         tabs={flowTabs.tabs}
@@ -223,7 +241,7 @@ const FlowTabs = () => {
         onChangeTab={handleChangeTab}
         tabPrefix={t("Flow")}
       >
-        <div className="ml-auto flex flex-row items-center space-x-1">
+        <div className="ml-auto flex flex-row items-center space-x-2">
           <div className="h-auto w-6">
             <EdgeTypeButton
               edgeType={selectedEdgeType}
@@ -233,13 +251,15 @@ const FlowTabs = () => {
             />
           </div>
 
-          <div className="px-2 py-2">
-            <FaEye
-              className="text-slate-400 hover:text-slate-50"
-              onClick={handleToggleOutput}
-            />
-          </div>
+          <FaSitemap
+            className="-rotate-90 text-slate-400 hover:text-slate-50"
+            onClick={handleFormatFlow}
+          />
 
+          <FaEye
+            className="text-slate-400 hover:text-slate-50"
+            onClick={handleToggleOutput}
+          />
           <div className="h-6 border-l-2 border-l-slate-500/50 pl-2"></div>
           <div className="pr-2">
             <ButtonRunAll
@@ -256,6 +276,7 @@ const FlowTabs = () => {
         onCloseConfig={() => setOpenConfig(false)}
         onOpenConfig={() => setOpenConfig(true)}
         onChangeMode={handleChangeMode}
+        onAddNewFlow={handleAddNewFlow}
       >
         {mode === "flow" && (
           <Flow
@@ -286,10 +307,6 @@ const FlowTabs = () => {
   );
 };
 
-const FlowManagerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-`;
+const FlowManagerContainer = styled.div``;
 
 export default FlowTabs;

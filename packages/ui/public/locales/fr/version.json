@@ -7,14 +7,6 @@
         {
             "title": "NOUVEAU Nœud Replicate",
             "description": "Découvrez une gamme variée de modèles open-source avec le nouveau Nœud Replicate, comprenant des modèles open-source populaires tels que Llama, Mistral, Stable Video Diffusion, Music-gen, SDXL personnalisé, et bien d'autres."
-        },
-        {
-            "title": "Sélection du Type de Bordure",
-            "description": "Nouveau bouton en haut à droite pour sélectionner et utiliser différents types d'arêtes'."
-        },
-        {
-            "title": "Informations Supplémentaires",
-            "description": "En raison de la vaste gamme de modèles disponibles via Replicate, certains peuvent ne pas être encore pris en charge. De plus, comme les coûts de l'API Replicate sont basés sur le temps de traitement et le type de matériel, les prix peuvent varier considérablement entre les modèles."
         }
     ],
     "imageSrc": "./gif-new-version.gif"

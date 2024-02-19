@@ -15,7 +15,7 @@ const inputImageNodeConfig: NodeConfig = {
   outputType: "imageUrl",
   defaultHideOutput: false,
   section: 'input',
-  helpMessage: 'inputHelp'
+  helpMessage: 'inputImageHelp'
 };
 
 export default inputImageNodeConfig;

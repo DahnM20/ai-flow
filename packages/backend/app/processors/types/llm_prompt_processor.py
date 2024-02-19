@@ -62,6 +62,8 @@ class LLMPromptProcessor(APIContextProcessor):
                 "You are a helpful assistant. "
                 "You will respond to requests indicated by the '#Request' tag, "
                 "using the context provided under the '#Context' tag."
+                "Your response should feel natural and seamless, as if you've internalized the context "
+                "and are answering the request without needing to directly point back to the information provided"
             )
             user_msg_content = f"#Context: {input_data} \n\n#Request: {self.prompt}"
 

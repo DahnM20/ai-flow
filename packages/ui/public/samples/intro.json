@@ -1,81 +1,10 @@
 [
   {
     "inputs": [],
-    "name": "xwldhcg5y#llm-prompt",
+    "name": "3jexlwros#llm-prompt",
     "processorType": "llm-prompt",
-    "model": "gpt-4-1106-preview",
-    "prompt": "Generate a short poem about a bird and a butterfly",
-    "outputData": "# A Symphony of Wings\n\nIn the realm where the sun kisses the sky,\nA bird and a butterfly, together they fly.\nTheir dance is a melody, a sight to behold,\nA tale of friendship, silently told.\n\nThe bird, with feathers of sapphire hue,\nSoars through the clouds, in the morning dew.\nThe butterfly, with wings of gold,\nDances in the wind, bold and bold.\n\nThey meet in the meadow, under the sun's warm light,\nTheir wings fluttering, a beautiful sight.\nThe bird sings a song, so sweet and clear,\nThe butterfly dances, without any fear.\n\nIn the twilight glow, under the moon's soft beam,\nThey part ways, like a fleeting dream.\nA bird and a butterfly, under the sky so wide,\nIn the symphony of nature, they take pride.",
-    "lastRun": "2023-11-03T16:41:34.482Z",
-    "x": -1853.4623149727402,
-    "y": -789.4748403024386
-  },
-  {
-    "inputs": [
-      {
-        "inputNode": "xwldhcg5y#llm-prompt",
-        "inputNodeOutputKey": 0
-      }
-    ],
-    "name": "96k2xy9cf#ai-action",
-    "processorType": "ai-action",
-    "prompt": "From the text I previously provided, create a descriptive prompt suitable for an AI visual generator like DALL-E.",
-    "actionName": "VisualPrompt",
-    "outputData": "Create an image that captures a scene of a bird in graceful flight against the daylight backdrop and a butterfly dancing on flowers with rainbow colors. Show the natural beauty and interaction between these two creatures, showcasing nature's finesse and quiet glory. Be sure to capture a sense of awe and inspiration from this symphony of life.",
-    "lastRun": "2023-11-03T16:41:43.416Z",
-    "x": -1308.197250447152,
-    "y": -625.1455299079078
-  },
-  {
-    "inputs": [
-      {
-        "inputNode": "xwldhcg5y#llm-prompt",
-        "inputNodeOutputKey": 0
-      }
-    ],
-    "name": "uya75oqhb#ai-action",
-    "processorType": "ai-action",
-    "prompt": "Based on the text I previously provided, review it for spelling errors and highlight any found. Respond in the language of the provided text.",
-    "actionName": "SpellCheck",
-    "outputData": "The text provided does not contain any spelling errors.",
-    "lastRun": "2023-11-03T16:41:45.095Z",
-    "x": -1308.0029847562164,
-    "y": -40.598204126134235
-  },
-  {
-    "inputs": [
-      {
-        "inputName": "prompt",
-        "inputNode": "96k2xy9cf#ai-action",
-        "inputNodeOutputKey": 0
-      }
-    ],
-    "name": "92cceb3u4#stable-diffusion-stabilityai-prompt",
-    "processorType": "stable-diffusion-stabilityai-prompt",
-    "size": "1024x1024",
-    "outputData": [
-      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/v0.4.0-sample-1.png"
-    ],
-    "lastRun": "2023-11-03T16:51:27.083Z",
-    "x": -653.9779123846465,
-    "y": -1010.9674831417482
-  },
-  {
-    "inputs": [
-      {
-        "inputName": "prompt",
-        "inputNode": "96k2xy9cf#ai-action",
-        "inputNodeOutputKey": 0
-      }
-    ],
-    "name": "lcql3ggy4#stable-diffusion-stabilityai-prompt",
-    "processorType": "stable-diffusion-stabilityai-prompt",
-    "size": "1024x1024",
-    "outputData": [
-      "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/v0.4.0-sample-2.png"
-    ],
-    "lastRun": "2023-11-03T16:42:48.390Z",
-    "x": -652.8642006269613,
-    "y": -395.1972364362026
+    "model": "gpt-4-turbo-preview",
+    "x": -1130.048690482733,
+    "y": -885.266525660136
   }
 ]

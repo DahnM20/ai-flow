@@ -11,6 +11,7 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({ onClick, isRunning }) => {
   return (
     <TapScale>
       <div
+        id="run-all-button"
         className={`flex flex-row items-center justify-center gap-x-2 
                 ${
                   isRunning

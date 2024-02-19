@@ -1,219 +1,267 @@
-import { useState, useEffect } from 'react';
-import useCachedFetch, { CACHE_PREFIX, DISPENSABLE_CACHE_PREFIX } from '../../../hooks/useCachedFetch';
-import { LoadingIcon } from '../../nodes/Node.styles';
-import { getRestApiUrl } from '../../../config/config';
-import DefaultPopupWrapper from '../DefaultPopup';
-import ModelsGrid from './ModelsGrid';
-import CollectionGrid from './CollectionGrid';
-import LoadMoreButton from './LoadMoreButton';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from "react";
+import useCachedFetch, {
+  CACHE_PREFIX,
+  DISPENSABLE_CACHE_PREFIX,
+} from "../../../hooks/useCachedFetch";
+import { LoadingIcon } from "../../nodes/Node.styles";
+import { getRestApiUrl } from "../../../config/config";
+import DefaultPopupWrapper from "../DefaultPopup";
+import FilterGrid from "../shared/FilterGrid";
+import LoadMoreButton from "../shared/LoadMoreButton";
+import { useTranslation } from "react-i18next";
+import Grid from "../shared/Grid";
+import { Model } from "./Model";
 
 interface SelectModelPopupProps {
-    show: boolean;
-    onClose: () => void;
-    onValidate: (data: any) => void;
+  show: boolean;
+  onClose: () => void;
+  onValidate: (data: any) => void;
 }
 
-export default function SelectModelPopup({ show, onClose, onValidate }: SelectModelPopupProps) {
-    const { t } = useTranslation('flow');
+export default function SelectModelPopup({
+  show,
+  onClose,
+  onValidate,
+}: SelectModelPopupProps) {
+  const { t } = useTranslation("flow");
 
-    const [models, setModels] = useState<any>()
-    const [highlitedModels, setHighlightedModels] = useState<any>()
-    const [collections, setCollections] = useState<any>()
-    const [selectedCollection, setSelectedCollection] = useState<any>()
-    const [opening, setOpening] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [cursor, setCursor] = useState("")
+  const [models, setModels] = useState<any>();
+  const [highlitedModels, setHighlightedModels] = useState<any>();
+  const [collections, setCollections] = useState<any>();
+  const [selectedCollection, setSelectedCollection] = useState<any>();
+  const [opening, setOpening] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [cursor, setCursor] = useState("");
 
-    const { fetchCachedData } = useCachedFetch()
+  const { fetchCachedData } = useCachedFetch();
 
-    useEffect(() => {
-
-
-        async function getCollections() {
-            try {
-                const url = `${getRestApiUrl()}/node/collections`;
-                const data = await fetchCachedData(url, `${CACHE_PREFIX}_replicate_collections`, 600000, {});
-                return data.results;
-            } catch (error) {
-                console.error('Error fetching configuration:', error);
-            }
-        }
-
-        async function configurePopup() {
-            setOpening(true)
-            const collections = await getCollections()
-            const models = await getPublicModels()
-            const highlightedModels = await getHighlightedModels()
-            const extractedData = extractModelsData(models);
-            const extractedHighlightedModels = extractModelsData(highlightedModels);
-            setModels(extractedData)
-            setHighlightedModels(extractedHighlightedModels)
-            setCollections(collections)
-            setOpening(false)
-        }
-
-        if (!!models) return;
-
-        configurePopup()
-
-    }, [])
-
-    useEffect(() => {
-        if (!selectedCollection) return
-
-        const loadCollectionModels = async () => {
-            setLoading(true)
-            const models = await getCollectionModels(selectedCollection)
-            const extractedData = extractModelsData(models);
-            setModels(extractedData)
-            setLoading(false)
-        }
-
-        loadCollectionModels()
-
-    }, [selectedCollection])
-
-
-    function updateCursorFromResponse(response: any) {
-        if (response?.next)
-            setCursor(response.next.split('?cursor=')[1])
-        else
-            setCursor("")
+  useEffect(() => {
+    async function getCollections() {
+      try {
+        const url = `${getRestApiUrl()}/node/collections`;
+        const data = await fetchCachedData(
+          url,
+          `${CACHE_PREFIX}_replicate_collections`,
+          600000,
+          {},
+        );
+        return data.results;
+      } catch (error) {
+        console.error("Error fetching configuration:", error);
+      }
     }
 
-    function appendCursorToUrl(url: string) {
-        if (cursor != null && cursor != "")
-            return `${url}?cursor=${cursor}`
-        return url
+    async function configurePopup() {
+      setOpening(true);
+      const collections = await getCollections();
+      const models = await getPublicModels();
+      const highlightedModels = await getHighlightedModels();
+      const extractedData = extractModelsData(models);
+      const extractedHighlightedModels = extractModelsData(highlightedModels);
+      setModels(extractedData);
+      setHighlightedModels(extractedHighlightedModels);
+      setCollections(collections);
+      setOpening(false);
     }
 
-    async function getPublicModels() {
-        try {
-            let url = `${getRestApiUrl()}/node/models`;
-            if (cursor != null && cursor != "")
-                url = appendCursorToUrl(url)
-            const data = await fetchCachedData(url, `${CACHE_PREFIX}_replicate_models${!!cursor ? "_" + cursor : ''}`, 600000, {});
-            updateCursorFromResponse(data.public)
-            return data.public.results;
-        } catch (error) {
-            console.error('Error fetching configuration:', error);
-        }
-    }
+    if (!!models) return;
 
-    async function getHighlightedModels() {
-        try {
-            let url = `${getRestApiUrl()}/node/models`;
-            const data = await fetchCachedData(url, `${CACHE_PREFIX}_replicate_models`, 600000, {});
-            return data.highlighted;
-        } catch (error) {
-            console.error('Error fetching configuration:', error);
-        }
-    }
+    configurePopup();
+  }, []);
 
-    function extractModelsData(models: any) {
-        return models?.map((result: { default_example: { model: string; }; cover_image_url: string; description: string; name: string, owner: string, run_count: number }) => {
-            return {
-                modelName: result.owner + '/' + result.name,
-                coverImage: result.cover_image_url,
-                description: result.description,
-                runCount: result.run_count,
-            };
-        }).filter((model: any) => {
-            return !!model && model.description != null && model.coverImage != null;
-        });
-    }
+  useEffect(() => {
+    if (!selectedCollection) return;
 
-    async function getCollectionModels(collectionName: string) {
-        try {
-            let url = `${getRestApiUrl()}/node/collections/${collectionName}`;
-
-            if (cursor != null && cursor != "")
-                url = appendCursorToUrl(url)
-
-            const cacheId = `${DISPENSABLE_CACHE_PREFIX}_replicate_${collectionName}_models${!!cursor ? "_" + cursor : ''}`
-            const data = await fetchCachedData(url, cacheId, 600000, {});
-            updateCursorFromResponse(data)
-            return data.models;
-        } catch (error) {
-            console.error('Error fetching configuration:', error);
-        }
-    }
-
-    async function handleSelectCollection(collectionName: string) {
-        setModels([])
-        setCursor("")
-        setSelectedCollection(collectionName)
-    }
-
-    async function handleLoadMore() {
-        setLoading(true)
-        let newModels: any[] = []
-        if (selectedCollection) {
-            const models = await getCollectionModels(selectedCollection)
-            newModels = extractModelsData(models);
-        } else {
-            const models = await getPublicModels()
-            newModels = extractModelsData(models);
-        }
-        setModels([...models, ...newModels])
-        setLoading(false)
-    }
-
-    const renderModelSections = () => {
-        if (!selectedCollection) {
-            return (
-                <>
-                    <ModelsSection title={t('SpotlightModels')} models={highlitedModels} onValidate={onValidate} />
-                    <ModelsSection title={t('AllModels')} models={models} onValidate={onValidate} />
-                </>
-            );
-        }
-        return <ModelsSection models={models} onValidate={onValidate} />;
+    const loadCollectionModels = async () => {
+      setLoading(true);
+      const models = await getCollectionModels(selectedCollection);
+      const extractedData = extractModelsData(models);
+      setModels(extractedData);
+      setLoading(false);
     };
 
+    loadCollectionModels();
+  }, [selectedCollection]);
 
-    if (opening) return (
-        <LoadingIcon className='ml-5' />
-    )
+  function updateCursorFromResponse(response: any) {
+    if (response?.next) setCursor(response.next.split("?cursor=")[1]);
+    else setCursor("");
+  }
 
-    if (!models && !collections) return null
+  function appendCursorToUrl(url: string) {
+    if (cursor != null && cursor != "") return `${url}?cursor=${cursor}`;
+    return url;
+  }
 
+  async function getPublicModels() {
+    try {
+      let url = `${getRestApiUrl()}/node/models`;
+      if (cursor != null && cursor != "") url = appendCursorToUrl(url);
+      const data = await fetchCachedData(
+        url,
+        `${CACHE_PREFIX}_replicate_models${!!cursor ? "_" + cursor : ""}`,
+        600000,
+        {},
+      );
+      updateCursorFromResponse(data.public);
+      return data.public.results;
+    } catch (error) {
+      console.error("Error fetching configuration:", error);
+    }
+  }
 
-    return (
-        <DefaultPopupWrapper onClose={onClose} show={show}>
-            <div className='flex flex-col bg-zinc-900 shadow text-slate-200 w-full rounded-xl p-5 overflow-auto my-4 space-y-3' >
+  async function getHighlightedModels() {
+    try {
+      let url = `${getRestApiUrl()}/node/models`;
+      const data = await fetchCachedData(
+        url,
+        `${CACHE_PREFIX}_replicate_models`,
+        600000,
+        {},
+      );
+      return data.highlighted;
+    } catch (error) {
+      console.error("Error fetching configuration:", error);
+    }
+  }
 
-                <CollectionGrid
-                    collections={collections}
-                    selectedCollection={selectedCollection}
-                    handleSelectCollection={handleSelectCollection}
-                />
+  function extractModelsData(models: any) {
+    return models
+      ?.map(
+        (result: {
+          default_example: { model: string };
+          cover_image_url: string;
+          description: string;
+          name: string;
+          owner: string;
+          run_count: number;
+        }) => {
+          return {
+            modelName: result.owner + "/" + result.name,
+            coverImage: result.cover_image_url,
+            description: result.description,
+            runCount: result.run_count,
+          };
+        },
+      )
+      .filter((model: any) => {
+        return !!model && model.coverImage != null;
+      });
+  }
 
-                {renderModelSections()}
+  async function getCollectionModels(collectionName: string) {
+    try {
+      let url = `${getRestApiUrl()}/node/collections/${collectionName}`;
 
-                <LoadMoreButton loading={loading} cursor={cursor} onLoadMore={handleLoadMore} />
-            </div>
-        </DefaultPopupWrapper>)
-};
+      if (cursor != null && cursor != "") url = appendCursorToUrl(url);
 
+      const cacheId = `${DISPENSABLE_CACHE_PREFIX}_replicate_${collectionName}_models${!!cursor ? "_" + cursor : ""}`;
+      const data = await fetchCachedData(url, cacheId, 600000, {});
+      updateCursorFromResponse(data);
+      return data.models;
+    } catch (error) {
+      console.error("Error fetching configuration:", error);
+    }
+  }
+
+  async function handleSelectCollection(collectionName: string) {
+    setModels([]);
+    setCursor("");
+    setSelectedCollection(collectionName);
+  }
+
+  async function handleLoadMore() {
+    setLoading(true);
+    let newModels: any[] = [];
+    if (selectedCollection) {
+      const models = await getCollectionModels(selectedCollection);
+      newModels = extractModelsData(models);
+    } else {
+      const models = await getPublicModels();
+      newModels = extractModelsData(models);
+    }
+    setModels([...models, ...newModels]);
+    setLoading(false);
+  }
+
+  const renderModelSections = () => {
+    if (!selectedCollection) {
+      return (
+        <>
+          <ModelsSection
+            title={t("SpotlightModels")}
+            models={highlitedModels}
+            onValidate={onValidate}
+          />
+          <ModelsSection
+            title={t("AllModels")}
+            models={models}
+            onValidate={onValidate}
+          />
+        </>
+      );
+    }
+    return <ModelsSection models={models} onValidate={onValidate} />;
+  };
+
+  if (opening) return <LoadingIcon className="ml-5" />;
+
+  if (!models && !collections) return null;
+
+  return (
+    <DefaultPopupWrapper onClose={onClose} show={show}>
+      <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow lg:flex-row">
+        <div className="flex lg:w-1/4">
+          <FilterGrid
+            filters={collections}
+            selectedFilter={selectedCollection}
+            onSelectFilter={handleSelectCollection}
+          />
+        </div>
+
+        <div className="flex flex-col gap-2 lg:w-3/4">
+          {renderModelSections()}
+
+          <LoadMoreButton
+            loading={loading}
+            cursor={cursor}
+            onLoadMore={handleLoadMore}
+          />
+        </div>
+      </div>
+    </DefaultPopupWrapper>
+  );
+}
 
 interface ModelSectionProps {
-    title?: string | null;
-    models: any;
-    onValidate: (data: any) => void;
+  title?: string | null;
+  models: any;
+  onValidate: (data: any) => void;
+}
+
+export interface ModelData {
+  modelName: string;
+  coverImage: string;
+  description: string;
+  runCount: number;
 }
 
 const ModelsSection = ({ title, models, onValidate }: ModelSectionProps) => {
-    if (!models || models.length == 0)
-        return null
+  if (!models || models.length == 0) return null;
 
-    return (
-        <>
-            {
-                title && <h2>{title}</h2>
-            }
-            <ModelsGrid models={models} onValidate={onValidate} />
-        </>
-    );
-}
+  const renderModelItem = (
+    model: ModelData,
+    onValidate: (modelName: string) => void,
+  ) => <Model model={model} onValidate={onValidate} />;
+
+  return (
+    <>
+      {title && <h2>{title}</h2>}
+      <Grid
+        items={models}
+        onValidate={onValidate}
+        renderItem={renderModelItem}
+      />
+    </>
+  );
+};

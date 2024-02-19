@@ -1,4 +1,4 @@
-from llama_index.llms.base import LLM
+from llama_index.llms.base import BaseLLM
 
 from llama_index.llms.base import ChatMessage
 from llama_index.llms.base import ChatResponse
@@ -16,7 +16,7 @@ class MockedStreamObject:
         self.delta = delta
 
 
-class LLMMock(LLM):
+class LLMMock(BaseLLM):
     expected_response: Union[str, List[str]]
 
     def __init__(self, expected_response=None, **data):
@@ -63,6 +63,10 @@ class LLMMock(LLM):
         pass
 
     async def astream_complete(self, prompt: str, **kwargs: Any):
+        """Async streaming completion endpoint for LLM."""
+        pass
+
+    async def _as_query_component(self, prompt: str, **kwargs: Any):
         """Async streaming completion endpoint for LLM."""
         pass
 
