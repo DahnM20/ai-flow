@@ -1,7 +1,8 @@
+import logging
 import os
 import json
 from cachetools import cached, TTLCache
-from typing import List, Dict, Optional
+from typing import Dict, Optional
 
 from .template_provider import TemplateProvider
 
@@ -33,6 +34,7 @@ class StaticTemplateProvider(TemplateProvider):
                     }
                     templates.append(template)
                     id += 1
+        templates.reverse()
         return templates
 
     def get_template_by_id(self, template_id: int) -> Optional[Dict]:

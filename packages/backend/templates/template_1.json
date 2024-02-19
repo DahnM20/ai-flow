@@ -1,8 +1,8 @@
 {
-  "title": "Summarize Youtube Video",
+  "title": "🎥📋 Summarize Youtube Video",
   "description": "Summarize youtube video with GPT",
   "image": "https://example.com/path/to/template-image.jpg",
-  "tags": ["productivity", "text", "image", "sound", "web"],
+  "tags": ["productivity", "text"],
   "template": [
     {
       "inputs": [],

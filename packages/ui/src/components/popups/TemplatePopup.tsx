@@ -92,7 +92,11 @@ export default function TemplatePopup({
   }
 
   function handleSelectFilter(filter: string) {
-    setSelectedFilter(filter);
+    if (filter === selectedFilter) {
+      setSelectedFilter(undefined);
+    } else {
+      setSelectedFilter(filter);
+    }
   }
 
   const filters: FilterItem[] = templateTags.map((str) => {
@@ -101,8 +105,8 @@ export default function TemplatePopup({
 
   return (
     <DefaultPopupWrapper show={isOpen} onClose={onClose} centered>
-      <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow lg:flex-row">
-        <div className="w-1/3">
+      <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow md:flex-row">
+        <div className="w-full md:w-1/3 lg:w-1/5">
           <FilterGrid
             filters={filters}
             onSelectFilter={handleSelectFilter}

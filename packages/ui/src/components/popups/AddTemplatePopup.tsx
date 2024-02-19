@@ -17,8 +17,8 @@ export const templateTags = [
   "productivity",
   "text",
   "image",
+  "video",
   "sound",
-  "web",
 ] as const;
 
 export type TemplateTag = (typeof templateTags)[number];

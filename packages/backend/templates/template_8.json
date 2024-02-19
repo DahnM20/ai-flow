@@ -1,0 +1,282 @@
+{
+  "title": "🎵🛠️ Generate Music",
+  "description": "Generate a music from a prompt using MusicGen",
+  "tags": ["sound"],
+  "template": [
+    {
+      "inputs": [],
+      "name": "1s1zssja5#input-text",
+      "processorType": "input-text",
+      "inputText": "-- Your idea here --",
+      "config": {
+        "fields": [
+          {
+            "type": "textarea",
+            "name": "inputText",
+            "required": true,
+            "placeholder": "InputPlaceholder"
+          }
+        ],
+        "nodeName": "Text",
+        "outputType": "text"
+      },
+      "x": 149.0999410373039,
+      "y": 312.1126547201654
+    },
+    {
+      "inputs": [
+        {
+          "inputName": "prompt",
+          "inputNode": "1s1zssja5#input-text",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "name": "djy7dtzpk#replicate",
+      "processorType": "replicate",
+      "classifier_free_guidance": 3,
+      "continuation": false,
+      "continuation_start": 0,
+      "duration": 8,
+      "model_version": "stereo-melody-large",
+      "multi_band_diffusion": false,
+      "normalization_strategy": "loudness",
+      "output_format": "wav",
+      "temperature": 1,
+      "top_k": 250,
+      "top_p": 0,
+      "config": {
+        "fields": [
+          {
+            "name": "classifier_free_guidance",
+            "type": "inputInt",
+            "label": "classifier_free_guidance",
+            "placeholder": "Increases the influence of inputs on the output. Higher values produce lower-varience outputs that adhere more closely to inputs.",
+            "defaultValue": 3,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "continuation",
+            "type": "boolean",
+            "label": "continuation",
+            "placeholder": "If `True`, generated music will continue from `input_audio`. Otherwise, generated music will mimic `input_audio`'s melody.",
+            "defaultValue": false,
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "continuation_end",
+            "type": "inputInt",
+            "label": "continuation_end",
+            "placeholder": "End time of the audio file to use for continuation. If -1 or None, will default to the end of the audio clip.",
+            "min": 0,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "continuation_start",
+            "type": "inputInt",
+            "label": "continuation_start",
+            "placeholder": "Start time of the audio file to use for continuation.",
+            "defaultValue": 0,
+            "min": 0,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "duration",
+            "type": "inputInt",
+            "label": "duration",
+            "placeholder": "Duration of the generated audio in seconds.",
+            "defaultValue": 8,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "input_audio",
+            "type": "input",
+            "label": "input_audio",
+            "placeholder": "An audio file that will influence the generated music. If `continuation` is `True`, the generated music will be a continuation of the audio file. Otherwise, the generated music will mimic the audio file's melody.",
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "model_version",
+            "type": "select",
+            "label": "model_version",
+            "placeholder": "Model to use for generation. If set to 'encode-decode', the audio specified via 'input_audio' will simply be encoded and then decoded.",
+            "defaultValue": "stereo-melody-large",
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false,
+            "options": [
+              {
+                "label": "stereo-melody-large",
+                "value": "stereo-melody-large",
+                "default": true
+              },
+              {
+                "label": "stereo-large",
+                "value": "stereo-large",
+                "default": false
+              },
+              {
+                "label": "melody-large",
+                "value": "melody-large",
+                "default": false
+              },
+              {
+                "label": "large",
+                "value": "large",
+                "default": false
+              },
+              {
+                "label": "encode-decode",
+                "value": "encode-decode",
+                "default": false
+              }
+            ]
+          },
+          {
+            "name": "multi_band_diffusion",
+            "type": "boolean",
+            "label": "multi_band_diffusion",
+            "placeholder": "If `True`, the EnCodec tokens will be decoded with MultiBand Diffusion. Only works with non-stereo models.",
+            "defaultValue": false,
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "normalization_strategy",
+            "type": "select",
+            "label": "normalization_strategy",
+            "placeholder": "Strategy for normalizing audio.",
+            "defaultValue": "loudness",
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false,
+            "options": [
+              {
+                "label": "loudness",
+                "value": "loudness",
+                "default": true
+              },
+              {
+                "label": "clip",
+                "value": "clip",
+                "default": false
+              },
+              {
+                "label": "peak",
+                "value": "peak",
+                "default": false
+              },
+              {
+                "label": "rms",
+                "value": "rms",
+                "default": false
+              }
+            ]
+          },
+          {
+            "name": "output_format",
+            "type": "select",
+            "label": "output_format",
+            "placeholder": "Output format for generated audio.",
+            "defaultValue": "wav",
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false,
+            "options": [
+              {
+                "label": "wav",
+                "value": "wav",
+                "default": true
+              },
+              {
+                "label": "mp3",
+                "value": "mp3",
+                "default": false
+              }
+            ]
+          },
+          {
+            "name": "prompt",
+            "type": "input",
+            "label": "prompt",
+            "placeholder": "A description of the music you want to generate.",
+            "hasHandle": true,
+            "isLinked": true,
+            "required": false
+          },
+          {
+            "name": "seed",
+            "type": "inputInt",
+            "label": "seed",
+            "placeholder": "Seed for random number generator. If None or -1, a random seed will be used.",
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "temperature",
+            "type": "input",
+            "label": "temperature",
+            "placeholder": "Controls the 'conservativeness' of the sampling process. Higher temperature means more diversity.",
+            "defaultValue": 1,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "top_k",
+            "type": "inputInt",
+            "label": "top_k",
+            "placeholder": "Reduces sampling to the k most likely tokens.",
+            "defaultValue": 250,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "top_p",
+            "type": "input",
+            "label": "top_p",
+            "placeholder": "Reduces sampling to tokens with cumulative probability of p. When set to  `0` (default), top_k sampling is used.",
+            "defaultValue": 0,
+            "hasHandle": true,
+            "isLinked": false,
+            "required": false
+          }
+        ],
+        "nodeName": "meta/musicgen:b05b1dff1d8c6dc63d14b0cdb42135378dcb87f6373b0d3d341ede46e59e2b38",
+        "inputNames": [
+          "classifier_free_guidance",
+          "continuation",
+          "continuation_end",
+          "continuation_start",
+          "duration",
+          "input_audio",
+          "model_version",
+          "multi_band_diffusion",
+          "normalization_strategy",
+          "output_format",
+          "prompt",
+          "seed",
+          "temperature",
+          "top_k",
+          "top_p"
+        ]
+      },
+      "x": 816.6664056503769,
+      "y": -44.699037272509756
+    }
+  ]
+}

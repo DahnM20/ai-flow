@@ -1,8 +1,8 @@
 {
-  "title": "Stable Video Diffusion",
+  "title": "📹✨ Stable Video Diffusion",
   "description": "Text-to-video using Stable Video Diffusion",
   "image": "https://example.com/path/to/template-image.jpg",
-  "tags": ["productivity", "text"],
+  "tags": ["image", "video"],
   "template": [
     {
       "inputs": [],

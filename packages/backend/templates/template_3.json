@@ -1,8 +1,8 @@
 {
-  "title": "DALL-E 4 variations",
-  "description": "Generate four variations of the same prompt using DALL-E",
+  "title": "🎨🔄 DALL-E 3 - 4 Variations",
+  "description": "Generate four variations of the same prompt using DALL-E 3",
   "image": "https://example.com/path/to/template-image.jpg",
-  "tags": ["productivity", "text"],
+  "tags": ["image"],
   "template": [
     {
       "inputs": [],
