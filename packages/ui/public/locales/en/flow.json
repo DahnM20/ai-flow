@@ -40,7 +40,7 @@
     "MergerNode": "Merge",
     "inputHelp": "This node is used to input text.",
     "inputImageHelp": "This node is used to input an image URL.",
-    "urlInputHelp": "Enter a valid URL and the node will retrieve the data from this URL if JavaScript isn't required to load the page.",
+    "urlInputHelp": "Enter a valid URL and the node will retrieve the data from this URL.",
     "youtubeTranscriptHelp": "This node retrieves the subtitles of a YouTube video from its URL.",
     "gptHelp": "This node allows you to configure a GPT model, specify its role, and the data it will use to respond.",
     "gptPromptHelp": "This node allows you to query a GPT model. It shares its context with other nodes connected to the model.",

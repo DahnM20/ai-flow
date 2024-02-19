@@ -40,7 +40,7 @@
     "ReplicateModel": "Replicate",
     "inputHelp": "Ce noeud sert à saisir du texte.",
     "inputImageHelp": "Ce noeud permet de visualiser une image via une URL.",
-    "urlInputHelp": "Saisissez une URL valide et le noeud récupérera les données de cette URL si javascript n'est pas nécessaire pour charger la page.",
+    "urlInputHelp": "Saisissez une URL valide et le noeud récupérera les données de cette URL.",
     "youtubeTranscriptHelp": "Ce noeud récupère les sous titres d'une vidéo Youtube à partir de son URL",
     "gptHelp": "Ce noeud permet de configurer un modèle GPT, de lui préciser son rôle, et les données sur lesquelles il se basera pour répondre.",
     "gptPromptHelp": "Ce noeud permet d'interroger un modèle GPT. Il partage son contexte avec les autres noeuds connectés au modèle.",

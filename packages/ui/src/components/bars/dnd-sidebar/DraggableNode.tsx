@@ -1,7 +1,7 @@
 import { useDrag } from "react-dnd";
 import { useTranslation } from "react-i18next";
 import { DnDNode } from "../../../nodes-configuration/sectionConfig";
-import { ReactNode, memo, useEffect, useState } from "react";
+import { ReactNode, memo } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import styled from "styled-components";
 
@@ -44,24 +44,18 @@ const DraggableNode = (props: DraggableNodeProps) => {
       }}
       className={`sidebar-dnd-node text-md group relative flex h-auto w-full 
                   cursor-grab
-                  flex-row items-center justify-center
-                  gap-x-1 overflow-hidden rounded-md px-3 py-2
+                  flex-row items-center justify-between
+                  gap-x-1 overflow-hidden rounded-md py-2
                   text-center font-medium text-slate-200
                   shadow-md
                   transition-all duration-200 ease-in-out 
                   hover:ring-2 hover:ring-slate-200/10 
                   ${isDragging ? "opacity-10" : ""}`}
+      data-tooltip-id={`dnd-tooltip`}
+      data-tooltip-content={t(props.node.helpMessage ?? "")}
     >
-      {t(props.node.label)}
-      {props.node.helpMessage && !isDragging && (
-        <div className="absolute left-5 flex items-center">
-          <StyledInfoIcon
-            className="opacity-0 group-hover:opacity-100"
-            data-tooltip-id={`dnd-tooltip`}
-            data-tooltip-content={t(props.node.helpMessage)}
-          />
-        </div>
-      )}
+      <div className="flex-grow px-2 text-center">{t(props.node.label)}</div>
+
       {props.node.isBeta && <NodeBadge>Beta</NodeBadge>}
     </Node>
   );
@@ -76,7 +70,5 @@ const Node = styled.div`
   -moz-user-select: none;
   -ms-user-select: none;
 `;
-
-const StyledInfoIcon = styled(FaInfoCircle)``;
 
 export default memo(DraggableNode);

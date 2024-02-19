@@ -70,7 +70,7 @@ const DnDSidebar = () => {
           </DnDSidebarContainer>
         )}
       </div>
-      <Tooltip id={`dnd-tooltip`} style={{ zIndex: 100 }} />
+      <Tooltip id={`dnd-tooltip`} style={{ zIndex: 100 }} delayShow={300} />
     </>
   );
 };
