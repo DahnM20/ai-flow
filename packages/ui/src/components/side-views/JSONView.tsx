@@ -2,6 +2,7 @@ import React, { useContext, memo, useState } from "react";
 import { FiCrosshair, FiDownload, FiSave, FiUpload } from "react-icons/fi";
 import { Edge, Node } from "reactflow";
 import {
+  clearAllOutput,
   convertFlowToJson,
   convertJsonToFlow,
   nodesTopologicalSort,
@@ -76,12 +77,8 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
   };
 
   const handleDeleteOutput = () => {
-    const nodeUpdated = nodes.map((node) => {
-      node.data.outputData = undefined;
-      node.data.lastRun = undefined;
-      return node;
-    });
-    onUpdateNodes(nodeUpdated, edges);
+    const nodesCleared = clearAllOutput(nodes);
+    onUpdateNodes(nodesCleared, edges);
   };
 
   const handleDeleteAll = () => {
@@ -89,10 +86,11 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
   };
 
   const handleSaveAsTemplate = async (data: TemplateFormData) => {
-    const flowData = convertFlowToJson(nodes, edges, true, true);
+    const nodesCleared = clearAllOutput(nodes);
+    const flowData = convertFlowToJson(nodesCleared, edges, true, true);
+
     const template = {
-      title: data.title,
-      description: data.description,
+      ...data,
       template: flowData,
     };
 

@@ -219,7 +219,7 @@ export default function SelectModelPopup({
           />
         </div>
 
-        <div className="flex flex-col lg:w-3/4">
+        <div className="flex flex-col gap-2 lg:w-3/4">
           {renderModelSections()}
 
           <LoadMoreButton

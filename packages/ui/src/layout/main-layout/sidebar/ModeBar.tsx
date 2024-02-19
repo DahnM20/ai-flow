@@ -1,7 +1,6 @@
 import { memo } from "react";
-import { FaColumns, FaProjectDiagram } from "react-icons/fa";
+import { FaColumns, FaFileAlt, FaProjectDiagram } from "react-icons/fa";
 import { ApplicationMode, ApplicationMenu } from "../AppLayout";
-import { FiFile } from "react-icons/fi";
 
 interface ModeBarProps {
   onChangeMode: (mode: ApplicationMode) => void;
@@ -16,7 +15,7 @@ function ModeBar({ onChangeMode, onOpenMenu, currentMode }: ModeBarProps) {
   ];
 
   const menus: { name: ApplicationMenu; icon: any }[] = [
-    { name: "template", icon: FiFile },
+    { name: "template", icon: FaFileAlt },
   ];
 
   function handleChangeMode(newMode: ApplicationMode) {
@@ -35,6 +34,7 @@ function ModeBar({ onChangeMode, onOpenMenu, currentMode }: ModeBarProps) {
           return (
             <Icon
               key={index}
+              id={`mode-${mode.name}`}
               onClick={() => handleChangeMode(mode.name)}
               className={`w-full cursor-pointer text-2xl ${currentMode === mode.name ? "text-sky-300" : "text-sky-900/50 hover:text-sky-300/50"}`}
             />
@@ -47,6 +47,7 @@ function ModeBar({ onChangeMode, onOpenMenu, currentMode }: ModeBarProps) {
           return (
             <Icon
               key={index}
+              id={`menu-${menu.name}`}
               onClick={() => handleOpenMenu(menu.name)}
               className="w-full cursor-pointer text-2xl text-sky-900/50 hover:text-sky-300/50"
             />

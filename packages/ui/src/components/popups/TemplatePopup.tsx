@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import useCachedFetch, { CACHE_PREFIX } from "../../hooks/useCachedFetch";
+import useCachedFetch, {
+  DISPENSABLE_CACHE_PREFIX,
+} from "../../hooks/useCachedFetch";
 import DefaultPopupWrapper from "./DefaultPopup";
 import FilterGrid, { FilterItem } from "./shared/FilterGrid";
 import Grid from "./shared/Grid";
 import { getRestApiUrl } from "../../config/config";
 import { convertJsonToFlow } from "../../utils/flowUtils";
+import { templateTags } from "./AddTemplatePopup";
+import axios from "axios";
 
 interface TemplatePopupProps {
   isOpen: boolean;
@@ -31,13 +35,8 @@ export default function TemplatePopup({
   const { fetchCachedData } = useCachedFetch();
 
   async function loadTemplates() {
-    const data = await fetchCachedData(
-      `${getRestApiUrl()}/template`,
-      `${CACHE_PREFIX}_templates`,
-      10,
-      {},
-    );
-    setTemplates(data);
+    const response = await axios.get(`${getRestApiUrl()}/template`);
+    setTemplates(response.data);
   }
 
   useEffect(() => {
@@ -49,18 +48,20 @@ export default function TemplatePopup({
     onValidate: (templateId: string) => void,
   ) {
     return (
-      <div className="flex flex-col space-y-2 rounded-lg bg-subtle-gradient p-4">
-        <h1 className="text-xl font-bold">{template.title}</h1>
-        <p className="text-sm text-slate-400">{template.description}</p>
-        <div className="flex flex-row space-x-1 overflow-hidden">
-          {template.tags?.map((tag: string) => (
-            <span
-              key={tag}
-              className="rounded-lg bg-slate-700 px-2 py-1 text-xs font-bold text-slate-200"
-            >
-              {tag}
-            </span>
-          ))}
+      <div className="flex flex-col justify-between rounded-lg bg-subtle-gradient p-4">
+        <div className="space-y-2">
+          <h1 className="text-xl font-bold">{template.title}</h1>
+          <p className="text-sm text-slate-400">{template.description}</p>
+          <div className="flex flex-row flex-wrap gap-2">
+            {template.tags?.map((tag: string) => (
+              <span
+                key={tag}
+                className="rounded-lg bg-slate-700 px-2 py-1 text-xs font-bold text-slate-200"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
         <div className="flex w-full flex-row-reverse p-1">
           <button
@@ -77,7 +78,7 @@ export default function TemplatePopup({
   async function fetchTemplate(templateId: string) {
     return fetchCachedData(
       `${getRestApiUrl()}/template/${templateId}`,
-      `${CACHE_PREFIX}_template_${templateId}`,
+      `${DISPENSABLE_CACHE_PREFIX}_template_${templateId}`,
       10,
       {},
     );
@@ -94,13 +95,7 @@ export default function TemplatePopup({
     setSelectedFilter(filter);
   }
 
-  const filters: FilterItem[] = [
-    "productivity",
-    "text",
-    "image",
-    "sound",
-    "web",
-  ].map((str) => {
+  const filters: FilterItem[] = templateTags.map((str) => {
     return { name: str, slug: str };
   });
 

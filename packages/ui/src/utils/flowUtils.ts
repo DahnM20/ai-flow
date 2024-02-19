@@ -88,6 +88,14 @@ export const getTargetHandleKey: any = (edge: Edge) => {
   return edge?.targetHandle?.split(handleSeparator)[indexKeyHandleIn];
 };
 
+export function clearAllOutput(nodes: Node[]) {
+  return nodes.map((node) => {
+    node.data.outputData = undefined;
+    node.data.lastRun = undefined;
+    return node;
+  });
+}
+
 export function convertFlowToJson(
   nodes: Node[],
   edges: Edge[],
