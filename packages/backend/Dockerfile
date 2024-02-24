@@ -37,6 +37,7 @@ RUN poetry install --no-interaction
 
 # The rest of the app
 COPY app /app/app/
+COPY templates /app/templates
 COPY tests/ /app/tests/
 COPY server.py README.md /app/
 
