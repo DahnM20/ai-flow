@@ -267,7 +267,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(
           showLogs={showLogs}
           noPadding={outputIsMedia && showLogs}
           onClick={() => setShowLogs(!showLogs)}
-          className={`relative flex h-auto w-full flex-grow justify-center p-4`}
+          className={`relative flex h-auto w-full flex-grow justify-center p-4 ${showLogs ? "nodrag nowheel" : ""}`}
         >
           {showLogs && data.outputData && !outputIsMedia && (
             <StyledCopyIcon
