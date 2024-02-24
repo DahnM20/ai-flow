@@ -31,7 +31,7 @@ export const allNodeTypes = [
   "stable-video-diffusion-replicate",
   "replicate",
   "transition",
-  "file-upload",
+  "file",
 ] as const;
 export type NodeType = (typeof allNodeTypes)[number];
 
@@ -44,7 +44,7 @@ export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> =
     "data-splitter": DataSplitterNode,
     "ai-data-splitter": AIDataSplitterNode,
     "ai-action": AIActionNode,
-    "file-upload": FileUploadNode,
+    file: FileUploadNode,
     replicate: DynamicFieldsNode,
     transition: TransitionNode,
   };

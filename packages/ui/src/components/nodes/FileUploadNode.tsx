@@ -12,26 +12,46 @@ import {
   NodeContainer,
   NodeHeader,
   NodeIcon,
+  NodeInput,
   NodeTitle,
 } from "./Node.styles";
 import { useTranslation } from "react-i18next";
 import { getRestApiUrl } from "../../config/config";
 import { toastInfoMessage } from "../../utils/toastUtils";
-import axios, { AxiosProgressEvent, AxiosRequestConfig } from "axios";
+import axios, { AxiosProgressEvent } from "axios";
+import { GenericNodeData } from "./types/node";
+import { getOutputTypeFromExtension } from "./node-output/outputUtils";
+import NodeOutput from "./node-output/NodeOutput";
 
-const FileUploadNode: React.FC<NodeProps> = ({ data, id, selected }) => {
+interface GenericNodeProps extends NodeProps {
+  data: GenericNodeData;
+  id: string;
+  selected: boolean;
+}
+
+const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
   const { hasParent, showOnlyOutput, isRunning, onUpdateNodeData } =
     useContext(NodeContext);
   const { t } = useTranslation("flow");
   const [files, setFiles] = useState<File[] | null>(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const [isPlaying, setIsPlaying] = useIsPlaying();
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed, setCollapsed] = useState<boolean>(
+    data.outputData ? true : false,
+  );
+  const [showLogs, setShowLogs] = useState<boolean>(
+    data.outputData ? true : false,
+  );
+  const [url, setUrl] = useState<string | null>(null);
+
   const accept = {
     "video/mp4": [".mp4"],
     "audio/mpeg": [".mp3"],
     "image/png": [".png"],
     "image/jpeg": [".jpg", ".jpeg"],
+    "image/gif": [".gif"],
+    "text/plain": [".txt"],
+    "application/pdf": [".pdf"],
   };
 
   const {
@@ -42,12 +62,8 @@ const FileUploadNode: React.FC<NodeProps> = ({ data, id, selected }) => {
     accept,
     multiple: false,
     onDrop: (acceptedFiles) => {
-      if (acceptedFiles && acceptedFiles.length > 0) {
-        if (!!files) {
-          setFiles([...files, ...acceptedFiles]);
-        } else {
-          setFiles(acceptedFiles);
-        }
+      if (acceptedFiles && acceptedFiles.length == 1) {
+        setFiles(acceptedFiles);
       }
     },
   });
@@ -70,7 +86,11 @@ const FileUploadNode: React.FC<NodeProps> = ({ data, id, selected }) => {
 
       const urls = await getUploadAndDownloadUrl();
 
-      const uploadUrl = urls.upload_url;
+      console.log("URLS : ", urls);
+
+      const uploadUrl = urls.upload_link;
+
+      console.log("Upload URL : ", uploadUrl);
 
       const config = {
         onUploadProgress: (progressEvent: AxiosProgressEvent) => {
@@ -86,8 +106,24 @@ const FileUploadNode: React.FC<NodeProps> = ({ data, id, selected }) => {
 
       await axios.put(uploadUrl, files[0], config);
 
+      const outputType = getOutputTypeFromExtension(files[0].name);
+
+      onUpdateNodeData(id, {
+        ...data,
+        fileUrl: urls.download_link,
+        outputData: urls.download_link,
+        lastRun: new Date(),
+        config: {
+          ...data.config,
+          outputType,
+        },
+      });
+
+      setShowLogs(true);
+      setCollapsed(true);
+
       console.log("File successfully uploaded");
-      console.log(urls.download_url);
+      console.log(urls.download_link);
     }
 
     if (files) {
@@ -117,8 +153,27 @@ const FileUploadNode: React.FC<NodeProps> = ({ data, id, selected }) => {
     setCollapsed(!collapsed);
   };
 
+  const handleSetFileViaURL = () => {
+    if (!url) return;
+
+    const outputType = getOutputTypeFromExtension(url);
+    onUpdateNodeData(id, {
+      ...data,
+      fileUrl: url,
+      outputData: url,
+      lastRun: new Date(),
+      config: {
+        ...data.config,
+        outputType,
+      },
+    });
+
+    setShowLogs(true);
+    setCollapsed(true);
+  };
+
   return (
-    <NodeContainer className="pb-2">
+    <NodeContainer>
       <NodeHeader onDoubleClick={toggleCollapsed}>
         <NodeIcon>
           <FaImage />
@@ -170,6 +225,30 @@ const FileUploadNode: React.FC<NodeProps> = ({ data, id, selected }) => {
           )}
         </div>
       )}
+      {!collapsed && !files && (
+        <div className="flex w-full flex-col items-center justify-center space-y-2 px-2 pb-4 text-slate-200">
+          <p> {t("Or")} </p>
+          <div className="flex w-2/3  flex-row space-x-2">
+            <NodeInput
+              className="text-center"
+              placeholder={t("EnterModelNameDirectly") ?? ""}
+              onChange={(event) => setUrl(event.target.value)}
+            />
+            <button
+              className="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"
+              onClick={handleSetFileViaURL}
+            >
+              {" "}
+              {t("Load")}{" "}
+            </button>
+          </div>
+        </div>
+      )}
+      <NodeOutput
+        showLogs={showLogs}
+        onClickOutput={() => setShowLogs(!showLogs)}
+        data={data}
+      />
     </NodeContainer>
   );
 };

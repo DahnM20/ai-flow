@@ -118,8 +118,9 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       <NodeResizer
         isVisible={resize}
         minWidth={450}
+        maxWidth={1500}
         minHeight={200}
-        maxHeight={700}
+        maxHeight={1000}
       />
       {children}
       <div

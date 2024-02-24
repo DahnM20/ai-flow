@@ -21,3 +21,4 @@ class ProcessorType(Enum):
     AI_DATA_SPLITTER = "ai-data-splitter"
     AI_ACTION = "ai-action"
     TRANSITION = "transition"
+    FILE = "file"

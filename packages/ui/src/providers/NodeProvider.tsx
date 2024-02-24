@@ -9,6 +9,11 @@ import {
   getNodeInError,
 } from "../utils/flowCheckUtils";
 
+export type NodeDimensions = {
+  width?: number | null;
+  height?: number | null;
+};
+
 interface NodeContextType {
   runNode: (nodeName: string) => boolean;
   hasParent: (id: string) => boolean;
@@ -20,6 +25,7 @@ interface NodeContextType {
   errorCount: number;
   onUpdateNodeData: (nodeId: string, data: any) => void;
   onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void;
+  getNodeDimensions: (nodeId: string) => NodeDimensions | undefined;
   nodes: Node[];
   edges: Edge[];
 }
@@ -35,6 +41,7 @@ export const NodeContext = createContext<NodeContextType>({
   errorCount: 0,
   onUpdateNodeData: () => undefined,
   onUpdateNodes: () => undefined,
+  getNodeDimensions: () => undefined,
   nodes: [],
   edges: [],
 });
@@ -97,6 +104,16 @@ export const NodeProvider = ({
     return edges.find((edge) => edge.target === id);
   };
 
+  const getNodeDimensions = (id: string) => {
+    const node = nodes.find((node) => node.id === id);
+    let dimensions: NodeDimensions = { width: undefined, height: undefined };
+    if (!!node) {
+      dimensions = { width: node.width, height: node.height };
+    }
+
+    return dimensions;
+  };
+
   return (
     <NodeContext.Provider
       value={{
@@ -110,6 +127,7 @@ export const NodeProvider = ({
         errorCount,
         onUpdateNodeData,
         onUpdateNodes,
+        getNodeDimensions,
         nodes,
         edges,
       }}

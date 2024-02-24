@@ -11,6 +11,8 @@ import ImageUrlOutput from "./ImageUrlOutput";
 import ImageBase64Output from "./ImageBase64Output";
 import VideoUrlOutput from "./VideoUrlOutput";
 import AudioUrlOutput from "./AudioUrlOutput";
+import { getOutputTypeFromExtension } from "./outputUtils";
+import PdfUrlOutput from "./PdfUrlOutput";
 
 interface NodeOutputProps {
   data: NodeData;
@@ -57,6 +59,8 @@ export default function NodeOutput({
         return <VideoUrlOutput url={output} name={data.name} />;
       case "audioUrl":
         return <AudioUrlOutput url={output} name={data.name} />;
+      case "pdfUrl":
+        return <PdfUrlOutput url={output} name={data.name} />;
       default:
         return <MarkdownOutput data={output} />;
     }
@@ -80,14 +84,7 @@ export default function NodeOutput({
       output = outputData[0];
     }
 
-    const outputType =
-      output.endsWith(".png") || output.endsWith(".jpg")
-        ? "imageUrl"
-        : output.endsWith(".mp4") || output.endsWith(".mov")
-          ? "videoUrl"
-          : output.endsWith(".mp3") || output.endsWith(".wav")
-            ? "audioUrl"
-            : "markdown";
+    const outputType = getOutputTypeFromExtension(output);
 
     return outputType;
   }
@@ -98,7 +95,8 @@ export default function NodeOutput({
     (outputType === "imageUrl" ||
       outputType === "imageBase64" ||
       outputType === "videoUrl" ||
-      outputType === "audioUrl") &&
+      outputType === "audioUrl" ||
+      outputType === "pdfUrl") &&
     !!data.outputData;
 
   return (
