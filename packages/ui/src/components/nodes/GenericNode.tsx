@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
-import { Position, NodeProps, useUpdateNodeInternals } from "reactflow";
+import {
+  Position,
+  NodeProps,
+  useUpdateNodeInternals,
+  NodeResizer,
+} from "reactflow";
 import {
   NodeContainer,
   NodeHeader,
@@ -211,7 +216,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
     return (
-      <NodeContainer key={id} className="node-wrapper">
+      <NodeContainer key={id} className={`flex h-full w-full flex-col`}>
         <NodeHeader onDoubleClick={toggleCollapsed}>
           {data.config.hasInputHandle && (
             <>
@@ -254,14 +259,15 @@ const GenericNode: React.FC<NodeProps> = React.memo(
         </NodeHeader>
         <NodeBand />
         {!hideNodeParams && (
-          <NodeContent>
-            <NodeForm>{formFields}</NodeForm>
+          <NodeContent className="flex h-auto w-full flex-grow justify-center p-4">
+            <NodeForm className="h-full w-full">{formFields}</NodeForm>
           </NodeContent>
         )}
         <NodeLogs
           showLogs={showLogs}
           noPadding={outputIsMedia && showLogs}
           onClick={() => setShowLogs(!showLogs)}
+          className={`relative flex h-auto w-full flex-grow justify-center p-4`}
         >
           {showLogs && data.outputData && !outputIsMedia && (
             <StyledCopyIcon
@@ -272,7 +278,7 @@ const GenericNode: React.FC<NodeProps> = React.memo(
             />
           )}
           {!showLogs && data.outputData ? (
-            <NodeLogsText className="text-center">
+            <NodeLogsText className="flex h-auto w-full justify-center text-center">
               {t("ClickToShowOutput")}
             </NodeLogsText>
           ) : (
