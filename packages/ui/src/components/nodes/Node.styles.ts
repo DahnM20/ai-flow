@@ -41,12 +41,16 @@ export const NodeTitle = styled.div`
   color: ${({ theme }) => theme.text};
 `;
 
-export const NodeContent = styled.div`
+export const NodeContent = styled.div.attrs({
+  className: "flex h-auto w-full flex-grow justify-center p-4",
+})`
   color: ${({ theme }) => theme.text};
 `;
 
 export const NodeForm = styled.div`
   display: flex;
+  height: 100%;
+  width: 100%;
   flex-direction: column;
   gap: 8px;
 `;

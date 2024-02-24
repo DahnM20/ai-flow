@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaWaveSquare } from "react-icons/fa";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
@@ -12,368 +12,333 @@ import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
 import HandleWrapper from "../handles/HandleWrapper";
 import SelectModelPopup from "../popups/select-model-popup/SelectModelPopup";
 import { NodeContext } from "../../providers/NodeProvider";
-import { NodeBand, NodeContainer, NodeContent, NodeForm, NodeHeader, NodeIcon, NodeInput, NodeLogs, NodeLogsText, NodeTitle } from "./Node.styles";
+import {
+  NodeBand,
+  NodeContainer,
+  NodeContent,
+  NodeForm,
+  NodeHeader,
+  NodeIcon,
+  NodeInput,
+  NodeTitle,
+} from "./Node.styles";
 import NodePlayButton from "./node-button/NodePlayButton";
-import styled from 'styled-components';
-import { FiCopy } from 'react-icons/fi';
-import ImageUrlOutput from './node-output/ImageUrlOutput';
-import MarkdownOutput from './node-output/MarkdownOutput';
-import VideoUrlOutput from './node-output/VideoUrlOutput';
-import useCachedFetch from '../../hooks/useCachedFetch';
-import { getRestApiUrl } from '../../config/config';
-import AudioUrlOutput from './node-output/AudioUrlOutput';
-import { toastFastInfoMessage, toastInfoMessage } from "../../utils/toastUtils";
-import { convertOpenAPISchemaToNodeConfig, getSchemaFromConfig } from "../../utils/openAPIUtils";
-import { copyToClipboard } from "../../utils/navigatorUtils";
+import useCachedFetch from "../../hooks/useCachedFetch";
+import { getRestApiUrl } from "../../config/config";
+import { toastInfoMessage } from "../../utils/toastUtils";
+import {
+  convertOpenAPISchemaToNodeConfig,
+  getSchemaFromConfig,
+} from "../../utils/openAPIUtils";
 import { NodeData } from "./types/node";
+import NodeOutput from "./node-output/NodeOutput";
 
 interface DynamicFieldsNodeData extends NodeData {
-    schema: any;
+  schema: any;
 }
 
 interface DynamicFieldsProps extends NodeProps {
-    data: DynamicFieldsNodeData
+  data: DynamicFieldsNodeData;
 }
 
-export default function DynamicFieldsNode({ data, id, selected }: DynamicFieldsProps) {
+export default function DynamicFieldsNode({
+  data,
+  id,
+  selected,
+}: DynamicFieldsProps) {
+  const [fields, setFields] = useState<Field[]>(
+    !!data.config?.fields ? data.config.fields : [],
+  );
+  const [model, setModel] = useState<string | undefined>(
+    !!data.config?.nodeName ? data.config.nodeName : undefined,
+  );
+  const [modelInput, setModelInput] = useState<string>("");
 
-    const [fields, setFields] = useState<Field[]>(!!data.config?.fields ? data.config.fields : [])
-    const [model, setModel] = useState<string | undefined>(!!data.config?.nodeName ? data.config.nodeName : undefined)
-    const [modelInput, setModelInput] = useState<string>("");
+  const { getIncomingEdges, showOnlyOutput, isRunning, onUpdateNodeData } =
+    useContext(NodeContext);
 
-    const { getIncomingEdges, showOnlyOutput, isRunning, onUpdateNodeData } = useContext(NodeContext);
+  const { t } = useTranslation("flow");
+  const { fetchCachedData } = useCachedFetch();
 
-    const { t } = useTranslation('flow');
-    const { fetchCachedData } = useCachedFetch();
+  const updateNodeInternals = useUpdateNodeInternals();
 
-    const updateNodeInternals = useUpdateNodeInternals();
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [showLogs, setShowLogs] = useState<boolean>(true);
+  const [isPlaying, setIsPlaying] = useIsPlaying();
+  const [showPopup, setShowPopup] = useState(false);
 
-    const [collapsed, setCollapsed] = useState<boolean>(false);
-    const [showLogs, setShowLogs] = useState<boolean>(true);
-    const [isPlaying, setIsPlaying] = useIsPlaying();
-    const [showPopup, setShowPopup] = useState(false);
+  const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
 
-    const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
+  const nodeRef = useRef(null);
 
-    const nodeRef = useRef(null)
+  const nbInput = useMemo(() => {
+    return !!fields ? fields.length : 1;
+  }, []);
 
-    const nbInput = useMemo(() => {
-        return !!fields
-            ? fields.length
-            : 1;
-    }, []);
+  const { allHandlePositions } = useHandlePositions(
+    data,
+    nbInput,
+    outputHandleId,
+  );
 
-    const { allHandlePositions } = useHandlePositions(data, nbInput, outputHandleId);
+  useEffect(() => {
+    if (data.isDone) setIsPlaying(false);
 
-    useEffect(() => {
-        if (data.isDone) setIsPlaying(false);
+    updateNodeInternals(id);
+  }, [data.lastRun]);
 
-        updateNodeInternals(id);
-    }, [data.lastRun]);
+  useEffect(() => {
+    const fieldsToNullify: any = {};
 
-    useEffect(() => {
-        const fieldsToNullify: any = {}
-
-        const edgesKeys = getIncomingEdges(id)?.map((edge) => getTargetHandleKey(edge))
-
-        edgesKeys?.forEach((key) => {
-            fieldsToNullify[fields[key]?.name] = undefined
-        })
-
-        const fieldsUpdated = fields.map((field) => {
-            if (field.name in fieldsToNullify) {
-                field.isLinked = true
-            } else {
-                field.isLinked = false
-            }
-            return field
-        })
-
-        onUpdateNodeData(id, {
-            ...data,
-            ...fieldsToNullify,
-            config: {
-                ...data.config,
-                fields: fieldsUpdated
-            }
-        });
-
-        updateNodeInternals(id);
-    }, [getIncomingEdges(id)?.length])
-
-    useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
-
-    useHandleShowOutput({
-        showOnlyOutput,
-        id: id,
-        setCollapsed: setCollapsed,
-        setShowLogs: setShowLogs,
-        updateNodeInternals: updateNodeInternals
-    });
-
-    const handleNodeDataChange = (fieldName: string, value: any) => {
-        onUpdateNodeData(id, {
-            ...data,
-            [fieldName]: value,
-        });
-        updateNodeInternals(id);
-    };
-
-    const handleOptionChange = (name: string, value: string) => {
-        onUpdateNodeData(id, {
-            ...data,
-            [name]: value,
-        });
-        updateNodeInternals(id);
-    };
-
-    const formFields = useFormFields(
-        data,
-        id,
-        handleNodeDataChange,
-        handleOptionChange,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        true,
-        collapsed
+    const edgesKeys = getIncomingEdges(id)?.map((edge) =>
+      getTargetHandleKey(edge),
     );
 
+    edgesKeys?.forEach((key) => {
+      fieldsToNullify[fields[key]?.name] = undefined;
+    });
 
-    const toggleCollapsed = () => {
-        setCollapsed(!collapsed);
-    };
+    const fieldsUpdated = fields.map((field) => {
+      if (field.name in fieldsToNullify) {
+        field.isLinked = true;
+      } else {
+        field.isLinked = false;
+      }
+      return field;
+    });
 
-    const handlePlayClick = () => {
-        setIsPlaying(true);
-    };
+    onUpdateNodeData(id, {
+      ...data,
+      ...fieldsToNullify,
+      config: {
+        ...data.config,
+        fields: fieldsUpdated,
+      },
+    });
 
+    updateNodeInternals(id);
+  }, [getIncomingEdges(id)?.length]);
 
-    useEffect(() => {
+  useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
 
-        async function getConfig() {
-            try {
-                const url = `${getRestApiUrl()}/node/replicate/config/${model}`;
-                return await fetchCachedData(url, `${model}_config`, 600000, { processorType: data.processorType });
-            } catch (error) {
-                toastInfoMessage("Error fetching configuration for " + model)
-                console.error('Error fetching configuration:', error);
-                throw error;
-            }
-        }
+  useHandleShowOutput({
+    showOnlyOutput,
+    id: id,
+    setCollapsed: setCollapsed,
+    setShowLogs: setShowLogs,
+    updateNodeInternals: updateNodeInternals,
+  });
 
-        async function configureNode() {
-            let config;
-            let fields: Field[] = [];
-            try {
-                config = await getConfig()
-                const inputSchema = getSchemaFromConfig(config, "Input")
-                fields = convertOpenAPISchemaToNodeConfig(inputSchema, config)
-            } catch (error) {
-                console.error('Error fetching configuration:', error);
-            }
-            if (!config) return
-            const modelId = config.modelId
-            setModel(model + ':' + modelId)
-            console.log(fields)
-            setFields(fields)
+  const handleNodeDataChange = (fieldName: string, value: any) => {
+    onUpdateNodeData(id, {
+      ...data,
+      [fieldName]: value,
+    });
+    updateNodeInternals(id);
+  };
 
+  const handleOptionChange = (name: string, value: string) => {
+    onUpdateNodeData(id, {
+      ...data,
+      [name]: value,
+    });
+    updateNodeInternals(id);
+  };
 
-        }
+  const formFields = useFormFields(
+    data,
+    id,
+    handleNodeDataChange,
+    handleOptionChange,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    true,
+    collapsed,
+  );
 
-        if (fields.length > 0 || !model) return;
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
 
-        configureNode()
+  const handlePlayClick = () => {
+    setIsPlaying(true);
+  };
 
-    }, [model])
-
-    useEffect(() => {
-        const newFieldData: any = {}
-
-        fields.forEach((field) => {
-            if (field.defaultValue != null) {
-                if (data[field.name] == null && !field.isLinked) {
-                    newFieldData[field.name] = field.defaultValue;
-                }
-            }
-        })
-
-        onUpdateNodeData(id, {
-            ...data,
-            ...newFieldData,
-            config: {
-                ...data.config,
-                inputNames: fields.map((field) => field.name),
-                fields: fields,
-                nodeName: model,
-            }
+  useEffect(() => {
+    async function getConfig() {
+      try {
+        const url = `${getRestApiUrl()}/node/replicate/config/${model}`;
+        return await fetchCachedData(url, `${model}_config`, 600000, {
+          processorType: data.processorType,
         });
-    }, [fields])
-
-    const handleChangeHandlePosition = (newPosition: Position, handleId: string) => {
-        onUpdateNodeData(id, {
-            ...data,
-            handles: {
-                ...data.handles,
-                [handleId]: newPosition
-            }
-        });
-        updateNodeInternals(id);
+      } catch (error) {
+        toastInfoMessage("Error fetching configuration for " + model);
+        console.error("Error fetching configuration:", error);
+        throw error;
+      }
     }
 
-    const handleButtonClick = () => {
-        setShowPopup(!showPopup);
-    };
-
-    const handleValidate = (data: any) => {
-        setModel(data);
-        setShowPopup(!showPopup);
+    async function configureNode() {
+      let config;
+      let fields: Field[] = [];
+      try {
+        config = await getConfig();
+        const inputSchema = getSchemaFromConfig(config, "Input");
+        fields = convertOpenAPISchemaToNodeConfig(inputSchema, config);
+      } catch (error) {
+        console.error("Error fetching configuration:", error);
+      }
+      if (!config) return;
+      const modelId = config.modelId;
+      setModel(model + ":" + modelId);
+      console.log(fields);
+      setFields(fields);
     }
 
-    function getOutputType(): string {
-        if (!data.outputData || !data.lastRun) return "markdown"
+    if (fields.length > 0 || !model) return;
 
-        let outputData = data.outputData;
-        let output = ""
+    configureNode();
+  }, [model]);
 
-        if (typeof (output) !== 'string') {
-            output = outputData[0];
-        } else {
-            output = outputData[0];
+  useEffect(() => {
+    const newFieldData: any = {};
+
+    fields.forEach((field) => {
+      if (field.defaultValue != null) {
+        if (data[field.name] == null && !field.isLinked) {
+          newFieldData[field.name] = field.defaultValue;
         }
+      }
+    });
 
+    onUpdateNodeData(id, {
+      ...data,
+      ...newFieldData,
+      config: {
+        ...data.config,
+        inputNames: fields.map((field) => field.name),
+        fields: fields,
+        nodeName: model,
+      },
+    });
+  }, [fields]);
 
-        const outputType = (output.endsWith(".png") || output.endsWith(".jpg"))
-            ? "imageUrl"
-            : (output.endsWith(".mp4") || output.endsWith(".mov"))
-                ? "videoUrl"
-                : (output.endsWith(".mp3") || output.endsWith(".wav"))
-                    ? "audioUrl"
-                    : "markdown";
+  const handleChangeHandlePosition = (
+    newPosition: Position,
+    handleId: string,
+  ) => {
+    onUpdateNodeData(id, {
+      ...data,
+      handles: {
+        ...data.handles,
+        [handleId]: newPosition,
+      },
+    });
+    updateNodeInternals(id);
+  };
 
-        return outputType
-    }
+  const handleButtonClick = () => {
+    setShowPopup(!showPopup);
+  };
 
+  const handleValidate = (data: any) => {
+    setModel(data);
+    setShowPopup(!showPopup);
+  };
 
-    function getOutputComponent(): any {
-        if (!data.outputData || !data.lastRun) return <></>
+  function handleLoadModel() {
+    setModel(modelInput);
+  }
 
-        let outputData = data.outputData;
-        let output = ""
+  function handleClosePopup() {
+    setShowPopup(false);
+  }
 
-        if (typeof (output) !== 'string') {
-            output = outputData[0];
-        } else {
-            output = outputData[0];
-        }
+  const modelNameToDisplay = model?.includes(":") ? model.split(":")[0] : model;
 
+  const hasFieldToDisplay = formFields?.some((field: any) => field != null);
 
-        switch (getOutputType()) {
-            case 'imageUrl':
-                return <ImageUrlOutput url={output} name={data.name} />
-            case 'videoUrl':
-                return <VideoUrlOutput url={output} name={data.name} />
-            case 'audioUrl':
-                return <AudioUrlOutput url={output} name={data.name} />
-            default:
-                return <MarkdownOutput data={output} />
-        }
-    }
-
-    function handleLoadModel() {
-        setModel(modelInput)
-    }
-
-    function handleCopyToClipboard(event: MouseEvent<SVGElement, globalThis.MouseEvent>) {
-        event.stopPropagation();
-        if (data.outputData && data.outputData.length > 0) {
-            copyToClipboard(data.outputData[0]);
-            toastFastInfoMessage(t('copiedToClipboard'));
-        }
-
-    }
-
-    function handleClosePopup() {
-        setShowPopup(false);
-    }
-
-    const outputType = getOutputType()
-
-    const outputIsMedia = (outputType === 'imageUrl'
-        || outputType === 'imageBase64'
-        || outputType === 'videoUrl'
-        || outputType === 'audioUrl') && !!data.outputData;
-
-    const modelNameToDisplay = model?.includes(':') ? model.split(':')[0] : model;
-
-    const hasFieldToDisplay = formFields?.some((field: any) => field != null)
-
-    return (<NodeContainer key={id} ref={nodeRef} >
-        <NodeHeader onDoubleClick={toggleCollapsed}>
-            <NodeIcon><FaWaveSquare /></NodeIcon>
-            <NodeTitle className='px-5 overflow-hidden whitespace-nowrap text-ellipsis'>{modelNameToDisplay}</NodeTitle>
-            <HandleWrapper id={outputHandleId} position={
-                !!data?.handles && data.handles[outputHandleId]
-                    ? data.handles[outputHandleId]
-                    : Position.Right}
-                linkedHandlePositions={allHandlePositions}
-                onChangeHandlePosition={handleChangeHandlePosition}
-                isOutput />
-            <NodePlayButton isPlaying={isPlaying} hasRun={!!data.lastRun} onClick={handlePlayClick} nodeName={data.name} />
-        </NodeHeader>
-        <NodeBand />
-        {(!collapsed || hasFieldToDisplay) &&
-            <NodeContent>
-                <NodeForm>
-                    {
-                        fields.length > 0
-                            ? formFields
-                            : <div className="flex flex-col space-y-2 w-full items-center justify-center">
-                                <div className='flex flex-row w-2/3 items-center'>
-                                    <button
-                                        className="bg-slate-600 hover:bg-slate-400 rounded-2xl px-3 py-2 w-full"
-                                        onClick={handleButtonClick}
-                                    >
-                                        {t('ClickToSelectModel')}
-                                    </button>
-                                    {
-                                        showPopup
-                                        && <SelectModelPopup show={showPopup} onClose={handleClosePopup} onValidate={handleValidate} />
-                                    }
-                                </div>
-                                <p> {t('Or')} </p>
-                                <div className='flex flex-row  space-x-2 w-2/3'>
-                                    <NodeInput className='text-center'
-                                        placeholder={t('EnterModelNameDirectly') ?? ''}
-                                        onChange={(event) => setModelInput(event.target.value)} />
-                                    <button className='bg-sky-500 hover:bg-sky-400 p-2 rounded-lg' onClick={handleLoadModel}> {t('Load')} </button>
-                                </div>
-                            </div>
-                    }
-                </NodeForm>
-            </NodeContent>
-        }
-        <NodeLogs
-            showLogs={showLogs}
-            noPadding={outputIsMedia && showLogs}
-            onClick={() => setShowLogs(!showLogs)}
-        >
-            {showLogs && data.outputData && !outputIsMedia
-                && <StyledCopyIcon className="copy-icon hover:text-white" onClick={(event) => {
-                    handleCopyToClipboard(event);
-                }} />}
-            {!showLogs && data.outputData
-                ? <NodeLogsText className='text-center'>{t('ClickToShowOutput')}</NodeLogsText>
-                : getOutputComponent()}
-        </NodeLogs>
-    </NodeContainer>)
+  return (
+    <NodeContainer
+      key={id}
+      ref={nodeRef}
+      className={`flex h-full w-full flex-col`}
+    >
+      <NodeHeader onDoubleClick={toggleCollapsed}>
+        <NodeIcon>
+          <FaWaveSquare />
+        </NodeIcon>
+        <NodeTitle className="overflow-hidden text-ellipsis whitespace-nowrap px-5">
+          {modelNameToDisplay}
+        </NodeTitle>
+        <HandleWrapper
+          id={outputHandleId}
+          position={
+            !!data?.handles && data.handles[outputHandleId]
+              ? data.handles[outputHandleId]
+              : Position.Right
+          }
+          linkedHandlePositions={allHandlePositions}
+          onChangeHandlePosition={handleChangeHandlePosition}
+          isOutput
+        />
+        <NodePlayButton
+          isPlaying={isPlaying}
+          hasRun={!!data.lastRun}
+          onClick={handlePlayClick}
+          nodeName={data.name}
+        />
+      </NodeHeader>
+      <NodeBand />
+      {(!collapsed || hasFieldToDisplay) && (
+        <NodeContent>
+          <NodeForm>
+            {fields.length > 0 ? (
+              formFields
+            ) : (
+              <div className="flex w-full flex-col items-center justify-center space-y-2">
+                <div className="flex w-2/3 flex-row items-center">
+                  <button
+                    className="w-full rounded-2xl bg-slate-600 px-3 py-2 hover:bg-slate-400"
+                    onClick={handleButtonClick}
+                  >
+                    {t("ClickToSelectModel")}
+                  </button>
+                  {showPopup && (
+                    <SelectModelPopup
+                      show={showPopup}
+                      onClose={handleClosePopup}
+                      onValidate={handleValidate}
+                    />
+                  )}
+                </div>
+                <p> {t("Or")} </p>
+                <div className="flex w-2/3  flex-row space-x-2">
+                  <NodeInput
+                    className="text-center"
+                    placeholder={t("EnterModelNameDirectly") ?? ""}
+                    onChange={(event) => setModelInput(event.target.value)}
+                  />
+                  <button
+                    className="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"
+                    onClick={handleLoadModel}
+                  >
+                    {" "}
+                    {t("Load")}{" "}
+                  </button>
+                </div>
+              </div>
+            )}
+          </NodeForm>
+        </NodeContent>
+      )}
+      <NodeOutput
+        showLogs={showLogs}
+        onClickOutput={() => setShowLogs(!showLogs)}
+        data={data}
+      />
+    </NodeContainer>
+  );
 }
-
-const StyledCopyIcon = styled(FiCopy)`
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-  z-index: 1;
-  `;
-

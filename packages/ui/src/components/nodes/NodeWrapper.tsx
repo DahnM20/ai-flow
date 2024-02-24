@@ -34,7 +34,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   };
 
   const hideResizeWithDelay = () => {
-    hideResizeTimeout = setTimeout(() => setResize(false), 3000);
+    hideResizeTimeout = setTimeout(() => setResize(false), 5000);
   };
 
   const clearHideIconTimeout = () => {
