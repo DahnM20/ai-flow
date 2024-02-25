@@ -12,8 +12,11 @@ export async function getUploadAndDownloadUrl() {
   }
 }
 
-export async function uploadWithS3Link(s3UploadLink: string, file: File) {
+export async function uploadWithS3Link(s3UploadData: any, file: File) {
   const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
     onUploadProgress: (progressEvent: AxiosProgressEvent) => {
       if (!progressEvent.total) return;
 
@@ -26,7 +29,18 @@ export async function uploadWithS3Link(s3UploadLink: string, file: File) {
   };
 
   try {
-    await axios.put(s3UploadLink, file, config);
+    const url = s3UploadData.url;
+    const fields = s3UploadData.fields;
+
+    const formData = new FormData();
+
+    Object.keys(fields).forEach((key) => {
+      formData.append(key, fields[key]);
+    });
+
+    formData.append("file", file);
+
+    await axios.post(url, formData, config);
   } catch (error) {
     console.error("Error uploading file :", error);
     throw error;

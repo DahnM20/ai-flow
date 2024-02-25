@@ -16,12 +16,11 @@ def upload_file():
     logging.info("Uploading file")
     storage_strategy = root_injector.get(StorageStrategy)
 
-    link = storage_strategy.get_upload_link()
+    data = storage_strategy.get_upload_link()
 
     json_link = {
-        "upload_link": link[0],
-        "download_link": link[1],
+        "upload_data": data[0],
+        "download_link": data[1],
     }
-    logging.info(f"Link: {json_link}")
 
     return json_link

@@ -38,13 +38,11 @@ class S3StorageStrategy(CloudStorageStrategy):
     def get_upload_link(self) -> str:
         file_key = f"uploads/{uuid.uuid4()}"
 
-        upload_url = self.s3_client.generate_presigned_url(
-            ClientMethod="put_object",
-            Params={
-                "Bucket": self.BUCKET_NAME,
-                "Key": file_key,
-                # "ContentLength": self.MAX_UPLOAD_SIZE_BYTES,
-            },
+        upload_data = self.s3_client.generate_presigned_post(
+            Bucket=self.BUCKET_NAME,
+            Key=file_key,
+            Fields=None,
+            Conditions=[["content-length-range", 0, self.MAX_UPLOAD_SIZE_BYTES]],
             ExpiresIn=int(self.EXPIRATION.total_seconds()),
         )
 
@@ -54,7 +52,7 @@ class S3StorageStrategy(CloudStorageStrategy):
             ExpiresIn=int(self.EXPIRATION.total_seconds()),
         )
 
-        return upload_url, download_url
+        return upload_data, download_url
 
     def get_url(self, filename: str) -> str:
         """The URL is only given when the image is saved"""

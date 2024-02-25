@@ -292,3 +292,7 @@ export const LoadingIcon = styled(FaSpinner)`
   animation: ${spin} 1s linear infinite;
   font-size: 16px;
 `;
+
+export const LoadingSpinner = styled(FaSpinner)`
+  animation: ${spin} 1s linear infinite;
+`;

@@ -27,8 +27,9 @@ export default function OptionSelector<T>({
           <div
             key={option.name}
             className={`
-                        flex cursor-pointer flex-row items-center
-                        justify-center rounded-full
+                        flex cursor-pointer
+                        flex-row items-center
+                        justify-center rounded-lg
                         p-2
                         hover:bg-blue-400/50
                         ${isSelected ? "bg-blue-400 text-white" : " bg-slate-200/10 text-stone-100"}

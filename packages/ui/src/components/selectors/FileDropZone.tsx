@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Accept, useDropzone } from "react-dropzone";
 import { FaCheckCircle, FaFileAlt } from "react-icons/fa";
 
@@ -8,7 +7,11 @@ interface FileDropZoneProps {
   oneFile: boolean;
   dragActiveText?: string;
   dropZoneText?: string;
+  selectedFiles?: File[] | null;
+  maxSize?: number;
 }
+
+const DEFAULT_MAX_SIZE = 314572800; // 300 MB
 
 export default function FileDropZone({
   accept,
@@ -16,40 +19,45 @@ export default function FileDropZone({
   oneFile,
   dragActiveText = "Drop the file here",
   dropZoneText = "Drag and drop a file here or click to select",
+  selectedFiles,
+  maxSize,
 }: FileDropZoneProps) {
-  const [files, setFiles] = useState<File[] | null>(null);
-
   const {
     getRootProps,
     getInputProps,
     isDragActive = false,
   } = useDropzone({
     accept,
-    multiple: false,
-    onDrop: (acceptedFiles) => {
+    multiple: !oneFile,
+    maxSize: maxSize ?? DEFAULT_MAX_SIZE,
+    onDrop: (acceptedFiles, fileRejections) => {
+      if (fileRejections.length > 0) {
+        alert(
+          "Some files were rejected due to exceeding the maximum size limit of 300MB.",
+        );
+      }
+
       if (oneFile) {
         onAcceptFile([acceptedFiles[0]]);
-        setFiles([acceptedFiles[0]]);
         return;
       }
       onAcceptFile(acceptedFiles);
-      setFiles(acceptedFiles);
     },
   });
 
   return (
     <div
       className={`${isDragActive ? " border-sky-300 " : "border-slate-500 "} 
-        flex  flex-col items-center space-y-3 rounded-lg  border-2 border-dashed p-4 text-slate-200 transition-all hover:text-sky-300`}
+        flex  flex-col items-center space-y-3 rounded-lg  border-2 border-dashed p-20 text-slate-200 transition-all hover:text-sky-300`}
       {...getRootProps()}
     >
       <input {...getInputProps()} />
 
-      {files ? (
+      {!!selectedFiles ? (
         <>
           <FaCheckCircle className="text-4xl text-green-400" />
-          <p>{files.length} file(s) selected</p>
-          {files.map((file) => (
+          <p>{selectedFiles.length} file(s) selected</p>
+          {selectedFiles.map((file) => (
             <p key={file.name}>{file.name}</p>
           ))}
         </>
