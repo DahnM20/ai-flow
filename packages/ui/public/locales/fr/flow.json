@@ -70,5 +70,9 @@
     "MissingFields": "Champ manquant",
     "CannotDeleteLastFlow": "Impossible de supprimer le dernier Flow",
     "HideSidebar": "Cacher la barre",
-    "ShowSidebar": "Afficher la barre"
+    "ShowSidebar": "Afficher la barre",
+    "File": "Fichier",
+    "EnterUrlToDesiredFile": "Entrez l'URL",
+    "fileUploadHelp": "Utilisez ce noeud pour charger un fichier",
+    "llmPromptHelp": "Ce noeud permet d'envoyer des prompts à GPT-3.5 ou GPT-4"
 }

@@ -41,7 +41,7 @@ function getAllDndNode(): DnDNode[] {
       section: "tools",
     },
     {
-      label: "FileUpload",
+      label: "File",
       type: "file",
       helpMessage: "fileUploadHelp",
       section: "input",

@@ -71,5 +71,7 @@
     "MissingFields": "Missing fields",
     "CannotDeleteLastFlow": "Cannot delete the last flow",
     "HideSidebar": "Hide sidebar",
-    "ShowSidebar": "Show sidebar"
+    "ShowSidebar": "Show sidebar",
+    "fileUploadHelp": "This node can be used to load a file.",
+    "llmPromptHelp": "This node allows you to send prompt to GPT-3.5 or GPT-4"
 }

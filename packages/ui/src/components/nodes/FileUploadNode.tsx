@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { FaFileAlt, FaImage, FaLink } from "react-icons/fa";
+import { FaFileAlt, FaLink } from "react-icons/fa";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import HandleWrapper from "../handles/HandleWrapper";
 import { generateIdForHandle } from "../../utils/flowUtils";
@@ -77,6 +77,13 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
     useState<FileChoice | null>(data?.fileChoiceSelected);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (data.isDone) {
+      setIsPlaying(false);
+    }
+    updateNodeInternals(id);
+  }, [data.lastRun, data.outputData]);
 
   async function processFiles(files: File[]) {
     if (!files || files.length === 0) return;
