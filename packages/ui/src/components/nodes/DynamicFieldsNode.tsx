@@ -55,7 +55,7 @@ export default function DynamicFieldsNode({
   );
   const [modelInput, setModelInput] = useState<string>("");
 
-  const { getIncomingEdges, showOnlyOutput, isRunning, onUpdateNodeData } =
+  const { getIncomingEdges, showOnlyOutput, onUpdateNodeData } =
     useContext(NodeContext);
 
   const { t } = useTranslation("flow");

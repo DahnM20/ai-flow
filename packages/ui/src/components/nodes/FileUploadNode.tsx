@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaFileAlt, FaImage, FaLink } from "react-icons/fa";
-import { NodeProps, Handle, Position, useUpdateNodeInternals } from "reactflow";
+import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import HandleWrapper from "../handles/HandleWrapper";
 import { generateIdForHandle } from "../../utils/flowUtils";
 import { NodeContext } from "../../providers/NodeProvider";
 import { useIsPlaying } from "../../hooks/useIsPlaying";
 import NodePlayButton from "./node-button/NodePlayButton";
 import {
-  LoadingIcon,
+  LoadingSpinner,
   NodeBand,
   NodeContainer,
   NodeHeader,
   NodeIcon,
-  NodeInput,
   NodeTitle,
 } from "./Node.styles";
 import { useTranslation } from "react-i18next";
@@ -59,9 +58,9 @@ const accept = {
   "application/pdf": [".pdf"],
 };
 
-const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
-  const { hasParent, showOnlyOutput, isRunning, onUpdateNodeData } =
-    useContext(NodeContext);
+const FileUploadNode = ({ data, id }: GenericNodeProps) => {
+  const { onUpdateNodeData } = useContext(NodeContext);
+
   const { t } = useTranslation("flow");
   const [files, setFiles] = useState<File[] | null>(null);
   const updateNodeInternals = useUpdateNodeInternals();
@@ -79,48 +78,50 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    async function processFiles(files: File[]) {
-      if (!files || files.length === 0) return;
+  async function processFiles(files: File[]) {
+    if (!files || files.length === 0) return;
 
-      let urls;
-      let uploadError: boolean = false;
-      setIsLoading(true);
+    let urls;
+    let uploadError: boolean = false;
+    setIsLoading(true);
 
-      try {
-        urls = await getUploadAndDownloadUrl();
-        const uploadUrl = urls.upload_link;
-        await uploadWithS3Link(uploadUrl, files[0]);
-      } catch (error) {
-        toastErrorMessage(t("error.upload_failed") as string);
-        console.log(error);
-        uploadError = true;
-      } finally {
-        setIsLoading(false);
-        if (uploadError) return;
-      }
-
-      const outputType = getOutputTypeFromExtension(files[0].name);
-
-      onUpdateNodeData(id, {
-        ...data,
-        fileUrl: urls.download_link,
-        outputData: urls.download_link,
-        lastRun: new Date(),
-        config: {
-          ...data.config,
-          outputType,
-        },
-      });
-
-      setShowLogs(true);
-      setCollapsed(true);
+    try {
+      urls = await getUploadAndDownloadUrl();
+      const uploadData = urls.upload_data;
+      await uploadWithS3Link(uploadData, files[0]);
+    } catch (error) {
+      toastErrorMessage(t("error.upload_failed") as string);
+      console.log(error);
+      uploadError = true;
+      setFiles(null);
+    } finally {
+      setIsLoading(false);
+      if (uploadError) return;
     }
 
+    const outputType = getOutputTypeFromExtension(files[0].name);
+
+    onUpdateNodeData(id, {
+      ...data,
+      fileUrl: urls.download_link,
+      outputData: urls.download_link,
+      lastRun: new Date(),
+      config: {
+        ...data.config,
+        outputType,
+      },
+    });
+
+    setShowLogs(true);
+    setCollapsed(true);
+  }
+
+  const handleAcceptFiles = (files: File[]) => {
     if (files) {
+      setFiles(files);
       processFiles(files);
     }
-  }, [files]);
+  };
 
   const handleChangeHandlePosition = (
     newPosition: Position,
@@ -167,7 +168,7 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
     setFileChoiceSelected(choice);
     onUpdateNodeData(id, {
       ...data,
-      fileChoiceSelected,
+      fileChoiceSelected: choice,
     });
   }
 
@@ -177,7 +178,7 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
     <NodeContainer>
       <NodeHeader onDoubleClick={toggleCollapsed}>
         <NodeIcon>
-          <FaImage />
+          <FaFileAlt />
         </NodeIcon>
         <NodeTitle>{t("File")}</NodeTitle>
         <HandleWrapper
@@ -200,22 +201,29 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
       <NodeBand />
 
       {!hideFields && (
-        <OptionSelector
-          onSelectOption={(option) => handleFileChoiceSelected(option.value)}
-          options={fileChoices}
-          selectedOption={fileChoiceSelected}
-        />
+        <div className="p-2 text-3xl">
+          <OptionSelector
+            onSelectOption={(option) => handleFileChoiceSelected(option.value)}
+            options={fileChoices}
+            selectedOption={fileChoiceSelected}
+          />
+        </div>
       )}
 
       {isLoading && (
-        <div className="my-2 flex w-full items-center justify-center text-center text-4xl text-blue-400">
-          <LoadingIcon />
+        <div className="my-2 flex w-full items-center justify-center p-2 text-center text-2xl text-teal-400">
+          <LoadingSpinner />
         </div>
       )}
 
       {!hideFields && fileChoiceSelected === "upload" && (
         <div className="px-5 py-3">
-          <FileDropZone accept={accept} onAcceptFile={setFiles} oneFile />
+          <FileDropZone
+            accept={accept}
+            onAcceptFile={handleAcceptFiles}
+            selectedFiles={files}
+            oneFile
+          />
         </div>
       )}
 
@@ -223,7 +231,7 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
         <div className="text-slate-200">
           <InputWithButton
             buttonText={t("Load") ?? ""}
-            inputPlaceholder={t("EnterModelNameDirectly") ?? ""}
+            inputPlaceholder={t("EnterUrlToDesiredFile") ?? ""}
             onInputChange={setUrl}
             onButtonClick={handleSetFileViaURL}
             inputClassName="text-center"
