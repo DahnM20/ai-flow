@@ -13,7 +13,6 @@ import VideoUrlOutput from "./VideoUrlOutput";
 import AudioUrlOutput from "./AudioUrlOutput";
 import { getOutputTypeFromExtension } from "./outputUtils";
 import PdfUrlOutput from "./PdfUrlOutput";
-import GlbOutput from "./GLBOutput";
 
 interface NodeOutputProps {
   data: NodeData;
