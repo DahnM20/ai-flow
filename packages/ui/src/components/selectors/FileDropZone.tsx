@@ -17,6 +17,8 @@ export default function FileDropZone({
   dragActiveText = "Drop the file here",
   dropZoneText = "Drag and drop a file here or click to select",
 }: FileDropZoneProps) {
+  const [files, setFiles] = useState<File[] | null>(null);
+
   const {
     getRootProps,
     getInputProps,
@@ -27,13 +29,13 @@ export default function FileDropZone({
     onDrop: (acceptedFiles) => {
       if (oneFile) {
         onAcceptFile([acceptedFiles[0]]);
+        setFiles([acceptedFiles[0]]);
         return;
       }
       onAcceptFile(acceptedFiles);
+      setFiles(acceptedFiles);
     },
   });
-
-  const [files, setFiles] = useState<File[] | null>(null);
 
   return (
     <div
