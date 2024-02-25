@@ -23,9 +23,11 @@ const extensionToTypeMap: { [key: string]: string } = {
   // Other extensions
   ".pdf": "markdown",
   ".txt": "markdown",
+  ".glb": "markdown",
 };
 
 export function getOutputTypeFromExtension(output: string) {
+  if (!output) return "markdown";
   const extension = Object.keys(extensionToTypeMap).find((ext) =>
     output.endsWith(ext),
   );

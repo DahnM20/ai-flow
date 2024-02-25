@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Accept, useDropzone } from "react-dropzone";
-import { FaFileAlt, FaCheckCircle, FaImage } from "react-icons/fa";
+import { FaFileAlt, FaImage, FaLink } from "react-icons/fa";
 import { NodeProps, Handle, Position, useUpdateNodeInternals } from "reactflow";
 import HandleWrapper from "../handles/HandleWrapper";
 import { generateIdForHandle } from "../../utils/flowUtils";
@@ -16,18 +15,48 @@ import {
   NodeTitle,
 } from "./Node.styles";
 import { useTranslation } from "react-i18next";
-import { getRestApiUrl } from "../../config/config";
-import { toastInfoMessage } from "../../utils/toastUtils";
-import axios, { AxiosProgressEvent } from "axios";
+import { toastErrorMessage } from "../../utils/toastUtils";
 import { GenericNodeData } from "./types/node";
 import { getOutputTypeFromExtension } from "./node-output/outputUtils";
 import NodeOutput from "./node-output/NodeOutput";
+import OptionSelector, { Option } from "../selectors/OptionSelector";
+import InputWithButton from "../inputs/InputWithButton";
+import FileDropZone from "../selectors/FileDropZone";
+import {
+  getUploadAndDownloadUrl,
+  uploadWithS3Link,
+} from "../../api/uploadFile";
 
 interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
   id: string;
   selected: boolean;
 }
+
+type FileChoice = "url" | "upload";
+
+const fileChoices: Option<FileChoice>[] = [
+  {
+    name: "URL",
+    icon: <FaLink />,
+    value: "url",
+  },
+  {
+    name: "Upload",
+    icon: <FaFileAlt />,
+    value: "upload",
+  },
+];
+
+const accept = {
+  "video/mp4": [".mp4"],
+  "audio/mpeg": [".mp3"],
+  "image/png": [".png"],
+  "image/jpeg": [".jpg", ".jpeg"],
+  "image/gif": [".gif"],
+  "text/plain": [".txt"],
+  "application/pdf": [".pdf"],
+};
 
 const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
   const { hasParent, showOnlyOutput, isRunning, onUpdateNodeData } =
@@ -44,67 +73,24 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
   );
   const [url, setUrl] = useState<string | null>(null);
 
-  const accept = {
-    "video/mp4": [".mp4"],
-    "audio/mpeg": [".mp3"],
-    "image/png": [".png"],
-    "image/jpeg": [".jpg", ".jpeg"],
-    "image/gif": [".gif"],
-    "text/plain": [".txt"],
-    "application/pdf": [".pdf"],
-  };
-
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive = false,
-  } = useDropzone({
-    accept,
-    multiple: false,
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles && acceptedFiles.length == 1) {
-        setFiles(acceptedFiles);
-      }
-    },
-  });
-
-  async function getUploadAndDownloadUrl() {
-    try {
-      const url = `${getRestApiUrl()}/upload`;
-      const response = await axios.get(url);
-      return response.data;
-    } catch (error) {
-      toastInfoMessage("Error uploading file ");
-      console.error("Error uploading file :", error);
-      throw error;
-    }
-  }
+  const [fileChoiceSelected, setFileChoiceSelected] =
+    useState<FileChoice | null>(data?.fileChoiceSelected);
 
   useEffect(() => {
     async function processFiles(files: File[]) {
       if (!files || files.length === 0) return;
 
-      const urls = await getUploadAndDownloadUrl();
+      let urls;
 
-      console.log("URLS : ", urls);
-
-      const uploadUrl = urls.upload_link;
-
-      console.log("Upload URL : ", uploadUrl);
-
-      const config = {
-        onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-          if (!progressEvent.total) return;
-
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total,
-          );
-
-          console.log(`Upload progress: ${percentCompleted}%`);
-        },
-      };
-
-      await axios.put(uploadUrl, files[0], config);
+      try {
+        urls = await getUploadAndDownloadUrl();
+        const uploadUrl = urls.upload_link;
+        await uploadWithS3Link(uploadUrl, files[0]);
+      } catch (error) {
+        toastErrorMessage(t("error.upload_failed") as string);
+        console.log(error);
+        return;
+      }
 
       const outputType = getOutputTypeFromExtension(files[0].name);
 
@@ -121,9 +107,6 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
 
       setShowLogs(true);
       setCollapsed(true);
-
-      console.log("File successfully uploaded");
-      console.log(urls.download_link);
     }
 
     if (files) {
@@ -172,13 +155,21 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
     setCollapsed(true);
   };
 
+  function handleFileChoiceSelected(choice: FileChoice | null) {
+    setFileChoiceSelected(choice);
+    onUpdateNodeData(id, {
+      ...data,
+      fileChoiceSelected,
+    });
+  }
+
   return (
     <NodeContainer>
       <NodeHeader onDoubleClick={toggleCollapsed}>
         <NodeIcon>
           <FaImage />
         </NodeIcon>
-        <NodeTitle>{"File"}</NodeTitle>
+        <NodeTitle>{t("File")}</NodeTitle>
         <HandleWrapper
           id={generateIdForHandle(0)}
           position={
@@ -197,51 +188,26 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
         />
       </NodeHeader>
       <NodeBand />
-      {collapsed ? null : (
-        <div
-          className={`${isDragActive ? " border-sky-300 " : "border-slate-500 "} 
-        m-5 flex  flex-col items-center space-y-3 rounded-lg  border-2 border-dashed p-4 text-slate-200 transition-all hover:text-sky-300`}
-          {...getRootProps()}
-        >
-          <input {...getInputProps()} />
-
-          {files ? (
-            <>
-              <FaCheckCircle className="text-4xl text-green-400" />
-              <p>{files.length} file(s) selected</p>
-              {files.map((file) => (
-                <p key={file.name}>{file.name}</p>
-              ))}
-            </>
-          ) : (
-            <>
-              <FaFileAlt className="text-4xl" />
-              <p className="text-center text-lg">
-                {isDragActive
-                  ? "Drop the file here"
-                  : "Drag and drop a file here or click to select"}
-              </p>
-            </>
-          )}
+      <OptionSelector
+        onSelectOption={(option) => handleFileChoiceSelected(option.value)}
+        options={fileChoices}
+        selectedOption={fileChoiceSelected}
+      />
+      {!collapsed && fileChoiceSelected === "upload" && (
+        <div className="px-5 py-3">
+          <FileDropZone accept={accept} onAcceptFile={setFiles} oneFile />
         </div>
       )}
-      {!collapsed && !files && (
-        <div className="flex w-full flex-col items-center justify-center space-y-2 px-2 pb-4 text-slate-200">
-          <p> {t("Or")} </p>
-          <div className="flex w-2/3  flex-row space-x-2">
-            <NodeInput
-              className="text-center"
-              placeholder={t("EnterModelNameDirectly") ?? ""}
-              onChange={(event) => setUrl(event.target.value)}
-            />
-            <button
-              className="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"
-              onClick={handleSetFileViaURL}
-            >
-              {" "}
-              {t("Load")}{" "}
-            </button>
-          </div>
+      {!collapsed && fileChoiceSelected === "url" && (
+        <div className="text-slate-200">
+          <InputWithButton
+            buttonText={t("Load") ?? ""}
+            inputPlaceholder={t("EnterModelNameDirectly") ?? ""}
+            onInputChange={setUrl}
+            onButtonClick={handleSetFileViaURL}
+            inputClassName="text-center"
+            buttonClassName="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"
+          />
         </div>
       )}
       <NodeOutput

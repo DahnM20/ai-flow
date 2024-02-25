@@ -24,17 +24,17 @@ import useHandlePositions from "../../hooks/useHandlePositions";
 import { useFormFields } from "../../hooks/useFormFields";
 import NodeOutput from "./node-output/NodeOutput";
 
-interface GenericNodeProps {
+interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
   id: string;
   selected: boolean;
 }
 
-const GenericNode: React.FC<NodeProps> = React.memo(
+const GenericNode: React.FC<GenericNodeProps> = React.memo(
   ({ data, id, selected }) => {
     const { t } = useTranslation("flow");
 
-    const { hasParent, showOnlyOutput, onUpdateNodeData } =
+    const { hasParent, showOnlyOutput, onUpdateNodeData, getNodeDimensions } =
       useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
@@ -160,8 +160,15 @@ const GenericNode: React.FC<NodeProps> = React.memo(
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
+    const dimensions = getNodeDimensions(id);
+    // console.log(dimensions);
+
     return (
-      <NodeContainer key={id} className={`flex h-full w-full flex-col`}>
+      <NodeContainer
+        key={id}
+        className={`flex h-full w-full flex-col`}
+        width={dimensions?.width ?? undefined}
+      >
         <NodeHeader onDoubleClick={toggleCollapsed}>
           {data.config.hasInputHandle && (
             <>

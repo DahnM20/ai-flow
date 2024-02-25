@@ -1,37 +1,46 @@
-import React, { memo } from 'react';
-import { FaDownload } from 'react-icons/fa';
-import styled from 'styled-components';
+import React, { memo } from "react";
+import { FaDownload } from "react-icons/fa";
+import styled from "styled-components";
 
 interface ImageBase64OutputProps {
   data: string;
   name: string;
-  lastRun: string;
+  lastRun?: string;
 }
 
-const ImageBase64Output: React.FC<ImageBase64OutputProps> = ({ data, name, lastRun }) => {
-
-  const blob = new Blob([new Uint8Array(atob(data).split("").map(function (c) {
-    return c.charCodeAt(0);
-  }))]);
+const ImageBase64Output: React.FC<ImageBase64OutputProps> = ({
+  data,
+  name,
+  lastRun,
+}) => {
+  const blob = new Blob([
+    new Uint8Array(
+      atob(data)
+        .split("")
+        .map(function (c) {
+          return c.charCodeAt(0);
+        }),
+    ),
+  ]);
 
   const url = URL.createObjectURL(blob);
 
-
   const handleDownloadClick = () => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = name + '-output-generated.jpg';
-    link.target = '_blank';
+    link.download = name + "-output-generated.jpg";
+    link.target = "_blank";
     link.click();
   };
 
-
-  return <OutputImageContainer>
-    <OutputImage src={url} alt="Output Image" />
-    <DownloadButton onClick={handleDownloadClick}>
-      <FaDownload />
-    </DownloadButton>
-  </OutputImageContainer>
+  return (
+    <OutputImageContainer>
+      <OutputImage src={url} alt="Output Image" />
+      <DownloadButton onClick={handleDownloadClick}>
+        <FaDownload />
+      </DownloadButton>
+    </OutputImageContainer>
+  );
 };
 
 const OutputImageContainer = styled.div`
@@ -65,7 +74,10 @@ const DownloadButton = styled.a`
     background-color: #0d47a1;
   }
 `;
-function arePropsEqual(prevProps: ImageBase64OutputProps, nextProps: ImageBase64OutputProps) {
+function arePropsEqual(
+  prevProps: ImageBase64OutputProps,
+  nextProps: ImageBase64OutputProps,
+) {
   return prevProps.lastRun === nextProps.lastRun;
 }
 

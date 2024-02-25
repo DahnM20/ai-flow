@@ -12,6 +12,7 @@ class S3StorageStrategy(CloudStorageStrategy):
     """S3 storage strategy. For the cloud version, every generated image is saved in an S3 bucket for 12H."""
 
     BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
+    HOURS_BEFORE_EXPIRATION = int(os.getenv("S3_LINK_HOURS_BEFORE_EXPIRATION", "12"))
     EXPIRATION = timedelta(hours=12)
     MAX_UPLOAD_SIZE_BYTES = int(os.getenv("MAX_UPLOAD_SIZE_MB", "300")) * 1024 * 1024
 

@@ -32,6 +32,7 @@ import {
 } from "../../utils/openAPIUtils";
 import { NodeData } from "./types/node";
 import NodeOutput from "./node-output/NodeOutput";
+import InputWithButton from "../inputs/InputWithButton";
 
 interface DynamicFieldsNodeData extends NodeData {
   schema: any;
@@ -315,19 +316,15 @@ export default function DynamicFieldsNode({
                   )}
                 </div>
                 <p> {t("Or")} </p>
-                <div className="flex w-2/3  flex-row space-x-2">
-                  <NodeInput
-                    className="text-center"
-                    placeholder={t("EnterModelNameDirectly") ?? ""}
-                    onChange={(event) => setModelInput(event.target.value)}
+                <div className="w-full text-slate-200">
+                  <InputWithButton
+                    buttonText={t("Load") ?? ""}
+                    inputPlaceholder={t("EnterModelNameDirectly") ?? ""}
+                    onInputChange={setModelInput}
+                    onButtonClick={handleLoadModel}
+                    inputClassName="text-center"
+                    buttonClassName="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"
                   />
-                  <button
-                    className="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"
-                    onClick={handleLoadModel}
-                  >
-                    {" "}
-                    {t("Load")}{" "}
-                  </button>
                 </div>
               </div>
             )}

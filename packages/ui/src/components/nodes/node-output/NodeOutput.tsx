@@ -13,6 +13,7 @@ import VideoUrlOutput from "./VideoUrlOutput";
 import AudioUrlOutput from "./AudioUrlOutput";
 import { getOutputTypeFromExtension } from "./outputUtils";
 import PdfUrlOutput from "./PdfUrlOutput";
+import GlbOutput from "./GLBOutput";
 
 interface NodeOutputProps {
   data: NodeData;
@@ -36,7 +37,7 @@ export default function NodeOutput({
   };
 
   const getOutputComponent = () => {
-    if (!data.outputData || !data.lastRun) return <></>;
+    if (!data.outputData) return <></>;
 
     let output = data.outputData;
 
@@ -71,17 +72,17 @@ export default function NodeOutput({
       return data.config.outputType;
     }
 
-    if (!data.outputData || !data.lastRun) {
+    if (!data.outputData) {
       return "markdown";
     }
 
     let outputData = data.outputData;
     let output = "";
 
-    if (typeof output !== "string") {
+    if (typeof outputData !== "string") {
       output = outputData[0];
     } else {
-      output = outputData[0];
+      output = outputData;
     }
 
     const outputType = getOutputTypeFromExtension(output);

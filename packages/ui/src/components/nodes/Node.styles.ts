@@ -81,8 +81,9 @@ export const NodeIcon = styled.div`
   font-size: 1.5em;
 `;
 
-export const NodeContainer = styled.div`
+export const NodeContainer = styled.div<{ width?: number }>`
   min-width: 450px;
+  max-width: ${({ width }) => (!!width && width > 450 ? "1500px" : "450px")};
 
   background: ${({ theme }) => theme.nodeGradientBg};
   background-color: ${({ theme }) => theme.bg};
