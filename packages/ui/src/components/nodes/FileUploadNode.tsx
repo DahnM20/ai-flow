@@ -7,6 +7,7 @@ import { NodeContext } from "../../providers/NodeProvider";
 import { useIsPlaying } from "../../hooks/useIsPlaying";
 import NodePlayButton from "./node-button/NodePlayButton";
 import {
+  LoadingIcon,
   NodeBand,
   NodeContainer,
   NodeHeader,
@@ -76,11 +77,15 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
   const [fileChoiceSelected, setFileChoiceSelected] =
     useState<FileChoice | null>(data?.fileChoiceSelected);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   useEffect(() => {
     async function processFiles(files: File[]) {
       if (!files || files.length === 0) return;
 
       let urls;
+      let uploadError: boolean = false;
+      setIsLoading(true);
 
       try {
         urls = await getUploadAndDownloadUrl();
@@ -89,7 +94,10 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
       } catch (error) {
         toastErrorMessage(t("error.upload_failed") as string);
         console.log(error);
-        return;
+        uploadError = true;
+      } finally {
+        setIsLoading(false);
+        if (uploadError) return;
       }
 
       const outputType = getOutputTypeFromExtension(files[0].name);
@@ -163,6 +171,8 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
     });
   }
 
+  const hideFields = isLoading || collapsed;
+
   return (
     <NodeContainer>
       <NodeHeader onDoubleClick={toggleCollapsed}>
@@ -188,17 +198,28 @@ const FileUploadNode = ({ data, id, selected }: GenericNodeProps) => {
         />
       </NodeHeader>
       <NodeBand />
-      <OptionSelector
-        onSelectOption={(option) => handleFileChoiceSelected(option.value)}
-        options={fileChoices}
-        selectedOption={fileChoiceSelected}
-      />
-      {!collapsed && fileChoiceSelected === "upload" && (
+
+      {!hideFields && (
+        <OptionSelector
+          onSelectOption={(option) => handleFileChoiceSelected(option.value)}
+          options={fileChoices}
+          selectedOption={fileChoiceSelected}
+        />
+      )}
+
+      {isLoading && (
+        <div className="my-2 flex w-full items-center justify-center text-center text-4xl text-blue-400">
+          <LoadingIcon />
+        </div>
+      )}
+
+      {!hideFields && fileChoiceSelected === "upload" && (
         <div className="px-5 py-3">
           <FileDropZone accept={accept} onAcceptFile={setFiles} oneFile />
         </div>
       )}
-      {!collapsed && fileChoiceSelected === "url" && (
+
+      {!hideFields && fileChoiceSelected === "url" && (
         <div className="text-slate-200">
           <InputWithButton
             buttonText={t("Load") ?? ""}
