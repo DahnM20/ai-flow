@@ -1,7 +1,7 @@
-import React from 'react';
-import { FaDownload } from 'react-icons/fa';
-import styled from 'styled-components';
-import { getGeneratedFileName } from './outputUtils';
+import React from "react";
+import { FaDownload } from "react-icons/fa";
+import styled from "styled-components";
+import { getGeneratedFileName } from "./outputUtils";
 
 interface ImageUrlOutputProps {
   url: string;
@@ -9,25 +9,26 @@ interface ImageUrlOutputProps {
 }
 
 const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
-
   const handleDownloadClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = getGeneratedFileName(url, name);
-    link.target = '_blank';
+    link.target = "_blank";
     link.click();
   };
 
-
-  return <OutputImageContainer>
-    <OutputImage src={url} alt="Output Image" />
-    <div
-      className='absolute top-2 right-3 px-1 py-1 text-slate-100 text-2xl bg-slate-600/75 hover:bg-sky-600/90 rounded-md'
-      onClick={handleDownloadClick}>
-      <FaDownload />
-    </div>
-  </OutputImageContainer>
+  return (
+    <OutputImageContainer>
+      <OutputImage src={url} alt="Output Image" />
+      <div
+        className="absolute right-3 top-2 rounded-md bg-slate-600/75 px-1 py-1 text-2xl text-slate-100 hover:bg-sky-600/90"
+        onClick={handleDownloadClick}
+      >
+        <FaDownload />
+      </div>
+    </OutputImageContainer>
+  );
 };
 
 const OutputImageContainer = styled.div`

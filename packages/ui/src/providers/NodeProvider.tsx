@@ -29,7 +29,9 @@ interface NodeContextType {
   getNodeDimensions: (nodeId: string) => NodeDimensions | undefined;
   duplicateNode: (nodeId: string) => void;
   clearNodeOutput: (nodeId: string) => void;
+  clearAllOutput: () => void;
   removeNode: (nodeId: string) => void;
+  removeAll: () => void;
   findNode: (nodeId: string) => Node | undefined;
   nodes: Node[];
   edges: Edge[];
@@ -51,7 +53,9 @@ export const NodeContext = createContext<NodeContextType>({
   getNodeDimensions: () => undefined,
   duplicateNode: () => undefined,
   clearNodeOutput: () => undefined,
+  clearAllOutput: () => undefined,
   removeNode: () => undefined,
+  removeAll: () => undefined,
   findNode: () => undefined,
   nodes: [],
   edges: [],
@@ -169,12 +173,25 @@ export const NodeProvider = ({
     }
   };
 
+  function clearAllOutput() {
+    const nodesCleared = nodes.map((node) => {
+      node.data.outputData = undefined;
+      node.data.lastRun = undefined;
+      return node;
+    });
+    onUpdateNodes(nodesCleared, edges);
+  }
+
   const removeNode = (nodeId: string) => {
     const nodesUpdated = nodes.filter((node) => node.id !== nodeId);
     const edgesUpdated = edges.filter(
       (edge) => edge.source !== nodeId && edge.target !== nodeId,
     );
     onUpdateNodes(nodesUpdated, edgesUpdated);
+  };
+
+  const removeAll = () => {
+    onUpdateNodes([], []);
   };
 
   const findNode = (nodeId: string) => {
@@ -197,7 +214,9 @@ export const NodeProvider = ({
         getNodeDimensions,
         duplicateNode,
         clearNodeOutput,
+        clearAllOutput,
         removeNode,
+        removeAll,
         findNode,
         nodes,
         edges,

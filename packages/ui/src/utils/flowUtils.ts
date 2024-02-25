@@ -88,7 +88,7 @@ export const getTargetHandleKey: any = (edge: Edge) => {
   return edge?.targetHandle?.split(handleSeparator)[indexKeyHandleIn];
 };
 
-export function clearAllOutput(nodes: Node[]) {
+export function clearSelectedNodes(nodes: Node[]) {
   return nodes.map((node) => {
     node.data.outputData = undefined;
     node.data.lastRun = undefined;

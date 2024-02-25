@@ -2,7 +2,7 @@ import React, { useContext, memo, useState } from "react";
 import { FiCrosshair, FiDownload, FiSave, FiUpload } from "react-icons/fi";
 import { Edge, Node } from "reactflow";
 import {
-  clearAllOutput,
+  clearSelectedNodes,
   convertFlowToJson,
   convertJsonToFlow,
   nodesTopologicalSort,
@@ -25,7 +25,7 @@ interface JSONViewProps {
 
 const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
   const { t } = useTranslation("flow");
-  const { onUpdateNodes } = useContext(NodeContext);
+  const { removeAll, clearAllOutput } = useContext(NodeContext);
   const [showFieldsConfig, setShowFieldsConfig] = useState(false);
   const [showCoordinates, setShowCoordinates] = useState(true);
   const [showAddTemplatePopup, setShowAddTemplatePopup] = useState(false);
@@ -76,17 +76,8 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
     link.remove();
   };
 
-  const handleDeleteOutput = () => {
-    const nodesCleared = clearAllOutput(nodes);
-    onUpdateNodes(nodesCleared, edges);
-  };
-
-  const handleDeleteAll = () => {
-    onUpdateNodes([], []);
-  };
-
   const handleSaveAsTemplate = async (data: TemplateFormData) => {
-    const nodesCleared = clearAllOutput(nodes);
+    const nodesCleared = clearSelectedNodes(nodes);
     const flowData = convertFlowToJson(nodesCleared, edges, true, true);
 
     const template = {
@@ -122,11 +113,11 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
             <FiDownload />
             {t("Download")}
           </JSONViewButton>
-          <JSONViewButton onClick={handleDeleteOutput} dangerous>
+          <JSONViewButton onClick={clearAllOutput} dangerous>
             <FiCrosshair />
             {t("Delete Output")}
           </JSONViewButton>
-          <JSONViewButton onClick={handleDeleteAll} dangerous>
+          <JSONViewButton onClick={removeAll} dangerous>
             <FaExclamationTriangle />
             {t("Delete All")}
           </JSONViewButton>

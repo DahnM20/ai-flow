@@ -1,12 +1,12 @@
 import { ReactNode, memo, useCallback, useState } from "react";
 import { FiHelpCircle } from "react-icons/fi";
 import ConfigPopup from "../../../components/popups/config-popup/ConfigPopup";
-import HelpPopup from "../../../components/popups/HelpPopup";
 import DnDSidebar from "../../../components/bars/dnd-sidebar/DnDSidebar";
 import RightIconButton from "../../../components/buttons/ConfigurationButton";
 import ModeBar from "../sidebar/ModeBar";
 import { ApplicationMenu, ApplicationMode } from "../AppLayout";
 import TemplatePopup from "../../../components/popups/TemplatePopup";
+import HelpPopup from "../../../components/popups/HelpPopup";
 
 interface FlowWrapperProps {
   children?: ReactNode;
@@ -72,16 +72,21 @@ function FlowWrapper({
         bottom="80px"
         icon={<FiHelpCircle />}
       />
+
       <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
-      <HelpPopup
-        isOpen={menuState["help"]}
-        onClose={() => handleMenuChange("help")}
-      />
-      <TemplatePopup
-        isOpen={menuState["template"]}
-        onValidate={onAddNewFlow}
-        onClose={() => handleMenuChange("template")}
-      />
+      {menuState["help"] && (
+        <HelpPopup
+          isOpen={menuState["help"]}
+          onClose={() => handleMenuChange("help")}
+        />
+      )}
+      {menuState["template"] && (
+        <TemplatePopup
+          isOpen={menuState["template"]}
+          onValidate={onAddNewFlow}
+          onClose={() => handleMenuChange("template")}
+        />
+      )}
       {children}
     </>
   );
