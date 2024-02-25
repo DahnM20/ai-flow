@@ -146,8 +146,8 @@ export function convertFlowToJson(
 
     if (withCoordinates) {
       return {
-        inputs,
         ...nodeValues,
+        inputs,
         config: withConfig ? configEssentials : undefined,
         x: node.position.x,
         y: node.position.y,
