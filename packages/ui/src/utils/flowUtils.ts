@@ -154,8 +154,8 @@ export function convertFlowToJson(
       };
     } else {
       return {
-        inputs,
         ...nodeValues,
+        inputs,
         config: withConfig ? configEssentials : undefined,
       };
     }
