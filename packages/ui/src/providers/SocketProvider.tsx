@@ -1,19 +1,18 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import { getWsUrl } from "../config/config";
 import { APIKeys } from "../components/popups/config-popup/ApiKeys";
 import { toastInfoMessage } from "../utils/toastUtils";
 import { useTranslation } from "react-i18next";
+import { FlowEventOut, FlowSocket } from "../utils/flowSocket";
 
 export interface FlowEventData {
   jsonFile: string;
   nodeName?: string;
 }
 
-export type FlowEventName = "run_node" | "process_file";
-
 export interface FlowEvent {
-  name: FlowEventName;
+  name: FlowEventOut;
   data: FlowEventData;
 }
 
@@ -22,7 +21,7 @@ export type WSConfiguration = {
 };
 
 interface ISocketContext {
-  socket: Socket | null;
+  socket: FlowSocket | null;
   config: WSConfiguration | null;
   updateConfig: (config: WSConfiguration) => void;
   emitEvent: (event: FlowEvent) => boolean;
@@ -40,7 +39,7 @@ export const SocketContext = createContext<ISocketContext>({
 });
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [socket, setSocket] = useState<FlowSocket | null>(null);
   const [config, setConfig] = useState<WSConfiguration | null>(null);
 
   const { t } = useTranslation("flow");
@@ -74,7 +73,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     }
   }
 
-  function getActiveSocket(): Socket | null {
+  function getActiveSocket(): FlowSocket | null {
     if (!socket && !!config) {
       return createNewSocket(config);
     }
@@ -84,7 +83,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   function createNewSocket(configuration: WSConfiguration) {
     setConfig(configuration);
 
-    const newSocket = io(getWsUrl());
+    const newSocket = new FlowSocket(io(getWsUrl()));
 
     setSocket(newSocket);
     return newSocket;
