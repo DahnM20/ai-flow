@@ -2,18 +2,20 @@ import { useState } from "react";
 
 type AsyncFunction<T extends any[], N> = (...args: T) => Promise<N>;
 
-type LoadingAction<T extends any[], N> = (
+type Params<T> = T extends (...args: infer U) => any ? U : never;
+
+type StartLoadingWith = <T extends any[], N>(
   func: AsyncFunction<T, N>,
-  ...args: T
+  ...args: Params<AsyncFunction<T, N>>
 ) => Promise<N>;
 
-export const useLoading = <T extends any[], N>(): [
+export const useLoading = (): [
   isLoading: boolean,
-  startLoadingWith: LoadingAction<T, N>,
+  startLoadingWith: StartLoadingWith,
 ] => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const startLoadingWith: LoadingAction<T, N> = async (func, ...args) => {
+  const startLoadingWith: StartLoadingWith = async (func, ...args) => {
     setIsLoading(true);
     try {
       const result = await func(...args);
@@ -24,5 +26,6 @@ export const useLoading = <T extends any[], N>(): [
       throw error;
     }
   };
+
   return [isLoading, startLoadingWith];
 };
