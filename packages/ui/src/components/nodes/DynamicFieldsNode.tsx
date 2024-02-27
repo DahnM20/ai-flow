@@ -116,18 +116,12 @@ export default function DynamicFieldsNode({
         fields: fieldsUpdated,
       },
     });
-
-    updateNodeInternals(id);
   }, [getIncomingEdges(id)?.length]);
-
-  useRefreshOnAppearanceChange(updateNodeInternals, id, [collapsed, showLogs]);
 
   useHandleShowOutput({
     showOnlyOutput,
-    id: id,
     setCollapsed: setCollapsed,
     setShowLogs: setShowLogs,
-    updateNodeInternals: updateNodeInternals,
   });
 
   const handleNodeDataChange = (fieldName: string, value: any) => {
@@ -135,23 +129,12 @@ export default function DynamicFieldsNode({
       ...data,
       [fieldName]: value,
     });
-    updateNodeInternals(id);
-  };
-
-  const handleOptionChange = (name: string, value: string) => {
-    onUpdateNodeData(id, {
-      ...data,
-      [name]: value,
-    });
-    updateNodeInternals(id);
   };
 
   const formFields = useFormFields(
     data,
     id,
     handleNodeDataChange,
-    handleOptionChange,
-    undefined,
     undefined,
     undefined,
     undefined,

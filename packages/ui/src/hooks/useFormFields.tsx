@@ -11,7 +11,7 @@ import {
 } from "../components/nodes/Node.styles";
 import InputNameBar from "../components/nodes/node-button/InputNameBar";
 import { Field } from "../nodes-configuration/nodeConfig";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Switch from "react-switch";
 import { generateIdForHandle } from "../utils/flowUtils";
 import { Position } from "reactflow";
@@ -22,15 +22,15 @@ export function useFormFields(
   data: any,
   id: string,
   handleNodeDataChange: (fieldName: string, value: any) => void,
-  handleOptionChange: Function,
   setDefaultOption?: Function,
-  textareaRef?: any,
   hasParent?: Function,
   specificField?: string,
   showHandles?: boolean,
   showOnlyConnectedFields?: boolean,
 ) {
   const { t } = useTranslation("flow");
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const getFields = () => {
     let fields;
@@ -59,7 +59,7 @@ export function useFormFields(
     handleNodeDataChange(event.target.name, event.target.value);
   };
 
-  const renderField = (field: Field, index: number) => {
+  const renderField = (field: Field) => {
     switch (field.type) {
       case "input":
         return (
@@ -98,7 +98,7 @@ export function useFormFields(
       case "select":
         return (
           <NodeSelect
-            onChange={(e) => handleOptionChange(field.name, e.target.value)}
+            onChange={(e) => handleNodeDataChange(field.name, e.target.value)}
             defaultValue={data[field.name]}
           >
             {field.options?.map((option) => (
@@ -116,9 +116,9 @@ export function useFormFields(
                 <OptionButton
                   key={`${id}-${option.value}`}
                   selected={data[field.name] === option.value}
-                  onClick={() => handleOptionChange(field.name, option.value)}
+                  onClick={() => handleNodeDataChange(field.name, option.value)}
                   onTouchEnd={() =>
-                    handleOptionChange(field.name, option.value)
+                    handleNodeDataChange(field.name, option.value)
                   }
                 >
                   {t(option.label)}
@@ -237,7 +237,7 @@ export function useFormFields(
               </NodeLabel>
             </div>
           )}
-          {!field.isLinked && renderField(field, index)}
+          {!field.isLinked && renderField(field)}
         </React.Fragment>
       );
     });

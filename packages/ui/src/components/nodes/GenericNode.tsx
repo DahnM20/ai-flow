@@ -10,7 +10,6 @@ import {
   NodeBand,
 } from "./Node.styles";
 import useHandleShowOutput from "../../hooks/useHandleShowOutput";
-import { useRefreshOnAppearanceChange } from "../../hooks/useRefreshOnAppearanceChange";
 import { generateIdForHandle } from "../../utils/flowUtils";
 import { ICON_MAP } from "./utils/NodeIcons";
 import { Field } from "../../nodes-configuration/nodeConfig";
@@ -48,7 +47,6 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
     const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const nbInput = useMemo(() => {
       return !!data.config.inputNames ? data.config.inputNames.length : 1;
@@ -68,40 +66,13 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       } else {
         setShowLogs(false);
       }
-
-      updateNodeInternals(id);
     }, [data.lastRun, data.outputData]);
-
-    useEffect(() => {
-      if (textareaRef.current) {
-        const newWidth = textareaRef.current.offsetWidth;
-        const newHeight = textareaRef.current.offsetHeight;
-        if (newWidth !== data.width || newHeight !== data.height) {
-          updateNodeInternals(id);
-        }
-      }
-    }, [data, id]);
-
-    useRefreshOnAppearanceChange(updateNodeInternals, id, [
-      collapsed,
-      showLogs,
-    ]);
 
     useHandleShowOutput({
       showOnlyOutput,
-      id: id,
       setCollapsed: setCollapsed,
       setShowLogs: setShowLogs,
-      updateNodeInternals: updateNodeInternals,
     });
-
-    const handleNodeDataChange = (fieldName: string, value: any) => {
-      onUpdateNodeData(id, {
-        ...data,
-        [fieldName]: value,
-      });
-      updateNodeInternals(id);
-    };
 
     const toggleCollapsed = () => {
       setCollapsed(!collapsed);
@@ -111,12 +82,11 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       setIsPlaying(true);
     };
 
-    const handleOptionChange = (name: string, value: string) => {
+    const handleNodeDataChange = (fieldName: string, value: any) => {
       onUpdateNodeData(id, {
         ...data,
-        [name]: value,
+        [fieldName]: value,
       });
-      updateNodeInternals(id);
     };
 
     function setDefaultOption(field: Field) {
@@ -135,9 +105,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       data,
       id,
       handleNodeDataChange,
-      handleOptionChange,
       setDefaultOption,
-      textareaRef,
       hasParent,
     );
 
@@ -160,15 +128,11 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
-    const dimensions = getNodeDimensions(id);
+    //const dimensions = getNodeDimensions(id);
     // console.log(dimensions);
 
     return (
-      <NodeContainer
-        key={id}
-        className={`flex h-full w-full flex-col`}
-        width={dimensions?.width ?? undefined}
-      >
+      <NodeContainer key={id} className={`flex h-full w-full flex-col`}>
         <NodeHeader onDoubleClick={toggleCollapsed}>
           {data.config.hasInputHandle && (
             <>
