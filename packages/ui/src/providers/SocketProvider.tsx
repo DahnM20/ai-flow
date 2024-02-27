@@ -4,7 +4,7 @@ import { getWsUrl } from "../config/config";
 import { APIKeys } from "../components/popups/config-popup/ApiKeys";
 import { toastInfoMessage } from "../utils/toastUtils";
 import { useTranslation } from "react-i18next";
-import { FlowEventOut, FlowSocket } from "../utils/flowSocket";
+import { FlowEventOut, FlowSocket } from "../sockets/flowSocket";
 
 export interface FlowEventData {
   jsonFile: string;

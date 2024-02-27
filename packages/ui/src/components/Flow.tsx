@@ -34,6 +34,11 @@ import { useDrop } from "react-dnd";
 import { useSocketListeners } from "../hooks/useFlowSocketListeners";
 import ButtonEdge from "./edges/buttonEdge";
 import { createUniqNodeId } from "../utils/nodeUtils";
+import {
+  FlowOnCurrentNodeRunningEventData,
+  FlowOnErrorEventData,
+  FlowOnProgressEventData,
+} from "../sockets/flowEventTypes";
 
 export interface FlowProps {
   nodes?: Node[];
@@ -89,10 +94,14 @@ function Flow(props: FlowProps) {
     setReactFlowInstance(reactFlowInstance);
   };
 
-  useSocketListeners(onProgress, onError, () => {}, onCurrentNodeRunning);
+  useSocketListeners<
+    FlowOnProgressEventData,
+    FlowOnErrorEventData,
+    FlowOnProgressEventData
+  >(onProgress, onError, () => {}, onCurrentNodeRunning);
 
-  function onProgress(data: any) {
-    const nodeToUpdate = data.instanceName as string;
+  function onProgress(data: FlowOnProgressEventData) {
+    const nodeToUpdate = data.instanceName;
     const output = data.output;
 
     setCurrentNodesRunning((previous) => {
@@ -119,7 +128,7 @@ function Flow(props: FlowProps) {
     }
   }
 
-  function onError(data: any) {
+  function onError(data: FlowOnErrorEventData) {
     setCurrentNodesRunning((previous) => {
       return previous.filter((node) => node != data.instanceName);
     });
@@ -128,7 +137,7 @@ function Flow(props: FlowProps) {
     setIsPopupOpen(true);
   }
 
-  function onCurrentNodeRunning(data: any) {
+  function onCurrentNodeRunning(data: FlowOnCurrentNodeRunningEventData) {
     setCurrentNodesRunning((previous) => {
       return [...previous, data.instanceName];
     });

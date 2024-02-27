@@ -3,11 +3,15 @@ import { SocketContext } from "../providers/SocketProvider";
 import { useTranslation } from "react-i18next";
 import { toastInfoMessage } from "../utils/toastUtils";
 
-export const useSocketListeners = (
-  onProgress: (data: any) => void,
-  onError: (data: any) => void,
+export const useSocketListeners = <
+  ProgressData,
+  ErrorData,
+  CurrentNodeRunningData,
+>(
+  onProgress: (data: ProgressData) => void,
+  onError: (data: ErrorData) => void,
   onRunEnd: () => void,
-  onCurrentNodeRunning: (data: any) => void,
+  onCurrentNodeRunning: (data: CurrentNodeRunningData) => void,
   onDisconnect?: (reason: string) => void,
 ) => {
   const { t } = useTranslation("flow");
