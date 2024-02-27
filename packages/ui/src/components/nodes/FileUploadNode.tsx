@@ -26,6 +26,7 @@ import {
   getUploadAndDownloadUrl,
   uploadWithS3Link,
 } from "../../api/uploadFile";
+import { useLoading } from "../../hooks/useLoading";
 
 interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
@@ -76,7 +77,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
   const [fileChoiceSelected, setFileChoiceSelected] =
     useState<FileChoice | null>(data?.fileChoiceSelected);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, startLoadingWith] = useLoading();
 
   useEffect(() => {
     if (data.isDone) {
@@ -85,24 +86,27 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
     updateNodeInternals(id);
   }, [data.lastRun, data.outputData]);
 
+  async function uploadFile(files: File[]) {
+    const urls = await getUploadAndDownloadUrl();
+    const uploadData = urls.upload_data;
+    await uploadWithS3Link(uploadData, files[0]);
+    return urls;
+  }
+
   async function processFiles(files: File[]) {
     if (!files || files.length === 0) return;
 
-    let urls;
+    let urls: any;
     let uploadError: boolean = false;
-    setIsLoading(true);
 
     try {
-      urls = await getUploadAndDownloadUrl();
-      const uploadData = urls.upload_data;
-      await uploadWithS3Link(uploadData, files[0]);
+      urls = await startLoadingWith(uploadFile, files);
     } catch (error) {
       toastErrorMessage(t("error.upload_failed") as string);
       console.log(error);
       uploadError = true;
       setFiles(null);
     } finally {
-      setIsLoading(false);
       if (uploadError) return;
     }
 

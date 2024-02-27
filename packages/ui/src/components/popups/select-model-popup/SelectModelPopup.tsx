@@ -11,6 +11,7 @@ import LoadMoreButton from "../shared/LoadMoreButton";
 import { useTranslation } from "react-i18next";
 import Grid from "../shared/Grid";
 import { Model } from "./Model";
+import { useLoading } from "../../../hooks/useLoading";
 
 interface SelectModelPopupProps {
   show: boolean;
@@ -29,8 +30,8 @@ export default function SelectModelPopup({
   const [highlitedModels, setHighlightedModels] = useState<any>();
   const [collections, setCollections] = useState<any>();
   const [selectedCollection, setSelectedCollection] = useState<any>();
-  const [opening, setOpening] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [opening, startOpeningWith] = useLoading();
+  const [loading, startLoadingWith] = useLoading();
   const [cursor, setCursor] = useState("");
 
   const { fetchCachedData } = useCachedFetch();
@@ -51,8 +52,7 @@ export default function SelectModelPopup({
       }
     }
 
-    async function configurePopup() {
-      setOpening(true);
+    async function loadAllData() {
       const collections = await getCollections();
       const models = await getPublicModels();
       const highlightedModels = await getHighlightedModels();
@@ -61,7 +61,10 @@ export default function SelectModelPopup({
       setModels(extractedData);
       setHighlightedModels(extractedHighlightedModels);
       setCollections(collections);
-      setOpening(false);
+    }
+
+    async function configurePopup() {
+      await startOpeningWith(loadAllData);
     }
 
     if (!!models) return;
@@ -73,11 +76,12 @@ export default function SelectModelPopup({
     if (!selectedCollection) return;
 
     const loadCollectionModels = async () => {
-      setLoading(true);
-      const models = await getCollectionModels(selectedCollection);
+      const models = await startLoadingWith(
+        getCollectionModels,
+        selectedCollection,
+      );
       const extractedData = extractModelsData(models);
       setModels(extractedData);
-      setLoading(false);
     };
 
     loadCollectionModels();
@@ -171,17 +175,18 @@ export default function SelectModelPopup({
   }
 
   async function handleLoadMore() {
-    setLoading(true);
     let newModels: any[] = [];
     if (selectedCollection) {
-      const models = await getCollectionModels(selectedCollection);
+      const models = await startLoadingWith(
+        getCollectionModels,
+        selectedCollection,
+      );
       newModels = extractModelsData(models);
     } else {
-      const models = await getPublicModels();
+      const models = await startLoadingWith(getPublicModels);
       newModels = extractModelsData(models);
     }
     setModels([...models, ...newModels]);
-    setLoading(false);
   }
 
   const renderModelSections = () => {

@@ -33,7 +33,7 @@ import TabHeader from "./header/TabHeader";
 import {
   createErrorMessageForMissingFields,
   getNodeInError,
-} from "../../utils/flowCheckUtils";
+} from "../../utils/flowChecker";
 
 export interface FlowTab {
   nodes: Node[];

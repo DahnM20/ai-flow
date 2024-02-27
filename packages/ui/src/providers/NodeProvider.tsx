@@ -7,7 +7,7 @@ import { toastErrorMessage, toastInfoMessage } from "../utils/toastUtils";
 import {
   createErrorMessageForMissingFields,
   getNodeInError,
-} from "../utils/flowCheckUtils";
+} from "../utils/flowChecker";
 import { createUniqNodeId } from "../utils/nodeUtils";
 
 export type NodeDimensions = {
