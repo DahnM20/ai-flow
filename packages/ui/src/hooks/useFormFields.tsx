@@ -1,22 +1,20 @@
 import { useTranslation } from "react-i18next";
 import {
-  NodeLabel,
   NodeInput,
   NodeTextarea,
   NodeSelect,
   NodeSelectOption,
   OptionSelector,
   OptionButton,
-  InputHandle,
 } from "../components/nodes/Node.styles";
 import InputNameBar from "../components/nodes/node-button/InputNameBar";
 import { Field } from "../nodes-configuration/nodeConfig";
 import React, { useEffect, useRef } from "react";
 import Switch from "react-switch";
 import { generateIdForHandle } from "../utils/flowUtils";
-import { Position } from "reactflow";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import NodeField from "../components/nodes/node-input/NodeField";
 
 export function useFormFields(
   data: any,
@@ -217,27 +215,13 @@ export function useFormFields(
 
       return (
         <React.Fragment key={`${id}-${field.name}`}>
-          {field.label && showHandles && (
-            <div className="flex flex-row items-center space-x-5">
-              {field.hasHandle && (
-                <InputHandle
-                  className={`handle custom-handle`}
-                  required={field.required}
-                  type="target"
-                  position={Position.Left}
-                  id={generateIdForHandle(index)}
-                />
-              )}
-              <NodeLabel
-                className={`font-md
-                                        ${field.isLinked ? "text-sky-400" : ""}  
-                                        ${field.required ? "font-bold" : ""}`}
-              >
-                {t(field.name) + `${field.required ? " *" : ""}`}
-              </NodeLabel>
-            </div>
-          )}
-          {!field.isLinked && renderField(field)}
+          <NodeField
+            field={field}
+            label={t(field.name) + `${field.required ? " *" : ""}`}
+            renderField={renderField}
+            handleId={generateIdForHandle(index)}
+            showHandles={showHandles}
+          />
         </React.Fragment>
       );
     });

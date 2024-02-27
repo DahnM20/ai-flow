@@ -6,7 +6,6 @@ import { useFormFields } from "../../hooks/useFormFields";
 import useHandlePositions from "../../hooks/useHandlePositions";
 import useHandleShowOutput from "../../hooks/useHandleShowOutput";
 import { useIsPlaying } from "../../hooks/useIsPlaying";
-import { useRefreshOnAppearanceChange } from "../../hooks/useRefreshOnAppearanceChange";
 import { Field } from "../../nodes-configuration/nodeConfig";
 import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
 import HandleWrapper from "../handles/HandleWrapper";
@@ -19,7 +18,6 @@ import {
   NodeForm,
   NodeHeader,
   NodeIcon,
-  NodeInput,
   NodeTitle,
 } from "./Node.styles";
 import NodePlayButton from "./node-button/NodePlayButton";
@@ -47,6 +45,11 @@ export default function DynamicFieldsNode({
   id,
   selected,
 }: DynamicFieldsProps) {
+  const { t } = useTranslation("flow");
+
+  const { getIncomingEdges, showOnlyOutput, onUpdateNodeData } =
+    useContext(NodeContext);
+
   const [fields, setFields] = useState<Field[]>(
     !!data.config?.fields ? data.config.fields : [],
   );
@@ -54,33 +57,33 @@ export default function DynamicFieldsNode({
     !!data.config?.nodeName ? data.config.nodeName : undefined,
   );
   const [modelInput, setModelInput] = useState<string>("");
-
-  const { getIncomingEdges, showOnlyOutput, onUpdateNodeData } =
-    useContext(NodeContext);
-
-  const { t } = useTranslation("flow");
-  const { fetchCachedData } = useCachedFetch();
-
-  const updateNodeInternals = useUpdateNodeInternals();
-
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [showLogs, setShowLogs] = useState<boolean>(true);
   const [isPlaying, setIsPlaying] = useIsPlaying();
   const [showPopup, setShowPopup] = useState(false);
 
-  const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
-
   const nodeRef = useRef(null);
 
+  const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
   const nbInput = useMemo(() => {
     return !!fields ? fields.length : 1;
   }, []);
+
+  const { fetchCachedData } = useCachedFetch();
+
+  const updateNodeInternals = useUpdateNodeInternals();
 
   const { allHandlePositions } = useHandlePositions(
     data,
     nbInput,
     outputHandleId,
   );
+
+  useHandleShowOutput({
+    showOnlyOutput,
+    setCollapsed: setCollapsed,
+    setShowLogs: setShowLogs,
+  });
 
   useEffect(() => {
     if (data.isDone) setIsPlaying(false);
@@ -117,12 +120,6 @@ export default function DynamicFieldsNode({
       },
     });
   }, [getIncomingEdges(id)?.length]);
-
-  useHandleShowOutput({
-    showOnlyOutput,
-    setCollapsed: setCollapsed,
-    setShowLogs: setShowLogs,
-  });
 
   const handleNodeDataChange = (fieldName: string, value: any) => {
     onUpdateNodeData(id, {
@@ -177,7 +174,6 @@ export default function DynamicFieldsNode({
       if (!config) return;
       const modelId = config.modelId;
       setModel(model + ":" + modelId);
-      console.log(fields);
       setFields(fields);
     }
 
