@@ -1,10 +1,9 @@
 import axios, { AxiosProgressEvent } from "axios";
-import { getRestApiUrl } from "../config/config";
+import client from "./client";
 
 export async function getUploadAndDownloadUrl() {
   try {
-    const url = `${getRestApiUrl()}/upload`;
-    const response = await axios.get(url);
+    const response = await client.get("/upload");
     return response.data;
   } catch (error) {
     console.error("Error while trying to get upload link :", error);
