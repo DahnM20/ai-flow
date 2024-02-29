@@ -42,7 +42,7 @@ const TabHeader = ({
       </Tabs>
       <AddTabButton
         onClick={onAddFlowTab}
-        className="rounded-lg px-1 py-1 text-lg text-slate-200 ring-slate-200 hover:text-slate-50 hover:ring-2"
+        className="rounded-lg px-1 py-1 text-lg text-slate-200 ring-slate-200 transition-all duration-300 ease-in-out hover:text-slate-50 hover:ring-2"
       >
         <FaPlus />
       </AddTabButton>

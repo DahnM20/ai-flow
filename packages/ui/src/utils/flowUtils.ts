@@ -3,6 +3,12 @@ import { Field, getConfigViaType } from "../nodes-configuration/nodeConfig";
 import { NodeData } from "../components/nodes/types/node";
 import { FlowTab } from "../layout/main-layout/AppLayout";
 
+export type BasicNode = Pick<Node, "id" | "data" | "position" | "type">;
+export type BasicEdge = Pick<
+  Edge,
+  "id" | "source" | "sourceHandle" | "target" | "targetHandle" | "type"
+>;
+
 const CONFIG = {
   FLOW_VERSION: "1.0.0",
 };
@@ -26,7 +32,10 @@ export const generateIdForHandle = (key: number, isOutput?: boolean) =>
     ? `${handleInPrefix}${handleSeparator}${key}`
     : `${handleOutPrefix}${handleSeparator}${key}`;
 
-export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
+export function nodesTopologicalSort(
+  nodes: BasicNode[],
+  edges: BasicEdge[],
+): Node[] {
   const visited = new Set<string>();
   const sortedNodes: Node[] = [];
 
@@ -49,13 +58,13 @@ export function nodesTopologicalSort(nodes: Node[], edges: Edge[]): Node[] {
   return sortedNodes;
 }
 
-export function findParents(node: Node, edges: Edge[]) {
+export function findParents(node: BasicNode, edges: BasicEdge[]) {
   return edges
     .filter((edge) => edge.target === node.id)
     .map((edge) => edge.source);
 }
 
-export function formatFlow(nodes: Node[], edges: Edge[]) {
+export function formatFlow(nodes: BasicNode[], edges: BasicEdge[]) {
   const nodesSorted = nodesTopologicalSort(nodes, edges);
 
   const levelDict: any = {};
@@ -84,7 +93,7 @@ export function formatFlow(nodes: Node[], edges: Edge[]) {
   return nodes;
 }
 
-export const getTargetHandleKey: any = (edge: Edge) => {
+export const getTargetHandleKey: any = (edge: BasicEdge) => {
   return edge?.targetHandle?.split(handleSeparator)[indexKeyHandleIn];
 };
 
@@ -96,81 +105,78 @@ export function clearSelectedNodes(nodes: Node[]) {
   });
 }
 
+function getConfigEssentials(config: any) {
+  const { fields, nodeName, inputNames, hasInputHandle, outputType } =
+    config || {};
+  return { fields, nodeName, inputNames, hasInputHandle, outputType };
+}
+
 export function convertFlowToJson(
-  nodes: Node[],
-  edges: Edge[],
+  nodes: BasicNode[],
+  edges: BasicEdge[],
   withCoordinates?: boolean,
   withConfig?: boolean,
 ): NodeData[] {
-  return nodes.map((node: Node) => {
-    const { id, ...rest } = node;
+  return nodes.map((node: BasicNode) => {
+    const { data, id, position } = node;
+    const { config, ...nodeValues } = data;
 
     const inputEdges = edges.filter((edge: any) => edge.target === id);
 
     const inputs = inputEdges.map((edge: any) => {
-      const inputId = edge?.source || "";
-
-      const keySplitted =
-        edge?.sourceHandle?.split(handleSeparator)[indexKeyHandleOut];
-      const inputNodeOutputKey =
-        !keySplitted || isNaN(+keySplitted) ? undefined : +keySplitted;
-
-      const inputNode =
-        nodes.find((node: any) => node.id === inputId)?.data.name || "";
-
-      const targetHandleKey = getTargetHandleKey(edge);
-
-      return {
-        inputName: !!node.data.config?.inputNames
-          ? node.data.config.inputNames[targetHandleKey]
-          : undefined,
-        inputNode,
-        inputNodeOutputKey,
-      };
+      return convertEdgeToNodeInput(edge, nodes, node);
     });
 
-    const { a, nodeType, output, input, config, ...nodeValues } = node.data;
+    let nodeJson = { ...nodeValues, inputs };
 
-    const fields = config?.fields;
-    const nodeName = config?.nodeName;
-    const inputNames = config?.inputNames;
-    const hasInputHandle = config?.hasInputHandle;
-
-    const configEssentials = {
-      fields,
-      nodeName,
-      inputNames,
-      hasInputHandle,
-      outputType: config?.outputType,
-    };
+    if (withConfig) {
+      nodeJson.config = getConfigEssentials(config);
+    }
 
     if (withCoordinates) {
-      return {
-        ...nodeValues,
-        inputs,
-        config: withConfig ? configEssentials : undefined,
-        x: node.position.x,
-        y: node.position.y,
-      };
-    } else {
-      return {
-        ...nodeValues,
-        inputs,
-        config: withConfig ? configEssentials : undefined,
-      };
+      nodeJson = { ...nodeJson, x: position.x, y: position.y };
     }
+
+    return nodeJson;
   });
 }
-export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[] } {
-  const nodes: Node[] = [];
-  const edges: Edge[] = [];
+
+function convertEdgeToNodeInput(
+  edge: any,
+  nodes: BasicNode[],
+  node: BasicNode,
+) {
+  const inputId = edge?.source || "";
+
+  const keySplitted =
+    edge?.sourceHandle?.split(handleSeparator)[indexKeyHandleOut];
+  const inputNodeOutputKey =
+    !keySplitted || isNaN(+keySplitted) ? undefined : +keySplitted;
+
+  const inputNode =
+    nodes.find((node: any) => node.id === inputId)?.data.name || "";
+
+  const targetHandleKey = getTargetHandleKey(edge);
+
+  return {
+    inputName: !!node.data.config?.inputNames
+      ? node.data.config.inputNames[targetHandleKey]
+      : undefined,
+    inputNode,
+    inputNodeOutputKey,
+  };
+}
+
+export function convertJsonToFlow(json: any): {
+  nodes: BasicNode[];
+  edges: BasicEdge[];
+} {
+  const nodes: BasicNode[] = [];
+  const edges: BasicEdge[] = [];
 
   // Create nodes
   json.forEach((node: any) => {
     const { x, y, ...nodeData } = node;
-
-    //Temp - for old files
-    arrangeOldFields(nodeData);
 
     nodes.push({
       id: node.name,
@@ -230,36 +236,11 @@ export function convertJsonToFlow(json: any): { nodes: Node[]; edges: Edge[] } {
   return { nodes, edges };
 }
 
-function arrangeOldFields(nodeData: any) {
-  if (nodeData.processorType === "gpt-no-context-prompt") {
-    nodeData.processorType = "llm-prompt";
-    nodeData.model = nodeData.gptVersion;
-    nodeData.prompt = nodeData.inputText;
-  }
-
-  if (nodeData.processorType === "ai-action") {
-    if (!!nodeData.inputText) {
-      nodeData.model = nodeData.gptVersion;
-      nodeData.prompt = nodeData.inputText;
-    }
-  }
-
-  nodeData.gptVersion = undefined;
-  nodeData.inputText = undefined;
-}
-
-function arrangeOldType(node: any) {
-  if (node.type === "gpt-no-context-prompt") {
-    node.type = "llm-prompt";
-    node.data.config = getConfigViaType(node.type);
-  }
-}
-
 export function migrateConfig(oldConfig: FlowTab) {
   if (!oldConfig.metadata) {
     oldConfig.nodes.forEach((node) => {
-      arrangeOldType(node);
-      arrangeOldFields(node.data);
+      // arrangeOldType(node);
+      // arrangeOldFields(node.data);
     });
   }
 }
