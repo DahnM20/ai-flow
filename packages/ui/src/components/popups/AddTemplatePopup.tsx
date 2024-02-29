@@ -1,16 +1,14 @@
 import { useState } from "react";
 import DefaultPopupWrapper from "./DefaultPopup";
-
-export type TemplateFormData = {
-  title: string;
-  description: string;
-  tags?: string[];
-};
+import { TemplateFormData } from "../../api/template";
+import { useLoading } from "../../hooks/useLoading";
+import { LoadingSpinner } from "../nodes/Node.styles";
+import { useTranslation } from "react-i18next";
 
 interface AddTemplatePopupProps {
   show: boolean;
   onClose: () => void;
-  onValidate: (data: TemplateFormData) => void;
+  onValidate: (data: TemplateFormData) => Promise<void>;
 }
 
 export const templateTags = [
@@ -28,9 +26,13 @@ export default function AddTemplatePopup({
   onClose,
   onValidate,
 }: AddTemplatePopupProps) {
+  const { t } = useTranslation("flow");
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState<Set<TemplateTag>>(new Set());
+
+  const [loading, startLoadingWith] = useLoading();
 
   function handleUpdateTag(tag: TemplateTag) {
     setTags((prev) => {
@@ -46,7 +48,7 @@ export default function AddTemplatePopup({
 
   function handleValidate() {
     if (title.length > 0) {
-      onValidate({
+      startLoadingWith(onValidate, {
         title,
         description,
         tags: Array.from(tags),
@@ -80,18 +82,24 @@ export default function AddTemplatePopup({
           ))}
         </div>
         <div className="flex flex-row space-x-2">
-          <button
-            className="rounded-lg bg-teal-400/80 px-4 py-1 shadow-xl transition-all duration-300 ease-in-out hover:bg-teal-400"
-            onClick={handleValidate}
-          >
-            Save
-          </button>
-          <button
-            className="rounded-lg bg-slate-400/80 px-4 py-1 shadow-xl transition-all duration-300 ease-in-out hover:bg-slate-400"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+          {!loading && (
+            <>
+              <button
+                className="rounded-lg bg-teal-400/80 px-4 py-1 shadow-xl transition-all duration-300 ease-in-out hover:bg-teal-400"
+                disabled={title.length === 0}
+                onClick={handleValidate}
+              >
+                {t("Save")}
+              </button>
+              <button
+                className="rounded-lg bg-slate-400/80 px-4 py-1 shadow-xl transition-all duration-300 ease-in-out hover:bg-slate-400"
+                onClick={onClose}
+              >
+                {t("Cancel")}
+              </button>
+            </>
+          )}
+          {loading && <LoadingSpinner />}
         </div>
       </div>
     </DefaultPopupWrapper>

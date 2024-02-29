@@ -33,7 +33,6 @@ export default function ActionGroup<T>({
                         text-stone-100
                         hover:bg-slate-200/20
                         ${option.hoverColor ? "hover:" + option.hoverColor : "hover:text-blue-400"}
-
                         `}
             onClick={option.onClick}
             style={{ display: showIcon ? "block" : "none" }}

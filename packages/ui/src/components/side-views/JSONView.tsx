@@ -12,10 +12,9 @@ import { useTranslation } from "react-i18next";
 import { NodeContext } from "../../providers/NodeProvider";
 import { FaExclamationTriangle } from "react-icons/fa";
 import DefaultSwitch from "../buttons/DefaultSwitch";
-import axios from "axios";
-import { getRestApiUrl } from "../../config/config";
 import { toastInfoMessage } from "../../utils/toastUtils";
-import AddTemplatePopup, { TemplateFormData } from "../popups/AddTemplatePopup";
+import AddTemplatePopup from "../popups/AddTemplatePopup";
+import { TemplateFormData, saveTemplate } from "../../api/template";
 
 interface JSONViewProps {
   nodes: Node[];
@@ -80,15 +79,8 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
     const nodesCleared = clearSelectedNodes(nodes);
     const flowData = convertFlowToJson(nodesCleared, edges, true, true);
 
-    const template = {
-      ...data,
-      template: flowData,
-    };
+    const response = await saveTemplate(data, flowData);
 
-    let url = `${getRestApiUrl()}/template`;
-
-    const response = await axios.post(url, template);
-    console.log(response);
     if (response.status === 200) {
       toastInfoMessage("Template saved");
       setShowAddTemplatePopup(false);
