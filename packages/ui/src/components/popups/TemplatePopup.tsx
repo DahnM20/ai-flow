@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
-import useCachedFetch, {
-  DISPENSABLE_CACHE_PREFIX,
-} from "../../hooks/useCachedFetch";
 import DefaultPopupWrapper from "./DefaultPopup";
 import FilterGrid, { FilterItem } from "./shared/FilterGrid";
 import Grid from "./shared/Grid";
-import { getRestApiUrl } from "../../config/config";
 import { convertJsonToFlow } from "../../utils/flowUtils";
 import { templateTags } from "./AddTemplatePopup";
-import { Template, getTemplates } from "../../api/template";
+import { Template, getTemplate, getTemplates } from "../../api/template";
 import { useLoading } from "../../hooks/useLoading";
 import { LoadingIcon } from "../nodes/Node.styles";
 import withCache from "../../api/cache/withCache";
@@ -26,7 +22,6 @@ export default function TemplatePopup({
 }: TemplatePopupProps) {
   const [templates, setTemplates] = useState<Template[]>();
   const [selectedFilter, setSelectedFilter] = useState<string>();
-  const { fetchCachedData } = useCachedFetch();
 
   const [loading, startLoadingWith] = useLoading();
 
@@ -43,7 +38,10 @@ export default function TemplatePopup({
     onValidate: (templateId: string) => void,
   ) {
     return (
-      <div className="flex flex-col justify-between rounded-lg bg-subtle-gradient p-4">
+      <div
+        className="flex flex-col justify-between rounded-lg bg-subtle-gradient p-4"
+        key={template.id}
+      >
         <div className="space-y-2">
           <h1 className="text-xl font-bold">{template.title}</h1>
           <p className="text-sm text-slate-400">{template.description}</p>
@@ -70,17 +68,8 @@ export default function TemplatePopup({
     );
   }
 
-  async function fetchTemplate(templateId: string) {
-    return fetchCachedData(
-      `${getRestApiUrl()}/template/${templateId}`,
-      `${DISPENSABLE_CACHE_PREFIX}_template_${templateId}`,
-      10,
-      {},
-    );
-  }
-
   async function handleSelectTemplate(templateId: string): Promise<void> {
-    const template = await fetchTemplate(templateId);
+    const template = await withCache(getTemplate, templateId);
     const flowData = convertJsonToFlow(template);
     onValidate?.(flowData);
     onClose();

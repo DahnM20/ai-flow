@@ -74,19 +74,15 @@ function FlowWrapper({
       />
 
       <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
-      {menuState["help"] && (
-        <HelpPopup
-          isOpen={menuState["help"]}
-          onClose={() => handleMenuChange("help")}
-        />
-      )}
-      {menuState["template"] && (
-        <TemplatePopup
-          isOpen={menuState["template"]}
-          onValidate={onAddNewFlow}
-          onClose={() => handleMenuChange("template")}
-        />
-      )}
+      <HelpPopup
+        isOpen={menuState["help"]}
+        onClose={() => handleMenuChange("help")}
+      />
+      <TemplatePopup
+        isOpen={menuState["template"]}
+        onValidate={onAddNewFlow}
+        onClose={() => handleMenuChange("template")}
+      />
       {children}
     </>
   );

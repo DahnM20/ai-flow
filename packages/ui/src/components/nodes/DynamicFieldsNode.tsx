@@ -21,9 +21,6 @@ import {
   NodeTitle,
 } from "./Node.styles";
 import NodePlayButton from "./node-button/NodePlayButton";
-import useCachedFetch from "../../hooks/useCachedFetch";
-import { getRestApiUrl } from "../../config/config";
-import { toastInfoMessage } from "../../utils/toastUtils";
 import {
   convertOpenAPISchemaToNodeConfig,
   getSchemaFromConfig,
@@ -31,6 +28,9 @@ import {
 import { NodeData } from "./types/node";
 import NodeOutput from "./node-output/NodeOutput";
 import InputWithButton from "../inputs/InputWithButton";
+import { getModelConfig } from "../../api/replicateModels";
+import withCache from "../../api/cache/withCache";
+import { toastErrorMessage } from "../../utils/toastUtils";
 
 interface DynamicFieldsNodeData extends NodeData {
   schema: any;
@@ -68,8 +68,6 @@ export default function DynamicFieldsNode({
   const nbInput = useMemo(() => {
     return !!fields ? fields.length : 1;
   }, []);
-
-  const { fetchCachedData } = useCachedFetch();
 
   const updateNodeInternals = useUpdateNodeInternals();
 
@@ -148,28 +146,16 @@ export default function DynamicFieldsNode({
   };
 
   useEffect(() => {
-    async function getConfig() {
-      try {
-        const url = `${getRestApiUrl()}/node/replicate/config/${model}`;
-        return await fetchCachedData(url, `${model}_config`, 600000, {
-          processorType: data.processorType,
-        });
-      } catch (error) {
-        toastInfoMessage("Error fetching configuration for " + model);
-        console.error("Error fetching configuration:", error);
-        throw error;
-      }
-    }
-
     async function configureNode() {
+      if (!model) return;
       let config;
       let fields: Field[] = [];
       try {
-        config = await getConfig();
+        config = await withCache(getModelConfig, model, data.processorType);
         const inputSchema = getSchemaFromConfig(config, "Input");
         fields = convertOpenAPISchemaToNodeConfig(inputSchema, config);
       } catch (error) {
-        console.error("Error fetching configuration:", error);
+        toastErrorMessage(`Error fetching configuration: ${error}`);
       }
       if (!config) return;
       const modelId = config.modelId;

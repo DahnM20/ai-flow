@@ -1,3 +1,4 @@
+import { Config } from "../utils/openAPIUtils";
 import client from "./client";
 
 interface GetCollectionModelsResponse {
@@ -71,4 +72,19 @@ export async function getCollectionModels(
     : "";
 
   return { models, cursor: newCursor } as GetCollectionModelsResponse;
+}
+
+export async function getModelConfig(model: string, processorType: string) {
+  let response;
+  try {
+    response = await client.get(`/node/replicate/config/${model}`, {
+      params: {
+        processorType: processorType,
+      },
+    });
+    return response.data as Config;
+  } catch (error) {
+    console.error("Error fetching configuration:", error);
+    throw error;
+  }
 }

@@ -62,7 +62,7 @@ export default function SelectModelPopup({
     if (!selectedCollection) return;
 
     const loadCollectionModels = async () => {
-      const { models, cursor: newCursor } = await startLoadingWith(
+      const { models, cursor: newCursor } = await withCache(
         getCollectionModels,
         selectedCollection,
       );
@@ -71,7 +71,7 @@ export default function SelectModelPopup({
       setCursor(newCursor);
     };
 
-    loadCollectionModels();
+    startLoadingWith(loadCollectionModels);
   }, [selectedCollection]);
 
   function extractModelsData(models: any) {
@@ -202,7 +202,7 @@ const ModelsSection = ({ title, models, onValidate }: ModelSectionProps) => {
   const renderModelItem = (
     model: ModelData,
     onValidate: (modelName: string) => void,
-  ) => <Model model={model} onValidate={onValidate} />;
+  ) => <Model key={model.modelName} model={model} onValidate={onValidate} />;
 
   return (
     <>

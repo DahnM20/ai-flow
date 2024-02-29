@@ -25,6 +25,7 @@ export default function ActionGroup<T>({
       {options.map((option) => {
         return (
           <span
+            key={option.name}
             className={`cursor-pointer 
                         rounded-full bg-slate-200/10
                         p-2
