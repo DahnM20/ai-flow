@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
-import styled from 'styled-components';
-import ReactTooltip, { Tooltip } from 'react-tooltip';
-import { NodeContext } from '../../providers/NodeProvider';
-import NodePlayButton from './node-button/NodePlayButton';
-import { generateIdForHandle } from '../../utils/flowUtils';
-import { InputHandle, NodeTitle, OutputHandle } from './Node.styles';
-import { darken } from 'polished';
-import { useIsPlaying } from '../../hooks/useIsPlaying';
+import React, { useContext, useEffect, useState } from "react";
+import { Position, NodeProps, useUpdateNodeInternals } from "reactflow";
+import styled from "styled-components";
+import { Tooltip } from "react-tooltip";
+import { NodeContext } from "../../providers/NodeProvider";
+import NodePlayButton from "./node-button/NodePlayButton";
+import { generateIdForHandle } from "../../utils/flowUtils";
+import { InputHandle, NodeTitle, OutputHandle } from "./Node.styles";
+import { darken } from "polished";
+import { useIsPlaying } from "../../hooks/useIsPlaying";
 
 interface DataSplitterNodeData {
   splitChar: string;
@@ -24,137 +24,171 @@ interface DataSplitterNodeProps extends NodeProps {
   data: DataSplitterNodeData;
 }
 
-const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(({ data, id, selected }) => {
+const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(
+  ({ data, id, selected }) => {
+    const { onUpdateNodeData } = useContext(NodeContext);
 
-  const { onUpdateNodeData } = useContext(NodeContext);
+    const updateNodeInternals = useUpdateNodeInternals();
 
-  const updateNodeInternals = useUpdateNodeInternals();
+    const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
+    const [isPlaying, setIsPlaying] = useIsPlaying();
+    const [isCustomSplit, setIsCustomSplit] = useState<boolean>(false);
+    const [collapsed, setCollapsed] = useState(false);
 
+    useEffect(() => {
+      setNodeId(`${data.id}-${Date.now()}`);
+      const newNbOutput = data.outputData ? data.outputData.length : 0;
+      if (!data.nbOutput || newNbOutput > data.nbOutput) {
+        onUpdateNodeData(id, {
+          ...data,
+          nbOutput: newNbOutput,
+        });
+      }
+      setIsPlaying(false);
+      updateNodeInternals(id);
+    }, [data.outputData]);
+    const handlePlayClick = () => {
+      setIsPlaying(true);
+    };
 
-  const [nodeId, setNodeId] = useState<string>(`${data.id}-${Date.now()}`);
-  const [isPlaying, setIsPlaying] = useIsPlaying();
-  const [isCustomSplit, setIsCustomSplit] = useState<boolean>(false);
-  const [collapsed, setCollapsed] = useState(false);
+    const handleCollapseClick = () => {
+      setCollapsed(!collapsed);
+    };
 
+    const handleSplitCharChange = (
+      event: React.ChangeEvent<HTMLSelectElement>,
+    ) => {
+      if (event.target.value === "custom") {
+        setIsCustomSplit(true);
+      } else {
+        setIsCustomSplit(false);
 
-  useEffect(() => {
-    setNodeId(`${data.id}-${Date.now()}`);
-    const newNbOutput = data.outputData ? data.outputData.length : 0;
-    if (!data.nbOutput || newNbOutput > data.nbOutput) {
-      onUpdateNodeData(id, {
-        ...data,
-        nbOutput: newNbOutput,
-      });
-    }
-    setIsPlaying(false);
-    updateNodeInternals(id);
-  }, [data.outputData]);
-  const handlePlayClick = () => {
-    setIsPlaying(true);
-  };
+        onUpdateNodeData(id, {
+          ...data,
+          splitChar: event.target.value,
+        });
 
+        updateNodeInternals(id);
+      }
+    };
 
-  const handleCollapseClick = () => {
-    setCollapsed(!collapsed);
-  };
-
-
-  const handleSplitCharChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (event.target.value === "custom") {
-      setIsCustomSplit(true);
-    } else {
-      setIsCustomSplit(false);
-
+    const handleCustomSplitCharChange = (
+      event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
       onUpdateNodeData(id, {
         ...data,
         splitChar: event.target.value,
       });
 
       updateNodeInternals(id);
-    }
-  };
+    };
 
-  const handleCustomSplitCharChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdateNodeData(id, {
-      ...data,
-      splitChar: event.target.value,
-    });
+    const handleForceNbOutputChange = (
+      event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+      onUpdateNodeData(id, {
+        ...data,
+        nbOutput: event.target.value,
+      });
+      updateNodeInternals(id);
+    };
 
-    updateNodeInternals(id);
-  };
+    const getNbOutput = () => {
+      return !!data.nbOutput ? data.nbOutput : 0;
+    };
 
-  const handleForceNbOutputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdateNodeData(id, {
-      ...data,
-      nbOutput: event.target.value,
-    });
-    updateNodeInternals(id);
-  };
+    return (
+      <DataSplitterNodeContainer
+        selected={selected}
+        nbOutput={getNbOutput()}
+        collapsed={collapsed}
+        key={nodeId}
+        onDoubleClick={handleCollapseClick}
+      >
+        {!collapsed && <NodeTitle>Splitter</NodeTitle>}
+        <NodePlayButton
+          isPlaying={isPlaying}
+          nodeName={data.name}
+          onClick={handlePlayClick}
+        />
+        {!collapsed && (
+          <>
+            <SplitCharSelect
+              value={data.splitChar}
+              onChange={handleSplitCharChange}
+            >
+              <option value="\n">\n</option>
+              <option value=";">;</option>
+              <option value=",">,</option>
+              <option value="custom">Personnalisé...</option>
+            </SplitCharSelect>
+            {isCustomSplit && (
+              <CustomSplitCharInput
+                value={data.splitChar}
+                onChange={handleCustomSplitCharChange}
+                placeholder="Entrez caractère"
+              />
+            )}
+            <ForceNbOutputInput
+              id="nbOutput"
+              value={getNbOutput()}
+              onChange={handleForceNbOutputChange}
+            />
+          </>
+        )}
+        <InputHandle
+          className="handle"
+          type="target"
+          position={Position.Left}
+        />
+        <div className="output-strip-node-outputs">
+          {Array.from(Array(getNbOutput())).map((_, index) => (
+            <OutputHandle
+              key={generateIdForHandle(index)}
+              data-tooltip-id={`${nodeId}-tooltip`}
+              data-tooltip-content={
+                data.outputData ? data.outputData[index] : ""
+              }
+              type="source"
+              id={generateIdForHandle(index)}
+              position={Position.Right}
+              style={{
+                background: data?.outputData
+                  ? data.outputData[index]
+                    ? "rgb(224, 166, 79)"
+                    : "#ddd"
+                  : "#ddd",
+                top: `${getNbOutput() === 1 ? 50 : (index / (getNbOutput() - 1)) * 80 + 10}%`,
+              }}
+            />
+          ))}
+          <Tooltip id={`${nodeId}-tooltip`} style={{ zIndex: 100 }} />
+        </div>
+      </DataSplitterNodeContainer>
+    );
+  },
+);
 
-  const getNbOutput = () => {
-    return !!data.nbOutput ? data.nbOutput : 0;
-  }
-
-
-  return (
-    <DataSplitterNodeContainer selected={selected} nbOutput={getNbOutput()} collapsed={collapsed} key={nodeId} onDoubleClick={handleCollapseClick}>
-      {!collapsed
-        && <NodeTitle>Splitter</NodeTitle>
-      }
-      <NodePlayButton isPlaying={isPlaying} nodeName={data.name} onClick={handlePlayClick} />
-      {!collapsed && (
-        <>
-          <SplitCharSelect value={data.splitChar} onChange={handleSplitCharChange}>
-            <option value="\n">\n</option>
-            <option value=";">;</option>
-            <option value=",">,</option>
-            <option value="custom">Personnalisé...</option>
-          </SplitCharSelect>
-          {isCustomSplit && (
-            <CustomSplitCharInput value={data.splitChar} onChange={handleCustomSplitCharChange} placeholder="Entrez caractère" />
-          )}
-          <ForceNbOutputInput
-            id="nbOutput"
-            value={getNbOutput()}
-            onChange={handleForceNbOutputChange}
-          />
-        </>
-      )}
-      <InputHandle className="handle" type="target" position={Position.Left} />
-      <div className="output-strip-node-outputs">
-        {Array.from(Array(getNbOutput())).map((_, index) => (
-          <OutputHandle
-            key={generateIdForHandle(index)}
-            data-tooltip-id={`${nodeId}-tooltip`}
-            data-tooltip-content={data.outputData ? data.outputData[index] : ''}
-            type="source"
-            id={generateIdForHandle(index)}
-            position={Position.Right}
-            style={{
-              background: data?.outputData ? (data.outputData[index] ? 'rgb(224, 166, 79)' : '#ddd') : '#ddd',
-              top: `${getNbOutput() === 1 ? 50 : (index / (getNbOutput() - 1)) * 80 + 10}%`
-            }}
-          />
-        ))}
-        <Tooltip id={`${nodeId}-tooltip`} style={{ zIndex: 100 }} />
-      </div>
-    </DataSplitterNodeContainer>
-  );
-});
-
-const DataSplitterNodeContainer = styled.div<{ selected: boolean, nbOutput: number, collapsed: boolean }>`
+const DataSplitterNodeContainer = styled.div<{
+  selected: boolean;
+  nbOutput: number;
+  collapsed: boolean;
+}>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
   background-color: ${({ theme }) => theme.bg};
   padding: 10px;
-  border: 2px solid ${props => props.selected ? '#72c8fa' : '#ddd'};
+  border: 2px solid ${(props) => (props.selected ? "#72c8fa" : "#ddd")};
   border-radius: 10px;
-  box-shadow: ${props => props.selected ? '0px 0px 5px rgba(114, 200, 250, 0.6)' : 'rgba(0, 0, 0, 0.05) 2px 1px 1px'};
+  box-shadow: ${(props) =>
+    props.selected
+      ? "0px 0px 5px rgba(114, 200, 250, 0.6)"
+      : "rgba(0, 0, 0, 0.05) 2px 1px 1px"};
   min-height: 250px;
-  height: ${props => props.nbOutput * 30 + 100}px;
-  width: ${props => props.collapsed ? 'auto' : '150px'};
+  height: ${(props) => props.nbOutput * 30 + 100}px;
+  width: ${(props) => (props.collapsed ? "auto" : "150px")};
   transition: all 0.3s ease-in-out;
 `;
 

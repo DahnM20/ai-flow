@@ -21,8 +21,6 @@ import UserMessagePopup, {
 } from "./popups/UserMessagePopup";
 import { getConfigViaType } from "../nodes-configuration/nodeConfig";
 import { getAllNodeWithEaseOut } from "../utils/mappings";
-import { useTranslation } from "react-i18next";
-import { toastInfoMessage } from "../utils/toastUtils";
 import { useDrop } from "react-dnd";
 import { useSocketListeners } from "../hooks/useFlowSocketListeners";
 import ButtonEdge from "./edges/buttonEdge";
@@ -44,8 +42,6 @@ export interface FlowProps {
 }
 
 function Flow(props: FlowProps) {
-  const { t } = useTranslation("flow");
-
   const reactFlowWrapper = useRef(null);
 
   function getAllEdgeTypes() {

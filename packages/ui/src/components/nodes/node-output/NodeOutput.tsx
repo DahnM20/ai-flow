@@ -1,7 +1,6 @@
-import React, { useState } from "react";
 import { copyToClipboard } from "../../../utils/navigatorUtils";
 import MarkdownOutput from "./MarkdownOutput";
-import { CopyButton, CopyIcon, NodeLogs, NodeLogsText } from "../Node.styles";
+import { NodeLogs, NodeLogsText } from "../Node.styles";
 import { NodeData } from "../types/node";
 import { toastFastInfoMessage } from "../../../utils/toastUtils";
 import { useTranslation } from "react-i18next";
@@ -13,6 +12,7 @@ import VideoUrlOutput from "./VideoUrlOutput";
 import AudioUrlOutput from "./AudioUrlOutput";
 import { getOutputTypeFromExtension } from "./outputUtils";
 import PdfUrlOutput from "./PdfUrlOutput";
+import { OutputType } from "../../../nodes-configuration/nodeConfig";
 
 interface NodeOutputProps {
   data: NodeData;
@@ -66,7 +66,7 @@ export default function NodeOutput({
     }
   };
 
-  function getOutputType(): string {
+  function getOutputType(): OutputType {
     if (data.config?.outputType) {
       return data.config.outputType;
     }

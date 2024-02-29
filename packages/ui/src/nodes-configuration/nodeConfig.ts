@@ -7,7 +7,6 @@ import { urlNodeConfig } from "./urlNode";
 import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
 import { mergerPromptNode } from "./mergerPromptNode";
 import { gptVisionNodeConfig } from "./gptVisionNode";
-import inputImageNodeConfig from "./inputImageNode";
 
 export type SectionType = "models" | "image-generation" | "tools" | "input";
 export type FieldType =
@@ -19,6 +18,15 @@ export type FieldType =
   | "inputNameBar"
   | "boolean"
   | "slider";
+
+export type OutputType =
+  | "imageUrl"
+  | "videoUrl"
+  | "audioUrl"
+  | "pdfUrl"
+  | "imageBase64"
+  | "markdown"
+  | "text";
 
 const fieldTypeWithoutHandle: FieldType[] = [
   "select",
@@ -54,7 +62,7 @@ export interface NodeConfig {
   inputNames?: string[];
   fields: Field[];
   hideFieldsIfParent?: boolean;
-  outputType: "text" | "imageUrl" | "imageBase64" | "videoUrl";
+  outputType: OutputType;
   defaultHideOutput?: boolean;
   hasInputHandle?: boolean;
   section: SectionType;

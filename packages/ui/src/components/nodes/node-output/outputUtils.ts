@@ -1,3 +1,5 @@
+import { OutputType } from "../../../nodes-configuration/nodeConfig";
+
 export const getFileExtension = (url: string) => {
   const extensionMatch = url.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
   return extensionMatch ? extensionMatch[1] : "";
@@ -8,7 +10,7 @@ export const getGeneratedFileName = (url: string, nodeName: string) => {
   return `${nodeName}-output.${extension}`;
 };
 
-const extensionToTypeMap: { [key: string]: string } = {
+const extensionToTypeMap: { [key: string]: OutputType } = {
   // Image extensions
   ".png": "imageUrl",
   ".jpg": "imageUrl",
@@ -26,7 +28,7 @@ const extensionToTypeMap: { [key: string]: string } = {
   ".glb": "markdown",
 };
 
-export function getOutputTypeFromExtension(output: string) {
+export function getOutputTypeFromExtension(output: string): OutputType {
   if (!output) return "markdown";
   const extension = Object.keys(extensionToTypeMap).find((ext) =>
     output.endsWith(ext),

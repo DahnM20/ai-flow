@@ -1,6 +1,6 @@
 import { AiOutlineRobot } from "react-icons/ai";
 import { BsInputCursorText } from "react-icons/bs";
-import { FaImage, FaToolbox } from "react-icons/fa";
+import { FaToolbox } from "react-icons/fa";
 import { NodeType } from "../utils/mappings";
 import { NodeConfig, SectionType, nodeConfigs } from "./nodeConfig";
 

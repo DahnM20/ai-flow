@@ -29,7 +29,7 @@ async function withCache<T extends any[], N>(
   let options: CacheOptions | undefined = undefined;
   let parameters: Params<AsyncFunction<T, N>>;
 
-  if (args.length > 0 && typeof args[0] === "object" && "key" in args[0]) {
+  if (args.length > 0 && typeof args[0] === "object" && "ttl" in args[0]) {
     options = args.shift() as CacheOptions;
     parameters = args as Params<AsyncFunction<T, N>>;
   } else {
@@ -45,11 +45,9 @@ async function withCache<T extends any[], N>(
   let cachedResult = getCache<N>(cacheKey);
 
   if (cachedResult !== undefined) {
-    console.log("Cache hit");
     return cachedResult;
   }
 
-  console.log("Cache miss");
   const result = await fn(...parameters);
   setCache(cacheKey, result);
   return result;

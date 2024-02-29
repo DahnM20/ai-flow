@@ -3,7 +3,7 @@ import { Node, Edge } from "reactflow";
 import { nodesTopologicalSort, convertFlowToJson } from "../utils/flowUtils";
 import { FlowEvent, SocketContext } from "./SocketProvider";
 import { useTranslation } from "react-i18next";
-import { toastErrorMessage, toastInfoMessage } from "../utils/toastUtils";
+import { toastErrorMessage } from "../utils/toastUtils";
 import {
   createErrorMessageForMissingFields,
   getNodeInError,

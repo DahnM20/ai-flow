@@ -4,7 +4,6 @@ import { useContext, useMemo, useState } from "react";
 import { NodeContext } from "../../../providers/NodeProvider";
 import AttachNodeDialog from "../AttachNodeDialog";
 import { Field } from "../../../nodes-configuration/nodeConfig";
-import { useTranslation } from "react-i18next";
 import { useFormFields } from "../../../hooks/useFormFields";
 import MarkdownOutput from "../../nodes/node-output/MarkdownOutput";
 import ImageUrlOutput from "../../nodes/node-output/ImageUrlOutput";
@@ -29,7 +28,6 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
   const { nodes, onUpdateNodeData, currentNodesRunning, isRunning } =
     useContext(NodeContext);
   const [popupOpen, setPopupOpen] = useState(false);
-  const { t } = useTranslation("flow");
 
   const currentNode = useMemo(
     () => nodes.find((n) => n.data.name === nodeId),

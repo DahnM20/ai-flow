@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import { FaPlay, FaSpinner } from "react-icons/fa";
-import { memo, useContext } from "react";
+import { memo } from "react";
 import TapScale from "../shared/motions/TapScale";
 
 interface ButtonRunAllProps {
