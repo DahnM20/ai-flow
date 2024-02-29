@@ -17,7 +17,8 @@ export async function getTemplates() {
 }
 
 export async function getTemplate(templateId: string) {
-  return await client.get(`/template/${templateId}`);
+  const response = await client.get(`/template/${templateId}`);
+  return response.data;
 }
 
 export async function saveTemplate(data: TemplateFormData, flowData: any) {
