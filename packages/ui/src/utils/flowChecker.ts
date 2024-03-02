@@ -2,7 +2,10 @@ import { NodeData } from "../components/nodes/types/node";
 import { Field } from "../nodes-configuration/nodeConfig";
 import { Node } from "reactflow";
 
-const isFieldLinkedToAnotherNode = (field: Field, nodeData: NodeData) => {
+export const isFieldLinkedToAnotherNode = (
+  field: Field,
+  nodeData: NodeData,
+) => {
   const nodeFieldsWithSameName = nodeData.inputs?.find(
     (input) => input.inputName === field.name,
   );
@@ -28,7 +31,7 @@ export const getRequiredNodesForLaunch = (
   return requiredNodes;
 };
 
-const getNodeMissingFields = (nodeData: NodeData) => {
+export const getNodeMissingFields = (nodeData: NodeData) => {
   const missingFields: string[] = [];
 
   nodeData.config?.fields?.forEach((field) => {

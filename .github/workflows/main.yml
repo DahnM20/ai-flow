@@ -26,6 +26,10 @@ jobs:
           chmod +x healthcheck.sh
           ./healthcheck.sh http://localhost:5000/healthcheck
 
+      - name: Run UI unit tests
+        run: |
+          docker exec ai-flow-frontend npm run test
+
       - name: Run Python unit tests
         run: |
           docker exec ai-flow-backend python -m unittest discover -s tests/unit -p '*test_*.py'

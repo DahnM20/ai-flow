@@ -8,9 +8,10 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
+    "@types/chai": "^4.3.12",
     "@types/lodash.debounce": "^4.0.8",
     "@types/marked": "^4.0.8",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^16.18.24",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
@@ -58,7 +59,7 @@
     "start": "react-scripts start",
     "start-https": "HTTPS=true SSL_CRT_FILE=cert.pem SSL_KEY_FILE=key.pem react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -81,8 +82,11 @@
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.2",
+    "@types/jest": "^29.5.12",
     "@types/styled-components": "^5.1.26",
+    "jest": "^29.7.0",
     "prettier": "^3.2.4",
-    "prettier-plugin-tailwindcss": "^0.5.11"
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "ts-jest": "^29.1.2"
   }
 }

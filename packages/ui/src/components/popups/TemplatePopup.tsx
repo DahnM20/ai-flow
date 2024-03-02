@@ -58,7 +58,7 @@ export default function TemplatePopup({
         </div>
         <div className="flex w-full flex-row-reverse p-1">
           <button
-            className="rounded-lg bg-teal-400/80 px-4 py-1 shadow-xl transition-all duration-300 ease-in-out hover:bg-teal-400"
+            className="rounded-lg bg-teal-400/60 px-4 py-1 font-bold shadow-xl transition-all duration-300 ease-in-out hover:bg-teal-400"
             onClick={() => onValidate(template.id)}
           >
             Create

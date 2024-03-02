@@ -13,9 +13,9 @@ const CONFIG = {
   FLOW_VERSION: "1.0.0",
 };
 
-const handleInPrefix = "handle-in";
-const handleOutPrefix = "handle-out";
-const handleSeparator = "-";
+export const handleInPrefix = "handle-in";
+export const handleOutPrefix = "handle-out";
+export const handleSeparator = "-";
 const indexKeyHandleOut = 2;
 const indexKeyHandleIn = 2;
 
@@ -141,7 +141,7 @@ export function convertFlowToJson(
   });
 }
 
-function convertEdgeToNodeInput(
+export function convertEdgeToNodeInput(
   edge: any,
   nodes: BasicNode[],
   node: BasicNode,
