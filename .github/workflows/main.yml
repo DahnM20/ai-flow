@@ -28,7 +28,9 @@ jobs:
 
       - name: Run UI unit tests
         run: |
-          docker exec ai-flow-frontend npm run test
+          cd packages/ui
+          npm i
+          npm run tests/unit
 
       - name: Run Python unit tests
         run: |
