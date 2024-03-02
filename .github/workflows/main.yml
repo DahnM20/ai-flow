@@ -30,7 +30,7 @@ jobs:
         run: |
           cd packages/ui
           npm i
-          npm run tests/unit
+          npm run test
 
       - name: Run Python unit tests
         run: |
