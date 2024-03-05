@@ -19,11 +19,12 @@
 </p>
 <div align="center">
 
-## 🎉🚀 v0.6.1 is Now Available 🚀🎉
+## 🎉🚀 v0.6.2 is Now Available 🚀🎉
 
 🚀 **New Replicate Node** | ✨ **Access to a lot of open-source models </br> (LLama, Mistral, Face Swap, MusicGen, ...)**
 </br>
-🌟 **New Edge Type Button** | 🎵 **Support for audio output**
+</br>
+🌟 **New Standalone Desktop Release**
 
 </div>
 
@@ -54,14 +55,6 @@ LLaMA, Mistral, Stable Video Diffusion, Music-gen, and many more.
 #### Summarize web pages & youtube transcript
 
 ![image-summary](assets/summary.png)
-
-#### Use pre-made prompts to build quickly
-
-![image-ai-actions](assets/predefined-prompts.png)
-
-#### Split input with AI
-
-![image-summary](assets/split-input.png)
 
 #### Describe picture with AI
 
