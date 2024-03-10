@@ -1,6 +1,6 @@
 {
-  "title": "📹✨ Stable Video Diffusion",
-  "description": "Text-to-video using Stable Video Diffusion",
+  "title": "📹✨ Generate Video",
+  "description": "Text-to-video using Dynami-Crafter",
   "image": "https://example.com/path/to/template-image.jpg",
   "tags": ["image", "video"],
   "template": [
@@ -8,20 +8,23 @@
       "inputs": [],
       "name": "h5qznxkky#input-text",
       "processorType": "input-text",
+      "inputText": "Your prompt here",
+      "missingFields": [],
+      "isDone": false,
       "config": {
         "fields": [
           {
-            "type": "textarea",
             "name": "inputText",
+            "placeholder": "InputPlaceholder",
             "required": true,
-            "placeholder": "InputPlaceholder"
+            "type": "textarea"
           }
         ],
         "nodeName": "Text",
         "outputType": "text"
       },
       "x": 557.0628662660416,
-      "y": 371.72681644161884
+      "y": 355.9270728193104
     },
     {
       "inputs": [
@@ -34,23 +37,23 @@
       "name": "z21068rma#stable-diffusion-stabilityai-prompt",
       "processorType": "stable-diffusion-stabilityai-prompt",
       "size": "1024x1024",
+      "missingFields": [],
+      "isDone": false,
       "config": {
         "fields": [
           {
-            "type": "textarea",
+            "hideIfParent": true,
             "name": "prompt",
             "placeholder": "DallEPromptPlaceholder",
-            "hideIfParent": true
+            "type": "textarea"
           },
           {
-            "type": "select",
             "name": "size",
-            "placeholder": "StableDiffusionSizePlaceholder",
             "options": [
               {
+                "default": true,
                 "label": "1024x1024",
-                "value": "1024x1024",
-                "default": true
+                "value": "1024x1024"
               },
               {
                 "label": "1152x896",
@@ -84,7 +87,9 @@
                 "label": "896x1152",
                 "value": "896x1152"
               }
-            ]
+            ],
+            "placeholder": "StableDiffusionSizePlaceholder",
+            "type": "select"
           }
         ],
         "nodeName": "Stable Diffusion",
@@ -92,153 +97,124 @@
         "hasInputHandle": true,
         "outputType": "imageUrl"
       },
-      "x": 1155.561487658708,
-      "y": 161.9008158008993
+      "x": 1158.72143638317,
+      "y": 22.863071924585114
     },
     {
+      "name": "d58uegs2l#replicate",
+      "processorType": "replicate",
+      "i2v_cfg_scale": 7.5,
+      "i2v_eta": 1,
+      "i2v_motion": 4,
+      "i2v_seed": 123,
+      "i2v_steps": 50,
+      "missingFields": [],
       "inputs": [
         {
-          "inputName": "input_image",
+          "inputName": "i2v_input_image",
           "inputNode": "z21068rma#stable-diffusion-stabilityai-prompt",
+          "inputNodeOutputKey": 0
+        },
+        {
+          "inputName": "i2v_input_text",
+          "inputNode": "h5qznxkky#input-text",
           "inputNodeOutputKey": 0
         }
       ],
-      "name": "h291nwghc#replicate",
-      "processorType": "replicate",
-      "cond_aug": 0.02,
-      "decoding_t": 14,
-      "frames_per_second": 6,
-      "motion_bucket_id": 127,
-      "sizing_strategy": "maintain_aspect_ratio",
-      "video_length": "14_frames_with_svd",
       "config": {
         "fields": [
           {
-            "name": "cond_aug",
-            "type": "input",
-            "label": "cond_aug",
-            "placeholder": "Amount of noise to add to input image",
-            "defaultValue": 0.02,
-            "hasHandle": true,
-            "isLinked": false,
-            "required": false
-          },
-          {
-            "name": "decoding_t",
-            "type": "inputInt",
-            "label": "decoding_t",
-            "placeholder": "Number of frames to decode at a time",
-            "defaultValue": 14,
-            "hasHandle": true,
-            "isLinked": false,
-            "required": false
-          },
-          {
-            "name": "frames_per_second",
+            "name": "i2v_cfg_scale",
             "type": "slider",
-            "label": "frames_per_second",
-            "placeholder": "Frames per second",
-            "defaultValue": 6,
-            "max": 30,
-            "min": 5,
-            "hasHandle": false,
-            "isLinked": false,
-            "required": false
-          },
-          {
-            "name": "input_image",
-            "type": "input",
-            "label": "input_image",
-            "placeholder": "Input image",
-            "hasHandle": true,
-            "isLinked": true,
-            "required": true
-          },
-          {
-            "name": "motion_bucket_id",
-            "type": "slider",
-            "label": "motion_bucket_id",
-            "placeholder": "Increase overall motion in the generated video",
-            "defaultValue": 127,
-            "max": 255,
+            "label": "i2v_cfg_scale",
+            "placeholder": "CFG Scale",
+            "defaultValue": 7.5,
+            "max": 15,
             "min": 1,
             "hasHandle": false,
             "isLinked": false,
             "required": false
           },
           {
-            "name": "seed",
-            "type": "inputInt",
-            "label": "seed",
-            "placeholder": "Random seed. Leave blank to randomize the seed",
-            "hasHandle": true,
+            "name": "i2v_eta",
+            "type": "slider",
+            "label": "i2v_eta",
+            "placeholder": "ETA",
+            "defaultValue": 1,
+            "max": 1,
+            "min": 0,
+            "hasHandle": false,
             "isLinked": false,
             "required": false
           },
           {
-            "name": "sizing_strategy",
-            "type": "select",
-            "label": "sizing_strategy",
-            "placeholder": "Decide how to resize the input image",
-            "defaultValue": "maintain_aspect_ratio",
-            "hasHandle": false,
-            "isLinked": false,
-            "required": false,
-            "options": [
-              {
-                "label": "maintain_aspect_ratio",
-                "value": "maintain_aspect_ratio",
-                "default": true
-              },
-              {
-                "label": "crop_to_16_9",
-                "value": "crop_to_16_9",
-                "default": false
-              },
-              {
-                "label": "use_image_dimensions",
-                "value": "use_image_dimensions",
-                "default": false
-              }
-            ]
+            "name": "i2v_input_image",
+            "type": "input",
+            "label": "i2v_input_image",
+            "placeholder": "Input image",
+            "hasHandle": true,
+            "isLinked": true,
+            "required": true
           },
           {
-            "name": "video_length",
-            "type": "select",
-            "label": "video_length",
-            "placeholder": "Use svd to generate 14 frames or svd_xt for 25 frames",
-            "defaultValue": "14_frames_with_svd",
+            "name": "i2v_input_text",
+            "type": "input",
+            "label": "i2v_input_text",
+            "defaultValue": "man fishing in a boat at sunset",
+            "hasHandle": true,
+            "isLinked": true,
+            "required": false
+          },
+          {
+            "name": "i2v_motion",
+            "type": "slider",
+            "label": "i2v_motion",
+            "placeholder": "Motion magnitude",
+            "defaultValue": 4,
+            "max": 20,
+            "min": 1,
             "hasHandle": false,
             "isLinked": false,
-            "required": false,
-            "options": [
-              {
-                "label": "14_frames_with_svd",
-                "value": "14_frames_with_svd",
-                "default": true
-              },
-              {
-                "label": "25_frames_with_svd_xt",
-                "value": "25_frames_with_svd_xt",
-                "default": false
-              }
-            ]
+            "required": false
+          },
+          {
+            "name": "i2v_seed",
+            "type": "slider",
+            "label": "i2v_seed",
+            "placeholder": "Random Seed",
+            "defaultValue": 123,
+            "max": 10000,
+            "min": 0,
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false
+          },
+          {
+            "name": "i2v_steps",
+            "type": "slider",
+            "label": "i2v_steps",
+            "placeholder": "Sampling steps",
+            "defaultValue": 50,
+            "max": 60,
+            "min": 1,
+            "hasHandle": false,
+            "isLinked": false,
+            "required": false
           }
         ],
-        "nodeName": "stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438",
+        "nodeName": "camenduru/dynami-crafter-576x1024:e79ff8d01e81cbd90acfa1df4f209f637da2c68307891d77a6e4227f4ec350f1",
         "inputNames": [
-          "cond_aug",
-          "decoding_t",
-          "frames_per_second",
-          "input_image",
-          "motion_bucket_id",
-          "seed",
-          "sizing_strategy",
-          "video_length"
+          "i2v_cfg_scale",
+          "i2v_eta",
+          "i2v_input_image",
+          "i2v_input_text",
+          "i2v_motion",
+          "i2v_seed",
+          "i2v_steps"
         ]
       },
-      "x": 1725.345235970366,
-      "y": 160.1974851819317
+      "x": 1819.3906450615507,
+      "y": 229.52161671553984
     }
   ]
 }
