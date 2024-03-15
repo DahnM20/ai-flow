@@ -155,7 +155,9 @@ export default function DynamicFieldsNode({
         const inputSchema = getSchemaFromConfig(config, "Input");
         fields = convertOpenAPISchemaToNodeConfig(inputSchema, config);
       } catch (error) {
-        toastErrorMessage(`Error fetching configuration: ${error}`);
+        toastErrorMessage(
+          `Error fetching configuration for following model : "${model}". \n\n Here's a valid model name as an example : fofr/become-image `,
+        );
       }
       if (!config) return;
       const modelId = config.modelId;
