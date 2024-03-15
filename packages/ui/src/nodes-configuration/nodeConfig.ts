@@ -67,6 +67,7 @@ export interface NodeConfig {
   hasInputHandle?: boolean;
   section: SectionType;
   helpMessage?: string;
+  showHandlesNames?: boolean;
 }
 
 export const nodeConfigs: { [key in NodeType]?: NodeConfig } = {

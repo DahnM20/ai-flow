@@ -10,7 +10,7 @@ import {
   NodeBand,
 } from "./Node.styles";
 import useHandleShowOutput from "../../hooks/useHandleShowOutput";
-import { generateIdForHandle } from "../../utils/flowUtils";
+import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
 import { ICON_MAP } from "./utils/NodeIcons";
 import { Field } from "../../nodes-configuration/nodeConfig";
 import { NodeContext } from "../../providers/NodeProvider";
@@ -33,8 +33,13 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
   ({ data, id, selected }) => {
     const { t } = useTranslation("flow");
 
-    const { hasParent, showOnlyOutput, onUpdateNodeData, getNodeDimensions } =
-      useContext(NodeContext);
+    const {
+      hasParent,
+      showOnlyOutput,
+      onUpdateNodeData,
+      getNodeDimensions,
+      getIncomingEdges,
+    } = useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
 
@@ -45,6 +50,9 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         : !data.config.defaultHideOutput,
     );
     const [isPlaying, setIsPlaying] = useIsPlaying();
+    const [fields, setFields] = useState<Field[]>(
+      !!data.config?.fields ? data.config.fields : [],
+    );
 
     const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
 
@@ -67,6 +75,36 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         setShowLogs(false);
       }
     }, [data.lastRun, data.outputData]);
+
+    useEffect(() => {
+      const fieldsToNullify: any = {};
+
+      const edgesKeys = getIncomingEdges(id)?.map((edge) =>
+        getTargetHandleKey(edge),
+      );
+
+      edgesKeys?.forEach((key) => {
+        fieldsToNullify[fields[key]?.name] = undefined;
+      });
+
+      const fieldsUpdated = fields.map((field) => {
+        if (field.name in fieldsToNullify) {
+          field.isLinked = true;
+        } else {
+          field.isLinked = false;
+        }
+        return field;
+      });
+
+      onUpdateNodeData(id, {
+        ...data,
+        ...fieldsToNullify,
+        config: {
+          ...data.config,
+          fields: fieldsUpdated,
+        },
+      });
+    }, [getIncomingEdges(id)?.length]);
 
     useHandleShowOutput({
       showOnlyOutput,
@@ -107,6 +145,9 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       handleNodeDataChange,
       setDefaultOption,
       hasParent,
+      undefined,
+      data.config.showHandlesNames,
+      collapsed,
     );
 
     const hideNodeParams =
@@ -128,13 +169,16 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
 
     const NodeIconComponent = ICON_MAP[data.config.icon];
 
+    const displayInputs =
+      data.config.hasInputHandle && !data.config.showHandlesNames;
+
     //const dimensions = getNodeDimensions(id);
     // console.log(dimensions);
 
     return (
       <NodeContainer key={id} className={`flex h-full w-full flex-col`}>
         <NodeHeader onDoubleClick={toggleCollapsed}>
-          {data.config.hasInputHandle && (
+          {displayInputs && (
             <>
               {allInputHandleIds.map((id) => {
                 return (
@@ -174,7 +218,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
           />
         </NodeHeader>
         <NodeBand />
-        {!hideNodeParams && (
+        {(!hideNodeParams || data.config.showHandlesNames) && (
           <NodeContent>
             <NodeForm>{formFields}</NodeForm>
           </NodeContent>
