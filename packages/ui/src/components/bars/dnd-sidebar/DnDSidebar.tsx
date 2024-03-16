@@ -2,21 +2,22 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Tooltip } from "react-tooltip";
 import { nodeSectionMapping } from "../../../nodes-configuration/sectionConfig";
-import { memo, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import DraggableNode from "./DraggableNode";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { useSidebarVisibility } from "../../../providers/SidebarVisibilityProvider";
 
 const HIDE_SIDEBAR_ANIMATION_DURATION = 300;
 
 const DnDSidebar = () => {
   const { t } = useTranslation("flow");
-  const [isOpen, setOpen] = useState(true);
+  const { isSidebarVisible, toggleSidebar } = useSidebarVisibility();
 
-  const [contentVisible, setContentVisible] = useState(isOpen);
+  const [contentVisible, setContentVisible] = useState(isSidebarVisible);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    if (isOpen) {
+    if (isSidebarVisible) {
       setContentVisible(true);
     } else {
       timeoutId = setTimeout(
@@ -26,25 +27,25 @@ const DnDSidebar = () => {
     }
 
     return () => clearTimeout(timeoutId);
-  }, [isOpen]);
+  }, [isSidebarVisible]);
 
   return (
     <>
       <div
         className={`relative flex w-1/2
         transform
-        transition-transform md:w-full duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out ${!isOpen ? "-translate-x-full" : "translate-x-0"}`}
+        transition-transform md:w-full duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out ${!isSidebarVisible ? "-translate-x-full" : "translate-x-0"}`}
       >
         <div
           className={`absolute left-full top-1/2 z-50 flex translate-x-2 transform 
           text-2xl font-bold
           text-slate-300 hover:font-extrabold hover:text-slate-100`}
-          onClick={() => setOpen(!isOpen)}
+          onClick={toggleSidebar}
           data-tooltip-id={`dnd-tooltip`}
-          data-tooltip-content={`${isOpen ? t("HideSidebar") : t("ShowSidebar")}`}
+          data-tooltip-content={`${isSidebarVisible ? t("HideSidebar") : t("ShowSidebar")}`}
           data-tooltip-place="right"
         >
-          {!isOpen ? <FiChevronRight /> : <FiChevronLeft />}
+          {!isSidebarVisible ? <FiChevronRight /> : <FiChevronLeft />}
         </div>
         {contentVisible && (
           <DnDSidebarContainer
@@ -54,7 +55,7 @@ const DnDSidebar = () => {
               ? nodeSectionMapping.map((section, index) => (
                   <Section
                     key={index}
-                    className={`mb-5 flex flex-col gap-y-2 ${!isOpen ? "opacity-0" : ""} 
+                    className={`mb-5 flex flex-col gap-y-2 ${!isSidebarVisible ? "opacity-0" : ""} 
                   transition-opacity duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out`}
                   >
                     <SectionTitle className="text-md ml-1 flex flex-row items-center gap-x-2 border-b-2 border-b-slate-500/20 py-1 text-slate-300">
@@ -70,7 +71,12 @@ const DnDSidebar = () => {
           </DnDSidebarContainer>
         )}
       </div>
-      <Tooltip id={`dnd-tooltip`} style={{ zIndex: 100 }} delayShow={300} />
+      <Tooltip
+        className="hidden transition-all md:block"
+        id={`dnd-tooltip`}
+        style={{ zIndex: 100 }}
+        delayShow={300}
+      />
     </>
   );
 };

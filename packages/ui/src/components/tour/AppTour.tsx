@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Joyride, { ACTIONS, EVENTS, STATUS, Step } from "react-joyride";
 import { theme } from "../shared/theme";
 import { useTranslation } from "react-i18next";
+import { useSidebarVisibility } from "../../providers/SidebarVisibilityProvider";
 
 interface AppTourProps {
   run: boolean;
@@ -32,6 +33,8 @@ export function AppTour({ run, setRun }: AppTourProps) {
   const [joyrideKey, setJoyrideKey] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
 
+  const { isSidebarVisible, showSidebar, hideSidebar } = useSidebarVisibility();
+
   const { t } = useTranslation("tour");
 
   useEffect(() => {
@@ -47,7 +50,7 @@ export function AppTour({ run, setRun }: AppTourProps) {
             <p>{t("firstTimeHere")}</p>
             <p>{t("discoverApp")}</p>
           </div>
-          <div className="flex flex-row justify-center space-x-4 text-lg">
+          <div className="flex flex-row justify-center space-x-4 text-sm md:text-lg">
             <button
               type="button"
               className="rounded-lg bg-slate-700 p-3 text-white transition duration-150 ease-in-out hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
@@ -185,6 +188,13 @@ export function AppTour({ run, setRun }: AppTourProps) {
 
     if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
       // Update state to advance the tour
+      if (index === 1) {
+        hideSidebar();
+      }
+
+      if (index === 3) {
+        showSidebar();
+      }
       setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1));
     } else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
       // Need to set our running state to false, so we can restart if we click start again.

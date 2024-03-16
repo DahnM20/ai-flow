@@ -275,12 +275,8 @@ function Flow(props: FlowProps) {
       onUpdateNodeData={handleUpdateNodeData}
       onUpdateNodes={handleUpdateNodes}
     >
-      <div style={{ height: "100%" }} onClick={handleNodesClick} ref={dropRef}>
-        <div
-          className="reactflow-wrapper"
-          style={{ height: "100%" }}
-          ref={reactFlowWrapper}
-        >
+      <div className="h-full w-full" onClick={handleNodesClick} ref={dropRef}>
+        <div className="reactflow-wrapper h-full w-full" ref={reactFlowWrapper}>
           <ReactFlowStyled
             nodes={nodes}
             nodeTypes={nodeTypes}
