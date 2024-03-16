@@ -22,7 +22,7 @@ export const gptVisionNodeConfig: NodeConfig = {
       type: "input",
       hasHandle: true,
       required: true,
-      placeholder: "VisionPromptPlaceholder",
+      placeholder: "VisionImageURLPlaceholder",
     },
     {
       name: "prompt",
