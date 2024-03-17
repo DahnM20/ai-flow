@@ -37,7 +37,7 @@ function InputNameBar({
   };
 
   return (
-    <div className="flex flex-row items-center justify-center space-x-4 rounded-lg py-1 shadow">
+    <div className="flex w-full flex-row items-center justify-center space-x-4 rounded-lg py-1 shadow">
       {inputNames.map((name) => {
         return (
           <div

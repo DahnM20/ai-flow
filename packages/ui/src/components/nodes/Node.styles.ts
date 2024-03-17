@@ -120,7 +120,7 @@ export const OptionSelector = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  width: fit-content;
+  width: 100%;
   height: fit-content;
   border: 2px solid ${({ theme }) => theme.accent};
   border-radius: 4px;
@@ -134,7 +134,7 @@ export const OptionSelector = styled.div`
 export const OptionButton = styled.button<{ selected: boolean }>`
   flex-grow: 1;
   padding: 10px 10px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   background: ${({ selected, theme }) =>
     selected ? theme.optionButtonBgSelected : null};
   color: ${({ selected, theme }) =>

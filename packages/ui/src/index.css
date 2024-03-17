@@ -13,6 +13,9 @@ body,
   font-family: sans-serif;
 }
 
+#webpack-dev-server-client-overlay{
+  display: none;
+}
 
 html{
   background: linear-gradient(0deg, hsl(180deg 9.33% 12.39%) 0%, hsl(0deg 0% 10.39%) 100%);

@@ -15,12 +15,13 @@ import { generateIdForHandle } from "../utils/flowUtils";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import NodeField from "../components/nodes/node-input/NodeField";
+import SelectAutocomplete from "../components/selectors/SelectAutocomplete";
 
 export function useFormFields(
   data: any,
   id: string,
   handleNodeDataChange: (fieldName: string, value: any) => void,
-  setDefaultOption?: Function,
+  setDefaultOptions?: Function,
   hasParent?: Function,
   specificField?: string,
   showHandles?: boolean,
@@ -41,14 +42,8 @@ export function useFormFields(
   };
 
   useEffect(() => {
-    if (!setDefaultOption) return;
-
-    const fields = getFields();
-    fields?.forEach((field: Field) => {
-      if (!data[field.name]) {
-        setDefaultOption(field);
-      }
-    });
+    if (!setDefaultOptions) return;
+    setDefaultOptions();
   }, []);
 
   const handleEventNodeDataChange = (
@@ -95,16 +90,21 @@ export function useFormFields(
         );
       case "select":
         return (
-          <NodeSelect
-            onChange={(e) => handleNodeDataChange(field.name, e.target.value)}
-            defaultValue={data[field.name]}
-          >
-            {field.options?.map((option) => (
-              <NodeSelectOption key={`${id}-${option.value}`}>
-                {t(option.label)}
-              </NodeSelectOption>
-            ))}
-          </NodeSelect>
+          <SelectAutocomplete
+            key={`${id}-${field.name}`}
+            onChange={(value) => handleNodeDataChange(field.name, value)}
+            selectedValue={data[field.name] ?? ""}
+            values={
+              !!field.options
+                ? field.options?.map((option) => {
+                    return {
+                      name: option.label,
+                      value: option.value,
+                    };
+                  })
+                : []
+            }
+          />
         );
       case "option":
         return (
