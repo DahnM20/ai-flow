@@ -127,23 +127,27 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       });
     };
 
-    function setDefaultOption(field: Field) {
-      if (field.options) {
-        const defaultOption = field.options.find((option) => option.default);
-        if (defaultOption) {
-          onUpdateNodeData(id, {
-            ...data,
-            [field.name]: defaultOption.value,
-          });
-        }
-      }
+    function setDefaultOptions() {
+      const defaultOptions: any = {};
+      data.config.fields
+        .filter((field) => field.options?.find((option) => option.default))
+        .forEach((field) => {
+          defaultOptions[field.name] = field.options?.find(
+            (option) => option.default,
+          )?.value;
+        });
+
+      onUpdateNodeData(id, {
+        ...data,
+        ...defaultOptions,
+      });
     }
 
     const formFields = useFormFields(
       data,
       id,
       handleNodeDataChange,
-      setDefaultOption,
+      setDefaultOptions,
       hasParent,
       undefined,
       data.config.showHandlesNames,
