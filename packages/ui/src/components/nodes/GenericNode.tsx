@@ -77,6 +77,8 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     }, [data.lastRun, data.outputData]);
 
     useEffect(() => {
+      if (!data.config.fields.some((field) => field.hasHandle)) return;
+
       const fieldsToNullify: any = {};
 
       const edgesKeys = getIncomingEdges(id)?.map((edge) =>
