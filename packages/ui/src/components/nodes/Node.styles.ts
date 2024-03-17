@@ -58,18 +58,24 @@ export const NodeForm = styled.div`
 export const NodeLabel = styled.label``;
 
 export const NodeTextarea = styled.textarea`
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 12px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-size: 16px;
   background-color: ${({ theme }) => theme.nodeInputBg};
-  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.text};
   resize: vertical;
-  min-height: 6rem;
+  min-height: 8rem;
   width: 100%;
-  height: 100%;
-  transition: all 0.3s ease;
+  transition:
+    box-shadow 0.3s ease-in-out,
+    background-color 0.3s ease;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 export const NodeIcon = styled.div`
@@ -230,12 +236,23 @@ export const NodeInput = styled.input`
   width: 100%;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: 16px;
   color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.nodeInputBg};
-  padding: 10px 16px;
-  border-radius: 5px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  transition:
+    box-shadow 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+    transform: translateY(
+      -1px
+    ); // Slight lift effect on hover/focus for an interactive feel
+  }
 `;
 
 export const InputHandle = styled(Handle)<{ required?: boolean }>`
@@ -276,6 +293,11 @@ export const OutputHandle = styled(Handle)`
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease;
+
+  @media (max-width: 600px) {
+    width: 1.25em;
+    height: 1.25em;
+  }
 
   &:hover {
     background: rgb(234, 176, 89);

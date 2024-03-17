@@ -1,10 +1,10 @@
-import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
 interface Item {
   name?: string;
-  value: string;
+  value: any;
 }
 
 interface SelectAutocompleteProps<T> {
@@ -24,7 +24,8 @@ function SelectAutocomplete<T extends Item>({
     query === ""
       ? values
       : values.filter((item) => {
-          return item.value.toLowerCase().includes(query.toLowerCase());
+          const nameStr = item.name ?? "" + item.value;
+          return nameStr.toLowerCase().includes(query.toLowerCase());
         });
 
   return (
@@ -34,6 +35,9 @@ function SelectAutocomplete<T extends Item>({
           <Combobox.Input
             className="text-md w-full border-none bg-zinc-700/40 py-2 pl-3 pr-10 leading-5 text-slate-50"
             onChange={(event) => setQuery(event.target.value)}
+            displayValue={(value: any) =>
+              filteredItems.find((item) => item.value === value)?.name ?? ""
+            }
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
             <FiChevronRight
@@ -49,7 +53,7 @@ function SelectAutocomplete<T extends Item>({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options className="absolute z-30 mt-1 max-h-60 w-full overflow-auto rounded-md bg-zinc-900 py-1 text-base shadow-lg  outline-none sm:text-sm">
+          <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-zinc-900 py-1 text-base shadow-lg  outline-none sm:text-sm">
             {filteredItems.length === 0 && query !== "" ? (
               <div className="relative cursor-default select-none px-4 py-2 text-slate-100">
                 Nothing found.
