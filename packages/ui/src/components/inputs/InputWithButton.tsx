@@ -19,7 +19,7 @@ const InputWithButton = ({
 }: InputWithButtonProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-center px-2 pb-4">
-      <div className="flex w-2/3 flex-row space-x-2">
+      <div className="flex w-full flex-row space-x-2">
         <NodeInput
           type="text"
           className={` ${inputClassName ? inputClassName : "text-center"} `}
