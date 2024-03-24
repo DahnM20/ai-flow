@@ -61,7 +61,7 @@ export const NodeTextarea = styled.textarea`
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 1.1em;
   background-color: ${({ theme }) => theme.nodeInputBg};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.text};
@@ -163,7 +163,7 @@ export const NodeSelect = styled.select`
   padding: 10px 16px;
   border: none;
   border-radius: 5px;
-  font-size: 1em;
+  font-size: 1.1em;
   background-color: ${({ theme }) => theme.nodeInputBg};
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   color: ${({ theme }) => theme.text};
@@ -236,7 +236,7 @@ export const NodeInput = styled.input`
   width: 100%;
   border: none;
   outline: none;
-  font-size: 16px;
+  font-size: 1.1em;
   color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.nodeInputBg};
   padding: 12px 18px;

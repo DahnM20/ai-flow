@@ -1,56 +1,54 @@
 import { NodeConfig } from "./nodeConfig";
 
-
 const dallENodeConfig: NodeConfig = {
-    nodeName: "DALL-E 3",
-    icon: "FaImage",
-    hasInputHandle: true,
-    fields: [
+  nodeName: "DALL-E 3",
+  icon: "FaImage",
+  hasInputHandle: true,
+  fields: [
+    {
+      type: "textarea",
+      name: "prompt",
+      placeholder: "DallEPromptPlaceholder",
+      hideIfParent: true,
+    },
+    {
+      type: "select",
+      name: "size",
+      options: [
         {
-            type: "textarea",
-            name: "prompt",
-            placeholder: 'DallEPromptPlaceholder',
-            hideIfParent: true,
+          label: "1024x1024",
+          value: "1024x1024",
+          default: true,
         },
         {
-            type: "select",
-            name: "size",
-            options: [
-                {
-                    label: '1024x1024',
-                    value: '1024x1024',
-                    default: true,
-                },
-                {
-                    label: '1024x1792',
-                    value: '1024x1792'
-                },
-                {
-                    label: '1792x1024',
-                    value: '1792x1024'
-                },
-            ]
+          label: "1024x1792",
+          value: "1024x1792",
         },
         {
-            type: "select",
-            name: "quality",
-            options: [
-                {
-                    label: 'standard',
-                    value: 'standard',
-                    default: true,
-                },
-                {
-                    label: 'hd',
-                    value: 'hd'
-                },
-            ]
-        }
-
-    ],
-    outputType: "imageUrl",
-    section: 'models',
-    helpMessage: 'dallePromptHelp',
+          label: "1792x1024",
+          value: "1792x1024",
+        },
+      ],
+    },
+    {
+      type: "select",
+      name: "quality",
+      options: [
+        {
+          label: "standard",
+          value: "standard",
+          default: true,
+        },
+        {
+          label: "hd",
+          value: "hd",
+        },
+      ],
+    },
+  ],
+  outputType: "imageUrl",
+  section: "models",
+  helpMessage: "dallePromptHelp",
 };
 
 export default dallENodeConfig;

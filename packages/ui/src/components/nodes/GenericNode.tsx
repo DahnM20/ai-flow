@@ -27,10 +27,11 @@ interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
   id: string;
   selected: boolean;
+  nodeFields?: Field[];
 }
 
 const GenericNode: React.FC<GenericNodeProps> = React.memo(
-  ({ data, id, selected }) => {
+  ({ data, id, selected, nodeFields }) => {
     const { t } = useTranslation("flow");
 
     const {
@@ -45,19 +46,29 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
 
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const [showLogs, setShowLogs] = useState<boolean>(
-      data.config.defaultHideOutput == null
+      data.config?.defaultHideOutput == null
         ? true
         : !data.config.defaultHideOutput,
     );
     const [isPlaying, setIsPlaying] = useIsPlaying();
     const [fields, setFields] = useState<Field[]>(
-      !!data.config?.fields ? data.config.fields : [],
+      !!data.config?.fields
+        ? data.config.fields
+        : !!nodeFields
+          ? nodeFields
+          : [],
     );
 
     const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
 
     const nbInput = useMemo(() => {
-      return !!data.config.inputNames ? data.config.inputNames.length : 1;
+      if (!!data.config.inputNames) {
+        return data.config.inputNames.length;
+      }
+      if (!!fields && fields.some((field) => field.hasHandle)) {
+        return fields.length;
+      }
+      return 1;
     }, []);
 
     const { allInputHandleIds, allHandlePositions } = useHandlePositions(

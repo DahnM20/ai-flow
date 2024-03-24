@@ -8,6 +8,7 @@ import EaseOut from "../components/shared/motions/EaseOut";
 import NodeWrapper from "../components/nodes/NodeWrapper";
 import DynamicFieldsNode from "../components/nodes/DynamicFieldsNode";
 import TransitionNode from "../components/nodes/TransitionNode";
+import ReplicateNode from "../components/nodes/ReplicateNode";
 
 /**
  * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
@@ -45,7 +46,7 @@ export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> =
     "ai-data-splitter": AIDataSplitterNode,
     "ai-action": AIActionNode,
     file: FileUploadNode,
-    replicate: DynamicFieldsNode,
+    replicate: ReplicateNode,
     transition: TransitionNode,
   };
 
