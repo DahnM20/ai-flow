@@ -30,10 +30,10 @@ function SelectAutocomplete<T extends Item>({
 
   return (
     <Combobox value={selectedValue} onChange={onChange}>
-      <div className="relative mt-1 ">
-        <div className="relative w-full cursor-default overflow-hidden rounded-lg  border-none text-left shadow-md outline-none  sm:text-sm">
+      <div className="relative mt-1">
+        <div className="relative w-full cursor-default overflow-hidden rounded-lg  border-none text-left shadow-md outline-none sm:text-sm">
           <Combobox.Input
-            className="text-md w-full border-none bg-zinc-700/40 py-2 pl-3 pr-10 leading-5 text-slate-50"
+            className="w-full border-none bg-zinc-700/40 py-2 pl-3 pr-10 text-lg leading-5 text-slate-50"
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(value: any) =>
               filteredItems.find((item) => item.value === value)?.name ?? ""
@@ -53,7 +53,7 @@ function SelectAutocomplete<T extends Item>({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-zinc-900 py-1 text-base shadow-lg  outline-none sm:text-sm">
+          <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-zinc-900 py-1 text-lg shadow-lg  outline-none sm:text-sm">
             {filteredItems.length === 0 && query !== "" ? (
               <div className="relative cursor-default select-none px-4 py-2 text-slate-100">
                 Nothing found.

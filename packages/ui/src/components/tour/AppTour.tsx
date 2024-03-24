@@ -187,7 +187,6 @@ export function AppTour({ run, setRun }: AppTourProps) {
     const { action, index, status, type } = data;
 
     if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
-      // Update state to advance the tour
       if (index === 1) {
         hideSidebar();
       }
