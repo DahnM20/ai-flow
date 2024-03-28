@@ -11,6 +11,9 @@ body,
   padding: 0;
   box-sizing: border-box;
   font-family: sans-serif;
+  line-height: 1.5em;
+  word-spacing: 0.16em;
+  /*letter-spacing: 0.12em;*/
 }
 
 #webpack-dev-server-client-overlay{

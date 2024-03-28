@@ -62,6 +62,7 @@ export const NodeTextarea = styled.textarea`
   border: none;
   border-radius: 8px;
   font-size: 1.1em;
+  line-height: 1.5em;
   background-color: ${({ theme }) => theme.nodeInputBg};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.text};
@@ -88,7 +89,7 @@ export const NodeIcon = styled.div`
 `;
 
 export const NodeContainer = styled.div<{ width?: number }>`
-  width: 450px;
+  width: 35em;
   //max-width: ${({ width }) => (!!width && width > 450 ? "1500px" : "450px")};
 
   background: ${({ theme }) => theme.nodeGradientBg};
@@ -140,7 +141,7 @@ export const OptionSelector = styled.div`
 export const OptionButton = styled.button<{ selected: boolean }>`
   flex-grow: 1;
   padding: 10px 10px;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   background: ${({ selected, theme }) =>
     selected ? theme.optionButtonBgSelected : null};
   color: ${({ selected, theme }) =>

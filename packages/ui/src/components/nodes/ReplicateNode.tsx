@@ -16,12 +16,12 @@ import { toastErrorMessage } from "../../utils/toastUtils";
 import GenericNode from "./GenericNode";
 import { NodeContext } from "../../providers/NodeProvider";
 
-interface DynamicFieldsNodeData extends NodeData {
+interface ReplicateNodeData extends NodeData {
   schema: any;
 }
 
 interface DynamicFieldsProps extends NodeProps {
-  data: DynamicFieldsNodeData;
+  data: ReplicateNodeData;
 }
 
 export default function ReplicateNode({

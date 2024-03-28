@@ -7,7 +7,7 @@ import { MultiBackend } from "react-dnd-multi-backend";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import WelcomePopup from "./components/popups/WelcomePopup";
 import { AppTour } from "./components/tour/AppTour";
-import { SidebarVisibilityProvider } from "./providers/SidebarVisibilityProvider";
+import { VisibilityProvider } from "./providers/VisibilityProvider";
 
 const App = () => {
   const { dark } = useContext(ThemeContext);
@@ -37,7 +37,7 @@ const App = () => {
   }, []);
 
   return (
-    <SidebarVisibilityProvider>
+    <VisibilityProvider>
       <DndProvider backend={MultiBackend} options={HTML5toTouch}>
         {runTour && <AppTour run={runTour} setRun={setRunTour} />}
         <FlowTabs />
@@ -45,7 +45,7 @@ const App = () => {
           <WelcomePopup show onClose={() => setShowWelcomePopup(false)} />
         )}
       </DndProvider>
-    </SidebarVisibilityProvider>
+    </VisibilityProvider>
   );
 };
 
