@@ -30,6 +30,7 @@ import {
   FlowOnErrorEventData,
   FlowOnProgressEventData,
 } from "../sockets/flowEventTypes";
+import { useVisibility } from "../providers/VisibilityProvider";
 
 export interface FlowProps {
   nodes?: Node[];
@@ -61,6 +62,9 @@ function Flow(props: FlowProps) {
   });
   const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
   const [errorCount, setErrorCount] = useState<number>(0);
+
+  const { getElement } = useVisibility();
+  const minimap = getElement("minimap");
 
   useEffect(() => {
     const areNodesRunning = currentNodesRunning.length > 0;
@@ -293,7 +297,7 @@ function Flow(props: FlowProps) {
             minZoom={0.2}
             maxZoom={1.5}
           >
-            <MiniMapStyled style={{ right: "4vw" }} />
+            {minimap.isVisible && <MiniMapStyled style={{ right: "4vw" }} />}
           </ReactFlowStyled>
         </div>
         <SideBar nodes={nodes} edges={edges} onChangeFlow={handleChangeFlow} />

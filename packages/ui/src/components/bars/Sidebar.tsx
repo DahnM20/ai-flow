@@ -6,6 +6,7 @@ import styled, { css } from "styled-components";
 import TopologicalView from "../side-views/TopologicalView";
 import { useTranslation } from "react-i18next";
 import { TabButton } from "../../layout/main-layout/header/Tab";
+import { useVisibility } from "../../providers/VisibilityProvider";
 
 interface SidebarProps {
   nodes: Node[];
@@ -15,10 +16,13 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
   const { t } = useTranslation("flow");
+  const { getElement } = useVisibility();
 
-  const [show, setShow] = useState(false);
+  const sidebar = getElement("sidebar");
+
+  const show = sidebar.isVisible;
   const [activeTab, setActiveTab] = useState("json");
-  const toggleShow = () => setShow(!show);
+  const toggleShow = () => sidebar.toggle();
 
   return (
     <>

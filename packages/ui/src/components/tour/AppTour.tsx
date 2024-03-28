@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Joyride, { ACTIONS, EVENTS, STATUS, Step } from "react-joyride";
 import { theme } from "../shared/theme";
 import { useTranslation } from "react-i18next";
-import { useSidebarVisibility } from "../../providers/SidebarVisibilityProvider";
+import { useVisibility } from "../../providers/VisibilityProvider";
 
 interface AppTourProps {
   run: boolean;
@@ -33,7 +33,8 @@ export function AppTour({ run, setRun }: AppTourProps) {
   const [joyrideKey, setJoyrideKey] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
 
-  const { isSidebarVisible, showSidebar, hideSidebar } = useSidebarVisibility();
+  // const { isSidebarVisible, showSidebar, hideSidebar } = useSidebarVisibility();
+  const { getElement } = useVisibility();
 
   const { t } = useTranslation("tour");
 
@@ -185,14 +186,15 @@ export function AppTour({ run, setRun }: AppTourProps) {
 
   const handleJoyrideCallback = (data: any) => {
     const { action, index, status, type } = data;
+    const sidebar = getElement("dragAndDropSidebar");
 
     if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
       if (index === 1) {
-        hideSidebar();
+        sidebar.hide();
       }
 
       if (index === 3) {
-        showSidebar();
+        sidebar.show();
       }
       setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1));
     } else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
