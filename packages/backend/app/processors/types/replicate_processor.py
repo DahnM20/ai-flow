@@ -20,7 +20,11 @@ class ReplicateProcessor(APIContextProcessor):
         self._has_dynamic_behavior = True
 
         self.config = config
-        self.model = config.get("config").get("nodeName")
+        self.model = config.get("model")
+
+        if self.model is None:
+            self.model = config.get("config").get("nodeName")
+
         model_name_withouth_version = self.model.split(":")[0]
         self.schema = get_model_openapi_schema(model_name_withouth_version)
 
