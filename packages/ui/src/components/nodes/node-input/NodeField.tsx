@@ -1,13 +1,14 @@
 import { InputHandle, NodeLabel } from "../Node.styles";
 import { Position } from "reactflow";
 import { Field } from "../../../nodes-configuration/nodeConfig";
+import { DisplayParams } from "../../../hooks/useFormFields";
 
 interface NodeFieldProps<T> {
   field: T;
   renderField: (field: T) => JSX.Element;
   label: string;
   handleId?: string;
-  showHandles?: boolean;
+  displayParams?: DisplayParams;
   handlePosition?: Position;
 }
 
@@ -15,7 +16,7 @@ export default function NodeField<
   T extends Pick<Field, "required" | "label" | "hasHandle" | "isLinked">,
 >({
   field,
-  showHandles,
+  displayParams,
   renderField,
   label,
   handlePosition = Position.Left,
@@ -23,9 +24,9 @@ export default function NodeField<
 }: NodeFieldProps<T>) {
   return (
     <>
-      {field.label && showHandles && (
+      {field.label && displayParams?.showLabels && (
         <div className="flex flex-row items-center space-x-5">
-          {field.hasHandle && (
+          {field.hasHandle && displayParams?.showHandles && (
             <InputHandle
               className="handle custom-handle"
               required={field.required}

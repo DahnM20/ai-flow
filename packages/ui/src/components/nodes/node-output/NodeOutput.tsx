@@ -1,18 +1,13 @@
 import { copyToClipboard } from "../../../utils/navigatorUtils";
-import MarkdownOutput from "./MarkdownOutput";
 import { NodeLogs, NodeLogsText } from "../Node.styles";
 import { NodeData } from "../types/node";
 import { toastFastInfoMessage } from "../../../utils/toastUtils";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { FiCopy } from "react-icons/fi";
-import ImageUrlOutput from "./ImageUrlOutput";
-import ImageBase64Output from "./ImageBase64Output";
-import VideoUrlOutput from "./VideoUrlOutput";
-import AudioUrlOutput from "./AudioUrlOutput";
 import { getOutputTypeFromExtension } from "./outputUtils";
-import PdfUrlOutput from "./PdfUrlOutput";
 import { OutputType } from "../../../nodes-configuration/nodeConfig";
+import OutputDisplay from "./OutputDisplay";
 
 interface NodeOutputProps {
   data: NodeData;
@@ -32,37 +27,6 @@ export default function NodeOutput({
     if (data.outputData && typeof data.outputData == "string") {
       copyToClipboard(data.outputData);
       toastFastInfoMessage(t("copiedToClipboard"));
-    }
-  };
-
-  const getOutputComponent = () => {
-    if (!data.outputData) return <></>;
-
-    let output = data.outputData;
-
-    if (typeof output !== "string") {
-      output = output[0];
-    }
-
-    switch (getOutputType()) {
-      case "imageUrl":
-        return <ImageUrlOutput url={output} name={data.name} />;
-      case "imageBase64":
-        return (
-          <ImageBase64Output
-            data={output}
-            name={data.name}
-            lastRun={data.lastRun}
-          />
-        );
-      case "videoUrl":
-        return <VideoUrlOutput url={output} name={data.name} />;
-      case "audioUrl":
-        return <AudioUrlOutput url={output} name={data.name} />;
-      case "pdfUrl":
-        return <PdfUrlOutput url={output} name={data.name} />;
-      default:
-        return <MarkdownOutput data={output} />;
     }
   };
 
@@ -119,7 +83,7 @@ export default function NodeOutput({
           {t("ClickToShowOutput")}
         </NodeLogsText>
       ) : (
-        getOutputComponent()
+        <OutputDisplay data={data} />
       )}
     </NodeLogs>
   );
