@@ -17,15 +17,20 @@ import "rc-slider/assets/index.css";
 import NodeField from "../components/nodes/node-input/NodeField";
 import SelectAutocomplete from "../components/selectors/SelectAutocomplete";
 
+export interface DisplayParams {
+  showHandles?: boolean;
+  showLabels?: boolean;
+  showOnlyConnectedFields?: boolean;
+  specificField?: string;
+}
+
 export function useFormFields(
   data: any,
   id: string,
   handleNodeDataChange: (fieldName: string, value: any) => void,
   setDefaultOptions?: Function,
   hasParent?: Function,
-  specificField?: string,
-  showHandles?: boolean,
-  showOnlyConnectedFields?: boolean,
+  displayParams?: DisplayParams,
 ) {
   const { t } = useTranslation("flow");
 
@@ -206,10 +211,12 @@ export function useFormFields(
         : true,
     )
     .filter((field: Field) =>
-      specificField ? field.name === specificField : true,
+      displayParams?.specificField
+        ? field.name === displayParams.specificField
+        : true,
     )
     .map((field: Field, index: number) => {
-      if (showOnlyConnectedFields && !field.isLinked) {
+      if (displayParams?.showOnlyConnectedFields && !field.isLinked) {
         return null;
       }
 
@@ -220,7 +227,7 @@ export function useFormFields(
             label={t(field.name) + `${field.required ? " *" : ""}`}
             renderField={renderField}
             handleId={generateIdForHandle(index)}
-            showHandles={showHandles}
+            displayParams={displayParams}
           />
         </React.Fragment>
       );

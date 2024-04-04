@@ -143,7 +143,11 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     function setDefaultOptions() {
       const defaultOptions: any = {};
       data.config.fields
-        .filter((field) => field.options?.find((option) => option.default))
+        .filter(
+          (field) =>
+            field.options?.find((option) => option.default) &&
+            !data[field.name],
+        )
         .forEach((field) => {
           defaultOptions[field.name] = field.options?.find(
             (option) => option.default,
@@ -162,9 +166,11 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       handleNodeDataChange,
       setDefaultOptions,
       hasParent,
-      undefined,
-      data.config.showHandlesNames,
-      collapsed,
+      {
+        showHandles: data.config.showHandlesNames,
+        showLabels: data.config.showHandlesNames,
+        showOnlyConnectedFields: collapsed,
+      },
     );
 
     const hideNodeParams =
