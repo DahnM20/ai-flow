@@ -5,18 +5,29 @@ import { FaCopy, FaEraser } from "react-icons/fa";
 import { NodeResizer } from "reactflow";
 import { GiResize } from "react-icons/gi";
 import ActionGroup, { Action } from "../selectors/ActionGroup";
+import { MdMenuOpen } from "react-icons/md";
+import { useVisibility } from "../../providers/VisibilityProvider";
+import { BiMenuAltRight } from "react-icons/bi";
+import { toastFastInfoMessage } from "../../utils/toastUtils";
 
 type NodeWrapperProps = {
   children: React.ReactNode;
   nodeId: string;
 };
 
-type NodeActions = "clear" | "duplicate" | "remove";
+type NodeActions = "clear" | "duplicate" | "remove" | "sidepane";
 
 function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   const [resize, setResize] = useState(false);
-  const { findNode, duplicateNode, removeNode, clearNodeOutput } =
-    useContext(NodeContext);
+  const { getElement } = useVisibility();
+
+  const {
+    findNode,
+    duplicateNode,
+    removeNode,
+    clearNodeOutput,
+    setCurrentNodeIdSelected,
+  } = useContext(NodeContext);
 
   const currentNode = findNode(nodeId);
   const currentNodeIsMissingFields =
@@ -52,12 +63,22 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
     setResize(!resize);
   }
 
+  function handleOpenSidepane(): void {
+    getElement("sidebar").toggle();
+  }
+
   const actions: Action<NodeActions>[] = [
     {
       icon: <FaCopy />,
       name: "Duplicate",
       value: "duplicate",
       onClick: () => duplicateNode(nodeId),
+    },
+    {
+      icon: <MdMenuOpen />,
+      name: "Open in Sidepane",
+      value: "sidepane",
+      onClick: () => handleOpenSidepane(),
     },
     {
       icon: <FaEraser />,
@@ -77,7 +98,10 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   return (
     <div
       className={`group relative flex h-full w-full p-1 transition-all ${currentNodeIsMissingFields ? "rounded-lg border-2 border-dashed border-red-500/80" : ""}`}
-      onClick={() => setShowActions(true)}
+      onClick={() => {
+        setShowActions(true);
+        setCurrentNodeIdSelected(nodeId);
+      }}
       onMouseLeave={() => {
         hideActionsWithDelay();
         hideResizeWithDelay();

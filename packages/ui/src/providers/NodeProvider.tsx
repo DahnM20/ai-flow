@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { Node, Edge } from "reactflow";
 import { nodesTopologicalSort, convertFlowToJson } from "../utils/flowUtils";
 import { FlowEvent, SocketContext } from "./SocketProvider";
@@ -35,6 +35,8 @@ interface NodeContextType {
   findNode: (nodeId: string) => Node | undefined;
   nodes: Node[];
   edges: Edge[];
+  currentNodeIdSelected: string;
+  setCurrentNodeIdSelected: (id: string) => void;
 }
 
 const DUPLICATED_NODE_OFFSET = 100;
@@ -59,6 +61,8 @@ export const NodeContext = createContext<NodeContextType>({
   findNode: () => undefined,
   nodes: [],
   edges: [],
+  currentNodeIdSelected: "",
+  setCurrentNodeIdSelected: () => undefined,
 });
 
 export const NodeProvider = ({
@@ -84,6 +88,8 @@ export const NodeProvider = ({
 }) => {
   const { t } = useTranslation("flow");
   const { emitEvent } = useContext(SocketContext);
+  const [currentNodeIdSelected, setCurrentNodeIdSelected] =
+    useState<string>("");
 
   const runNode = (name: string) => {
     const nodesSorted = nodesTopologicalSort(nodes, edges);
@@ -220,6 +226,8 @@ export const NodeProvider = ({
         findNode,
         nodes,
         edges,
+        currentNodeIdSelected: currentNodeIdSelected,
+        setCurrentNodeIdSelected: setCurrentNodeIdSelected,
       }}
     >
       {children}

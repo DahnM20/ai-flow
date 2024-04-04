@@ -10,6 +10,7 @@ import ImageUrlOutput from "../../nodes/node-output/ImageUrlOutput";
 import { LoadingIcon } from "../../nodes/Node.styles";
 import VideoUrlOutput from "../../nodes/node-output/VideoUrlOutput";
 import AudioUrlOutput from "../../nodes/node-output/AudioUrlOutput";
+import OutputDisplay from "../../nodes/node-output/OutputDisplay";
 
 interface NodePaneProps {
   nodeId?: string;
@@ -67,7 +68,9 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
     handleNodeDataChange,
     () => {},
     () => {},
-    getFieldConfig()?.name,
+    {
+      specificField: getFieldConfig()?.name,
+    },
   );
 
   const fieldConfig = getFieldConfig();
@@ -75,50 +78,6 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
     fieldName &&
     fieldConfig &&
     ["input", "textarea"].includes(fieldConfig.type);
-
-  const renderOutput = () => {
-    if (!currentNode || !fieldName) return null;
-
-    const isOutputDataField = fieldName === outputFieldName;
-    const isImageUrlOutput =
-      currentNode.data?.config?.outputType === "imageUrl";
-    const isVideoUrlOutput =
-      currentNode.data?.config?.outputType === "videoUrl";
-    const isAudioUrlOutput =
-      currentNode.data?.config?.outputType === "audioUrl";
-
-    const data = currentNode.data?.[fieldName] || "No output";
-
-    if (isOutputDataField && isImageUrlOutput) {
-      return data ? (
-        <ImageUrlOutput url={data} name={fieldName} />
-      ) : (
-        <p>No Output</p>
-      );
-    }
-
-    if (isOutputDataField && isVideoUrlOutput) {
-      return data ? (
-        <VideoUrlOutput url={data} name={fieldName} />
-      ) : (
-        <p>No Output</p>
-      );
-    }
-
-    if (isOutputDataField && isAudioUrlOutput) {
-      return data ? (
-        <AudioUrlOutput url={data} name={fieldName} />
-      ) : (
-        <p>No Output</p>
-      );
-    }
-
-    if (isOutputDataField && !isImageUrlOutput) {
-      return <MarkdownOutput data={data} />;
-    }
-
-    return formFields;
-  };
 
   const isCurrentNodeRunning =
     !!nodeId &&
@@ -134,6 +93,8 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
     );
   };
 
+  const isOutputDataField = fieldName === outputFieldName;
+
   return (
     <div
       className="group min-h-0 w-full flex-grow"
@@ -146,7 +107,11 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
           className={`flex h-full w-full justify-center overflow-y-auto px-3 py-2 text-justify text-lg text-slate-300 
                                         ${isTextField || fieldName === "outputData" ? "" : "items-center"}`}
         >
-          {renderOutput()}
+          {isOutputDataField ? (
+            <OutputDisplay data={currentNode.data} />
+          ) : (
+            formFields
+          )}
         </div>
       ) : (
         <div

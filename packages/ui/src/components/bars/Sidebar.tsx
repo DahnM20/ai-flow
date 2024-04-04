@@ -7,12 +7,15 @@ import TopologicalView from "../side-views/TopologicalView";
 import { useTranslation } from "react-i18next";
 import { TabButton } from "../../layout/main-layout/header/Tab";
 import { useVisibility } from "../../providers/VisibilityProvider";
+import CurrentNodeView from "../side-views/CurrentNodeView";
 
 interface SidebarProps {
   nodes: Node[];
   edges: Edge[];
   onChangeFlow: (nodes: Node[], edges: Edge[]) => void;
 }
+
+type Tab = "json" | "topological" | "current_node";
 
 const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
   const { t } = useTranslation("flow");
@@ -21,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
   const sidebar = getElement("sidebar");
 
   const show = sidebar.isVisible;
-  const [activeTab, setActiveTab] = useState("json");
+  const [activeTab, setActiveTab] = useState<Tab>("json");
   const toggleShow = () => sidebar.toggle();
 
   return (
@@ -47,6 +50,13 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
           >
             <Title>{t("TopologicalView")}</Title>
           </TabButton>
+          <TabButton
+            active={activeTab === "current_node"}
+            onClick={() => setActiveTab("current_node")}
+            className="text-md px-1 py-2 hover:text-slate-50"
+          >
+            <Title>{t("currentNodeView")}</Title>
+          </TabButton>
         </HeaderContainer>
         {show && activeTab === "topological" && (
           <TopologicalView nodes={nodes} edges={edges} />
@@ -54,6 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
         {show && activeTab === "json" && (
           <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} />
         )}
+        {show && activeTab === "current_node" && <CurrentNodeView />}
       </SidebarContainer>
       {!show && <div className="sidebar-overlay" onClick={toggleShow} />}
     </>
