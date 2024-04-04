@@ -64,7 +64,7 @@ export function useFormFields(
           <NodeInput
             name={field.name}
             className="nodrag"
-            defaultValue={data[field.name]}
+            value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
             onChange={handleEventNodeDataChange}
           />
@@ -74,7 +74,7 @@ export function useFormFields(
           <NodeInput
             name={field.name}
             className="nodrag"
-            defaultValue={data[field.name]}
+            value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
             onChange={(event) =>
               handleNodeDataChange(event.target.name, +event.target.value)
@@ -88,7 +88,7 @@ export function useFormFields(
             ref={textareaRef}
             name={field.name}
             className="nodrag nowheel"
-            defaultValue={data[field.name]}
+            value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
             onChange={handleEventNodeDataChange}
           />
@@ -148,7 +148,7 @@ export function useFormFields(
             </p>
             <Slider
               className="nodrag w-11/12"
-              defaultValue={data[field.name]}
+              value={data[field.name]}
               onChange={(value) => handleNodeDataChange(field.name, value)}
               onChangeComplete={(value) =>
                 handleNodeDataChange(field.name, value)

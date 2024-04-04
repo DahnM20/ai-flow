@@ -18,6 +18,7 @@
     "ClickToShowImageOutput": "Cliquez pour afficher la sortie d'image",
     "JsonView": "Vue JSON",
     "TopologicalView": "Vue résultats",
+    "currentNodeView": "Noeud selectionné",
     "Upload": "Importer",
     "Download": "Télécharger",
     "Text": "Texte",
@@ -75,5 +76,11 @@
     "File": "Fichier",
     "EnterUrlToDesiredFile": "Entrez l'URL",
     "fileUploadHelp": "Utilisez ce noeud pour charger un fichier",
-    "llmPromptHelp": "Ce noeud permet d'envoyer des prompts à GPT-3.5 ou GPT-4"
+    "llmPromptHelp": "Ce noeud permet d'envoyer des prompts à GPT-3.5 ou GPT-4",
+    "Output": "Résultat",
+    "Inputs": "Paramètres",
+    "Duplicate": "Dupliquer",
+    "OpeninSidepane": "Ouvrir dans le bandeau",
+    "ClearOutput": "Supprimer le résultat",
+    "RemoveNode": "Supprimer le noeud"
 }

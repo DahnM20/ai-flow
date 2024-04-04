@@ -18,6 +18,7 @@
     "ClickToShowImageOutput": "Click to show image output",
     "JsonView": "JSON View",
     "TopologicalView": "Output View",
+    "currentNodeView": "Current Node",
     "Upload": "Upload",
     "Download": "Download",
     "Text": "Text",
@@ -65,6 +66,7 @@
     "AllModels": "All Models",
     "EdgeType": "Edge type",
     "CannotChangeTabWhileRunning": "Cannot change tab while running",
+    "EnterUrlToDesiredFile": "Enter file URL",
     "Transition": "Transition",
     "transitionHelp": "This node can be used to organize the flow.",
     "MissingFieldsMessage": "Required fields are missing",
@@ -74,5 +76,11 @@
     "HideSidebar": "Hide sidebar",
     "ShowSidebar": "Show sidebar",
     "fileUploadHelp": "This node can be used to load a file.",
-    "llmPromptHelp": "This node allows you to send prompt to GPT-3.5 or GPT-4"
+    "llmPromptHelp": "This node allows you to send prompt to GPT-3.5 or GPT-4",
+    "Output": "Output",
+    "Inputs": "Inputs",
+    "Duplicate": "Duplicate",
+    "OpeninSidepane": "Open in sidepane",
+    "ClearOutput": "Clear Output",
+    "RemoveNode": "Remove Node"
 }

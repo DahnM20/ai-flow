@@ -36,6 +36,9 @@ export default function ActionGroup<T>({
                         `}
             onClick={option.onClick}
             style={{ display: showIcon ? "block" : "none" }}
+            data-tooltip-id={"app-tooltip"}
+            data-tooltip-content={option.name}
+            data-tooltip-place="top"
           >
             {option.icon}
           </span>

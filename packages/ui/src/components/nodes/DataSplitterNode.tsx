@@ -145,7 +145,7 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(
           {Array.from(Array(getNbOutput())).map((_, index) => (
             <OutputHandle
               key={generateIdForHandle(index)}
-              data-tooltip-id={`${nodeId}-tooltip`}
+              data-tooltip-id={`app-tooltip`}
               data-tooltip-content={
                 data.outputData ? data.outputData[index] : ""
               }
@@ -162,7 +162,6 @@ const DataSplitterNode: React.FC<DataSplitterNodeProps> = React.memo(
               }}
             />
           ))}
-          <Tooltip id={`${nodeId}-tooltip`} style={{ zIndex: 100 }} />
         </div>
       </DataSplitterNodeContainer>
     );

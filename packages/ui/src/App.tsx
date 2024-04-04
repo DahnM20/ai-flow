@@ -8,6 +8,7 @@ import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import WelcomePopup from "./components/popups/WelcomePopup";
 import { AppTour } from "./components/tour/AppTour";
 import { VisibilityProvider } from "./providers/VisibilityProvider";
+import { Tooltip } from "react-tooltip";
 
 const App = () => {
   const { dark } = useContext(ThemeContext);
@@ -44,6 +45,7 @@ const App = () => {
         {showWelcomePopup && !runTour && (
           <WelcomePopup show onClose={() => setShowWelcomePopup(false)} />
         )}
+        <Tooltip id={`app-tooltip`} style={{ zIndex: 100 }} delayShow={400} />
       </DndProvider>
     </VisibilityProvider>
   );

@@ -7,8 +7,7 @@ import { GiResize } from "react-icons/gi";
 import ActionGroup, { Action } from "../selectors/ActionGroup";
 import { MdMenuOpen } from "react-icons/md";
 import { useVisibility } from "../../providers/VisibilityProvider";
-import { BiMenuAltRight } from "react-icons/bi";
-import { toastFastInfoMessage } from "../../utils/toastUtils";
+import { useTranslation } from "react-i18next";
 
 type NodeWrapperProps = {
   children: React.ReactNode;
@@ -18,6 +17,7 @@ type NodeWrapperProps = {
 type NodeActions = "clear" | "duplicate" | "remove" | "sidepane";
 
 function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
+  const { t } = useTranslation("flow");
   const [resize, setResize] = useState(false);
   const { getElement } = useVisibility();
 
@@ -70,25 +70,25 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   const actions: Action<NodeActions>[] = [
     {
       icon: <FaCopy />,
-      name: "Duplicate",
+      name: t("Duplicate"),
       value: "duplicate",
       onClick: () => duplicateNode(nodeId),
     },
     {
       icon: <MdMenuOpen />,
-      name: "Open in Sidepane",
+      name: t("OpeninSidepane"),
       value: "sidepane",
       onClick: () => handleOpenSidepane(),
     },
     {
       icon: <FaEraser />,
-      name: "Clear output",
+      name: t("ClearOutput"),
       value: "clear",
       onClick: () => clearNodeOutput(nodeId),
     },
     {
       icon: <AiOutlineClose />,
-      name: "Remove",
+      name: t("RemoveNode"),
       value: "remove",
       onClick: () => removeNode(nodeId),
       hoverColor: "text-red-400",
