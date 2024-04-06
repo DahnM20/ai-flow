@@ -3,6 +3,7 @@ import { FaDownload } from "react-icons/fa";
 import styled from "styled-components";
 import { getGeneratedFileName } from "./outputUtils";
 import { toastErrorMessage } from "../../../utils/toastUtils";
+import { useTranslation } from "react-i18next";
 
 interface ImageUrlOutputProps {
   url: string;
@@ -10,7 +11,7 @@ interface ImageUrlOutputProps {
 }
 
 const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
-  // State to manage whether the image has errored
+  const { t } = useTranslation("flow");
   const [hasError, setHasError] = useState(false);
 
   const handleDownloadClick = (event: React.MouseEvent) => {
@@ -33,7 +34,7 @@ const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
   return (
     <OutputImageContainer>
       {hasError ? (
-        <p> URL Expired</p>
+        <p> {t("ExpiredURL")}</p>
       ) : (
         <>
           <OutputImage src={url} alt="Output Image" onError={handleError} />

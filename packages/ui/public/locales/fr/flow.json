@@ -82,5 +82,6 @@
     "Duplicate": "Dupliquer",
     "OpeninSidepane": "Ouvrir dans le bandeau",
     "ClearOutput": "Supprimer le résultat",
-    "RemoveNode": "Supprimer le noeud"
+    "RemoveNode": "Supprimer le noeud",
+    "ExpiredURL": "URL expirée"
 }

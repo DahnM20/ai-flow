@@ -82,5 +82,6 @@
     "Duplicate": "Duplicate",
     "OpeninSidepane": "Open in sidepane",
     "ClearOutput": "Clear Output",
-    "RemoveNode": "Remove Node"
+    "RemoveNode": "Remove Node",
+    "ExpiredURL": "URL expirée"
 }

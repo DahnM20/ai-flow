@@ -240,7 +240,10 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
             nodeName={data.name}
           />
         </NodeHeader>
-        <NodeBand selected={selected} />
+        <NodeBand
+          selected={selected}
+          className={`${selected ? "animate-pulse" : ""}`}
+        />
         {(!hideNodeParams || data.config.showHandlesNames) && (
           <NodeContent>
             <NodeForm>{formFields}</NodeForm>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import styled from "styled-components";
 import { getGeneratedFileName } from "./outputUtils";
+import { useTranslation } from "react-i18next";
 
 interface VideoUrlOutputProps {
   url: string;
@@ -9,6 +10,7 @@ interface VideoUrlOutputProps {
 }
 
 const VideoUrlOutput: React.FC<VideoUrlOutputProps> = ({ url, name }) => {
+  const { t } = useTranslation("flow");
   const [hasError, setHasError] = useState(false);
 
   const handleDownloadClick = (event: React.MouseEvent) => {
@@ -27,7 +29,7 @@ const VideoUrlOutput: React.FC<VideoUrlOutputProps> = ({ url, name }) => {
   return (
     <OutputVideoContainer>
       {hasError ? (
-        <p>URL Expired</p>
+        <p> {t("ExpiredURL")}</p>
       ) : (
         <>
           <OutputVideo controls src={url} onError={handleError} /> {}

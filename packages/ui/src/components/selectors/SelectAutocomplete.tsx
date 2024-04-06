@@ -33,7 +33,7 @@ function SelectAutocomplete<T extends Item>({
       <div className="relative mt-1">
         <div className="relative w-full cursor-default overflow-hidden rounded-lg  border-none text-left shadow-md outline-none sm:text-sm">
           <Combobox.Input
-            className="w-full border-none bg-zinc-700/40 p-3 text-lg leading-5 text-slate-50"
+            className="w-full border-none bg-zinc-700/40 p-3 text-lg leading-5 text-slate-50 outline-none"
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(value: any) =>
               filteredItems.find((item) => item.value === value)?.name ?? ""
