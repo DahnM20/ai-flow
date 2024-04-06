@@ -1,6 +1,8 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import "@mantine/core/styles.css";
+import { createTheme, MantineProvider } from "@mantine/core";
 import "react-toastify/dist/ReactToastify.css";
 import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "./providers/ThemeProvider";
@@ -16,17 +18,27 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 
+const theme = createTheme({});
+
 root.render(
   <>
     <GlobalStyle />
-    <SocketProvider>
-      <ThemeProvider>
-        <Suspense fallback={<Fallback />}>
-          <ToastContainer />
-          <App />
-        </Suspense>
-      </ThemeProvider>
-    </SocketProvider>
+    <MantineProvider
+      getRootElement={() =>
+        document.querySelector<HTMLElement>("#dark-area") ?? undefined
+      }
+      cssVariablesSelector="#dark-area"
+      forceColorScheme="dark"
+    >
+      <SocketProvider>
+        <ThemeProvider>
+          <Suspense fallback={<Fallback />}>
+            <ToastContainer />
+            <App />
+          </Suspense>
+        </ThemeProvider>
+      </SocketProvider>
+    </MantineProvider>
   </>,
 );
 

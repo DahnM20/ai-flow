@@ -36,7 +36,7 @@ export default function NodeField<
             />
           )}
           <NodeLabel
-            className={`font-md
+            className={`text-lg
                         ${field.isLinked ? "text-sky-400" : ""}  
                         ${field.required ? "font-bold" : ""}`}
           >

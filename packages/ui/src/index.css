@@ -20,7 +20,7 @@ body,
   display: none;
 }
 
-html{
+html, body{
   background: linear-gradient(0deg, hsl(180deg 9.33% 12.39%) 0%, hsl(0deg 0% 10.39%) 100%);
 }
 
@@ -64,6 +64,7 @@ body.dark-theme {
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--scrollbar-thumb-hover-color);
 }
+
 
 /* Custom React Flow Handle Style */
 .custom-handle.react-flow__handle {

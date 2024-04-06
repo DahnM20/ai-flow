@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import {
-  NodeInput,
   NodeTextarea,
   NodeSelect,
   NodeSelectOption,
@@ -10,12 +9,13 @@ import {
 import InputNameBar from "../components/nodes/node-button/InputNameBar";
 import { Field } from "../nodes-configuration/nodeConfig";
 import React, { useEffect, useRef } from "react";
-import Switch from "react-switch";
 import { generateIdForHandle } from "../utils/flowUtils";
-import Slider from "rc-slider";
+import { Slider } from "@mantine/core";
+import { Switch } from "@mantine/core";
 import "rc-slider/assets/index.css";
 import NodeField from "../components/nodes/node-input/NodeField";
 import SelectAutocomplete from "../components/selectors/SelectAutocomplete";
+import NodeTextField from "../components/nodes/node-input/NodeTextField";
 
 export interface DisplayParams {
   showHandles?: boolean;
@@ -61,24 +61,22 @@ export function useFormFields(
     switch (field.type) {
       case "input":
         return (
-          <NodeInput
-            name={field.name}
-            className="nodrag"
+          <NodeTextField
             value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-            onChange={handleEventNodeDataChange}
+            onChange={(value) => handleNodeDataChange(field.name, value)}
           />
         );
       case "inputInt":
         return (
-          <NodeInput
-            name={field.name}
-            className="nodrag"
+          <NodeTextField
             value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-            onChange={(event) =>
-              handleNodeDataChange(event.target.name, +event.target.value)
-            }
+            onChange={(value) => {
+              const numericValue = isNaN(+value) ? field.defaultValue : +value;
+              handleNodeDataChange(field.name, numericValue);
+            }}
+            error={isNaN(data[field.name])}
           />
         );
       case "textarea":
@@ -147,23 +145,22 @@ export function useFormFields(
               {data[field.name]}
             </p>
             <Slider
-              className="nodrag w-11/12"
+              className="nodrag track w-11/12"
               value={data[field.name]}
               onChange={(value) => handleNodeDataChange(field.name, value)}
-              onChangeComplete={(value) =>
-                handleNodeDataChange(field.name, value)
-              }
+              onChangeEnd={(value) => handleNodeDataChange(field.name, value)}
               styles={{
                 track: {
-                  backgroundColor: "rgba(94,209,232,0.85)",
-                },
-                handle: {
-                  //borderColor: 'blue',
-                  borderColor: "rgba(94,209,232,0.85)",
-                  backgroundColor: "rgba(94,209,232,1)",
-                },
-                rail: {
                   backgroundColor: "rgba(54, 54, 54, 0.8)",
+                  borderColor: "rgba(54, 54, 54, 0.8)",
+                  height: "0.35em",
+                },
+                bar: {
+                  backgroundColor: "rgba(29, 193, 226, 0.85)",
+                },
+                thumb: {
+                  backgroundColor: "rgba(94, 209, 232, 1)",
+                  borderColor: "rgba(94, 209, 232, 1)",
                 },
               }}
               min={field.min}
@@ -176,20 +173,15 @@ export function useFormFields(
         return (
           <div className="flex w-full flex-row items-center">
             <Switch
-              onChange={(checked: boolean) =>
-                handleNodeDataChange(field.name, checked)
+              onChange={(e) =>
+                handleNodeDataChange(field.name, e.currentTarget.checked)
               }
               checked={data[field.name]}
               className="nodrag"
-              onColor="#86d3ff"
-              onHandleColor="#2693e6"
-              handleDiameter={20}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-              height={15}
-              width={30}
+              size="lg"
+              color="rgba(29, 193, 226, 0.95)"
+              onLabel="ON"
+              offLabel="OFF"
             />
           </div>
         );
