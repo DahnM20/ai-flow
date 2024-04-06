@@ -39,6 +39,7 @@
     "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-h5-audio-player": "^3.9.1",
     "react-i18next": "^12.3.1",
     "react-icons": "^4.11.0",
     "react-joyride": "^2.7.2",
