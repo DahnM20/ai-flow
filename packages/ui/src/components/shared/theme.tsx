@@ -37,6 +37,8 @@ export const theme = {
     // text: "#f7f7f7",
     text: "#fbfbfb",
     accent: "linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)",
+    accentSelected:
+      "linear-gradient(120deg, rgb(102 219 255) 0%, rgb(55 189 255) 100%)",
     accentText: "rgb(186 188 215)",
     logsText: "#fcfcfc",
     boxShadow: "rgb(1 1 1 / 82%) 0px 2px 4px",

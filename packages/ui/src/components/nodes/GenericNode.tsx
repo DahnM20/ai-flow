@@ -240,7 +240,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
             nodeName={data.name}
           />
         </NodeHeader>
-        <NodeBand />
+        <NodeBand selected={selected} />
         {(!hideNodeParams || data.config.showHandlesNames) && (
           <NodeContent>
             <NodeForm>{formFields}</NodeForm>
