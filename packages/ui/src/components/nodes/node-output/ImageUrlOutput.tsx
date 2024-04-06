@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import styled from "styled-components";
 import { getGeneratedFileName } from "./outputUtils";
+import { toastErrorMessage } from "../../../utils/toastUtils";
 
 interface ImageUrlOutputProps {
   url: string;
@@ -9,8 +10,15 @@ interface ImageUrlOutputProps {
 }
 
 const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
+  // State to manage whether the image has errored
+  const [hasError, setHasError] = useState(false);
+
   const handleDownloadClick = (event: React.MouseEvent) => {
     event.stopPropagation();
+    if (hasError) {
+      toastErrorMessage("URL Expired");
+      return;
+    }
     const link = document.createElement("a");
     link.href = url;
     link.download = getGeneratedFileName(url, name);
@@ -18,15 +26,25 @@ const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
     link.click();
   };
 
+  const handleError = () => {
+    setHasError(true);
+  };
+
   return (
     <OutputImageContainer>
-      <OutputImage src={url} alt="Output Image" />
-      <div
-        className="absolute right-3 top-2 rounded-md bg-slate-600/75 px-1 py-1 text-2xl text-slate-100 hover:bg-sky-600/90"
-        onClick={handleDownloadClick}
-      >
-        <FaDownload />
-      </div>
+      {hasError ? (
+        <p> URL Expired</p>
+      ) : (
+        <>
+          <OutputImage src={url} alt="Output Image" onError={handleError} />
+          <div
+            className="absolute right-3 top-2 rounded-md bg-slate-600/75 px-1 py-1 text-2xl text-slate-100 hover:bg-sky-600/90"
+            onClick={handleDownloadClick}
+          >
+            <FaDownload />
+          </div>
+        </>
+      )}
     </OutputImageContainer>
   );
 };

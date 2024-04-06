@@ -1,4 +1,4 @@
-import { NodeInput } from "../nodes/Node.styles";
+import NodeTextField from "../nodes/node-input/NodeTextField";
 
 interface InputWithButtonProps {
   buttonText: string;
@@ -20,11 +20,11 @@ const InputWithButton = ({
   return (
     <div className="flex w-full flex-col items-center justify-center px-2 pb-4">
       <div className="flex w-full flex-row space-x-2">
-        <NodeInput
-          type="text"
-          className={` ${inputClassName ? inputClassName : "text-center"} `}
+        <NodeTextField
+          // className={` ${inputClassName ? inputClassName : "text-center"} `}
           placeholder={inputPlaceholder}
-          onChange={(e) => onInputChange(e.target.value)}
+          onChange={onInputChange}
+          value={""}
         />
         <button
           className={`${buttonClassName ? buttonClassName : "rounded-lg bg-sky-500 p-2 hover:bg-sky-400"}`}
