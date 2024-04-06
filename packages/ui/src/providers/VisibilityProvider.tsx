@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export type VisibilityElement = "sidebar" | "minimap" | "dragAndDropSidebar";
 
+export type Tab = "json" | "topological" | "current_node";
+
 export interface VisibilityContextState {
   [key: string]: {
     isVisible: boolean;
@@ -13,6 +15,8 @@ export interface VisibilityContextState {
 
 interface VisibilityContextType {
   getElement: (key: VisibilityElement) => VisibilityContextState[string];
+  sidepaneActiveTab: Tab;
+  setSidepaneActiveTab: (tab: Tab) => void;
 }
 
 export const VisibilityContext = createContext<
@@ -48,6 +52,8 @@ export const VisibilityProvider: React.FC<VisibilityProviderProps> = ({
       },
     });
 
+  const [sidepaneActiveTab, setSidepaneActiveTab] = useState<Tab>("json");
+
   const setVisibility = (key: VisibilityElement, isVisible: boolean) => {
     setVisibilityState((prevState) => ({
       ...prevState,
@@ -74,6 +80,8 @@ export const VisibilityProvider: React.FC<VisibilityProviderProps> = ({
 
   const value = {
     getElement: getElement,
+    sidepaneActiveTab: sidepaneActiveTab,
+    setSidepaneActiveTab: setSidepaneActiveTab,
   };
 
   return (

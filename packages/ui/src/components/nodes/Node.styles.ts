@@ -26,11 +26,12 @@ export const NodeHeader = styled.div`
   transition: all 0.3s ease;
 `;
 
-export const NodeBand = styled.div`
+export const NodeBand = styled.div<{ selected?: boolean }>`
   padding: 2px;
   overflow: hidden;
   transition: height 0.2s ease-out background 0.3s ease;
-  background: ${({ theme }) => theme.accent};
+  background: ${({ theme, selected }) =>
+    selected ? theme.accentSelected : theme.accent};
 `;
 
 export const NodeTitle = styled.div`
@@ -230,29 +231,6 @@ export const CopyIcon = styled(FiCopy)`
 
   :hover {
     color: #000000;
-  }
-`;
-
-export const NodeInput = styled.input`
-  width: 100%;
-  border: none;
-  outline: none;
-  font-size: 1.1em;
-  color: ${({ theme }) => theme.text};
-  background-color: ${({ theme }) => theme.nodeInputBg};
-  padding: 12px 18px;
-  border-radius: 8px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-  transition:
-    box-shadow 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
-
-  &:hover,
-  &:focus {
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
-    transform: translateY(
-      -1px
-    ); // Slight lift effect on hover/focus for an interactive feel
   }
 `;
 

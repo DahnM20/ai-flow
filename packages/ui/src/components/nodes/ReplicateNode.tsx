@@ -28,6 +28,11 @@ export default function ReplicateNode({
   data,
   id,
   selected,
+  isConnectable,
+  type,
+  xPos,
+  yPos,
+  zIndex,
 }: DynamicFieldsProps) {
   const { t } = useTranslation("flow");
   const [modelInput, setModelInput] = useState<string>("");
@@ -41,6 +46,29 @@ export default function ReplicateNode({
   const [showPopup, setShowPopup] = useState(false);
 
   const { onUpdateNodeData } = useContext(NodeContext);
+
+  function arrangeOldConfig() {
+    onUpdateNodeData(id, {
+      ...data,
+      nodeLoaded: true,
+      model: data.config.nodeName,
+      config: {
+        ...data.config,
+        showHandlesNames: true,
+        nodeName: data.config?.nodeName.split(":")[0],
+      },
+    });
+  }
+
+  useEffect(() => {
+    if (
+      !!data?.config?.fields &&
+      !!data?.config?.nodeName &&
+      !data.nodeLoaded
+    ) {
+      arrangeOldConfig();
+    }
+  });
 
   useEffect(() => {
     async function configureNode() {
@@ -169,12 +197,12 @@ export default function ReplicateNode({
     <GenericNode
       data={data}
       id={id}
-      selected={false}
-      type={""}
-      zIndex={0}
-      isConnectable={false}
-      xPos={0}
-      yPos={0}
+      selected={selected}
+      type={type}
+      zIndex={zIndex}
+      isConnectable={isConnectable}
+      xPos={xPos}
+      yPos={yPos}
       dragging={false}
       nodeFields={fields}
     />

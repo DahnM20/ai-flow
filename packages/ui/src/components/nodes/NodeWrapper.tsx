@@ -19,7 +19,7 @@ type NodeActions = "clear" | "duplicate" | "remove" | "sidepane";
 function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   const { t } = useTranslation("flow");
   const [resize, setResize] = useState(false);
-  const { getElement } = useVisibility();
+  const { getElement, setSidepaneActiveTab } = useVisibility();
 
   const {
     findNode,
@@ -64,7 +64,8 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   }
 
   function handleOpenSidepane(): void {
-    getElement("sidebar").toggle();
+    getElement("sidebar").show();
+    setSidepaneActiveTab("current_node");
   }
 
   const actions: Action<NodeActions>[] = [
@@ -97,7 +98,8 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
 
   return (
     <div
-      className={`group relative flex h-full w-full p-1 transition-all ${currentNodeIsMissingFields ? "rounded-lg border-2 border-dashed border-red-500/80" : ""}`}
+      className={`group relative flex h-full w-full rounded-lg p-1 transition-all duration-300 ease-in-out
+        ${currentNodeIsMissingFields ? "border-2 border-dashed border-red-500/80" : ""}`}
       onClick={() => {
         setShowActions(true);
         setCurrentNodeIdSelected(nodeId);

@@ -14,17 +14,14 @@ interface SidebarProps {
   edges: Edge[];
   onChangeFlow: (nodes: Node[], edges: Edge[]) => void;
 }
-
-type Tab = "json" | "topological" | "current_node";
-
 const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
   const { t } = useTranslation("flow");
-  const { getElement } = useVisibility();
+  const { getElement, sidepaneActiveTab, setSidepaneActiveTab } =
+    useVisibility();
 
   const sidebar = getElement("sidebar");
 
   const show = sidebar.isVisible;
-  const [activeTab, setActiveTab] = useState<Tab>("json");
   const toggleShow = () => sidebar.toggle();
 
   return (
@@ -37,34 +34,34 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
       <SidebarContainer show={show}>
         <HeaderContainer>
           <TabButton
-            active={activeTab === "json"}
-            onClick={() => setActiveTab("json")}
+            active={sidepaneActiveTab === "json"}
+            onClick={() => setSidepaneActiveTab("json")}
             className="text-md px-1 py-2 hover:text-slate-50"
           >
             <Title>{t("JsonView")}</Title>
           </TabButton>
           <TabButton
-            active={activeTab === "topological"}
-            onClick={() => setActiveTab("topological")}
+            active={sidepaneActiveTab === "topological"}
+            onClick={() => setSidepaneActiveTab("topological")}
             className="text-md px-1 py-2 hover:text-slate-50"
           >
             <Title>{t("TopologicalView")}</Title>
           </TabButton>
           <TabButton
-            active={activeTab === "current_node"}
-            onClick={() => setActiveTab("current_node")}
+            active={sidepaneActiveTab === "current_node"}
+            onClick={() => setSidepaneActiveTab("current_node")}
             className="text-md px-1 py-2 hover:text-slate-50"
           >
             <Title>{t("currentNodeView")}</Title>
           </TabButton>
         </HeaderContainer>
-        {show && activeTab === "topological" && (
+        {show && sidepaneActiveTab === "topological" && (
           <TopologicalView nodes={nodes} edges={edges} />
         )}
-        {show && activeTab === "json" && (
+        {show && sidepaneActiveTab === "json" && (
           <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} />
         )}
-        {show && activeTab === "current_node" && <CurrentNodeView />}
+        {show && sidepaneActiveTab === "current_node" && <CurrentNodeView />}
       </SidebarContainer>
       {!show && <div className="sidebar-overlay" onClick={toggleShow} />}
     </>
