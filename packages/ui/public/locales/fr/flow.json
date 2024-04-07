@@ -78,10 +78,12 @@
     "fileUploadHelp": "Utilisez ce noeud pour charger un fichier",
     "llmPromptHelp": "Ce noeud permet d'envoyer des prompts à GPT-3.5 ou GPT-4",
     "Output": "Résultat",
-    "Inputs": "Paramètres",
+    "Inputs": "Entrées",
+    "Parameters": "Paramètres",
     "Duplicate": "Dupliquer",
     "OpeninSidepane": "Ouvrir dans le bandeau",
     "ClearOutput": "Supprimer le résultat",
     "RemoveNode": "Supprimer le noeud",
-    "ExpiredURL": "URL expirée"
+    "ExpiredURL": "URL expirée",
+    "NoNodeSelected": "Aucun nœud sélectionné pour le moment. Veuillez cliquer sur un nœud pour le sélectionner !"
 }

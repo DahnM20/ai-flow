@@ -79,9 +79,11 @@
     "llmPromptHelp": "This node allows you to send prompt to GPT-3.5 or GPT-4",
     "Output": "Output",
     "Inputs": "Inputs",
+    "Parameters": "Parameters",
     "Duplicate": "Duplicate",
     "OpeninSidepane": "Open in sidepane",
     "ClearOutput": "Clear Output",
     "RemoveNode": "Remove Node",
-    "ExpiredURL": "URL expirée"
+    "ExpiredURL": "Expired URL",
+    "NoNodeSelected": "No node selected yet. Please click on any node to select it."
 }

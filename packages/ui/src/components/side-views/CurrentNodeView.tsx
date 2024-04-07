@@ -57,18 +57,32 @@ const CurrentNodeView: React.FC<CurrentNodeViewProps> = () => {
     },
   );
 
+  if (!currentNodeIdSelected)
+    return (
+      <ViewContainer className="space-y-2 text-center">
+        <p>{t("NoNodeSelected")}</p>
+      </ViewContainer>
+    );
+
   return (
     <>
       <ViewContainer className="space-y-2">
-        <div className="mb-4 flex justify-center text-lg font-bold">
-          {currentNodeIdSelected}
+        <div className="mb-4 flex flex-col items-center justify-center">
+          <p className="text-lg font-bold text-sky-100">
+            {t(node?.data.config?.nodeName)}
+          </p>
+          <p className="mt-1 rounded-md bg-zinc-600/30 px-2 py-1 text-sm">
+            {currentNodeIdSelected}
+          </p>
         </div>
-        <div className="flex flex-col space-y-3">
-          <ExpandableBloc title={t("Inputs")} defaultOpen>
-            <div className="space-y-1 px-1">{formFields}</div>
-          </ExpandableBloc>
-        </div>
-        {!!node?.data && (
+        {!!formFields && (
+          <div className="flex flex-col space-y-3">
+            <ExpandableBloc title={t("Parameters")} defaultOpen>
+              <div className="space-y-1 px-1">{formFields}</div>
+            </ExpandableBloc>
+          </div>
+        )}
+        {!!node?.data.outputData && (
           <div className="flex flex-col space-y-3">
             <ExpandableBloc title={t("Output")} defaultOpen>
               <OutputDisplay data={node?.data} />
