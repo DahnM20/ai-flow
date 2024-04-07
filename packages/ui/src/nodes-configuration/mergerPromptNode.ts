@@ -1,40 +1,40 @@
 import { NodeConfig } from "./nodeConfig";
 
 export const mergerPromptNode: NodeConfig = {
-    nodeName: 'MergerNode',
-    icon: 'AiOutlineMergeCells',
-    inputNames: ['input-1', 'input-2'],
-    fields: [
+  nodeName: "MergerNode",
+  icon: "AiOutlineMergeCells",
+  inputNames: ["input-1", "input-2"],
+  fields: [
+    {
+      name: "mergeMode",
+      label: "",
+      type: "option",
+      options: [
         {
-            name: 'mergeMode',
-            label: '',
-            type: 'option',
-            options: [
-                {
-                    label: 'Merge',
-                    value: '1',
-                },
-                {
-                    label: 'Merge + GPT',
-                    value: '2',
-                    default: true,
-                }
-            ]
+          label: "Merge",
+          value: "1",
         },
         {
-            name: 'inputNameBar',
-            type: 'inputNameBar',
+          label: "Merge + GPT",
+          value: "2",
+          default: true,
         },
-        {
-            name: 'prompt',
-            type: 'textarea',
-            required: true,
-            placeholder: 'PromptPlaceholder',
-        },
-
-    ],
-    outputType: 'text',
-    hasInputHandle: true,
-    section: 'tools',
-    helpMessage: 'mergerPromptHelp',
+      ],
+    },
+    {
+      name: "inputNameBar",
+      type: "inputNameBar",
+      associatedField: "prompt",
+    },
+    {
+      name: "prompt",
+      type: "textarea",
+      required: true,
+      placeholder: "PromptPlaceholder",
+    },
+  ],
+  outputType: "text",
+  hasInputHandle: true,
+  section: "tools",
+  helpMessage: "mergerPromptHelp",
 };

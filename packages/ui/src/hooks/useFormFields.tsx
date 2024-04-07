@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import {
   NodeTextarea,
-  NodeSelect,
-  NodeSelectOption,
   OptionSelector,
   OptionButton,
 } from "../components/nodes/Node.styles";
@@ -135,6 +133,15 @@ export function useFormFields(
               key={`${id}-${field.name}`}
               inputNames={data.config.inputNames}
               textareaRef={textareaRef}
+              fieldToUpdate={field.associatedField}
+              onNameClick={(value: string) => {
+                if (!field.associatedField) return;
+                const currentValue = data[field.associatedField] ?? "";
+                handleNodeDataChange(
+                  field.associatedField,
+                  currentValue + value,
+                );
+              }}
             />
           )
         );

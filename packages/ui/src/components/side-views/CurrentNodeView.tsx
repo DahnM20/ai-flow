@@ -25,7 +25,7 @@ const CurrentNodeView: React.FC<CurrentNodeViewProps> = () => {
   };
 
   function setDefaultOptions() {
-    if (!node) return;
+    if (!node || !node.data.config.fields) return;
     const defaultOptions: any = {};
     node.data.config.fields
       .filter(

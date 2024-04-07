@@ -3,12 +3,14 @@ import { memo } from "react";
 interface InputNameBarProps {
   inputNames: string[];
   textareaRef: any;
-  onNameClick?: () => void;
+  fieldToUpdate?: string;
+  onNameClick?: (value: string) => void;
 }
 
 function InputNameBar({
   inputNames,
   textareaRef,
+  fieldToUpdate,
   onNameClick,
 }: InputNameBarProps) {
   const insertAtCursor = (
@@ -32,8 +34,10 @@ function InputNameBar({
   };
 
   const handleNameClick = (name: string) => {
-    insertAtCursor(textareaRef?.current, `\${${name}} `);
-    onNameClick?.();
+    if (!fieldToUpdate) {
+      insertAtCursor(textareaRef?.current, `\${${name}} `);
+    }
+    onNameClick?.(`\${${name}} `);
   };
 
   return (

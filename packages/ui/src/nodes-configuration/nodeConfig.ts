@@ -54,6 +54,7 @@ export interface Field {
   required?: boolean;
   hasHandle?: boolean;
   isLinked?: boolean;
+  associatedField?: string;
 }
 
 export interface NodeConfig {
