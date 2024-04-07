@@ -35,6 +35,7 @@
       "name": "7w1rytxvc#dalle-prompt",
       "processorType": "dalle-prompt",
       "quality": "standard",
+      "size": "1024x1024",
       "missingFields": [],
       "isDone": false,
       "config": {
