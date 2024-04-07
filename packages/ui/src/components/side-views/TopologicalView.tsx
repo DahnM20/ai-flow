@@ -1,10 +1,8 @@
 import React, { memo } from "react";
 import { Edge, Node } from "reactflow";
-import { convertFlowToJson, nodesTopologicalSort } from "../../utils/flowUtils";
+import { nodesTopologicalSort } from "../../utils/flowUtils";
 import styled from "styled-components";
-import ImageUrlOutput from "../nodes/node-output/ImageUrlOutput";
-import { NodeData } from "../nodes/types/node";
-import MarkdownOutput from "../nodes/node-output/MarkdownOutput";
+import OutputDisplay from "../nodes/node-output/OutputDisplay";
 
 interface TopologicalViewProps {
   nodes: Node[];
@@ -13,31 +11,15 @@ interface TopologicalViewProps {
 
 const TopologicalView: React.FC<TopologicalViewProps> = ({ nodes, edges }) => {
   nodes = nodesTopologicalSort(nodes, edges);
-  const data: NodeData[] = convertFlowToJson(nodes, edges, false);
-
-  function getOutputDataComponent(item: NodeData): React.ReactNode {
-    if (!item.outputData) return <></>;
-
-    if (
-      item.processorType === "stable-diffusion-stabilityai-prompt" ||
-      item.processorType === "dalle-prompt"
-    ) {
-      return <ImageUrlOutput url={item.outputData[0]} name={item.name} />;
-    } else {
-      if (typeof item.outputData === "string") {
-        return <NodeViewTextData data={item.outputData} />;
-      }
-    }
-  }
 
   return (
     <TopologicalViewContainer>
-      {data.map((item) => {
-        if (!item.outputData) return undefined;
+      {nodes.map((node) => {
+        if (!node.data.outputData) return undefined;
         return (
           <TopologicalViewContent>
-            <TopologicalViewNodeName>{item.name}</TopologicalViewNodeName>
-            {getOutputDataComponent(item)}
+            <TopologicalViewNodeName>{node.id}</TopologicalViewNodeName>
+            <OutputDisplay data={node.data} />
           </TopologicalViewContent>
         );
       })}
@@ -53,7 +35,7 @@ const TopologicalViewNodeName = styled.div`
   font-size: 0.8em;
   margin-bottom: 10px;
   padding-left: 5%;
-  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) left / 2%
+  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) left / 1.5%
     no-repeat;
 `;
 
@@ -62,10 +44,6 @@ const TopologicalViewContent = styled.div`
   padding: 10px;
   margin-top: 10px;
   background-color: ${({ theme }) => theme.nodeInputBg};
-`;
-
-const NodeViewTextData = styled(MarkdownOutput)`
-  padding: 3px;
 `;
 
 function arePropsEqual(

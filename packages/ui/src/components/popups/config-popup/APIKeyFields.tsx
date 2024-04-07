@@ -3,30 +3,28 @@ import styled from "styled-components";
 import { defaultApiKeys } from "./ApiKeys";
 
 interface APIKeyFieldsProps {
-    apiKeys: Record<string, string>;
-    onApiKeyChange: (key: string, value: string) => void;
+  apiKeys: Record<string, string>;
+  onApiKeyChange: (key: string, value: string) => void;
 }
 
 const APIKeyFields = ({ apiKeys, onApiKeyChange }: APIKeyFieldsProps) => {
+  const { t } = useTranslation("config");
 
-
-    const { t } = useTranslation('config');
-
-    return (
-        <>
-            {Object.keys(defaultApiKeys).map((key) => (
-                <Field key={key}>
-                    <Label htmlFor={`api-key-${key}`}>{t(key)}</Label>
-                    <Input
-                        type="text"
-                        id={`api-key-${key}`}
-                        value={apiKeys[key]}
-                        onChange={(e) => onApiKeyChange(key, e.target.value)}
-                    />
-                </Field>
-            ))}
-        </>
-    );
+  return (
+    <>
+      {Object.keys(defaultApiKeys).map((key) => (
+        <Field key={key} className="text-zinc-800">
+          <Label htmlFor={`api-key-${key}`}>{t(key)}</Label>
+          <Input
+            type="text"
+            id={`api-key-${key}`}
+            value={apiKeys[key]}
+            onChange={(e) => onApiKeyChange(key, e.target.value)}
+          />
+        </Field>
+      ))}
+    </>
+  );
 };
 
 export default APIKeyFields;

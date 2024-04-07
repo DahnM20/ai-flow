@@ -1,5 +1,5 @@
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   SocketContext,
@@ -62,7 +62,7 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
         className="my-2 flex flex-col justify-between overflow-auto rounded-2xl bg-slate-100 p-5 md:h-fit"
       >
         <Header>
-          <Title>{t("configurationTitle")}</Title>
+          <Title className="text-zinc-900">{t("configurationTitle")}</Title>
         </Header>
         <>
           <SoftMessage>{t("openSourceDisclaimer")}</SoftMessage>
