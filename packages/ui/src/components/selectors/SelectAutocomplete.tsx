@@ -2,7 +2,8 @@ import { Combobox, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
-interface Item {
+
+export interface SelectItem {
   name?: string;
   value: any;
 }
@@ -13,7 +14,7 @@ interface SelectAutocompleteProps<T> {
   onChange: (value: T) => void;
 }
 
-function SelectAutocomplete<T extends Item>({
+function SelectAutocomplete<T extends SelectItem>({
   values,
   selectedValue,
   onChange,
