@@ -55,6 +55,29 @@ export function useFormFields(
     handleNodeDataChange(event.target.name, event.target.value);
   };
 
+  function calculateStep(min?: number, max?: number) {
+    if (min == null || max == null) return 1;
+
+    const range = max - min;
+    let step;
+
+    console.log(range);
+
+    if (range <= 1) {
+      step = 0.01;
+    } else if (range <= 10) {
+      step = 0.1;
+    } else if (range <= 100) {
+      step = 1;
+    } else if (range <= 1000) {
+      step = 10;
+    } else {
+      step = 100;
+    }
+
+    return step;
+  }
+
   const renderField = (field: Field) => {
     switch (field.type) {
       case "input":
@@ -172,7 +195,7 @@ export function useFormFields(
               }}
               min={field.min}
               max={field.max}
-              step={1}
+              step={calculateStep(field.min, field.max)}
             />
           </div>
         );
