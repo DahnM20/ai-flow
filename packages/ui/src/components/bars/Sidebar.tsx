@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FiChevronsRight, FiChevronsLeft } from "react-icons/fi";
 import { Edge, Node } from "reactflow";
 import JSONView from "../side-views/JSONView";
@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import { TabButton } from "../../layout/main-layout/header/Tab";
 import { useVisibility } from "../../providers/VisibilityProvider";
 import CurrentNodeView from "../side-views/CurrentNodeView";
+import ButtonRunAll from "../buttons/ButtonRunAll";
+import { NodeContext } from "../../providers/NodeProvider";
 
 interface SidebarProps {
   nodes: Node[];
@@ -16,6 +18,7 @@ interface SidebarProps {
 }
 const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
   const { t } = useTranslation("flow");
+  const { runAllNodes, currentNodesRunning } = useContext(NodeContext);
   const { getElement, sidepaneActiveTab, setSidepaneActiveTab } =
     useVisibility();
 
@@ -31,6 +34,17 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
           {show ? <FiChevronsRight /> : <FiChevronsLeft />}
         </ToggleIcon>
       </SidebarToggle>
+      <ButtonsContainer show={show}>
+        <div
+          className={`absolute flex flex-col space-y-3 ${show ? "opacity-100" : "opacity-0"} transition-all duration-300 ease-out`}
+        >
+          <ButtonRunAll
+            small
+            onClick={show ? runAllNodes : () => {}}
+            isRunning={currentNodesRunning?.length > 0}
+          />
+        </div>
+      </ButtonsContainer>
       <SidebarContainer show={show}>
         <HeaderContainer>
           <TabButton
@@ -117,6 +131,26 @@ const SidebarToggle = styled.div<{ show: boolean }>`
     show &&
     css`
       width: 31.5%;
+    `}
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const ButtonsContainer = styled.div<{ show: boolean }>`
+  position: fixed;
+  right: 0;
+  top: 2%;
+  transform: translateY(-50%);
+  width: 5em;
+  transition: width 0.2s ease-in-out;
+  z-index: 1000000;
+
+  ${({ show }) =>
+    show &&
+    css`
+      width: 33%;
     `}
 
   @media screen and (max-width: 768px) {

@@ -17,6 +17,7 @@ export type NodeDimensions = {
 
 interface NodeContextType {
   runNode: (nodeName: string) => boolean;
+  runAllNodes: () => void;
   hasParent: (id: string) => boolean;
   getIncomingEdges: (id: string) => Edge[] | undefined;
   getEdgeIndex: (id: string) => Edge | undefined;
@@ -43,6 +44,7 @@ const DUPLICATED_NODE_OFFSET = 100;
 
 export const NodeContext = createContext<NodeContextType>({
   runNode: () => false,
+  runAllNodes: () => undefined,
   hasParent: () => false,
   getIncomingEdges: () => undefined,
   getEdgeIndex: () => undefined,
@@ -111,6 +113,27 @@ export const NodeProvider = ({
       },
     };
     return emitEvent(event);
+  };
+
+  const runAllNodes = () => {
+    const nodesSorted = nodesTopologicalSort(nodes, edges);
+    const flowFile = convertFlowToJson(nodesSorted, edges, false, true);
+
+    const nodesInError = getNodeInError(flowFile, nodesSorted);
+
+    if (nodesInError.length > 0) {
+      let errorMessage = createErrorMessageForMissingFields(nodesInError, t);
+      toastErrorMessage(errorMessage);
+      return;
+    }
+
+    const event: FlowEvent = {
+      name: "process_file",
+      data: {
+        jsonFile: JSON.stringify(flowFile),
+      },
+    };
+    emitEvent(event);
   };
 
   const hasParent = (id: string) => {
@@ -208,6 +231,7 @@ export const NodeProvider = ({
     <NodeContext.Provider
       value={{
         runNode,
+        runAllNodes,
         hasParent,
         getIncomingEdges,
         getEdgeIndex,
