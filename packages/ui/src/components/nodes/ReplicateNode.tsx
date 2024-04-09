@@ -185,6 +185,7 @@ export default function ReplicateNode({
           <InputWithButton
             buttonText={t("Load") ?? ""}
             inputPlaceholder={t("EnterModelNameDirectly") ?? ""}
+            value={modelInput}
             onInputChange={setModelInput}
             onButtonClick={handleLoadModel}
             inputClassName="text-center"

@@ -72,7 +72,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
   const [showLogs, setShowLogs] = useState<boolean>(
     data.outputData ? true : false,
   );
-  const [url, setUrl] = useState<string | null>(null);
+  const [url, setUrl] = useState<string>("");
 
   const [fileChoiceSelected, setFileChoiceSelected] =
     useState<FileChoice | null>(data?.fileChoiceSelected);
@@ -244,6 +244,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
             buttonText={t("Load") ?? ""}
             inputPlaceholder={t("EnterUrlToDesiredFile") ?? ""}
             onInputChange={setUrl}
+            value={url}
             onButtonClick={handleSetFileViaURL}
             inputClassName="text-center"
             buttonClassName="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"

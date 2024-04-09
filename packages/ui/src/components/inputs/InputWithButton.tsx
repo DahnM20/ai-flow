@@ -4,6 +4,7 @@ interface InputWithButtonProps {
   buttonText: string;
   onInputChange: (value: string) => void;
   onButtonClick: () => void;
+  value: string;
   inputPlaceholder?: string;
   inputClassName?: string;
   buttonClassName?: string;
@@ -12,6 +13,7 @@ interface InputWithButtonProps {
 const InputWithButton = ({
   inputPlaceholder,
   buttonText,
+  value,
   onInputChange,
   onButtonClick,
   inputClassName = "",
@@ -24,7 +26,7 @@ const InputWithButton = ({
           // className={` ${inputClassName ? inputClassName : "text-center"} `}
           placeholder={inputPlaceholder}
           onChange={onInputChange}
-          value={""}
+          value={value}
         />
         <button
           className={`${buttonClassName ? buttonClassName : "rounded-lg bg-sky-500 p-2 hover:bg-sky-400"}`}
