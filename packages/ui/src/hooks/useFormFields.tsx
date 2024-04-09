@@ -61,8 +61,6 @@ export function useFormFields(
     const range = max - min;
     let step;
 
-    console.log(range);
-
     if (range <= 1) {
       step = 0.01;
     } else if (range <= 10) {
