@@ -1,4 +1,4 @@
-import React, { useContext, memo, useState } from "react";
+import React, { useContext, memo } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { NodeContext } from "../../providers/NodeProvider";
@@ -6,6 +6,7 @@ import { useFormFields } from "../../hooks/useFormFields";
 import { Field } from "../../nodes-configuration/nodeConfig";
 import OutputDisplay from "../nodes/node-output/OutputDisplay";
 import ExpandableBloc from "../selectors/ExpandableBloc";
+import NodePlayButton from "../nodes/node-button/NodePlayButton";
 
 interface CurrentNodeViewProps {}
 
@@ -68,9 +69,12 @@ const CurrentNodeView: React.FC<CurrentNodeViewProps> = () => {
     <>
       <ViewContainer className="space-y-2">
         <div className="mb-4 flex flex-col items-center justify-center">
-          <p className="text-lg font-bold text-sky-100">
-            {t(node?.data.config?.nodeName)}
-          </p>
+          <div className="flex flex-row space-x-3">
+            <p className="text-lg font-bold text-sky-100">
+              {t(node?.data.config?.nodeName)}
+            </p>
+            <NodePlayButton nodeName={currentNodeIdSelected} />
+          </div>
           <p className="mt-1 rounded-md bg-zinc-600/30 px-2 py-1 text-sm">
             {currentNodeIdSelected}
           </p>
