@@ -40,7 +40,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   let hideActionsTimeout: ReturnType<typeof setTimeout>;
 
   const hideActionsWithDelay = () => {
-    hideActionsTimeout = setTimeout(() => setShowActions(false), 500);
+    hideActionsTimeout = setTimeout(() => setShowActions(false), 1500);
   };
 
   const clearHideActionsTimeout = () => {
