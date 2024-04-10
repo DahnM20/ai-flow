@@ -85,5 +85,6 @@
     "ClearOutput": "Clear Output",
     "RemoveNode": "Remove Node",
     "ExpiredURL": "Expired URL",
-    "NoNodeSelected": "No node selected yet. Please click on any node to select it."
+    "NoNodeSelected": "No node selected yet.",
+    "ClickOnNodeToSelectIt": "Click on any node to select it."
 }

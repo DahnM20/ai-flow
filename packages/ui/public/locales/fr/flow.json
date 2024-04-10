@@ -85,5 +85,6 @@
     "ClearOutput": "Supprimer le résultat",
     "RemoveNode": "Supprimer le noeud",
     "ExpiredURL": "URL expirée",
-    "NoNodeSelected": "Aucun nœud sélectionné pour le moment. Veuillez cliquer sur un nœud pour le sélectionner !"
+    "NoNodeSelected": "Aucun nœud sélectionné pour le moment.",
+    "ClickOnNodeToSelectIt": "Veuillez cliquer sur un nœud pour le sélectionner."
 }

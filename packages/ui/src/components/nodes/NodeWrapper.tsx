@@ -91,7 +91,10 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       icon: <AiOutlineClose />,
       name: t("RemoveNode"),
       value: "remove",
-      onClick: () => removeNode(nodeId),
+      onClick: () => {
+        setCurrentNodeIdSelected("");
+        removeNode(nodeId);
+      },
       hoverColor: "text-red-400",
     },
   ];

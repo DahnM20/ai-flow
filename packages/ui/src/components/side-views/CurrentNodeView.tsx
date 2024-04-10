@@ -58,10 +58,11 @@ const CurrentNodeView: React.FC<CurrentNodeViewProps> = () => {
     },
   );
 
-  if (!currentNodeIdSelected)
+  if (!currentNodeIdSelected || !node)
     return (
-      <ViewContainer className="space-y-2 text-center">
+      <ViewContainer className="my-5 flex flex-col space-y-1 text-center text-lg">
         <p>{t("NoNodeSelected")}</p>
+        <p>{t("ClickOnNodeToSelectIt")}</p>
       </ViewContainer>
     );
 
