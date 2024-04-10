@@ -36,7 +36,7 @@ export default function NodeField<
             />
           )}
           <NodeLabel
-            className={`text-lg
+            className={`font-mono text-lg
                         ${field.isLinked ? "text-sky-400" : ""}  
                         ${field.required ? "font-bold" : ""}`}
           >
@@ -44,7 +44,7 @@ export default function NodeField<
           </NodeLabel>
         </div>
       )}
-      {!field.isLinked && renderField(field)}
+      {!field.isLinked && <div className="pb-3">{renderField(field)}</div>}
     </>
   );
 }

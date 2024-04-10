@@ -18,7 +18,9 @@ const TopologicalView: React.FC<TopologicalViewProps> = ({ nodes, edges }) => {
         if (!node.data.outputData) return undefined;
         return (
           <TopologicalViewContent>
-            <TopologicalViewNodeName>{node.id}</TopologicalViewNodeName>
+            <TopologicalViewNodeName className="font-mono">
+              {node.id}
+            </TopologicalViewNodeName>
             <OutputDisplay data={node.data} />
           </TopologicalViewContent>
         );
@@ -34,7 +36,7 @@ const TopologicalViewContainer = styled.div`
 const TopologicalViewNodeName = styled.div`
   font-size: 0.8em;
   margin-bottom: 10px;
-  padding-left: 5%;
+  padding-left: 3%;
   background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) left / 1.5%
     no-repeat;
 `;
