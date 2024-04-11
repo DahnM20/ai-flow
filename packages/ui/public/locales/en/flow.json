@@ -86,5 +86,6 @@
     "RemoveNode": "Remove Node",
     "ExpiredURL": "Expired URL",
     "NoNodeSelected": "No node selected yet.",
-    "ClickOnNodeToSelectIt": "Click on any node to select it."
+    "ClickOnNodeToSelectIt": "Click on any node to select it.",
+    "Field": "Field"
 }

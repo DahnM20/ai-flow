@@ -86,5 +86,6 @@
     "RemoveNode": "Supprimer le noeud",
     "ExpiredURL": "URL expirée",
     "NoNodeSelected": "Aucun nœud sélectionné pour le moment.",
-    "ClickOnNodeToSelectIt": "Veuillez cliquer sur un nœud pour le sélectionner."
+    "ClickOnNodeToSelectIt": "Veuillez cliquer sur un nœud pour le sélectionner.",
+    "Field": "Champ"
 }

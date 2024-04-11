@@ -120,23 +120,29 @@ function AttachNodeDialog({
           <Dialog.Title className="mb-4 text-center text-lg font-bold text-slate-200">
             {t("attachNodeTitle")}
           </Dialog.Title>
-          <CustomCombobox
-            items={nodes.map((node) => {
-              return { key: node.data.name, value: node };
-            })}
-            selectedItem={selectedNode?.data.name}
-            onChange={setSelectedNode}
-            query={query}
-            setQuery={setQuery}
-          />
-          {!!selectedNode && (
+          <div className="flex flex-row items-baseline justify-center space-x-2">
+            <p className="text-lg">{t("Node")}</p>
             <CustomCombobox
-              items={getValidFieldsOptionsForSelectedNode()}
-              selectedItem={selectedField}
-              onChange={setSelectedField}
-              query={queryField}
-              setQuery={setQueryField}
+              items={nodes.map((node) => {
+                return { key: node.data.name, value: node };
+              })}
+              selectedItem={selectedNode?.data.name}
+              onChange={setSelectedNode}
+              query={query}
+              setQuery={setQuery}
             />
+          </div>
+          {!!selectedNode && (
+            <div className="flex flex-row items-baseline justify-center  space-x-2">
+              <p className="text-lg">{t("Field")}</p>
+              <CustomCombobox
+                items={getValidFieldsOptionsForSelectedNode()}
+                selectedItem={selectedField}
+                onChange={setSelectedField}
+                query={queryField}
+                setQuery={setQueryField}
+              />
+            </div>
           )}
           {!!selectedNode && !!selectedField && (
             <button
