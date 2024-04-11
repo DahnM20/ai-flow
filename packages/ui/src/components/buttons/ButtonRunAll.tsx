@@ -2,6 +2,7 @@ import styled, { keyframes } from "styled-components";
 import { FaPlay, FaSpinner } from "react-icons/fa";
 import { memo } from "react";
 import TapScale from "../shared/motions/TapScale";
+import { Tooltip } from "react-tooltip";
 
 interface ButtonRunAllProps {
   onClick: () => void;
@@ -28,6 +29,9 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({
                 px-2
                 py-2 transition-all hover:text-sky-100 hover:ring-sky-500`}
         onClick={onClick}
+        data-tooltip-id={"app-tooltip"}
+        data-tooltip-content={small ? "RUN ALL" : undefined}
+        data-tooltip-place="left"
       >
         <Button>
           {isRunning ? <Spinner className="text-xl " /> : <FaPlay />}
