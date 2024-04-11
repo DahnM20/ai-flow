@@ -3,6 +3,7 @@ import { Edge, Node } from "reactflow";
 import { nodesTopologicalSort } from "../../utils/flowUtils";
 import styled from "styled-components";
 import OutputDisplay from "../nodes/node-output/OutputDisplay";
+import TopologicalViewNode from "./TopologicalViewNode";
 
 interface TopologicalViewProps {
   nodes: Node[];
@@ -17,12 +18,7 @@ const TopologicalView: React.FC<TopologicalViewProps> = ({ nodes, edges }) => {
       {nodes.map((node) => {
         if (!node.data.outputData) return undefined;
         return (
-          <TopologicalViewContent>
-            <TopologicalViewNodeName className="font-mono">
-              {node.id}
-            </TopologicalViewNodeName>
-            <OutputDisplay data={node.data} />
-          </TopologicalViewContent>
+          <TopologicalViewNode key={node.id} data={node.data} id={node.id} />
         );
       })}
     </TopologicalViewContainer>
@@ -31,21 +27,6 @@ const TopologicalView: React.FC<TopologicalViewProps> = ({ nodes, edges }) => {
 
 const TopologicalViewContainer = styled.div`
   padding: 20px;
-`;
-
-const TopologicalViewNodeName = styled.div`
-  font-size: 0.8em;
-  margin-bottom: 10px;
-  padding-left: 3%;
-  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) left / 1.5%
-    no-repeat;
-`;
-
-const TopologicalViewContent = styled.div`
-  white-space: pre-wrap;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: ${({ theme }) => theme.nodeInputBg};
 `;
 
 function arePropsEqual(
