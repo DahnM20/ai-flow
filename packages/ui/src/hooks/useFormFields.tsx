@@ -241,15 +241,14 @@ export function useFormFields(
       }
 
       return (
-        <React.Fragment key={`${id}-${field.name}`}>
-          <NodeField
-            field={field}
-            label={t(field.name) + `${field.required ? " *" : ""}`}
-            renderField={renderField}
-            handleId={generateIdForHandle(index)}
-            displayParams={displayParams}
-          />
-        </React.Fragment>
+        <NodeField
+          key={`${id}-${field.name}`}
+          field={field}
+          label={t(field.name) + `${field.required ? " *" : ""}`}
+          renderField={renderField}
+          handleId={generateIdForHandle(index)}
+          displayParams={displayParams}
+        />
       );
     });
 }

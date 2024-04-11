@@ -84,7 +84,7 @@ export const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
   // add other configs here...
 };
 export const getConfigViaType = (type: NodeType): NodeConfig | undefined => {
-  return nodeConfigs[type];
+  return structuredClone(nodeConfigs[type]);
 };
 
 export const fieldHasHandle = (fieldType: FieldType): boolean => {
