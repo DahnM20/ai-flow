@@ -26,7 +26,7 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
   const { t } = useTranslation("flow");
   const { removeAll, clearAllOutput } = useContext(NodeContext);
   const [showFieldsConfig, setShowFieldsConfig] = useState(false);
-  const [showCoordinates, setShowCoordinates] = useState(true);
+  const [showCoordinates, setShowCoordinates] = useState(false);
   const [showAddTemplatePopup, setShowAddTemplatePopup] = useState(false);
 
   nodes = nodesTopologicalSort(nodes, edges);
