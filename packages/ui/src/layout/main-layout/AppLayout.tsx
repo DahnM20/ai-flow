@@ -76,6 +76,7 @@ const FlowTabs = () => {
 
   useEffect(() => {
     const savedFlowTabsJson = localStorage.getItem("flowTabs");
+    const savedCurrentTab = localStorage.getItem("currentTab");
     if (savedFlowTabsJson) {
       const savedFlowTabs = JSON.parse(savedFlowTabsJson) as FlowManagerState;
       // savedFlowTabs.tabs.forEach((tab) => {
@@ -84,6 +85,7 @@ const FlowTabs = () => {
       //   }
       // })
       setFlowTabs(savedFlowTabs);
+      setCurrentTab(parseInt(savedCurrentTab || "0"));
       setRefresh(true);
     }
   }, []);
@@ -93,6 +95,10 @@ const FlowTabs = () => {
       localStorage.setItem("flowTabs", JSON.stringify(flowTabs));
     }
   }, [flowTabs]);
+
+  useEffect(() => {
+    localStorage.setItem("currentTab", currentTab.toString());
+  }, [currentTab]);
 
   useEffect(() => {
     const loadIntroFile = async () => {
