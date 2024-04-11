@@ -40,7 +40,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   let hideActionsTimeout: ReturnType<typeof setTimeout>;
 
   const hideActionsWithDelay = () => {
-    hideActionsTimeout = setTimeout(() => setShowActions(false), 1500);
+    hideActionsTimeout = setTimeout(() => setShowActions(false), 2000);
   };
 
   const clearHideActionsTimeout = () => {
@@ -111,7 +111,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
         hideActionsWithDelay();
         hideResizeWithDelay();
       }}
-      onMouseEnter={clearHideResizeTimeout}
+      onMouseEnter={clearHideActionsTimeout}
     >
       <NodeResizer
         isVisible={resize}
@@ -124,7 +124,6 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       <div
         className={`absolute right-1/2 top-0 flex -translate-y-14 translate-x-1/2 transition-all duration-300 ease-in-out  ${showActions ? "opacity-100" : "opacity-0"}`}
         onMouseEnter={clearHideActionsTimeout}
-        onMouseLeave={hideActionsWithDelay}
       >
         <ActionGroup actions={actions} showIcon={showActions} />
       </div>
