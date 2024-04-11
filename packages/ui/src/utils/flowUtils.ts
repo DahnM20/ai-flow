@@ -106,9 +106,22 @@ export function clearSelectedNodes(nodes: Node[]) {
 }
 
 function getConfigEssentials(config: any) {
-  const { fields, nodeName, inputNames, hasInputHandle, outputType } =
-    config || {};
-  return { fields, nodeName, inputNames, hasInputHandle, outputType };
+  const {
+    fields,
+    nodeName,
+    inputNames,
+    hasInputHandle,
+    outputType,
+    showHandlesNames,
+  } = config || {};
+  return {
+    fields,
+    nodeName,
+    inputNames,
+    hasInputHandle,
+    outputType,
+    showHandlesNames,
+  };
 }
 
 export function convertFlowToJson(
