@@ -19,7 +19,7 @@
 </p>
 <div align="center">
 
-## 🎉🚀 v0.6.2 is Now Available 🚀🎉
+## 🎉🚀 v0.6.3 is Now Available 🚀🎉
 
 🚀 **New Replicate Node** | ✨ **Access to a lot of open-source models </br> (LLama, Mistral, Face Swap, MusicGen, ...)**
 </br>
