@@ -87,5 +87,6 @@
     "ExpiredURL": "URL expirée",
     "NoNodeSelected": "Aucun nœud sélectionné pour le moment.",
     "ClickOnNodeToSelectIt": "Veuillez cliquer sur un nœud pour le sélectionner.",
-    "Field": "Champ"
+    "Field": "Champ",
+    "DragAndDropNodes":"Glissez et déposez les nœuds pour les ajouter."
 }

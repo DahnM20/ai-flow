@@ -87,5 +87,6 @@
     "ExpiredURL": "Expired URL",
     "NoNodeSelected": "No node selected yet.",
     "ClickOnNodeToSelectIt": "Click on any node to select it.",
-    "Field": "Field"
+    "Field": "Field",
+    "DragAndDropNodes":"Drag and drop nodes onto the canvas to add them."
 }

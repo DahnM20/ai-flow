@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { DnDNode } from "../../../nodes-configuration/sectionConfig";
 import { ReactNode, memo } from "react";
 import styled from "styled-components";
+import { toastCustomIconInfoMessage } from "../../../utils/toastUtils";
+import { FiMove } from "react-icons/fi";
 
 interface DraggableNodeProps {
   node: DnDNode;
@@ -31,6 +33,17 @@ const DraggableNode = (props: DraggableNodeProps) => {
     },
   });
 
+  function showDragAndDropHelper() {
+    if (localStorage.getItem("AIFLOW_didShowDragDropHelper") === "true") {
+      return;
+    }
+    toastCustomIconInfoMessage(
+      "Drag and drop nodes onto the canvas to add them.",
+      FiMove,
+    );
+    localStorage.setItem("AIFLOW_didShowDragDropHelper", "true");
+  }
+
   return (
     <Node
       ref={drag}
@@ -40,6 +53,9 @@ const DraggableNode = (props: DraggableNodeProps) => {
       }}
       onTouchEnd={(e) => {
         e.stopPropagation();
+      }}
+      onDoubleClick={(e) => {
+        showDragAndDropHelper();
       }}
       className={`sidebar-dnd-node text-md group relative flex h-auto w-full 
                   cursor-grab
