@@ -26,7 +26,7 @@ export default function NodeOutput({
     event.stopPropagation();
     if (data.outputData && typeof data.outputData == "string") {
       copyToClipboard(data.outputData);
-      toastFastInfoMessage(t("copiedToClipboard"));
+      toastFastInfoMessage(t("CopiedToClipboard"));
     }
   };
 
