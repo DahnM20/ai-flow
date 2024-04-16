@@ -7,7 +7,7 @@
     "ApiKeyRequiredMessage": "Veuillez fournir votre clé API dans les paramètres de configuration pour exécuter correctement votre flow.",
     "ClickToShowOutput": "Cliquez pour afficher le résultat",
     "RoleInitPrompt": "Indiquez le rôle que vous souhaitez que l'IA adopte lors de vos prochaines interactions. Par exemple, 'Comporte toi comme un Critique Littéraire'.",
-    "EnterURL": "URL",
+    "EnterURL": "Extracteur Web",
     "YoutubeTranscriptNodeName": "Transcription Youtube",
     "URLPlaceholder": "Saisissez une URL",
     "Input": "Entrées",

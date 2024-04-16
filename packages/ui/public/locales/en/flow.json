@@ -7,7 +7,7 @@
     "Prompt": "Prompt",
     "ClickToShowOutput": "Click to show output",
     "RoleInitPrompt": "Indicate the role you wish the AI to adopt in the upcoming interactions. For example, 'Behave as a Literary Critic'.",
-    "EnterURL": "URL",
+    "EnterURL": "Web Extractor",
     "YoutubeTranscriptNodeName": "Youtube Transcript",
     "URLPlaceholder": "Input a URL",
     "Input": "Inputs",
