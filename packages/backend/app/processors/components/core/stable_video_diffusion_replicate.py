@@ -1,7 +1,7 @@
 import os
 from urllib.parse import urlparse
-from ..context.processor_context import ProcessorContext
-from .processor import APIContextProcessor
+from ...context.processor_context import ProcessorContext
+from ..processor import APIContextProcessor
 import replicate
 
 from .processor_type_name_utils import ProcessorType

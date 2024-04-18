@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any
 
-from ..types.processor import Processor
+from ..components.processor import Processor
 
 
 @dataclass

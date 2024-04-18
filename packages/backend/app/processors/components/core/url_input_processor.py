@@ -1,9 +1,9 @@
 from queue import Empty, Queue
 import time
 import eventlet
-from .processor import SimpleProcessor
+from ..processor import SimpleProcessor
 
-from ...tasks.shared_ressources import scrapping_task_queue
+from ....tasks.shared_ressources import scrapping_task_queue
 
 from .processor_type_name_utils import ProcessorType
 

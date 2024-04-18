@@ -11,7 +11,7 @@ from .event_type import EventType
 
 from ..observer.observer import Observer
 
-from ..types.processor import Processor
+from ..components.processor import Processor
 from .abstract_topological_processor_launcher import (
     AbstractTopologicalProcessorLauncher,
 )

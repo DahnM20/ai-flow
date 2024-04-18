@@ -1,7 +1,7 @@
-from ..context.processor_context import ProcessorContext
-from .processor import APIContextProcessor
-from ...llms.factory.llm_factory import LLMFactory
-from ...root_injector import root_injector
+from ...context.processor_context import ProcessorContext
+from ..processor import APIContextProcessor
+from ....llms.factory.llm_factory import LLMFactory
+from ....root_injector import root_injector
 
 from llama_index.llms.base import ChatMessage
 

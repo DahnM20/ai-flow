@@ -1,7 +1,7 @@
 import base64
 
-from ..context.processor_context import ProcessorContext
-from .processor import APIContextProcessor
+from ...context.processor_context import ProcessorContext
+from ..processor import APIContextProcessor
 from datetime import datetime
 import requests
 

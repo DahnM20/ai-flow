@@ -2,7 +2,7 @@ import importlib
 import logging
 import pkgutil
 import inspect
-from ..types.processor import Processor
+from ..components.processor import Processor
 from .processor_factory import ProcessorFactory
 from injector import singleton
 
@@ -36,16 +36,22 @@ class ProcessorFactoryIterModules(ProcessorFactory):
         return processor
 
     def load_processors(self):
-        package = importlib.import_module("app.processors.types")
+        self._load_recursive("app.processors.components")
+
+    def _load_recursive(self, package_name):
+        package = importlib.import_module(package_name)
         prefix = package.__name__ + "."
         for importer, module_name, is_pkg in pkgutil.iter_modules(
             package.__path__, prefix
         ):
-            module = __import__(module_name, fromlist="dummy")
-            for attribute_name in dir(module):
-                attribute = getattr(module, attribute_name)
-                if isinstance(attribute, type) and issubclass(attribute, Processor):
-                    if attribute.processor_type is not None:
-                        self.register_processor(
-                            attribute.processor_type.value, attribute
-                        )
+            if is_pkg:
+                self._load_recursive(module_name)
+            else:
+                module = __import__(module_name, fromlist="dummy")
+                for attribute_name in dir(module):
+                    attribute = getattr(module, attribute_name)
+                    if isinstance(attribute, type) and issubclass(attribute, Processor):
+                        if attribute.processor_type is not None:
+                            self.register_processor(
+                                attribute.processor_type.value, attribute
+                            )

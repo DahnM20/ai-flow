@@ -7,7 +7,7 @@ from ..launcher.event_type import EventType
 
 from ..observer.observer import Observer
 
-from .processor_type_name_utils import ProcessorType
+from .core.processor_type_name_utils import ProcessorType
 
 from ...storage.storage_strategy import StorageStrategy
 

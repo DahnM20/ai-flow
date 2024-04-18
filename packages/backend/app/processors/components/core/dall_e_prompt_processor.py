@@ -1,5 +1,5 @@
-from ..context.processor_context import ProcessorContext
-from .processor import APIContextProcessor
+from ...context.processor_context import ProcessorContext
+from ..processor import APIContextProcessor
 
 from openai import OpenAI
 

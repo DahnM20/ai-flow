@@ -1,6 +1,6 @@
 import logging
-from ..context.processor_context import ProcessorContext
-from .processor import APIContextProcessor
+from ...context.processor_context import ProcessorContext
+from ..processor import APIContextProcessor
 from .processor_type_name_utils import ProcessorType
 from openai import OpenAI
 from urllib.parse import urlparse

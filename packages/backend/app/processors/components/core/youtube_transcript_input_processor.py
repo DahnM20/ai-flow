@@ -1,4 +1,4 @@
-from .processor import SimpleProcessor
+from ..processor import SimpleProcessor
 from langchain.document_loaders import YoutubeLoader
 
 from .processor_type_name_utils import ProcessorType

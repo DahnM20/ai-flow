@@ -1,9 +1,9 @@
 from .processor_type_name_utils import ProcessorType
-from .processor import SimpleProcessor
+from ..processor import SimpleProcessor
 
 
-class InputProcessor(SimpleProcessor):
-    processor_type = ProcessorType.INPUT_TEXT
+class InputImageProcessor(SimpleProcessor):
+    processor_type = ProcessorType.INPUT_IMAGE
 
     def __init__(self, config):
         super().__init__(config)

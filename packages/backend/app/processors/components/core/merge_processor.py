@@ -1,7 +1,7 @@
-from .processor import APIContextProcessor
+from ..processor import APIContextProcessor
 import re
-from ...llms.factory.llm_factory import LLMFactory
-from ...root_injector import root_injector
+from ....llms.factory.llm_factory import LLMFactory
+from ....root_injector import root_injector
 
 from .processor_type_name_utils import ProcessorType, MergeModeEnum
 

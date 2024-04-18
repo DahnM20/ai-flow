@@ -1,12 +1,12 @@
 import logging
 
-from ...utils.replicate_utils import (
+from ....utils.replicate_utils import (
     get_input_schema_from_open_API_schema,
     get_model_openapi_schema,
     get_output_schema_from_open_API_schema,
 )
-from ..context.processor_context import ProcessorContext
-from .processor import APIContextProcessor
+from ...context.processor_context import ProcessorContext
+from ..processor import APIContextProcessor
 import replicate
 
 from .processor_type_name_utils import ProcessorType
