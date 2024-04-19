@@ -38,6 +38,9 @@ pypdf = "^3.16.4"
 replicate = "0.22.0"
 
 
+[tool.poetry.group.dev.dependencies]
+datamodel-code-generator = "^0.25.5"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
