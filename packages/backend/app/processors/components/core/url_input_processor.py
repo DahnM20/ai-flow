@@ -16,9 +16,6 @@ class URLInputProcessor(SimpleProcessor):
         super().__init__(config)
         self.url = config["url"]
 
-    def update_context(self, data):
-        pass
-
     def process(self):
         urls = [self.url]
         results_queue = Queue()

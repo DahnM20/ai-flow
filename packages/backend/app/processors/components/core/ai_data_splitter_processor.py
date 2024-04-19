@@ -98,6 +98,3 @@ Now, be ready to do it with my next message
 
     def cancel(self):
         pass
-
-    def update_context(self, data):
-        pass

@@ -12,9 +12,6 @@ class YoutubeTranscriptInputProcessor(SimpleProcessor):
         self.url = config["url"]
         self.language = config["language"]
 
-    def update_context(self, data):
-        pass
-
     def process(self):
         loader = YoutubeLoader.from_youtube_url(
             self.url,

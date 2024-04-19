@@ -61,6 +61,3 @@ class StableVideoDiffusionReplicaterocessor(APIContextProcessor):
 
     def cancel(self):
         pass
-
-    def update_context(self, data):
-        pass

@@ -9,9 +9,6 @@ class InputImageProcessor(SimpleProcessor):
         super().__init__(config)
         self.inputText = config["inputText"]
 
-    def update_context(self, data):
-        pass
-
     def process(self):
         self.set_output(self.inputText)
         return self.inputText

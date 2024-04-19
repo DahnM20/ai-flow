@@ -8,9 +8,6 @@ class TransitionProcessor(SimpleProcessor):
     def __init__(self, config):
         super().__init__(config)
 
-    def update_context(self, data):
-        pass
-
     def process(self):
         input_data = None
         if self.get_input_processor() is not None:

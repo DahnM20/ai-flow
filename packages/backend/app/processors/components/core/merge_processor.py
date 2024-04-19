@@ -67,6 +67,3 @@ class MergeProcessor(APIContextProcessor):
 
     def cancel(self):
         pass
-
-    def update_context(self, data):
-        pass

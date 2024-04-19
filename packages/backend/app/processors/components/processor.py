@@ -87,7 +87,6 @@ class Processor(ABC):
     def cancel(self) -> None:
         pass
 
-    @abstractmethod
     def update_context(self, data: Any) -> None:
         pass
 

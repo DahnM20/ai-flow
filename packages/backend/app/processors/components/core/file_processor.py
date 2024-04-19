@@ -9,9 +9,6 @@ class FileProcessor(SimpleProcessor):
         super().__init__(config)
         self.url = config["fileUrl"]
 
-    def update_context(self, data):
-        pass
-
     def process(self):
         self.set_output(self.url)
         return self.url

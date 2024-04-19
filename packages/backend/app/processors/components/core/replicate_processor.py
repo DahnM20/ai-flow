@@ -90,6 +90,3 @@ class ReplicateProcessor(APIContextProcessor):
             api_token=self.api_context_data.get_api_key_for_provider("replicate")
         )
         api.predictions.cancel(id=self.prediction.id)
-
-    def update_context(self, data):
-        pass
