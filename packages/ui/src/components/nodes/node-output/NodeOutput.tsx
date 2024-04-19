@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { FiCopy } from "react-icons/fi";
 import { getOutputTypeFromExtension } from "./outputUtils";
-import { OutputType } from "../../../nodes-configuration/nodeConfig";
+import { OutputType } from "../../../nodes-configuration/types";
 import OutputDisplay from "./OutputDisplay";
 
 interface NodeOutputProps {

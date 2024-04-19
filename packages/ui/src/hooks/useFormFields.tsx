@@ -5,7 +5,7 @@ import {
   OptionButton,
 } from "../components/nodes/Node.styles";
 import InputNameBar from "../components/nodes/node-button/InputNameBar";
-import { Field } from "../nodes-configuration/nodeConfig";
+import { Field } from "../nodes-configuration/types";
 import React, { useEffect, useRef } from "react";
 import { generateIdForHandle } from "../utils/flowUtils";
 import { Slider } from "@mantine/core";

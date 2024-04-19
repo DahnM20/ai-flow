@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { NodeContext } from "../../providers/NodeProvider";
 import { useFormFields } from "../../hooks/useFormFields";
-import { Field } from "../../nodes-configuration/nodeConfig";
+import { Field } from "../../nodes-configuration/types";
 import OutputDisplay from "../nodes/node-output/OutputDisplay";
 import ExpandableBloc from "../selectors/ExpandableBloc";
 import NodePlayButton from "../nodes/node-button/NodePlayButton";

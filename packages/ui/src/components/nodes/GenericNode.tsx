@@ -12,7 +12,7 @@ import {
 import useHandleShowOutput from "../../hooks/useHandleShowOutput";
 import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
 import { ICON_MAP } from "./utils/NodeIcons";
-import { Field } from "../../nodes-configuration/nodeConfig";
+import { Field } from "../../nodes-configuration/types";
 import { NodeContext } from "../../providers/NodeProvider";
 import NodePlayButton from "./node-button/NodePlayButton";
 import { useTranslation } from "react-i18next";

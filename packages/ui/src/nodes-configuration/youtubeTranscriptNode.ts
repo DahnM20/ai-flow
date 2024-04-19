@@ -1,38 +1,38 @@
-import { NodeConfig } from './nodeConfig';
+import { NodeConfig } from "./types";
 
 export const youtubeTranscriptNodeConfig: NodeConfig = {
-  nodeName: 'YoutubeTranscriptNodeName',
-  icon: 'FaFilm',
+  nodeName: "YoutubeTranscriptNodeName",
+  processorType: "youtube_transcript_input",
+  icon: "FaFilm",
   fields: [
     {
-      name: 'url',
-      type: 'input',
+      name: "url",
+      type: "input",
       required: true,
       placeholder: "URLPlaceholder",
     },
     {
-      name: 'language',
-      type: 'option',
+      name: "language",
+      type: "option",
       options: [
         {
-          label: 'EN',
-          value: 'en',
+          label: "EN",
+          value: "en",
           default: true,
         },
         {
-          label: 'FR',
-          value: 'fr'
-        }
-        ,
+          label: "FR",
+          value: "fr",
+        },
         {
-          label: 'ES',
-          value: 'es'
-        }
-      ]
-    }
+          label: "ES",
+          value: "es",
+        },
+      ],
+    },
   ],
-  outputType: 'text',
+  outputType: "text",
   defaultHideOutput: true,
-  section: 'input',
-  helpMessage: 'youtubeTranscriptHelp',
+  section: "input",
+  helpMessage: "youtubeTranscriptHelp",
 };

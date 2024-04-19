@@ -8,46 +8,38 @@ import EaseOut from "../components/shared/motions/EaseOut";
 import NodeWrapper from "../components/nodes/NodeWrapper";
 import TransitionNode from "../components/nodes/TransitionNode";
 import ReplicateNode from "../components/nodes/ReplicateNode";
+import DynamicAPINode from "../components/nodes/DynamicAPINode";
+import { nodeConfigs } from "../nodes-configuration/nodeConfig";
 
-/**
- * All nodes types must be declared here. By default, every node will be associated with the GenericNode component.
- */
-export const allNodeTypes = [
-  "gpt",
-  "file-drop",
-  "url_input",
-  "dalle-prompt",
-  "data-splitter",
-  "ai-data-splitter",
-  "input-text",
-  "input-image",
-  "gpt-prompt",
-  "youtube_transcript_input",
-  "llm-prompt",
-  "ai-action",
-  "stable-diffusion-stabilityai-prompt",
-  "merger-prompt",
-  "gpt-vision",
-  "stable-video-diffusion-replicate",
-  "replicate",
-  "transition",
-  "file",
-] as const;
-export type NodeType = (typeof allNodeTypes)[number];
+let allNodeTypes: string[] = [];
+
+export const loadAllNodesTypes = () => {
+  allNodeTypes = !!nodeConfigs
+    ? Object.keys(nodeConfigs)
+        .filter((key: string) => {
+          return !!nodeConfigs[key]?.processorType;
+        })
+        .map((key: string) => {
+          return nodeConfigs[key]?.processorType as string;
+        })
+    : [];
+
+  console.log(allNodeTypes);
+};
 
 /**
  * Nodes types that uses specific components, instead of the generic one.
  */
-export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> =
-  {
-    "file-drop": FileUploadNode,
-    "data-splitter": DataSplitterNode,
-    "ai-data-splitter": AIDataSplitterNode,
-    "ai-action": AIActionNode,
-    file: FileUploadNode,
-    replicate: ReplicateNode,
-    transition: TransitionNode,
-  };
+export const specificNodeTypes: Partial<Record<string, React.FC<NodeProps>>> = {
+  "file-drop": FileUploadNode,
+  "data-splitter": DataSplitterNode,
+  "ai-data-splitter": AIDataSplitterNode,
+  "ai-action": AIActionNode,
+  file: FileUploadNode,
+  replicate: ReplicateNode,
+  transition: TransitionNode,
+  genericApiNode: DynamicAPINode,
+};
 
 /**
  * Generate the mapping used by ReactFlow.
@@ -55,8 +47,8 @@ export const specificNodeTypes: Partial<Record<NodeType, React.FC<NodeProps>>> =
  * @returns The complete mapping of all node types to their respective components.
  */
 export const getAllNodeTypesComponentMapping = () => {
-  const completeNodeTypes: Record<NodeType, React.FC<NodeProps>> = {} as Record<
-    NodeType,
+  const completeNodeTypes: Record<string, React.FC<NodeProps>> = {} as Record<
+    string,
     React.FC<NodeProps>
   >;
 
@@ -68,15 +60,15 @@ export const getAllNodeTypesComponentMapping = () => {
 };
 
 export const getAllNodeWithEaseOut = (): Record<
-  NodeType,
+  string,
   React.FC<NodeProps>
 > => {
-  const completeNodeTypes: Record<NodeType, React.FC<NodeProps>> = {} as Record<
-    NodeType,
+  const completeNodeTypes: Record<string, React.FC<NodeProps>> = {} as Record<
+    string,
     React.FC<NodeProps>
   >;
 
-  allNodeTypes.forEach((type: NodeType) => {
+  allNodeTypes.forEach((type: string) => {
     const NodeComponent = specificNodeTypes[type] || GenericNode;
 
     completeNodeTypes[type] = (props: NodeProps) => (

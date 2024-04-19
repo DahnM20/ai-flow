@@ -3,7 +3,7 @@ import { Combobox, Dialog } from "@headlessui/react";
 import { NodeContext } from "../../providers/NodeProvider";
 import { Node } from "reactflow";
 import { FiChevronDown } from "react-icons/fi";
-import { Field } from "../../nodes-configuration/nodeConfig";
+import { Field } from "../../nodes-configuration/types";
 import { useTranslation } from "react-i18next";
 
 interface AttachNodeDialogProps {

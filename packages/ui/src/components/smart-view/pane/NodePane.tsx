@@ -3,7 +3,7 @@ import { LayoutIndex } from "../RenderLayout";
 import { useContext, useMemo, useState } from "react";
 import { NodeContext } from "../../../providers/NodeProvider";
 import AttachNodeDialog from "../AttachNodeDialog";
-import { Field } from "../../../nodes-configuration/nodeConfig";
+import { Field } from "../../../nodes-configuration/types";
 import { useFormFields } from "../../../hooks/useFormFields";
 import MarkdownOutput from "../../nodes/node-output/MarkdownOutput";
 import ImageUrlOutput from "../../nodes/node-output/ImageUrlOutput";

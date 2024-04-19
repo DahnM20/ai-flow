@@ -1,18 +1,19 @@
-import { NodeConfig } from './nodeConfig';
+import { NodeConfig } from "./types";
 
 export const urlNodeConfig: NodeConfig = {
-  nodeName: 'EnterURL',
-  icon: 'FaLink',
+  nodeName: "EnterURL",
+  processorType: "url_input",
+  icon: "FaLink",
   fields: [
     {
-      name: 'url',
-      type: 'input',
+      name: "url",
+      type: "input",
       required: true,
       placeholder: "URLPlaceholder",
     },
   ],
-  outputType: 'text',
+  outputType: "text",
   defaultHideOutput: true,
-  section: 'input',
-  helpMessage: 'urlInputHelp',
+  section: "input",
+  helpMessage: "urlInputHelp",
 };

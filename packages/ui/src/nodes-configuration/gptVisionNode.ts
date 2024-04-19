@@ -1,7 +1,8 @@
-import { NodeConfig } from "./nodeConfig";
+import { NodeConfig } from "./types";
 
 export const gptVisionNodeConfig: NodeConfig = {
   nodeName: "GPT Vision",
+  processorType: "gpt-vision",
   icon: "FaEye",
   inputNames: ["image_url", "prompt"],
   fields: [

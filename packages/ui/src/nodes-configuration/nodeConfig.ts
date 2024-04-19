@@ -1,4 +1,3 @@
-import { NodeType } from "../utils/mappings";
 import dallENodeConfig from "./dallENode";
 import inputTextNodeConfig from "./inputTextNode";
 import { llmPromptNodeConfig } from "./llmPrompt";
@@ -7,73 +6,11 @@ import { urlNodeConfig } from "./urlNode";
 import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
 import { mergerPromptNode } from "./mergerPromptNode";
 import { gptVisionNodeConfig } from "./gptVisionNode";
+import { FieldType, NodeConfig } from "./types";
+import axios from "axios";
 
-export type SectionType = "models" | "image-generation" | "tools" | "input";
-export type FieldType =
-  | "input"
-  | "inputInt"
-  | "textarea"
-  | "select"
-  | "option"
-  | "inputNameBar"
-  | "boolean"
-  | "slider";
-
-export type OutputType =
-  | "imageUrl"
-  | "videoUrl"
-  | "audioUrl"
-  | "pdfUrl"
-  | "imageBase64"
-  | "markdown"
-  | "text";
-
-const fieldTypeWithoutHandle: FieldType[] = [
-  "select",
-  "option",
-  "boolean",
-  "slider",
-];
-
-export interface Option {
-  label: string;
-  value: string;
-  default?: boolean;
-}
-
-export interface Field {
-  name: string;
-  type: FieldType;
-  label?: string;
-  placeholder?: string;
-  defaultValue?: string;
-  max?: number;
-  min?: number;
-  options?: Option[];
-  hideIfParent?: boolean;
-  required?: boolean;
-  hasHandle?: boolean;
-  isLinked?: boolean;
-  associatedField?: string;
-}
-
-export interface NodeConfig {
-  nodeName: string;
-  icon: string;
-  inputNames?: string[];
-  fields: Field[];
-  hideFieldsIfParent?: boolean;
-  outputType: OutputType;
-  defaultHideOutput?: boolean;
-  hasInputHandle?: boolean;
-  section: SectionType;
-  helpMessage?: string;
-  showHandlesNames?: boolean;
-}
-
-export const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
+export const nodeConfigs: { [key: string]: NodeConfig | undefined } = {
   "input-text": inputTextNodeConfig,
-  //'input-image': inputImageNodeConfig,
   url_input: urlNodeConfig,
   "llm-prompt": llmPromptNodeConfig,
   "gpt-vision": gptVisionNodeConfig,
@@ -83,10 +20,29 @@ export const nodeConfigs: { [key in NodeType]?: NodeConfig } = {
   "merger-prompt": mergerPromptNode,
   // add other configs here...
 };
-export const getConfigViaType = (type: NodeType): NodeConfig | undefined => {
+
+const fieldTypeWithoutHandle: FieldType[] = [
+  "select",
+  "option",
+  "boolean",
+  "slider",
+];
+
+export const getConfigViaType = (type: string): NodeConfig | undefined => {
   return structuredClone(nodeConfigs[type]);
 };
 
 export const fieldHasHandle = (fieldType: FieldType): boolean => {
   return !fieldTypeWithoutHandle.includes(fieldType);
+};
+
+export const loadExtensions = async () => {
+  const response = await axios.get("http://192.168.1.27:5000/node/extensions");
+  response.data?.extensions.forEach((extension: NodeConfig) => {
+    const key = extension.processorType;
+    if (!key) return;
+    if (key in nodeConfigs) return;
+
+    nodeConfigs[key] = extension;
+  });
 };

@@ -1,4 +1,4 @@
-import { OutputType } from "../../../nodes-configuration/nodeConfig";
+import { OutputType } from "../../../nodes-configuration/types";
 
 export const getFileExtension = (url: string) => {
   const extensionMatch = url.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);

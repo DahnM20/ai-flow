@@ -1,7 +1,8 @@
-import { NodeConfig } from "./nodeConfig";
+import { NodeConfig } from "./types";
 
 export const mergerPromptNode: NodeConfig = {
   nodeName: "MergerNode",
+  processorType: "merger-prompt",
   icon: "AiOutlineMergeCells",
   inputNames: ["input-1", "input-2"],
   fields: [

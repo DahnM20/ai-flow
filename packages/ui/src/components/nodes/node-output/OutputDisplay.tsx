@@ -12,7 +12,7 @@ import VideoUrlOutput from "./VideoUrlOutput";
 import AudioUrlOutput from "./AudioUrlOutput";
 import { getOutputTypeFromExtension } from "./outputUtils";
 import PdfUrlOutput from "./PdfUrlOutput";
-import { OutputType } from "../../../nodes-configuration/nodeConfig";
+import { OutputType } from "../../../nodes-configuration/types";
 
 interface OutputDisplayProps {
   data: NodeData;

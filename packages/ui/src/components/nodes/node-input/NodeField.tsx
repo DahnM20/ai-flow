@@ -1,6 +1,6 @@
 import { InputHandle, NodeLabel } from "../Node.styles";
 import { Position } from "reactflow";
-import { Field } from "../../../nodes-configuration/nodeConfig";
+import { Field } from "../../../nodes-configuration/types";
 import { DisplayParams } from "../../../hooks/useFormFields";
 
 interface NodeFieldProps<T> {

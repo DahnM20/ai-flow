@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NodeProps } from "reactflow";
-import { Field } from "../../nodes-configuration/nodeConfig";
+import { Field } from "../../nodes-configuration/types";
 import SelectModelPopup from "../popups/select-model-popup/SelectModelPopup";
 import { NodeContainer } from "./Node.styles";
 import {

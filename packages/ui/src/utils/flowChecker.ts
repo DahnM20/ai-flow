@@ -1,5 +1,5 @@
 import { NodeData } from "../components/nodes/types/node";
-import { Field } from "../nodes-configuration/nodeConfig";
+import { Field } from "../nodes-configuration/types";
 import { Node } from "reactflow";
 
 export const isFieldLinkedToAnotherNode = (

@@ -1,5 +1,4 @@
-import { NodeConfig } from "../../../nodes-configuration/nodeConfig";
-import { NodeType } from "../../../utils/mappings";
+import { NodeConfig } from "../../../nodes-configuration/types";
 
 export interface NodeInput {
   inputName: string;
@@ -11,7 +10,7 @@ export interface NodeData {
   id: string;
   name: string;
   handles: any;
-  processorType: NodeType;
+  processorType: string;
   nbOutput: number;
   inputs: NodeInput[];
   outputData?: string[] | string;
