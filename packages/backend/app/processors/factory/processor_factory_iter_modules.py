@@ -1,3 +1,4 @@
+from enum import Enum
 import importlib
 import logging
 import pkgutil
@@ -52,6 +53,9 @@ class ProcessorFactoryIterModules(ProcessorFactory):
                     attribute = getattr(module, attribute_name)
                     if isinstance(attribute, type) and issubclass(attribute, Processor):
                         if attribute.processor_type is not None:
-                            self.register_processor(
-                                attribute.processor_type.value, attribute
+                            processor_type_key = (
+                                attribute.processor_type.value
+                                if isinstance(attribute.processor_type, Enum)
+                                else attribute.processor_type
                             )
+                            self.register_processor(processor_type_key, attribute)

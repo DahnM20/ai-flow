@@ -2,16 +2,13 @@ import unittest
 from app.processors.factory.processor_factory_iter_modules import (
     ProcessorFactoryIterModules,
 )
-from app.processors.types.processor import SimpleProcessor, APIContextProcessor
+from app.processors.components.processor import SimpleProcessor, APIContextProcessor
 
 
 class DummyProcessor(SimpleProcessor):
     processor_type = "dummy_processor"
 
     def process(self):
-        pass
-
-    def update_context(self, data):
         pass
 
     def cancel(self):
@@ -26,9 +23,6 @@ class APIDummyProcessor(APIContextProcessor):
         self.api_context_data = api_context_data
 
     def process(self):
-        pass
-
-    def update_context(self, data):
         pass
 
     def cancel(self):
