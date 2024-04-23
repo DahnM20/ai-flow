@@ -1,4 +1,5 @@
-import { Field, fieldHasHandle } from "../nodes-configuration/nodeConfig";
+import { Field } from "../nodes-configuration/types";
+import { fieldHasHandle } from "../nodes-configuration/nodeConfig";
 
 export interface OpenApiSchema {
   components: {
@@ -18,7 +19,7 @@ export function getSchemaFromConfig(config: Config, schemaName: string) {
 }
 
 const getNodeFieldTypeFromProp: (prop: any) => Field["type"] = (prop: any) => {
-  if (prop.allOf != null) {
+  if (prop.allOf != null || prop.enum != null) {
     return "select";
   }
   if (prop.maximum != null && prop.minimum != null) {
@@ -73,6 +74,13 @@ export function convertOpenAPISchemaToNodeConfig(schema: any, config?: Config) {
             return [refObj];
           }
         });
+      }
+
+      if (prop.enum != null) {
+        options = prop.enum.map((value: string) => ({
+          label: value,
+          value,
+        }));
       }
 
       const fieldType = getNodeFieldTypeFromProp(prop);

@@ -16,20 +16,18 @@ class ProcessorFactoryIterModules(ProcessorFactory):
     def register_processor(self, processor_type, processor_class):
         self._processors[processor_type] = processor_class
 
-    def create_processor(self, config, api_context_data=None, storage_strategy=None):
+    def create_processor(self, config, context_data=None, storage_strategy=None):
         processor_type = config["processorType"]
         processor_class = self._processors.get(processor_type)
         if not processor_class:
             raise ValueError(f"Processor type '{processor_type}' not supported")
 
         params = inspect.signature(processor_class.__init__).parameters
-        api_context_param = params.get("api_context_data")
+        context_param = params.get("context")
 
         processor = None
-        if api_context_param is not None:
-            processor = processor_class(
-                config=config, api_context_data=api_context_data
-            )
+        if context_param is not None:
+            processor = processor_class(config=config, context=context_data)
         else:
             processor = processor_class(config=config)
         processor.set_storage_strategy(storage_strategy)

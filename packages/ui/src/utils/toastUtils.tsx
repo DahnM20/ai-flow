@@ -16,16 +16,19 @@ export function toastInfoMessage(message: string, id?: string) {
 }
 
 export function toastErrorMessage(message: string) {
-  toast.error(<div className="whitespace-pre-line text-sm text-center"> {message} </div>, {
-    position: "top-center",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-  });
+  toast.error(
+    <div className="whitespace-pre-line text-center text-sm"> {message} </div>,
+    {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    },
+  );
 }
 
 export function toastFastInfoMessage(message: string) {

@@ -7,7 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import { GlobalStyle } from "./components/nodes/Node.styles";
-import { SocketProvider } from "./providers/SocketProvider";
 import { Fallback } from "./components/tools/Fallback";
 import "./i18n";
 import { ToastContainer } from "react-toastify";
@@ -30,14 +29,12 @@ root.render(
       cssVariablesSelector="#dark-area"
       forceColorScheme="dark"
     >
-      <SocketProvider>
-        <ThemeProvider>
-          <Suspense fallback={<Fallback />}>
-            <ToastContainer />
-            <App />
-          </Suspense>
-        </ThemeProvider>
-      </SocketProvider>
+      <ThemeProvider>
+        <Suspense fallback={<Fallback />}>
+          <ToastContainer />
+          <App />
+        </Suspense>
+      </ThemeProvider>
     </MantineProvider>
   </>,
 );

@@ -1,4 +1,5 @@
 import eventlet
+
 eventlet.monkey_patch(all=False, socket=True)
 
 from ..authentication.user_details import UserDetails
@@ -12,15 +13,16 @@ import json
 from flask import g, request, session
 from flask_socketio import emit
 from ..root_injector import root_injector
-from .utils.constants import API_KEYS_FIELD_NAME, ENV_API_KEYS, SESSION_USER_ID_KEY
+from .utils.constants import PARAMETERS_FIELD_NAME, ENV_API_KEYS, SESSION_USER_ID_KEY
 
 from ..processors.launcher.processor_launcher import ProcessorLauncher
-from ..processors.context.processor_context_flask_request import ProcessorContextFlaskRequest
+from ..processors.context.processor_context_flask_request import (
+    ProcessorContextFlaskRequest,
+)
 import traceback
 import os
 from .decorators import with_flow_data_validations
 from .validators import max_empty_output_data, max_url_input_nodes, max_nodes
-
 
 
 def populate_request_global_object(data):
@@ -43,25 +45,27 @@ def populate_request_global_object(data):
                 raise Exception(f"Required {env_key} not provided in environment.")
             setattr(g, f"session_{key}", value)
     else:
-        if not API_KEYS_FIELD_NAME in data :
-            raise Exception(f"No {API_KEYS_FIELD_NAME} provided in data.")
-        
-        for key, value in data[API_KEYS_FIELD_NAME].items():
+        if not PARAMETERS_FIELD_NAME in data:
+            raise Exception(f"No {PARAMETERS_FIELD_NAME} provided in data.")
+
+        for key, value in data[PARAMETERS_FIELD_NAME].items():
             if value:
                 setattr(g, f"session_{key}", value)
             else:
                 raise Exception(f"No {key} provided in data.")
 
+
 def log_in_user(user_details: UserDetails):
     """
-    This function is responsible for logging in a user by setting the session context. 
+    This function is responsible for logging in a user by setting the session context.
     The session is shared between multiple requests and saved with a client-side (/!\) signed cookie (using the secret_key).
     """
     user = get_or_create_user(user_details)
-        
-    if user is not None :
+
+    if user is not None:
         session[SESSION_USER_ID_KEY] = user_details.get_id()
         logging.info("Logged in")
+
 
 def reset_session_context():
     session[SESSION_USER_ID_KEY] = None
@@ -75,7 +79,7 @@ def handle_connect():
 @socketio.on("auth")
 def handle_connect(data):
     logging.debug("Auth received")
-    
+
     authenticator = root_injector.get(Authenticator)
 
     user_authentication_jwt = data.get("idToken")
@@ -141,7 +145,7 @@ def handle_run_node(data):
 
         launcher = root_injector.get(ProcessorLauncher)
         launcher.set_context(ProcessorContextFlaskRequest(g, session, request.sid))
-        
+
         if flow_data and node_name:
             processors = launcher.load_processors_for_node(flow_data, node_name)
             output = launcher.launch_processors_for_node(processors, node_name)

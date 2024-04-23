@@ -15,8 +15,8 @@ from .processor_type_name_utils import ProcessorType
 class ReplicateProcessor(APIContextProcessor):
     processor_type = ProcessorType.REPLICATE
 
-    def __init__(self, config, api_context_data: ProcessorContext):
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context: ProcessorContext):
+        super().__init__(config, context)
         self._has_dynamic_behavior = True
 
         self.config = config
@@ -47,7 +47,7 @@ class ReplicateProcessor(APIContextProcessor):
                 self.config[name] = output
 
         api = replicate.Client(
-            api_token=self.api_context_data.get_api_key_for_provider("replicate")
+            api_token=self._processor_context.get_api_key_for_provider("replicate")
         )
 
         output_schema = get_output_schema_from_open_API_schema(self.schema["schema"])
@@ -87,6 +87,6 @@ class ReplicateProcessor(APIContextProcessor):
 
     def cancel(self):
         api = replicate.Client(
-            api_token=self.api_context_data.get_api_key_for_provider("replicate")
+            api_token=self._processor_context.get_api_key_for_provider("replicate")
         )
         api.predictions.cancel(id=self.prediction.id)

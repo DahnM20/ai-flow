@@ -14,12 +14,12 @@ class LLMPromptProcessor(APIContextProcessor):
     processor_type = ProcessorType.LLM_PROMPT
     DEFAULT_MODEL = "gpt-4"
 
-    def __init__(self, config, api_context_data: ProcessorContext):
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context: ProcessorContext):
+        super().__init__(config, context)
 
         self.model = config.get("model", LLMPromptProcessor.DEFAULT_MODEL)
         self.prompt = config["prompt"]
-        self.api_key = api_context_data.get_api_key_for_model(self.model)
+        self.api_key = context.get_api_key_for_model(self.model)
 
     def process(self):
         input_data = None

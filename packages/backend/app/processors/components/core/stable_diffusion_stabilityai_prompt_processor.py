@@ -14,8 +14,8 @@ from .processor_type_name_utils import ProcessorType
 class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
     processor_type = ProcessorType.STABLE_DIFFUSION_STABILITYAI_PROMPT
 
-    def __init__(self, config, api_context_data: ProcessorContext):
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context: ProcessorContext):
+        super().__init__(config, context)
         self.prompt = config.get("prompt")
 
         size = config.get("size", "1024x1024")
@@ -47,7 +47,7 @@ class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
         return self._output
 
     def setup_data_to_send(self):
-        self.api_key = self.api_context_data.get_api_key_for_provider("stabilityai")
+        self.api_key = self._processor_context.get_api_key_for_provider("stabilityai")
 
         if self.get_input_processor() is not None:
             self.prompt = (

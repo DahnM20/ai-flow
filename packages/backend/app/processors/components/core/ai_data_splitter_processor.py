@@ -12,14 +12,12 @@ class AIDataSplitterProcessor(APIContextProcessor):
     processor_type = ProcessorType.AI_DATA_SPLITTER
     SPLIT_CHAR = ";"
 
-    def __init__(
-        self, config, api_context_data: ProcessorContext, custom_llm_factory=None
-    ):
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context: ProcessorContext, custom_llm_factory=None):
+        super().__init__(config, context)
 
         self.nb_output = 0
         self.model = "gpt-4-1106-preview"
-        self.api_key = api_context_data.get_api_key_for_model(self.model)
+        self.api_key = context.get_value("session_openai_api_key")
 
         if custom_llm_factory is None:
             custom_llm_factory = self._get_default_llm_factory()

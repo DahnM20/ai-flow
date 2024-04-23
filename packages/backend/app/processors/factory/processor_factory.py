@@ -6,7 +6,12 @@ from ..context.processor_context import ProcessorContext
 
 class ProcessorFactory(ABC):
     @abstractmethod
-    def create_processor(self, config, api_context_data: ProcessorContext = None, storage_strategy: StorageStrategy=None):
+    def create_processor(
+        self,
+        config,
+        context: ProcessorContext = None,
+        storage_strategy: StorageStrategy = None,
+    ):
         pass
 
     @abstractmethod

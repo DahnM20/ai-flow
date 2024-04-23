@@ -38,7 +38,7 @@ class Processor(ABC):
     storage_strategy: Optional["StorageStrategy"]
     """The storage strategy used by the processor"""
 
-    api_context_data: Optional["ProcessorContext"]
+    _processor_context: Optional["ProcessorContext"]
     """The context data of the processor"""
 
     name: str
@@ -65,17 +65,18 @@ class Processor(ABC):
         self.observers = []
         self._output = None
         self.inputs = None
-        self.api_context_data = None
+        self._processor_context = None
         self.input_processors = []
         self.storage_strategy = None
         self.is_finished = False
         self._has_dynamic_behavior = False
+        self._config = config
         if config.get("inputs") is not None and config.get("inputs") != []:
             self.inputs = config.get("inputs")
 
     def cleanup(self) -> None:
         self.input_processors = None
-        self.api_context_data = None
+        self._processor_context = None
         self._output = None
         self.storage_strategy = None
 
@@ -85,9 +86,6 @@ class Processor(ABC):
 
     @abstractmethod
     def cancel(self) -> None:
-        pass
-
-    def update_context(self, data: Any) -> None:
         pass
 
     def add_observer(self, observer):
@@ -150,6 +148,22 @@ class Processor(ABC):
             return None
         return [input.get("inputName") for input in self.inputs]
 
+    def get_input_by_name(self, name: str) -> Optional[InputItem]:
+        input = self._config.get(name, None)
+
+        input_processors = self.get_input_processors()
+        input_output_keys = self.get_input_node_output_keys()
+        input_names = self.get_input_names()
+
+        if input_processors:
+            for processor, input_name, key in zip(
+                input_processors, input_names, input_output_keys
+            ):
+                if input_name == name:
+                    return processor.get_output(key)
+
+        return input
+
     def add_input_processor(self, input_processor: "Processor") -> None:
         self.input_processors.append(input_processor)
 
@@ -178,6 +192,6 @@ class SimpleProcessor(Processor):
 
 
 class APIContextProcessor(Processor):
-    def __init__(self, config, api_context_data: ProcessorContext = None):
+    def __init__(self, config, context: ProcessorContext = None):
         super().__init__(config)
-        self.api_context_data = api_context_data
+        self._processor_context = context

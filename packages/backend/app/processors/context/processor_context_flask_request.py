@@ -1,3 +1,4 @@
+from typing import List, Optional
 from ...flask.utils.constants import SESSION_USER_ID_KEY
 from .processor_context import ProcessorContext
 
@@ -42,3 +43,13 @@ class ProcessorContextFlaskRequest(ProcessorContext):
             return self.g_context.get(key_name)
         else:
             raise ValueError(f"Unknown provider {provider}")
+
+    def get_parameter_names(self) -> List[str]:
+        return [
+            key
+            for key in dir(self.g_context)
+            if not key.startswith("_") and key not in dir(type(self.g_context))
+        ]
+
+    def get_value(self, name) -> Optional[str]:
+        return self.g_context.get(name)

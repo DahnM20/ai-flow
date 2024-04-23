@@ -19,6 +19,10 @@ from .app_routes.upload_routes import upload_blueprint
 
 flask_app.register_blueprint(upload_blueprint)
 
+from .app_routes.parameters_routes import parameters_blueprint
+
+flask_app.register_blueprint(parameters_blueprint)
+
 if is_server_static_files_enabled():
     from .app_routes.static_routes import static_blueprint
 

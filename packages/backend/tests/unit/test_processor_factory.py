@@ -18,9 +18,9 @@ class DummyProcessor(SimpleProcessor):
 class APIDummyProcessor(APIContextProcessor):
     processor_type = "api_dummy_processor"
 
-    def __init__(self, config, api_context_data=None):
+    def __init__(self, config, context=None):
         super().__init__(config)
-        self.api_context_data = api_context_data
+        self._processor_context = context
 
     def process(self):
         pass
@@ -53,8 +53,8 @@ class TestProcessorFactory(unittest.TestCase):
         )
         processor = self.factory.create_processor(
             {"processorType": "api_dummy_processor", "name": "api_dummy_processor"},
-            api_context_data="api_data",
+            context_data="api_data",
         )
         self.assertIsInstance(processor, APIDummyProcessor)
         self.assertIsInstance(processor, APIContextProcessor)
-        self.assertEqual(processor.api_context_data, "api_data")
+        self.assertEqual(processor._processor_context, "api_data")

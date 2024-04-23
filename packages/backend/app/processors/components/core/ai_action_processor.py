@@ -9,8 +9,8 @@ from .processor_type_name_utils import ProcessorType
 class AIActionProcessor(LLMPromptProcessor):
     processor_type = ProcessorType.AI_ACTION
 
-    def __init__(self, config, api_context_data) -> None:
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context) -> None:
+        super().__init__(config, context)
 
     def init_context(self, input_data: str) -> None:
         """

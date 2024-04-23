@@ -96,7 +96,7 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
 
         return mock_processor
 
-    def create_processor(self, config, api_context_data=None, storage_strategy=None):
+    def create_processor(self, config, context=None, storage_strategy=None):
         processor_type = config["processorType"]
         processor_class = self._processors.get(processor_type)
         if not processor_class:

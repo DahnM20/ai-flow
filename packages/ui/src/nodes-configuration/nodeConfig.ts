@@ -8,6 +8,7 @@ import { mergerPromptNode } from "./mergerPromptNode";
 import { gptVisionNodeConfig } from "./gptVisionNode";
 import { FieldType, NodeConfig } from "./types";
 import axios from "axios";
+import { getNodeExtensions } from "../api/nodes";
 
 export const nodeConfigs: { [key: string]: NodeConfig | undefined } = {
   "input-text": inputTextNodeConfig,
@@ -37,8 +38,8 @@ export const fieldHasHandle = (fieldType: FieldType): boolean => {
 };
 
 export const loadExtensions = async () => {
-  const response = await axios.get("http://192.168.1.27:5000/node/extensions");
-  response.data?.extensions.forEach((extension: NodeConfig) => {
+  const extensions = await getNodeExtensions();
+  extensions.forEach((extension: NodeConfig) => {
     const key = extension.processorType;
     if (!key) return;
     if (key in nodeConfigs) return;

@@ -12,13 +12,13 @@ class MergeProcessor(APIContextProcessor):
     processor_type = ProcessorType.MERGER_PROMPT
     DEFAULT_MODEL = "gpt-4-1106-preview"
 
-    def __init__(self, config, api_context_data, custom_llm_factory=None):
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context, custom_llm_factory=None):
+        super().__init__(config, context)
 
         self.model = config.get("model", MergeProcessor.DEFAULT_MODEL)
         self.prompt = config["prompt"]
         self.merge_mode = MergeModeEnum(int(config["mergeMode"]))
-        self.api_key = api_context_data.get_api_key_for_model(self.model)
+        self.api_key = context.get_api_key_for_model(self.model)
         if custom_llm_factory is None:
             custom_llm_factory = self._get_default_llm_factory()
 

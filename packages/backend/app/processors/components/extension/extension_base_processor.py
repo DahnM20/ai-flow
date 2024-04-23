@@ -22,6 +22,6 @@ class SimpleExtensionProcessor(ExtensionBaseProcessor):
 
 
 class APIContextExtensionProcessor(ExtensionBaseProcessor):
-    def __init__(self, config, api_context_data: ProcessorContext = None):
+    def __init__(self, config, context: ProcessorContext = None):
         super().__init__(config)
-        self.api_context_data = api_context_data
+        self._processor_context = context

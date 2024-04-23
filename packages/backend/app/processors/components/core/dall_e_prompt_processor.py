@@ -13,12 +13,12 @@ class DallEPromptProcessor(APIContextProcessor):
     DEFAULT_SIZE = "1024x1024"
     DEFAULT_QUALITY = "standard"
 
-    def __init__(self, config, api_context_data: ProcessorContext):
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context: ProcessorContext):
+        super().__init__(config, context)
         self.prompt = config.get("prompt")
         self.size = config.get("size", DallEPromptProcessor.DEFAULT_SIZE)
         self.quality = config.get("quality", DallEPromptProcessor.DEFAULT_QUALITY)
-        self.api_key = api_context_data.get_api_key_for_provider("openai")
+        self.api_key = context.get_api_key_for_provider("openai")
 
     def process(self):
         if self.get_input_processor() is not None:

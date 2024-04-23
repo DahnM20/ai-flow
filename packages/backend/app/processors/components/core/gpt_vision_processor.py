@@ -10,29 +10,17 @@ class GPTVisionProcessor(APIContextProcessor):
     processor_type = ProcessorType.GPT_VISION
     DEFAULT_MODEL = "gpt-4-vision-preview"
 
-    def __init__(self, config, api_context_data: ProcessorContext):
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context: ProcessorContext):
+        super().__init__(config, context)
 
         self.model = config.get("model", GPTVisionProcessor.DEFAULT_MODEL)
-        self.api_key = api_context_data.get_api_key_for_model(self.model)
-
-        self.vision_inputs = {
-            "prompt": config.get("prompt"),
-            "image_url": config.get("image_url"),
-        }
+        self.api_key = context.get_value("session_openai_api_key")
 
     def process(self):
-        input_processors = self.get_input_processors()
-        input_output_keys = self.get_input_node_output_keys()
-        input_names = self.get_input_names()
-
-        if input_processors:
-            for processor, name, key in zip(
-                input_processors, input_names, input_output_keys
-            ):
-                output = processor.get_output(key)
-                logging.info(output)
-                self.vision_inputs[name] = output
+        self.vision_inputs = {
+            "prompt": self.get_input_by_name("prompt"),
+            "image_url": self.get_input_by_name("image_url"),
+        }
 
         if (
             self.vision_inputs["prompt"] is None

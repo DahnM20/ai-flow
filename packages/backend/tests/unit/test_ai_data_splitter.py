@@ -26,7 +26,7 @@ class TestAIDataSplitter(unittest.TestCase):
         EXPECTED_OUTPUT = ["A dog", "A dolphin", "An elephant"]
         config = TestAIDataSplitter.get_default_valid_config()
 
-        api_context_data = ProcessorContextMock(API_KEY)
+        context = ProcessorContextMock(API_KEY)
 
         input_text = "a dog, a dolphin, an elephant"
         input_processor = InputProcessor(
@@ -38,20 +38,18 @@ class TestAIDataSplitter(unittest.TestCase):
             }
         )
         input_processor.set_output(input_text)
-        
+
         mock_factory = LLMMockFactory(expected_response=MOCKED_RESPONSE)
 
         # Act
-        processor = AIDataSplitterProcessor(config, api_context_data, mock_factory)
+        processor = AIDataSplitterProcessor(config, context, mock_factory)
         processor.add_input_processor(input_processor)
         result = processor.process()
 
         # Assert
         self.assertEqual(result, EXPECTED_OUTPUT)
 
-    def test_process_with_missing_input_return_none_and_does_not_call_openai_api(
-        self
-    ):
+    def test_process_with_missing_input_return_none_and_does_not_call_openai_api(self):
         # Arrange
         MODEL = "gpt-4"
         API_KEY = "000000000"
@@ -59,10 +57,10 @@ class TestAIDataSplitter(unittest.TestCase):
 
         config = self.get_default_valid_config()
 
-        api_context_data = ProcessorContextMock(API_KEY)
+        context = ProcessorContextMock(API_KEY)
 
         mock_factory = LLMMockFactory(expected_response=MOCKED_RESPONSE)
-        processor = AIDataSplitterProcessor(config, api_context_data, mock_factory)
+        processor = AIDataSplitterProcessor(config, context, mock_factory)
 
         # Act
         result = processor.process()

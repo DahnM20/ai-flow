@@ -12,8 +12,8 @@ class StableVideoDiffusionReplicaterocessor(APIContextProcessor):
 
     stable_video_diffusion_model = "stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438"
 
-    def __init__(self, config, api_context_data: ProcessorContext):
-        super().__init__(config, api_context_data)
+    def __init__(self, config, context: ProcessorContext):
+        super().__init__(config, context)
 
         self.length = config.get("length", "14_frames_with_svd")
         self.frames_per_second = config.get("frames_per_second", "6")
@@ -32,7 +32,7 @@ class StableVideoDiffusionReplicaterocessor(APIContextProcessor):
             return "Invalid URL provided."
 
         api = replicate.Client(
-            api_token=self.api_context_data.get_api_key_for_provider("replicate")
+            api_token=self._processor_context.get_api_key_for_provider("replicate")
         )
 
         output = api.run(
