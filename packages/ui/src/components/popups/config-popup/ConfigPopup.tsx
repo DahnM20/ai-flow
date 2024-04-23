@@ -6,8 +6,12 @@ import {
   WSConfiguration,
 } from "../../../providers/SocketProvider";
 import { useTranslation } from "react-i18next";
-import APIKeyFields from "./APIKeyFields";
-import { APIKeys, defaultApiKeys } from "./ApiKeys";
+import ParameterFields from "./ParametersFields";
+import {
+  Parameters,
+  getConfigParameters,
+  updateParameters,
+} from "./parameters";
 import DefaultPopupWrapper from "../DefaultPopup";
 import { FiMail } from "react-icons/fi";
 
@@ -20,41 +24,44 @@ interface ConfigPopupProps {
 function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
   const { t } = useTranslation("config");
 
-  const { config, updateConfig } = useContext(SocketContext);
+  const { updateSocket } = useContext(SocketContext);
 
-  const [apiKeys, setApiKeys] = useState<APIKeys>(
-    structuredClone(defaultApiKeys),
+  const [parameters, setParameters] = useState<Parameters>(
+    getConfigParameters(),
   );
 
-  useEffect(() => {
-    const storedKeys = config?.apiKeys;
-    if (storedKeys) {
-      setApiKeys(storedKeys);
+  const onParameterChange = (section: string, name: string, value: any) => {
+    const sectionParameters = parameters[section];
+    if (!sectionParameters) {
+      return;
     }
-  }, []);
-
-  const onApiKeyChange = (apiKeyType: string, newValue: string) => {
-    setApiKeys((prevApiKeys) => ({
-      ...prevApiKeys,
-      [apiKeyType]: newValue,
+    const parameter = sectionParameters[name];
+    if (!parameter) {
+      return;
+    }
+    parameter.value = value;
+    setParameters((prevParameters) => ({
+      ...prevParameters,
+      [section]: sectionParameters,
     }));
   };
 
   const handleValidate = () => {
-    window.localStorage.setItem("apiKeys", JSON.stringify(apiKeys));
+    updateParameters(parameters);
 
-    const config: WSConfiguration = {
-      apiKeys: {
-        ...apiKeys,
-      },
-    };
+    const config: WSConfiguration = {};
 
-    updateConfig(config);
+    updateSocket(config);
+    onClose();
+  };
+
+  const handleClose = () => {
+    setParameters(getConfigParameters());
     onClose();
   };
 
   return isOpen ? (
-    <DefaultPopupWrapper show={isOpen} onClose={onClose} centered>
+    <DefaultPopupWrapper show={isOpen} onClose={handleClose} centered>
       <Content
         onClick={(e) => {
           e.stopPropagation();
@@ -70,7 +77,12 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
           <SoftMessage>{t("apiKeyRevokeReminder")}</SoftMessage>
         </>
 
-        <APIKeyFields apiKeys={apiKeys} onApiKeyChange={onApiKeyChange} />
+        <div className="w-full overflow-auto">
+          <ParameterFields
+            parameters={parameters}
+            onParameterChange={onParameterChange}
+          />
+        </div>
         <Actions>
           <Button onClick={onClose} className="bg-[#9B8D8A]">
             {t("closeButtonLabel")}
@@ -191,13 +203,6 @@ const SoftMessage = styled.p`
   text-align: center;
   color: #888;
   margin-bottom: 20px;
-`;
-
-const MessageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 10px;
 `;
 
 const Icons = styled.div`

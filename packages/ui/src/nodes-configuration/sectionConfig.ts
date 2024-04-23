@@ -1,8 +1,8 @@
 import { AiOutlineRobot } from "react-icons/ai";
 import { BsInputCursorText } from "react-icons/bs";
 import { FaToolbox } from "react-icons/fa";
-import { NodeType } from "../utils/mappings";
-import { NodeConfig, SectionType, nodeConfigs } from "./nodeConfig";
+import { NodeConfig, SectionType } from "./types";
+import { nodeConfigs } from "./nodeConfig";
 
 export type NodeSection = {
   label: string;
@@ -13,21 +13,21 @@ export type NodeSection = {
 
 export type DnDNode = {
   label: string;
-  type: NodeType;
+  type: string;
   helpMessage?: string;
   section: SectionType;
   isBeta?: boolean;
 };
 
 function transformNodeConfigsToDndNode(configs: {
-  [key in NodeType]?: NodeConfig;
+  [key: string]: NodeConfig | undefined;
 }): DnDNode[] {
   return Object.entries(configs).map(([type, config]) => {
     return {
-      label: config.nodeName,
+      label: config?.nodeName,
       type: type,
-      helpMessage: config.helpMessage || undefined,
-      section: config.section,
+      helpMessage: config?.helpMessage || undefined,
+      section: config?.section,
     } as DnDNode;
   });
 }
@@ -71,29 +71,28 @@ function getAllDndNode(): DnDNode[] {
   );
 }
 
-export const emptyNodeSections: NodeSection[] = [
-  {
-    label: "Input",
-    type: "input",
-    icon: BsInputCursorText,
-  },
-  {
-    label: "Models",
-    type: "models",
-    icon: AiOutlineRobot,
-  },
-  {
-    label: "Tools",
-    type: "tools",
-    icon: FaToolbox,
-  },
-];
-
-const populateNodeSections = (nodeSection: NodeSection[]) => {
+export const populateNodeSections = () => {
+  const emptyNodeSections: NodeSection[] = [
+    {
+      label: "Input",
+      type: "input",
+      icon: BsInputCursorText,
+    },
+    {
+      label: "Models",
+      type: "models",
+      icon: AiOutlineRobot,
+    },
+    {
+      label: "Tools",
+      type: "tools",
+      icon: FaToolbox,
+    },
+  ];
   const nodes = getAllDndNode();
 
   nodes.forEach((node) => {
-    const section = nodeSection.find((sec) => sec.type === node.section);
+    const section = emptyNodeSections.find((sec) => sec.type === node.section);
 
     if (section) {
       if (!section.nodes) {
@@ -103,7 +102,9 @@ const populateNodeSections = (nodeSection: NodeSection[]) => {
     }
   });
 
-  return nodeSection;
+  return emptyNodeSections;
 };
 
-export const nodeSectionMapping = populateNodeSections(emptyNodeSections);
+export const getSections = () => populateNodeSections();
+
+// export const nodeSectionMapping = populateNodeSections(emptyNodeSections);

@@ -1,7 +1,10 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { io } from "socket.io-client";
 import { getWsUrl } from "../config/config";
-import { APIKeys } from "../components/popups/config-popup/ApiKeys";
+import {
+  Parameters,
+  getConfigParametersFlat,
+} from "../components/popups/config-popup/parameters";
 import { toastInfoMessage } from "../utils/toastUtils";
 import { useTranslation } from "react-i18next";
 import { FlowEventOut, FlowSocket } from "../sockets/flowSocket";
@@ -17,13 +20,13 @@ export interface FlowEvent {
 }
 
 export type WSConfiguration = {
-  apiKeys?: APIKeys;
+  parameters?: Parameters;
 };
 
 interface ISocketContext {
   socket: FlowSocket | null;
   config: WSConfiguration | null;
-  updateConfig: (config: WSConfiguration) => void;
+  updateSocket: (config?: WSConfiguration) => void;
   emitEvent: (event: FlowEvent) => boolean;
 }
 
@@ -34,7 +37,7 @@ interface SocketProviderProps {
 export const SocketContext = createContext<ISocketContext>({
   socket: null,
   config: null,
-  updateConfig: (config: WSConfiguration) => {},
+  updateSocket: (config?: WSConfiguration) => {},
   emitEvent: (event: FlowEvent) => false,
 });
 
@@ -49,11 +52,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       socket.disconnect();
     }
 
-    const storedApiKeys = window.localStorage.getItem("apiKeys");
-
-    const config = {
-      apiKeys: !!storedApiKeys ? JSON.parse(storedApiKeys) : undefined,
-    };
+    const config = {};
 
     setConfig(config);
 
@@ -64,12 +63,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     }
   }, []);
 
-  function updateConfig(config: WSConfiguration): void {
+  function updateSocket(config?: WSConfiguration): void {
     if (!!socket) {
       socket.close();
       createNewSocket(config);
     } else {
-      setConfig(config);
+      if (config) setConfig(config);
     }
   }
 
@@ -80,8 +79,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     return socket;
   }
 
-  function createNewSocket(configuration: WSConfiguration) {
-    setConfig(configuration);
+  function createNewSocket(configuration?: WSConfiguration) {
+    if (configuration) setConfig(configuration);
 
     const newSocket = new FlowSocket(io(getWsUrl()));
 
@@ -100,7 +99,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     if (activeSocket) {
       activeSocket.emit(event.name, {
         ...event.data,
-        apiKeys: config?.apiKeys,
+        parameters: getConfigParametersFlat(),
       });
 
       return true;
@@ -110,11 +109,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   }
 
   function verifyConfiguration(): boolean {
-    if (!config) {
+    const params = getConfigParametersFlat();
+    if (!params) {
       return false;
     }
 
-    if (config.apiKeys?.openai_api_key) {
+    if (params.openai_api_key) {
       return true;
     }
 
@@ -126,7 +126,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       value={{
         socket,
         config,
-        updateConfig,
+        updateSocket,
         emitEvent,
       }}
     >
