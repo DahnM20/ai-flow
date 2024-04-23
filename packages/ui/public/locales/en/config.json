@@ -3,13 +3,14 @@
     "apiKeyDisclaimer": "We do not use or store your API keys.",
     "openSourceDisclaimer": "The application code is open source.",
     "apiKeyRevokeReminder": "Remember, you can revoke your keys at any time and generate new ones.",
-    "openai_api_key": "OpenAI API Key:",
-    "stabilityai_api_key": "StabilityAI API Key:",
-    "replicate_api_key": "Replicate API Key:",
     "closeButtonLabel": "Close",
     "validateButtonLabel": "Validate",
     "likeProjectPrompt": "If you like this project, you can add a star on:",
     "supportProjectPrompt": "You can support the future of the project and contact us through :",
-    "leonardoKeyFieldLabel": "Leonardo API Key (Optional):",
-    "Logout": "Logout"
+    "Logout": "Logout",
+    "sections.core":"Base parameters",
+    "parameters.core.openai_api_key": "OpenAI API Key:",
+    "parameters.core.stabilityai_api_key": "StabilityAI API Key:",
+    "parameters.core.replicate_api_key": "Replicate API Key:",
+    "sections.extension":"Extensions"
 }

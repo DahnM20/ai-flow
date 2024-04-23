@@ -13,20 +13,6 @@ import { nodeConfigs } from "../nodes-configuration/nodeConfig";
 
 let allNodeTypes: string[] = [];
 
-export const loadAllNodesTypes = () => {
-  allNodeTypes = !!nodeConfigs
-    ? Object.keys(nodeConfigs)
-        .filter((key: string) => {
-          return !!nodeConfigs[key]?.processorType;
-        })
-        .map((key: string) => {
-          return nodeConfigs[key]?.processorType as string;
-        })
-    : [];
-
-  console.log(allNodeTypes);
-};
-
 /**
  * Nodes types that uses specific components, instead of the generic one.
  */
@@ -39,6 +25,20 @@ export const specificNodeTypes: Partial<Record<string, React.FC<NodeProps>>> = {
   replicate: ReplicateNode,
   transition: TransitionNode,
   genericApiNode: DynamicAPINode,
+};
+
+export const loadAllNodesTypes = () => {
+  allNodeTypes = !!nodeConfigs
+    ? Object.keys(nodeConfigs)
+        .filter((key: string) => {
+          return !!nodeConfigs[key]?.processorType;
+        })
+        .map((key: string) => {
+          return nodeConfigs[key]?.processorType as string;
+        })
+    : [];
+
+  allNodeTypes = allNodeTypes.concat(Object.keys(specificNodeTypes));
 };
 
 /**

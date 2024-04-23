@@ -1,26 +1,21 @@
 core:
   openai_api_key:
-    value: "your-openai-api-key-here"
     tag: "core"
     description: "API key for accessing OpenAI services."
   
   stabilityai_api_key:
-    value: "your-stabilityai-api-key-here"
     tag: "core"
     description: "API key for accessing Stability AI services."
   
   replicate_api_key:
-    value: "your-replicate-api-key-here"
     tag: "core"
     description: "API key for accessing Replicate services."
 
 extension:
   number_1_api_key:
-    value: "default-value"
     tag: "extension"
     description: "Description of what this parameter controls."
   
   number_2_api_key:
-    value: "e"
     tag: "extension"
     description: "An example numerical parameter."

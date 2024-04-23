@@ -3,13 +3,15 @@
     "apiKeyDisclaimer": "Nous n'utilisons ni ne stockons vos clés API.",
     "openSourceDisclaimer": "Ce projet est open source.",
     "apiKeyRevokeReminder": "N'oubliez pas, vous pouvez révoquer vos clés à tout moment et en générer de nouvelles.",
-    "openai_api_key": "Clé API OpenAI:",
-    "stabilityai_api_key": "Clé API StabilityAI:",
-    "replicate_api_key": "Clé API Replicate:",
     "closeButtonLabel": "Fermer",
     "validateButtonLabel": "Valider",
     "likeProjectPrompt": "Si vous aimez ce projet, vous pouvez ajouter une étoile sur:",
     "supportProjectPrompt": "Vous pouvez soutenir l'avenir du projet et nous contacter via :",
-    "leonardoKeyFieldLabel": "Clé API Leonardo (Facultatif):",
-    "Logout": "Se déconnecter"
+    "Logout": "Se déconnecter",
+    "sections.core": "Paramètres de base",
+    "parameters.core.openai_api_key": "Clé API OpenAI :",
+    "parameters.core.stabilityai_api_key": "Clé API StabilityAI :",
+    "parameters.core.replicate_api_key": "Clé API Replicate :",
+    "sections.extension": "Extensions"
+
 }
