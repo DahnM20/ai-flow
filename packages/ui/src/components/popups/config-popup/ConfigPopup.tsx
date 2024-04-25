@@ -74,14 +74,15 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
         <>
           <SoftMessage>{t("openSourceDisclaimer")}</SoftMessage>
           <SoftMessage>{t("apiKeyDisclaimer")}</SoftMessage>
-          <SoftMessage>{t("apiKeyRevokeReminder")}</SoftMessage>
         </>
 
-        <div className="w-full overflow-auto">
-          <ParameterFields
-            parameters={parameters}
-            onParameterChange={onParameterChange}
-          />
+        <div className="flex w-full justify-center overflow-auto ">
+          <div className="w-11/12">
+            <ParameterFields
+              parameters={parameters}
+              onParameterChange={onParameterChange}
+            />
+          </div>
         </div>
         <Actions>
           <Button onClick={onClose} className="bg-[#9B8D8A]">

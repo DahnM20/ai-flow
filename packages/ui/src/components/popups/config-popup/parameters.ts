@@ -1,3 +1,4 @@
+import withCache from "../../../api/cache/withCache";
 import { getParameters } from "../../../api/parameters";
 
 export interface ParameterDetail {
@@ -60,7 +61,7 @@ export function loadFromLocalStorage() {
 }
 
 export async function loadParameters() {
-  const fetchedParameters = await getParameters();
+  const fetchedParameters = await withCache(getParameters);
   parameters = !!fetchedParameters
     ? { ...fetchedParameters }
     : defaultParameters;

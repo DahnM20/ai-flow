@@ -9,6 +9,7 @@ import { gptVisionNodeConfig } from "./gptVisionNode";
 import { FieldType, NodeConfig } from "./types";
 import axios from "axios";
 import { getNodeExtensions } from "../api/nodes";
+import withCache from "../api/cache/withCache";
 
 export const nodeConfigs: { [key: string]: NodeConfig | undefined } = {
   "input-text": inputTextNodeConfig,
@@ -38,7 +39,7 @@ export const fieldHasHandle = (fieldType: FieldType): boolean => {
 };
 
 export const loadExtensions = async () => {
-  const extensions = await getNodeExtensions();
+  const extensions = await withCache(getNodeExtensions);
   extensions.forEach((extension: NodeConfig) => {
     const key = extension.processorType;
     if (!key) return;
