@@ -83,7 +83,13 @@ export function useFormFields(
           <NodeTextField
             value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-            onChange={handleEventNodeDataChange}
+            onChange={(event) => {
+              handleNodeDataChange(
+                field.name,
+                event.target.value,
+                event.target,
+              );
+            }}
           />
         );
       case "inputInt":
