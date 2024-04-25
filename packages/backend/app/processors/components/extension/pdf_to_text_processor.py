@@ -43,7 +43,6 @@ class PDFToText(SimpleExtensionProcessor):
             document = loader.load()
             if len(document) > 0:
                 output = document[0].page_content
-                self.set_output(output)
                 return output
             else:
                 return None

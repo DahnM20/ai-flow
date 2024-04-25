@@ -80,6 +80,11 @@ class Processor(ABC):
         self._output = None
         self.storage_strategy = None
 
+    def process_and_update(self):
+        output = self.process()
+        self.set_output(output)
+        return output
+
     @abstractmethod
     def process(self):
         pass

@@ -46,7 +46,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
             self.state = AsyncProcessorLauncher.NodeState.RUNNING
 
             try:
-                self.output = self.processor.process()
+                self.output = self.processor.process_and_update()
             except Exception as e:
                 self.state = AsyncProcessorLauncher.NodeState.ERROR
                 raise e
@@ -118,7 +118,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
     def run_processor(self, processor):
         try:
             self.notify_current_node_running(processor)
-            output = processor.process()
+            output = processor.process_and_update()
             self.notify_progress(processor, output, isDone=True)
         except Exception as e:
             self.notify_error(processor, e)

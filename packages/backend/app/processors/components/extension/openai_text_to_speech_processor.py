@@ -125,8 +125,6 @@ class OpenAITextToSpeechProcessor(APIContextExtensionProcessor):
 
         url = storage.save(filename, response.content)
 
-        self.set_output(url)
-
         return url
 
     def cancel(self):

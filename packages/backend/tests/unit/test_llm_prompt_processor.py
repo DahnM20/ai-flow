@@ -30,7 +30,7 @@ class TestLLMPromptProcessor(unittest.TestCase):
 
         config = TestLLMPromptProcessor.get_default_valid_config(MODEL)
 
-        api_context_data = ProcessorContextMock(API_KEY)
+        context = ProcessorContextMock(API_KEY)
         mock_factory = LLMMockFactory(expected_response=MOCKED_RESPONSE)
 
         with patch(
@@ -38,7 +38,7 @@ class TestLLMPromptProcessor(unittest.TestCase):
             return_value=mock_factory,
         ):
             # Act
-            processor = LLMPromptProcessor(config, api_context_data)
+            processor = LLMPromptProcessor(config, context)
             result = processor.process()
 
             # Assert
@@ -52,10 +52,10 @@ class TestLLMPromptProcessor(unittest.TestCase):
         config = self.get_default_valid_config(MODEL)
         del config["prompt"]
 
-        api_context_data = ProcessorContextMock(API_KEY)
+        context = ProcessorContextMock(API_KEY)
 
         # Act & Assert
         with self.assertRaises(Exception) as context:
-            LLMPromptProcessor(config, api_context_data)
+            LLMPromptProcessor(config, context)
 
         self.assertIn("prompt", str(context.exception))
