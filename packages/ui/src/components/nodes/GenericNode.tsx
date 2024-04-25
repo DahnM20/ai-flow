@@ -133,11 +133,25 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       setIsPlaying(true);
     };
 
-    const handleNodeDataChange = (fieldName: string, value: any) => {
+    const handleNodeDataChange = (
+      fieldName: string,
+      value: any,
+      target?: any,
+    ) => {
+      const selectionStart = target?.selectionStart;
+      const selectionEnd = target?.selectionEnd;
+
       onUpdateNodeData(id, {
         ...data,
         [fieldName]: value,
       });
+
+      if (!!target) {
+        requestAnimationFrame(() => {
+          target.selectionStart = selectionStart;
+          target.selectionEnd = selectionEnd;
+        });
+      }
     };
 
     function setDefaultOptions() {

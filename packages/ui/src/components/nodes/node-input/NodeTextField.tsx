@@ -1,10 +1,11 @@
 import { TextInput } from "@mantine/core";
 import styled from "styled-components";
 import { theme } from "../../shared/theme";
+import { ChangeEvent } from "react";
 
 interface NodeTextFieldProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   error?: boolean;
 }
@@ -19,7 +20,7 @@ export default function NodeTextField({
     <NodeInput
       value={value}
       className="nodrag"
-      onChange={(event) => onChange(event.currentTarget.value)}
+      onChange={(event) => onChange(event)}
       placeholder={placeholder}
     />
   );
