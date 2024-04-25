@@ -25,7 +25,7 @@ const InputWithButton = ({
         <NodeTextField
           // className={` ${inputClassName ? inputClassName : "text-center"} `}
           placeholder={inputPlaceholder}
-          onChange={onInputChange}
+          onChange={(event) => onInputChange(event.target.value)}
           value={value}
         />
         <button

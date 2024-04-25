@@ -25,7 +25,7 @@ export interface DisplayParams {
 export function useFormFields(
   data: any,
   id: string,
-  handleNodeDataChange: (fieldName: string, value: any) => void,
+  handleNodeDataChange: (fieldName: string, value: any, target?: any) => void,
   setDefaultOptions?: Function,
   hasParent?: Function,
   displayParams?: DisplayParams,
@@ -52,7 +52,7 @@ export function useFormFields(
   const handleEventNodeDataChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    handleNodeDataChange(event.target.name, event.target.value);
+    handleNodeDataChange(event.target.name, event.target.value, event.target);
   };
 
   function calculateStep(min?: number, max?: number) {
@@ -83,7 +83,7 @@ export function useFormFields(
           <NodeTextField
             value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-            onChange={(value) => handleNodeDataChange(field.name, value)}
+            onChange={handleEventNodeDataChange}
           />
         );
       case "inputInt":
@@ -91,9 +91,10 @@ export function useFormFields(
           <NodeTextField
             value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-            onChange={(value) => {
+            onChange={(event) => {
+              const value = event.target.value;
               const numericValue = isNaN(+value) ? field.defaultValue : +value;
-              handleNodeDataChange(field.name, numericValue);
+              handleNodeDataChange(field.name, numericValue, event.target);
             }}
             error={isNaN(data[field.name])}
           />
