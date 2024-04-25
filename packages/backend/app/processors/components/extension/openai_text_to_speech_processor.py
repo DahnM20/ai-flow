@@ -94,7 +94,6 @@ class OpenAITextToSpeechProcessor(APIContextExtensionProcessor):
             section="tools",
             helpMessage="textToSpeechHelp",
             showHandlesNames=True,
-            inputNames=["text", "model", "voice"],
         )
 
         return config

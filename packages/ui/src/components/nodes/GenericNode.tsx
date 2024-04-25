@@ -115,6 +115,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         config: {
           ...data.config,
           fields: fieldsUpdated,
+          inputNames: fields.map((field) => field.name),
         },
       });
     }, [getIncomingEdges(id)?.length]);

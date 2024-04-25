@@ -87,6 +87,7 @@ export const NodeIcon = styled.div`
   height: 100%;
   color: ${({ theme }) => theme.text};
   font-size: 1.5em;
+  max-width: 1em;
 `;
 
 export const NodeContainer = styled.div<{ width?: number }>`

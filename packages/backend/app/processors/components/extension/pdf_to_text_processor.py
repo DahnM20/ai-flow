@@ -31,7 +31,6 @@ class PDFToText(SimpleExtensionProcessor):
             helpMessage="urlInputHelp",
             hasInputHandle=True,
             showHandlesNames=True,
-            inputNames=["url"],
         )
 
         return config
