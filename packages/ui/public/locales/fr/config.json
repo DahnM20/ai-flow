@@ -9,9 +9,9 @@
     "supportProjectPrompt": "Vous pouvez soutenir l'avenir du projet et nous contacter via :",
     "Logout": "Se déconnecter",
     "sections.core": "Paramètres de base",
-    "parameters.core.openai_api_key": "Clé API OpenAI :",
-    "parameters.core.stabilityai_api_key": "Clé API StabilityAI :",
-    "parameters.core.replicate_api_key": "Clé API Replicate :",
+    "parameters.core.openai_api_key": "Clé API OpenAI",
+    "parameters.core.stabilityai_api_key": "Clé API StabilityAI",
+    "parameters.core.replicate_api_key": "Clé API Replicate",
     "sections.extension": "Extensions"
 
 }
