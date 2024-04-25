@@ -17,9 +17,6 @@ class SimpleExtensionProcessor(ExtensionBaseProcessor):
     def cancel(self):
         pass
 
-    def get_api_key(self, key_name):
-        pass
-
 
 class APIContextExtensionProcessor(ExtensionBaseProcessor):
     def __init__(self, config, context: ProcessorContext = None):

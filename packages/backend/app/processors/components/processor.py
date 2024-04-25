@@ -171,7 +171,7 @@ class Processor(ABC):
         self.storage_strategy = storage_strategy
 
     def __str__(self) -> str:
-        return f"Processor(name={self.name}, type={self.processor_type}, x={self.x}, y={self.y})"
+        return f"Processor(name={self.name}, type={self.processor_type})"
 
     def get_storage(self) -> Optional["StorageStrategy"]:
         return self.storage_strategy
@@ -185,9 +185,6 @@ class SimpleProcessor(Processor):
         super().__init__(config)
 
     def cancel(self):
-        pass
-
-    def get_api_key(self, key_name):
         pass
 
 
