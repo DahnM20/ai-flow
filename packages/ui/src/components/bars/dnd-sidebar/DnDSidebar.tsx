@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Tooltip } from "react-tooltip";
-import { nodeSectionMapping } from "../../../nodes-configuration/sectionConfig";
+import { getSections } from "../../../nodes-configuration/sectionConfig";
 import { memo, useEffect, useState } from "react";
 import DraggableNode from "./DraggableNode";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
@@ -15,6 +15,8 @@ const DnDSidebar = () => {
   const sidebar = getElement("dragAndDropSidebar");
 
   const [contentVisible, setContentVisible] = useState(sidebar?.isVisible);
+
+  const [sections, setSections] = useState(getSections());
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -53,7 +55,7 @@ const DnDSidebar = () => {
             className={` font-sm md:font-md flex transform flex-col overflow-hidden  border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md hover:overflow-y-auto`}
           >
             {contentVisible
-              ? nodeSectionMapping.map((section, index) => (
+              ? sections.map((section, index) => (
                   <Section
                     key={index}
                     className={`mb-5 flex flex-col gap-y-2 ${!sidebar.isVisible ? "opacity-0" : ""} 
