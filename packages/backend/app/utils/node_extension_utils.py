@@ -9,11 +9,11 @@ from ..processors.components.extension.extension_base_processor import (
 
 very_long_ttl_cache = 120000
 
-raw_blacklist = os.getenv("EXTENSION_BLACKLIST", "").strip()
-EXTENSION_BLACKLIST = raw_blacklist.split(",") if raw_blacklist else []
+raw_blacklist = os.getenv("EXTENSIONS_BLACKLIST", "").strip()
+EXTENSIONS_BLACKLIST = raw_blacklist.split(",") if raw_blacklist else []
 
-raw_whitelist = os.getenv("EXTENSION_WHITELIST", "").strip()
-EXTENSION_WHITELIST = raw_whitelist.split(",") if raw_whitelist else []
+raw_whitelist = os.getenv("EXTENSIONS_WHITELIST", "").strip()
+EXTENSIONS_WHITELIST = raw_whitelist.split(",") if raw_whitelist else []
 
 
 def _load_all_extension_schemas():
@@ -37,11 +37,11 @@ def _load_all_extension_schemas():
 
 
 def filter_extensions(extensions):
-    if len(EXTENSION_WHITELIST) > 0:
-        extensions = [e for e in extensions if e.processorType in EXTENSION_WHITELIST]
-    if len(EXTENSION_BLACKLIST) > 0:
+    if len(EXTENSIONS_WHITELIST) > 0:
+        extensions = [e for e in extensions if e.processorType in EXTENSIONS_WHITELIST]
+    if len(EXTENSIONS_BLACKLIST) > 0:
         extensions = [
-            e for e in extensions if e.processorType not in EXTENSION_BLACKLIST
+            e for e in extensions if e.processorType not in EXTENSIONS_BLACKLIST
         ]
     return extensions
 
