@@ -90,8 +90,8 @@
     "Field": "Champ",
     "DragAndDropNodes":"Glissez et déposez les nœuds pour les ajouter.",
     "CopiedToClipboard": "Copié dans le presse-papiers.",
-    "DocumentToText": "Document vers texte",
+    "DocumentToText": "Document vers Texte",
     "documentToTextHelp": "Convertir un fichier .pdf, .txt, .csv, .json, .html en texte simple",
-    "TextToSpeech": "Texte vers audio",
+    "TextToSpeech": "Texte vers Audio",
     "textToSpeechHelp": "Convertir un texte en fichier audio en utilisant le modèle tts d'OpenAI"
 }
