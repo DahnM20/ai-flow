@@ -15,7 +15,7 @@ class OpenAITextToSpeechProcessor(APIContextExtensionProcessor):
         text = Field(
             name="text",
             label="text",
-            type="input",
+            type="textfield",
             required=True,
             placeholder="InputTextPlaceholder",
             hasHandle=True,

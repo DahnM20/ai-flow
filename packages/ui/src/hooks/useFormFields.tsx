@@ -79,6 +79,7 @@ export function useFormFields(
   const renderField = (field: Field) => {
     switch (field.type) {
       case "input":
+      case "textfield":
         return (
           <NodeTextField
             value={data[field.name]}
@@ -93,6 +94,7 @@ export function useFormFields(
           />
         );
       case "inputInt":
+      case "numericfield":
         return (
           <NodeTextField
             value={data[field.name]}
@@ -204,6 +206,7 @@ export function useFormFields(
             />
           </div>
         );
+      case "switch":
       case "boolean":
         return (
           <div className="flex w-full flex-row items-center">

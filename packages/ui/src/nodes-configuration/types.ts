@@ -7,7 +7,10 @@ export type FieldType =
   | "option"
   | "inputNameBar"
   | "boolean"
-  | "slider";
+  | "slider"
+  | "textfield"
+  | "numericfield"
+  | "switch";
 
 export type OutputType =
   | "imageUrl"
