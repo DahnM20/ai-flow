@@ -84,7 +84,7 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
         def get_input_processors():
             return mock_processor.input_processors
 
-        mock_processor.process = (
+        mock_processor.process_and_update = (
             fake_process
             if config.get("raiseError", False) == False
             else fake_process_raise_error

@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import ANY, patch, Mock
 import re
-from app.processors.types.stable_diffusion_stabilityai_prompt_processor import (
+from app.processors.components.core.stable_diffusion_stabilityai_prompt_processor import (
     StableDiffusionStabilityAIPromptProcessor,
 )
 from app.storage.local_storage_strategy import LocalStorageStrategy
-from app.processors.types.input_processor import InputProcessor
+from app.processors.components.core.input_processor import InputProcessor
 from tests.utils.processor_context_mock import ProcessorContextMock
 
 

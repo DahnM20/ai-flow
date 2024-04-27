@@ -41,18 +41,18 @@ def get_collection_models(collection):
     return get_replicate_collection_models(collection, cursor=cursor)
 
 
-@node_blueprint.route("/node/replicate/config/<path:model>")
-def get_config(model):
-    return get_model_openapi_schema(model)
+# @node_blueprint.route("/node/replicate/config/<path:model>")
+# def get_config(model):
+#     return get_model_openapi_schema(model)
 
 
-@node_blueprint.route("/node/openapi/<path:api_name>/models")
-def get_openapi_models(api_name):
-    api_reader = OpenAPIReader(f"./resources/openapi/{api_name}.json")
-    return api_reader.get_all_paths()
+# @node_blueprint.route("/node/openapi/<path:api_name>/models")
+# def get_openapi_models(api_name):
+#     api_reader = OpenAPIReader(f"./resources/openapi/{api_name}.json")
+#     return api_reader.get_all_paths()
 
 
-@node_blueprint.route("/node/openapi/<path:api_name>/config/<path:id>")
-def get_openapi_model_config(api_name, id):
-    api_reader = OpenAPIReader(f"./resources/openapi/{api_name}.json")
-    return api_reader.get_request_schema(id)
+# @node_blueprint.route("/node/openapi/<path:api_name>/config/<path:id>")
+# def get_openapi_model_config(api_name, id):
+#     api_reader = OpenAPIReader(f"./resources/openapi/{api_name}.json")
+#     return api_reader.get_request_schema(id)

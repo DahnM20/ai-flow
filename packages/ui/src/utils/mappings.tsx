@@ -8,7 +8,6 @@ import EaseOut from "../components/shared/motions/EaseOut";
 import NodeWrapper from "../components/nodes/NodeWrapper";
 import TransitionNode from "../components/nodes/TransitionNode";
 import ReplicateNode from "../components/nodes/ReplicateNode";
-import DynamicAPINode from "../components/nodes/DynamicAPINode";
 import { nodeConfigs } from "../nodes-configuration/nodeConfig";
 
 let allNodeTypes: string[] = [];
@@ -24,7 +23,6 @@ export const specificNodeTypes: Partial<Record<string, React.FC<NodeProps>>> = {
   file: FileUploadNode,
   replicate: ReplicateNode,
   transition: TransitionNode,
-  genericApiNode: DynamicAPINode,
 };
 
 export const loadAllNodesTypes = () => {

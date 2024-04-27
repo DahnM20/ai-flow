@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import ANY, patch
 
-from app.processors.types.llm_prompt_processor import (
+from app.processors.components.core.llm_prompt_processor import (
     LLMPromptProcessor,
 )
 from tests.utils.llm_factory_mock import LLMMockFactory
