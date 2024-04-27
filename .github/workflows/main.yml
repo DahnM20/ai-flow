@@ -26,6 +26,12 @@ jobs:
           chmod +x healthcheck.sh
           ./healthcheck.sh http://localhost:5000/healthcheck
 
+      - name: Print Docker logs
+        if: failure()
+        run: |
+          cd docker
+          docker-compose logs
+
       - name: Run UI unit tests
         run: |
           cd packages/ui
