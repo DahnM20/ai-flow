@@ -89,5 +89,9 @@
     "ClickOnNodeToSelectIt": "Click on any node to select it.",
     "Field": "Field",
     "DragAndDropNodes":"Drag and drop nodes onto the canvas to add them.",
-    "CopiedToClipboard": "Copied to clipboard."
+    "CopiedToClipboard": "Copied to clipboard.",
+    "DocumentToText":"Document to text",
+    "documentToTextHelp":"Convert .pdf .txt .csv .json .html file to simple text",
+    "TextToSpeech": "Text to speech",
+    "textToSpeechHelp": "Convert a text to an audio file using OpenAI tts model"
 }

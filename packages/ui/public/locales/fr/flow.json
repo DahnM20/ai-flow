@@ -89,5 +89,9 @@
     "ClickOnNodeToSelectIt": "Veuillez cliquer sur un nœud pour le sélectionner.",
     "Field": "Champ",
     "DragAndDropNodes":"Glissez et déposez les nœuds pour les ajouter.",
-    "CopiedToClipboard": "Copié dans le presse-papiers."
+    "CopiedToClipboard": "Copié dans le presse-papiers.",
+    "DocumentToText": "Document vers texte",
+    "documentToTextHelp": "Convertir un fichier .pdf, .txt, .csv, .json, .html en texte simple",
+    "TextToSpeech": "Texte vers audio",
+    "textToSpeechHelp": "Convertir un texte en fichier audio en utilisant le modèle tts d'OpenAI"
 }
