@@ -61,6 +61,8 @@ export function loadFromLocalStorage() {
 }
 
 export async function loadParameters() {
+  migrateOldParameters();
+
   const fetchedParameters = await withCache(getParameters);
   parameters = !!fetchedParameters
     ? { ...fetchedParameters }
@@ -90,4 +92,36 @@ export function getConfigParametersFlat() {
   });
 
   return paramKeyValue;
+}
+
+export function migrateOldParameters() {
+  if (!window.localStorage.getItem("apiKeys")) return;
+
+  console.log("Migrating old parameters to new format");
+
+  const oldParameters = JSON.parse(
+    window.localStorage.getItem("apiKeys") || "{}",
+  );
+
+  const newParams = structuredClone(defaultParameters);
+
+  if (oldParameters.openai_api_key) {
+    newParams.core.openai_api_key.value = oldParameters.openai_api_key;
+  }
+  if (oldParameters.replicate_api_key) {
+    newParams.core.replicate_api_key.value = oldParameters.replicate_api_key;
+  }
+  if (oldParameters.stabilityai_api_key) {
+    newParams.core.stabilityai_api_key.value =
+      oldParameters.stabilityai_api_key;
+  }
+
+  window.localStorage.setItem(
+    PARAMETERS_KEY_LOCAL_STORAGE,
+    JSON.stringify(newParams),
+  );
+
+  window.localStorage.removeItem("apiKeys");
+
+  return newParams;
 }
