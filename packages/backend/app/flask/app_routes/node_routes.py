@@ -1,16 +1,17 @@
-from flask import Blueprint, request
 import json
+
+from flask import Blueprint, request
+
 from ...utils.node_extension_utils import get_extensions
 
 # from ...utils.openapi_reader import OpenAPIReader
 from ...utils.replicate_utils import (
-    get_model_openapi_schema,
-    get_replicate_models,
-    get_replicate_collections,
-    get_replicate_collection_models,
     get_highlighted_models_info,
+    get_model_openapi_schema,
+    get_replicate_collection_models,
+    get_replicate_collections,
+    get_replicate_models,
 )
-
 
 node_blueprint = Blueprint("node_blueprint", __name__)
 
