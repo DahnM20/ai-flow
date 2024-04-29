@@ -1,14 +1,14 @@
 from queue import Empty, Queue
 import time
 import eventlet
-from ..processor import SimpleProcessor
+from ..processor import BasicProcessor
 
 from ....tasks.shared_ressources import scrapping_task_queue
 
 from .processor_type_name_utils import ProcessorType
 
 
-class URLInputProcessor(SimpleProcessor):
+class URLInputProcessor(BasicProcessor):
     WAIT_TIMEOUT = 60
     processor_type = ProcessorType.URL_INPUT
 

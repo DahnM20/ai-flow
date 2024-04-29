@@ -1,11 +1,11 @@
 from ...context.processor_context import ProcessorContext
 from ..model import Field, NodeConfig, Option
-from .extension_base_processor import APIContextExtensionProcessor
+from .extension_processor import ContextAwareExtensionProcessor
 from openai import OpenAI
 from datetime import datetime
 
 
-class OpenAITextToSpeechProcessor(APIContextExtensionProcessor):
+class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
     processor_type = "openai-text-to-speech-processor"
 
     def __init__(self, config, context: ProcessorContext):

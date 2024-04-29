@@ -1,8 +1,8 @@
 from .processor_type_name_utils import ProcessorType
-from ..processor import SimpleProcessor
+from ..processor import BasicProcessor
 
 
-class FileProcessor(SimpleProcessor):
+class FileProcessor(BasicProcessor):
     processor_type = ProcessorType.FILE
 
     def __init__(self, config):

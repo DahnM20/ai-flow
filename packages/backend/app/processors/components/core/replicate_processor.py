@@ -6,13 +6,13 @@ from ....utils.replicate_utils import (
     get_output_schema_from_open_API_schema,
 )
 from ...context.processor_context import ProcessorContext
-from ..processor import APIContextProcessor
+from ..processor import ContextAwareProcessor
 import replicate
 
 from .processor_type_name_utils import ProcessorType
 
 
-class ReplicateProcessor(APIContextProcessor):
+class ReplicateProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.REPLICATE
 
     def __init__(self, config, context: ProcessorContext):

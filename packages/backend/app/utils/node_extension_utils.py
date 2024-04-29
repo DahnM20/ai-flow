@@ -3,8 +3,8 @@ import os
 import pkgutil
 from cachetools import TTLCache, cached
 
-from ..processors.components.extension.extension_base_processor import (
-    ExtensionBaseProcessor,
+from ..processors.components.extension.extension_processor import (
+    ExtensionProcessor,
 )
 
 very_long_ttl_cache = 120000
@@ -27,7 +27,7 @@ def _load_all_extension_schemas():
         for attribute_name in dir(module):
             attribute = getattr(module, attribute_name)
             if isinstance(attribute, type) and issubclass(
-                attribute, ExtensionBaseProcessor
+                attribute, ExtensionProcessor
             ):
                 if hasattr(attribute, "get_schema"):
                     schema = attribute.get_schema(attribute)

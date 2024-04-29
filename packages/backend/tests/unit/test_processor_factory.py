@@ -2,10 +2,10 @@ import unittest
 from app.processors.factory.processor_factory_iter_modules import (
     ProcessorFactoryIterModules,
 )
-from app.processors.components.processor import SimpleProcessor, APIContextProcessor
+from app.processors.components.processor import BasicProcessor, ContextAwareProcessor
 
 
-class DummyProcessor(SimpleProcessor):
+class DummyProcessor(BasicProcessor):
     processor_type = "dummy_processor"
 
     def process(self):
@@ -15,7 +15,7 @@ class DummyProcessor(SimpleProcessor):
         pass
 
 
-class APIDummyProcessor(APIContextProcessor):
+class APIDummyProcessor(ContextAwareProcessor):
     processor_type = "api_dummy_processor"
 
     def __init__(self, config, context=None):
@@ -39,7 +39,7 @@ class TestProcessorFactory(unittest.TestCase):
             {"processorType": "dummy_processor", "name": "dummy_processor"}
         )
         self.assertIsInstance(processor, DummyProcessor)
-        self.assertIsInstance(processor, SimpleProcessor)
+        self.assertIsInstance(processor, BasicProcessor)
 
     def test_create_unknown_processor_raises_exception(self):
         with self.assertRaises(ValueError):
@@ -56,5 +56,5 @@ class TestProcessorFactory(unittest.TestCase):
             context_data="api_data",
         )
         self.assertIsInstance(processor, APIDummyProcessor)
-        self.assertIsInstance(processor, APIContextProcessor)
+        self.assertIsInstance(processor, ContextAwareProcessor)
         self.assertEqual(processor._processor_context, "api_data")

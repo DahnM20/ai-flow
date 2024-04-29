@@ -1,4 +1,4 @@
-from ..processor import APIContextProcessor
+from ..processor import ContextAwareProcessor
 import re
 from ....llms.factory.llm_factory import LLMFactory
 from ....root_injector import root_injector
@@ -8,7 +8,7 @@ from .processor_type_name_utils import ProcessorType, MergeModeEnum
 from llama_index.llms.base import ChatMessage
 
 
-class MergeProcessor(APIContextProcessor):
+class MergeProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.MERGER_PROMPT
     DEFAULT_MODEL = "gpt-4-1106-preview"
 

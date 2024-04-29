@@ -1,12 +1,12 @@
 from ...context.processor_context import ProcessorContext
-from ..processor import APIContextProcessor
+from ..processor import ContextAwareProcessor
 
 from openai import OpenAI
 
 from .processor_type_name_utils import ProcessorType
 
 
-class DallEPromptProcessor(APIContextProcessor):
+class DallEPromptProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.DALLE_PROMPT
 
     DEFAULT_MODEL = "dall-e-3"

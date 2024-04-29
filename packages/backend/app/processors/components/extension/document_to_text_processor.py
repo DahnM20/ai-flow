@@ -7,7 +7,7 @@ from ....utils.processor_utils import (
     is_valid_url,
 )
 from ..model import Field, NodeConfig
-from .extension_base_processor import SimpleExtensionProcessor
+from .extension_processor import BasicExtensionProcessor
 from langchain.document_loaders import (
     UnstructuredPDFLoader,
     UnstructuredHTMLLoader,
@@ -17,7 +17,7 @@ from langchain.document_loaders import (
 )
 
 
-class DocumentToText(SimpleExtensionProcessor):
+class DocumentToText(BasicExtensionProcessor):
     processor_type = "document-to-text-processor"
 
     def __init__(self, config):

@@ -1,13 +1,13 @@
 import os
 from urllib.parse import urlparse
 from ...context.processor_context import ProcessorContext
-from ..processor import APIContextProcessor
+from ..processor import ContextAwareProcessor
 import replicate
 
 from .processor_type_name_utils import ProcessorType
 
 
-class StableVideoDiffusionReplicaterocessor(APIContextProcessor):
+class StableVideoDiffusionReplicaterocessor(ContextAwareProcessor):
     processor_type = ProcessorType.STABLE_VIDEO_DIFFUSION_REPLICATE
 
     stable_video_diffusion_model = "stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438"

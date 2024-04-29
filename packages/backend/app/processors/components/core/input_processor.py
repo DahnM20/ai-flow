@@ -1,8 +1,8 @@
 from .processor_type_name_utils import ProcessorType
-from ..processor import SimpleProcessor
+from ..processor import BasicProcessor
 
 
-class InputProcessor(SimpleProcessor):
+class InputProcessor(BasicProcessor):
     processor_type = ProcessorType.INPUT_TEXT
 
     def __init__(self, config):

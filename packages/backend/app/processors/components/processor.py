@@ -185,7 +185,7 @@ class Processor(ABC):
         return self._has_dynamic_behavior
 
 
-class SimpleProcessor(Processor):
+class BasicProcessor(Processor):
     def __init__(self, config):
         super().__init__(config)
 
@@ -193,7 +193,7 @@ class SimpleProcessor(Processor):
         pass
 
 
-class APIContextProcessor(Processor):
+class ContextAwareProcessor(Processor):
     def __init__(self, config, context: ProcessorContext = None):
         super().__init__(config)
         self._processor_context = context

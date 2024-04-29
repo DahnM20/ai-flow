@@ -1,7 +1,7 @@
 import base64
 
 from ...context.processor_context import ProcessorContext
-from ..processor import APIContextProcessor
+from ..processor import ContextAwareProcessor
 from datetime import datetime
 import requests
 
@@ -11,7 +11,7 @@ import os
 from .processor_type_name_utils import ProcessorType
 
 
-class StableDiffusionStabilityAIPromptProcessor(APIContextProcessor):
+class StableDiffusionStabilityAIPromptProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.STABLE_DIFFUSION_STABILITYAI_PROMPT
 
     def __init__(self, config, context: ProcessorContext):

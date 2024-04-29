@@ -1,10 +1,10 @@
-from ..processor import SimpleProcessor
+from ..processor import BasicProcessor
 from langchain.document_loaders import YoutubeLoader
 
 from .processor_type_name_utils import ProcessorType
 
 
-class YoutubeTranscriptInputProcessor(SimpleProcessor):
+class YoutubeTranscriptInputProcessor(BasicProcessor):
     processor_type = ProcessorType.YOUTUBE_TRANSCRIPT_INPUT
 
     def __init__(self, config):

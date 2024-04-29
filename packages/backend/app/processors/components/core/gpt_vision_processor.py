@@ -1,12 +1,12 @@
 import logging
 from ...context.processor_context import ProcessorContext
-from ..processor import APIContextProcessor
+from ..processor import ContextAwareProcessor
 from .processor_type_name_utils import ProcessorType
 from openai import OpenAI
 from urllib.parse import urlparse
 
 
-class GPTVisionProcessor(APIContextProcessor):
+class GPTVisionProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.GPT_VISION
     DEFAULT_MODEL = "gpt-4-vision-preview"
 

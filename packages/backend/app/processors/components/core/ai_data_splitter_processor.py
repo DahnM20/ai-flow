@@ -1,5 +1,5 @@
 from ...context.processor_context import ProcessorContext
-from ..processor import APIContextProcessor
+from ..processor import ContextAwareProcessor
 from ....llms.factory.llm_factory import LLMFactory
 from ....root_injector import root_injector
 
@@ -8,7 +8,7 @@ from llama_index.llms.base import ChatMessage
 from .processor_type_name_utils import ProcessorType
 
 
-class AIDataSplitterProcessor(APIContextProcessor):
+class AIDataSplitterProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.AI_DATA_SPLITTER
     SPLIT_CHAR = ";"
 
