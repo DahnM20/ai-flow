@@ -52,29 +52,30 @@ LLaMA, Mistral, Stable Video Diffusion, Music-gen, and many more.
 
 ![replicate](assets/replicate-models.png)
 
-#### Summarize web pages & youtube transcript
+## Contribute to AI-FLOW
 
-![image-summary](assets/summary.png)
+Whether you encounter bugs, have enhancements to propose, or want to add entirely new functionalities, we welcome your involvement.
 
-#### Describe picture with AI
+**Getting Started:**
 
-![ai-vision](assets/gpt-vision.png)
+- **Report Issues:** Spot a problem? Help us improve by [opening an issue](https://github.com/DahnM20/ai-flow/issues).
+- **Submit Pull Requests:** Have a fix or a new feature? Submit a pull request and contribute directly to the codebase.
 
-#### Create a custom layout for your flow
+**Expanding AI-FLOW:**
 
-When your flow is complete, you have the option to run it as is or create a custom layout focusing on the most interesting parts.
+- Interested in adding new nodes? Check out our comprehensive [Contributor Documentation](https://docs.ai-flow.net/docs/category/contribute) to learn how you can build and integrate new nodes.
 
-Here is an example of layout :
+Your contributions help make AI-FLOW better for everyone !
 
-![layout-view](assets/layout.png)
+## Installation
 
-## Installation (Windows executable)
+### Installation (Windows executable)
 
-For a quick local setup, grab the .exe from the [repository's releases section](https://github.com/DahnM20/ai-flow/releases).
+For a quick local setup, grab the Desktop App from the [repository's releases section](https://github.com/DahnM20/ai-flow/releases).
 
-You'll need to update the REPLICATE_API_KEY in the .env file to use the Replicate Node. This API key is used exclusively for fetching model data.
+You'll need to set REPLICATE_API_KEY in your env to use the Replicate Node. This API key is used exclusively for fetching model data.
 
-## Installation (without Docker)
+### Installation without Docker
 
 ### Prerequisites
 
@@ -108,7 +109,7 @@ Before getting started, make sure you have the following dependencies installed 
 
 You'll need to update the REPLICATE_API_KEY in the .env file to use the Replicate Node. This API key is used exclusively for fetching model data.
 
-1. Start the backend server: `cd backend && poetry run python server.py`
+1. Start the server: `cd backend && poetry run python server.py`
 2. Start the ui application: `cd ui && npm start`
 3. Open your browser and navigate to `http://localhost:3000`
 4. Use the drag-and-drop interface to design your AI workflow
@@ -116,19 +117,15 @@ You'll need to update the REPLICATE_API_KEY in the .env file to use the Replicat
 6. Click "Run" to execute the AI workflow
 7. Monitor the execution progress and results in real-time
 
-## 🐳 Docker
+### 🐳 Installation with Docker
 
-### Docker Compose
+#### Docker Compose
 
 1. Go to the docker directory: `cd ./docker`
 2. You'll need to update the REPLICATE_API_KEY in the .yml file to use the Replicate Node. This API key is used exclusively for fetching model data.
 3. Launch `docker-compose up` or `docker-compose up -d`
 4. Open your browser and navigate to `http://localhost:80`
 5. Use `docker-compose stop` when you want to stop the app.
-
-## Contributing
-
-Contributions are welcome! If you find any issues or have suggestions for improvement, please open an issue or submit a pull request.
 
 ## License
 
