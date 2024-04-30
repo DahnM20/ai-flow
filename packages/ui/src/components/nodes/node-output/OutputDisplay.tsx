@@ -5,7 +5,7 @@ import { NodeData } from "../types/node";
 import { toastFastInfoMessage } from "../../../utils/toastUtils";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { FiCopy } from "react-icons/fi";
+import { FiCopy, FiFile } from "react-icons/fi";
 import ImageUrlOutput from "./ImageUrlOutput";
 import ImageBase64Output from "./ImageBase64Output";
 import VideoUrlOutput from "./VideoUrlOutput";
@@ -47,6 +47,17 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
         return <AudioUrlOutput url={output} name={data.name} />;
       case "pdfUrl":
         return <PdfUrlOutput url={output} name={data.name} />;
+      case "text":
+        return <p>{output}</p>;
+      case "fileUrl":
+        return (
+          <a href={output} target="_blank" rel="noreferrer">
+            <div className="flex flex-row items-center justify-center space-x-2 py-2 hover:text-sky-400">
+              <FiFile className="text-4xl" />
+              <p>{t("DownloadFile")}</p>
+            </div>
+          </a>
+        );
       default:
         return <MarkdownOutput data={output} />;
     }

@@ -6,6 +6,7 @@ import boto3
 import os
 from datetime import timedelta
 from injector import singleton
+import mimetypes
 
 
 @singleton
@@ -39,9 +40,13 @@ class S3StorageStrategy(CloudStorageStrategy):
     def get_upload_link(self, filename=None) -> str:
         file_key = f"uploads/{uuid.uuid4()}"
 
+        content_type = None
+
         if filename:
             extension = filename.split(".")[-1]
             file_key += f".{extension}"
+            mime_type, _ = mimetypes.guess_type(filename)
+            content_type = mime_type
 
         try:
             upload_data = self.s3_client.generate_presigned_post(
@@ -54,7 +59,11 @@ class S3StorageStrategy(CloudStorageStrategy):
 
             download_url = self.s3_client.generate_presigned_url(
                 ClientMethod="get_object",
-                Params={"Bucket": self.BUCKET_NAME, "Key": file_key},
+                Params={
+                    "Bucket": self.BUCKET_NAME,
+                    "Key": file_key,
+                    "ResponseContentType": content_type,
+                },
                 ExpiresIn=int(self.EXPIRATION.total_seconds()),
             )
         except Exception as e:

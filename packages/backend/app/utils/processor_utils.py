@@ -48,6 +48,15 @@ def get_max_file_size_in_mb():
     return int(os.getenv("MAX_TMP_FILE_SIZE_MB", 300))
 
 
+def is_s3_file(url):
+    bucket_name = os.getenv("S3_BUCKET_NAME")
+    if not bucket_name:
+        return False
+    return url.startswith(f"s3://{bucket_name}") or url.startswith(
+        f"https://{bucket_name}.s3.amazonaws.com"
+    )
+
+
 def is_accepted_url_file_size(url):
     size_mb = get_file_size_from_url_in_mb(url)
     if size_mb > get_max_file_size_in_mb():

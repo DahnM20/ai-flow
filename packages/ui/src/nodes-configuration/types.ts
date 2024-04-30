@@ -19,7 +19,8 @@ export type OutputType =
   | "pdfUrl"
   | "imageBase64"
   | "markdown"
-  | "text";
+  | "text"
+  | "fileUrl";
 
 export interface Option {
   label: string;

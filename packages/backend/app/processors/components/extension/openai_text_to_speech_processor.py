@@ -91,7 +91,7 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
             icon="FaRobot",
             fields=fields,
             outputType="audioUrl",
-            section="tools",
+            section="models",
             helpMessage="textToSpeechHelp",
             showHandlesNames=True,
         )

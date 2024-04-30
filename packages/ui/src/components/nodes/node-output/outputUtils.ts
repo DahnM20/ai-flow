@@ -23,9 +23,9 @@ const extensionToTypeMap: { [key: string]: OutputType } = {
   ".mp3": "audioUrl",
   ".wav": "audioUrl",
   // Other extensions
-  ".pdf": "markdown",
-  ".txt": "markdown",
-  ".glb": "markdown",
+  ".pdf": "fileUrl",
+  ".txt": "fileUrl",
+  ".glb": "fileUrl",
 };
 
 export function getOutputTypeFromExtension(output: string): OutputType {

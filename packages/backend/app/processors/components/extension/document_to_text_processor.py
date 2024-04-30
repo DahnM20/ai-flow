@@ -4,6 +4,7 @@ from ....utils.processor_utils import (
     create_temp_file_with_bytes_content,
     get_max_file_size_in_mb,
     is_accepted_url_file_size,
+    is_s3_file,
     is_valid_url,
 )
 from ..model import Field, NodeConfig
@@ -71,7 +72,7 @@ class DocumentToText(BasicExtensionProcessor):
         if not is_valid_url(url):
             raise ValueError("Invalid URL")
 
-        if not is_accepted_url_file_size(url):
+        if not is_s3_file(url) and not is_accepted_url_file_size(url):
             raise ValueError(
                 f"File size is too large (Max : {get_max_file_size_in_mb()})"
             )
@@ -83,7 +84,7 @@ class DocumentToText(BasicExtensionProcessor):
             )
 
         mime_type = r.headers.get("Content-Type")
-        if mime_type not in self.accepted_mime_types:
+        if not is_s3_file(url) and mime_type not in self.accepted_mime_types:
             raise ValueError("The file type is not supported.")
 
         temp_file, temp_dir = create_temp_file_with_bytes_content(r.content)

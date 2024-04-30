@@ -14,9 +14,9 @@ export async function getUploadAndDownloadUrl(filename?: string) {
 
 export async function uploadWithS3Link(s3UploadData: any, file: File) {
   const config = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+    // headers: {
+    //   "Content-Type": "multipart/form-data",
+    // },
     onUploadProgress: (progressEvent: AxiosProgressEvent) => {
       if (!progressEvent.total) return;
 
