@@ -1,9 +1,10 @@
 import axios, { AxiosProgressEvent } from "axios";
 import client from "./client";
 
-export async function getUploadAndDownloadUrl() {
+export async function getUploadAndDownloadUrl(filename?: string) {
   try {
-    const response = await client.get("/upload");
+    const data = { filename };
+    const response = await client.get("/upload", { params: data });
     return response.data;
   } catch (error) {
     console.error("Error while trying to get upload link :", error);

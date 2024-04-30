@@ -87,7 +87,8 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
   }, [data.lastRun, data.outputData]);
 
   async function uploadFile(files: File[]) {
-    const urls = await getUploadAndDownloadUrl();
+    const filename = files[0].name;
+    const urls = await getUploadAndDownloadUrl(filename);
     const uploadData = urls.upload_data;
     await uploadWithS3Link(uploadData, files[0]);
     return urls;
@@ -102,8 +103,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
     try {
       urls = await startLoadingWith(uploadFile, files);
     } catch (error) {
-      toastErrorMessage(t("error.upload_failed") as string);
-      console.log(error);
+      toastErrorMessage(t("error.upload_failed"));
       uploadError = true;
       setFiles(null);
     } finally {

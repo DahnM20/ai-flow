@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 import uuid
 from ..storage.storage_strategy import CloudStorageStrategy
@@ -35,22 +36,34 @@ class S3StorageStrategy(CloudStorageStrategy):
 
         return url
 
-    def get_upload_link(self) -> str:
+    def get_upload_link(self, filename=None) -> str:
         file_key = f"uploads/{uuid.uuid4()}"
 
-        upload_data = self.s3_client.generate_presigned_post(
-            Bucket=self.BUCKET_NAME,
-            Key=file_key,
-            Fields=None,
-            Conditions=[["content-length-range", 0, self.MAX_UPLOAD_SIZE_BYTES]],
-            ExpiresIn=int(self.EXPIRATION.total_seconds()),
-        )
+        if filename:
+            extension = filename.split(".")[-1]
+            file_key += f".{extension}"
 
-        download_url = self.s3_client.generate_presigned_url(
-            ClientMethod="get_object",
-            Params={"Bucket": self.BUCKET_NAME, "Key": file_key},
-            ExpiresIn=int(self.EXPIRATION.total_seconds()),
-        )
+        try:
+            upload_data = self.s3_client.generate_presigned_post(
+                Bucket=self.BUCKET_NAME,
+                Key=file_key,
+                Fields=None,
+                Conditions=[["content-length-range", 0, self.MAX_UPLOAD_SIZE_BYTES]],
+                ExpiresIn=int(self.EXPIRATION.total_seconds()),
+            )
+
+            download_url = self.s3_client.generate_presigned_url(
+                ClientMethod="get_object",
+                Params={"Bucket": self.BUCKET_NAME, "Key": file_key},
+                ExpiresIn=int(self.EXPIRATION.total_seconds()),
+            )
+        except Exception as e:
+            logging.error(e)
+            raise Exception(
+                "Error uploading file. "
+                "Please check your S3 configuration. "
+                "If you've not configured S3 please refer to docs.ai-flow.net/docs/file-upload"
+            )
 
         return upload_data, download_url
 

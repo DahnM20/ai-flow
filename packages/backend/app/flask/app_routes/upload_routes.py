@@ -3,6 +3,7 @@ from flask import Blueprint
 from ...storage.storage_strategy import StorageStrategy
 
 from ...root_injector import root_injector
+from flask import request
 
 upload_blueprint = Blueprint("upload_blueprint", __name__)
 
@@ -16,7 +17,16 @@ def upload_file():
     logging.info("Uploading file")
     storage_strategy = root_injector.get(StorageStrategy)
 
-    data = storage_strategy.get_upload_link()
+    filename = request.args.get("filename")
+    try:
+        data = storage_strategy.get_upload_link(filename)
+    except Exception as e:
+        logging.error(e)
+        raise Exception(
+            "Error uploading file. "
+            "Please check your S3 configuration. "
+            "If you've not configured S3 please refer to docs.ai-flow.net/docs/file-upload"
+        )
 
     json_link = {
         "upload_data": data[0],

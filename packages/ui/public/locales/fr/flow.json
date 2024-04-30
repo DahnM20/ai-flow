@@ -93,5 +93,6 @@
     "DocumentToText": "Document vers Texte",
     "documentToTextHelp": "Convertir un fichier .pdf, .txt, .csv, .json, .html en texte simple",
     "TextToSpeech": "Texte vers Audio",
-    "textToSpeechHelp": "Convertir un texte en fichier audio en utilisant le modèle tts d'OpenAI"
+    "textToSpeechHelp": "Convertir un texte en fichier audio en utilisant le modèle tts d'OpenAI",
+    "error.upload_failed": "Echec de l'upload"
 }

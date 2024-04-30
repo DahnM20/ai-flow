@@ -17,5 +17,5 @@ class StorageStrategy(ABC):
 
 class CloudStorageStrategy(StorageStrategy):
     @abstractmethod
-    def get_upload_link(self) -> str:
+    def get_upload_link(self, filename: str) -> str:
         pass

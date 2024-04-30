@@ -93,5 +93,6 @@
     "DocumentToText":"Document-to-Text",
     "documentToTextHelp":"Convert .pdf .txt .csv .json .html file to simple text",
     "TextToSpeech": "Text-to-Speech",
-    "textToSpeechHelp": "Convert a text to an audio file using OpenAI tts model"
+    "textToSpeechHelp": "Convert a text to an audio file using OpenAI tts model",
+    "error.upload_failed": "Upload failed"
 }
