@@ -43,9 +43,9 @@ def get_collection_models(collection):
     return get_replicate_collection_models(collection, cursor=cursor)
 
 
-# @node_blueprint.route("/node/replicate/config/<path:model>")
-# def get_config(model):
-#     return get_model_openapi_schema(model)
+@node_blueprint.route("/node/replicate/config/<path:model>")
+def get_config(model):
+    return get_model_openapi_schema(model)
 
 
 # @node_blueprint.route("/node/openapi/<path:api_name>/models")

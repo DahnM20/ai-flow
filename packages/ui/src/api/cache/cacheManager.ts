@@ -1,3 +1,5 @@
+import { isCacheEnabled } from "../../config/config";
+
 interface CacheItem<T> {
   data: T;
   ttl?: number;
@@ -14,6 +16,7 @@ export function generateCacheKey(functionName: string, ...args: any[]): string {
 }
 
 export function setCache(key: string, data: any, ttl?: number) {
+  if (!isCacheEnabled()) return;
   const item = {
     data,
     ttl,
@@ -32,6 +35,8 @@ export function setCache(key: string, data: any, ttl?: number) {
 }
 
 export function getCache<T>(key: string): T | undefined {
+  if (!isCacheEnabled()) return;
+
   const itemStr = localStorage.getItem(key);
   if (!itemStr) return;
 
