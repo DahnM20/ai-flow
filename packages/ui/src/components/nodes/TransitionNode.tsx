@@ -33,7 +33,9 @@ const TransitionNode: React.FC<TransitionNodeProps> = React.memo(
     const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
     const inputHandleId = useMemo(() => generateIdForHandle(0), []);
 
-    const { allHandlePositions } = useHandlePositions(data, 1, outputHandleId);
+    const { allHandlePositions } = useHandlePositions(data, 1, [
+      outputHandleId,
+    ]);
 
     useEffect(() => {
       setNodeId(`${data.name}-${Date.now()}`);

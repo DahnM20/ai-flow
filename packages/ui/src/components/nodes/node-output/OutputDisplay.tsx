@@ -25,7 +25,7 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
   const [indexDisplayed, setIndexDisplayed] = useState(0);
 
   const nbOutput =
-    typeof data.outputData !== "string" && data.outputData != null
+    data.outputData != null && typeof data.outputData !== "string"
       ? data.outputData.length
       : 1;
 

@@ -59,7 +59,16 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
           : [],
     );
 
-    const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
+    const nbOutput =
+      data.outputData != null && typeof data.outputData !== "string"
+        ? data.outputData.length
+        : 1;
+
+    const outputHandleIds = useMemo(() => {
+      return new Array(nbOutput)
+        .fill(0)
+        .map((_, index) => generateIdForHandle(index, true));
+    }, [nbOutput]);
 
     const nbInput = useMemo(() => {
       if (!!data.config.inputNames) {
@@ -74,7 +83,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     const { allInputHandleIds, allHandlePositions } = useHandlePositions(
       data,
       nbInput,
-      outputHandleId,
+      outputHandleIds,
     );
 
     useEffect(() => {
@@ -248,7 +257,27 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
           )}
           <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
           <NodeTitle>{t(data.config.nodeName)}</NodeTitle>
-          <HandleWrapper
+          {outputHandleIds.map((id, index) => {
+            return (
+              <HandleWrapper
+                key={id}
+                id={id}
+                position={
+                  !!data?.handles && data.handles[id]
+                    ? data.handles[id]
+                    : Position.Right
+                }
+                linkedHandlePositions={allHandlePositions}
+                onChangeHandlePosition={handleChangeHandlePosition}
+                data-tooltip-id={`app-tooltip`}
+                data-tooltip-content={
+                  data.outputData ? data.outputData[index] : ""
+                }
+                isOutput
+              />
+            );
+          })}
+          {/* <HandleWrapper
             id={outputHandleId}
             position={
               !!data?.handles && data.handles[outputHandleId]
@@ -258,7 +287,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
             linkedHandlePositions={allHandlePositions}
             onChangeHandlePosition={handleChangeHandlePosition}
             isOutput
-          />
+          /> */}
           <NodePlayButton
             isPlaying={isPlaying}
             hasRun={!!data.lastRun}

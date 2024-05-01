@@ -49,11 +49,9 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(
 
     const { showOnlyOutput, isRunning, onUpdateNodeData } =
       useContext(NodeContext);
-    const { allHandlePositions } = useHandlePositions(
-      data,
-      NB_INPUT_HANDLE,
+    const { allHandlePositions } = useHandlePositions(data, NB_INPUT_HANDLE, [
       outputHandleId,
-    );
+    ]);
 
     useHandleShowOutput({
       showOnlyOutput,
