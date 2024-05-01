@@ -16,7 +16,7 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({
 }) => {
   return (
     <TapScale>
-      <div
+      <button
         id="run-all-button"
         className={`flex flex-row items-center justify-center gap-x-2 
                 ${
@@ -24,28 +24,23 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({
                     ? "bg-[#86D8F0] text-slate-200"
                     : "bg-slate-800 text-[#86D8F0] ring-2 ring-sky-800"
                 } 
+                z-50
                 cursor-pointer
                 rounded-md
-                px-2
-                py-2 transition-all hover:text-sky-100 hover:ring-sky-500`}
+                px-2 py-2 transition-all hover:text-sky-100 hover:ring-sky-500`}
         onClick={onClick}
         data-tooltip-id={"app-tooltip"}
         data-tooltip-content={small ? "RUN ALL" : undefined}
         data-tooltip-place="left"
       >
-        <Button>
-          {isRunning ? <Spinner className="text-xl " /> : <FaPlay />}
-        </Button>
-
+        {isRunning ? <Spinner className="text-xl " /> : <FaPlay />}
         {!isRunning && !small && <div className="hidden md:flex">RUN ALL</div>}
-      </div>
+      </button>
     </TapScale>
   );
 };
 
 export default memo(ButtonRunAll);
-
-const Button = styled.button``;
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
