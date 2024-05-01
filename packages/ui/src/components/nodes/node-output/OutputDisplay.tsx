@@ -13,6 +13,7 @@ import AudioUrlOutput from "./AudioUrlOutput";
 import { getOutputTypeFromExtension } from "./outputUtils";
 import PdfUrlOutput from "./PdfUrlOutput";
 import { OutputType } from "../../../nodes-configuration/types";
+import { useState } from "react";
 
 interface OutputDisplayProps {
   data: NodeData;
@@ -21,13 +22,20 @@ interface OutputDisplayProps {
 export default function OutputDisplay({ data }: OutputDisplayProps) {
   const { t } = useTranslation("flow");
 
+  const [indexDisplayed, setIndexDisplayed] = useState(0);
+
+  const nbOutput =
+    typeof data.outputData !== "string" && data.outputData != null
+      ? data.outputData.length
+      : 1;
+
   const getOutputComponent = () => {
     if (!data.outputData) return <></>;
 
     let output = data.outputData;
 
     if (typeof output !== "string") {
-      output = output[0];
+      output = output[indexDisplayed];
     }
 
     switch (getOutputType()) {
@@ -76,7 +84,7 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
     let output = "";
 
     if (typeof outputData !== "string") {
-      output = outputData[0];
+      output = outputData[indexDisplayed];
     } else {
       output = outputData;
     }
@@ -88,13 +96,22 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
 
   const outputType = getOutputType();
 
-  const outputIsMedia =
-    (outputType === "imageUrl" ||
-      outputType === "imageBase64" ||
-      outputType === "videoUrl" ||
-      outputType === "audioUrl" ||
-      outputType === "pdfUrl") &&
-    !!data.outputData;
-
-  return <>{getOutputComponent()}</>;
+  return (
+    <div className="flex flex-col">
+      {nbOutput > 1 && typeof data.outputData !== "string" && (
+        <div
+          className="mt-2 flex flex-row items-center justify-center space-x-4 p-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {data?.outputData?.map((output, index) => (
+            <button
+              className={`rounded-full ${index === indexDisplayed ? "bg-orange-400" : "bg-slate-200 hover:bg-orange-200"} p-1.5`}
+              onClick={() => setIndexDisplayed(index)}
+            />
+          ))}
+        </div>
+      )}
+      {getOutputComponent()}
+    </div>
+  );
 }

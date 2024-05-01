@@ -121,7 +121,7 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
             fields=fields,
             outputType="imageUrl",
             section="models",
-            helpMessage="stableDiffusionHelp",
+            helpMessage="stableDiffusionPromptHelp",
             showHandlesNames=True,
         )
 

@@ -1,5 +1,7 @@
 import logging
 
+from ....utils.processor_utils import is_valid_url
+
 from ....utils.replicate_utils import (
     get_input_schema_from_open_API_schema,
     get_model_openapi_schema,
@@ -53,6 +55,7 @@ class ReplicateProcessor(ContextAwareProcessor):
         output_schema = get_output_schema_from_open_API_schema(self.schema["schema"])
         logging.debug(f"Output schema : {output_schema}")
         output_type = output_schema.get("type")
+        output_array_display = output_schema.get("x-cog-array-display")
 
         rest, version_id = self.model.split(":")
 
@@ -69,8 +72,11 @@ class ReplicateProcessor(ContextAwareProcessor):
 
         output = self.prediction.output
 
-        if output_type == "array":
+        if output_type == "array" and output_array_display == "concatenate":
             output = "".join(output)
+        elif output_type == "array":
+            # Do nothing
+            output = output
         else:
             output = str(output)
 
