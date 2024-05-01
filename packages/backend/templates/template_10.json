@@ -1,0 +1,100 @@
+{
+  "title": "📃🤖 Ask Document",
+  "description": "Upload a document (.pdf, .json, .csv, .txt) and ask GPT to provide insights or answer questions about its content.",
+  "tags": ["productivity", "text"],
+  "template": [
+    {
+      "name": "b7g3qui30#file",
+      "processorType": "file",
+      "inputs": [],
+      "config": {},
+      "x": -1922.5144861883896,
+      "y": -1622.487950049707
+    },
+    {
+      "name": "qfkdj3w19#document-to-text-processor",
+      "processorType": "document-to-text-processor",
+      "missingFields": [],
+      "isDone": false,
+      "inputs": [
+        {
+          "inputName": "url",
+          "inputNode": "b7g3qui30#file",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "config": {
+        "fields": [
+          {
+            "associatedField": null,
+            "defaultValue": null,
+            "hasHandle": true,
+            "hideIfParent": null,
+            "isLinked": true,
+            "label": "url",
+            "max": null,
+            "min": null,
+            "name": "url",
+            "options": null,
+            "placeholder": "URLPlaceholder",
+            "required": true,
+            "type": "textfield"
+          }
+        ],
+        "nodeName": "DocumentToText",
+        "inputNames": ["url"],
+        "hasInputHandle": true,
+        "outputType": "text",
+        "showHandlesNames": true
+      },
+      "x": -1201.73672944401,
+      "y": -1523.0895863930716
+    },
+    {
+      "name": "1vactg0rq#llm-prompt",
+      "processorType": "llm-prompt",
+      "model": "gpt-4-turbo-preview",
+      "prompt": "Your prompt here",
+      "missingFields": [],
+      "inputs": [
+        {
+          "inputName": "initData",
+          "inputNode": "qfkdj3w19#document-to-text-processor",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "config": {
+        "fields": [
+          {
+            "name": "model",
+            "label": "",
+            "type": "option",
+            "options": [
+              {
+                "label": "GPT3.5",
+                "value": "gpt-3.5-turbo",
+                "default": true
+              },
+              {
+                "label": "GPT4",
+                "value": "gpt-4-turbo-preview"
+              }
+            ]
+          },
+          {
+            "name": "prompt",
+            "type": "textarea",
+            "required": true,
+            "placeholder": "PromptPlaceholder"
+          }
+        ],
+        "nodeName": "LLMPrompt",
+        "inputNames": ["initData"],
+        "hasInputHandle": true,
+        "outputType": "text"
+      },
+      "x": -504.87801959574335,
+      "y": -1674.4783631188443
+    }
+  ]
+}

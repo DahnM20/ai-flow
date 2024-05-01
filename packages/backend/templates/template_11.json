@@ -1,0 +1,138 @@
+{
+  "title": "📜🗣️ Generate Speech from Text",
+  "description": "Transform any text into spoken words with OpenAI's Text-to-Speech technology.",
+  "tags": ["sound", "text"],
+  "template": [
+    {
+      "name": "khv5orfch#input-text",
+      "processorType": "input-text",
+      "inputText": "-- Your text here --",
+      "inputs": [],
+      "config": {
+        "fields": [
+          {
+            "type": "textarea",
+            "name": "inputText",
+            "required": true,
+            "placeholder": "InputPlaceholder"
+          }
+        ],
+        "nodeName": "Text",
+        "outputType": "text"
+      },
+      "x": -1205.9229718555416,
+      "y": -774.4541062130291
+    },
+    {
+      "name": "6adbrqvqn#openai-text-to-speech-processor",
+      "processorType": "openai-text-to-speech-processor",
+      "model": "tts-1",
+      "voice": "alloy",
+      "inputs": [
+        {
+          "inputName": "text",
+          "inputNode": "khv5orfch#input-text",
+          "inputNodeOutputKey": 0
+        }
+      ],
+      "config": {
+        "fields": [
+          {
+            "associatedField": null,
+            "defaultValue": null,
+            "hasHandle": true,
+            "hideIfParent": null,
+            "isLinked": true,
+            "label": "text",
+            "max": null,
+            "min": null,
+            "name": "text",
+            "options": null,
+            "placeholder": "InputTextPlaceholder",
+            "required": true,
+            "type": "textfield"
+          },
+          {
+            "associatedField": null,
+            "defaultValue": null,
+            "hasHandle": null,
+            "hideIfParent": null,
+            "isLinked": false,
+            "label": "model",
+            "max": null,
+            "min": null,
+            "name": "model",
+            "options": [
+              {
+                "default": true,
+                "label": "tts-1",
+                "value": "tts-1"
+              },
+              {
+                "default": false,
+                "label": "tts-1-hd",
+                "value": "tts-1-hd"
+              }
+            ],
+            "placeholder": null,
+            "required": true,
+            "type": "select"
+          },
+          {
+            "associatedField": null,
+            "defaultValue": null,
+            "hasHandle": null,
+            "hideIfParent": null,
+            "isLinked": false,
+            "label": "voice",
+            "max": null,
+            "min": null,
+            "name": "voice",
+            "options": [
+              {
+                "default": true,
+                "label": "alloy",
+                "value": "alloy"
+              },
+              {
+                "default": false,
+                "label": "echo",
+                "value": "echo"
+              },
+              {
+                "default": false,
+                "label": "fable",
+                "value": "fable"
+              },
+              {
+                "default": false,
+                "label": "onyx",
+                "value": "onyx"
+              },
+              {
+                "default": false,
+                "label": "nova",
+                "value": "nova"
+              },
+              {
+                "default": false,
+                "label": "shimmer",
+                "value": "shimmer"
+              }
+            ],
+            "placeholder": null,
+            "required": true,
+            "type": "select"
+          }
+        ],
+        "nodeName": "TextToSpeech",
+        "inputNames": ["text", "model", "voice"],
+        "hasInputHandle": null,
+        "outputType": "audioUrl",
+        "showHandlesNames": true
+      },
+      "x": -491.6825822283554,
+      "y": -608.3497871105383
+    }
+  ]
+}
