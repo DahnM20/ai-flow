@@ -157,6 +157,8 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
 
     function setDefaultOptions() {
       const defaultOptions: any = {};
+
+      //Default options
       data.config.fields
         .filter(
           (field) =>
@@ -167,6 +169,15 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
           defaultOptions[field.name] = field.options?.find(
             (option) => option.default,
           )?.value;
+        });
+
+      //Default values
+      data.config.fields
+        .filter(
+          (field) => field.defaultValue != null && data[field.name] == null,
+        )
+        .forEach((field) => {
+          defaultOptions[field.name] = field.defaultValue;
         });
 
       onUpdateNodeData(id, {

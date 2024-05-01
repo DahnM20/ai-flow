@@ -120,7 +120,7 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
 
         storage = self.get_storage()
         timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")
-        filename = f"{self.name}-{timestamp_str}.png"
+        filename = f"{self.name}-{timestamp_str}"
 
         url = storage.save(filename, response.content)
 

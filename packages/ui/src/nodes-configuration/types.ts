@@ -33,7 +33,7 @@ export interface Field {
   type: FieldType;
   label?: string;
   placeholder?: string;
-  defaultValue?: string;
+  defaultValue?: string | number;
   max?: number;
   min?: number;
   options?: Option[];
