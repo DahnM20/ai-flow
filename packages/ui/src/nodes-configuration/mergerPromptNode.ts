@@ -34,7 +34,7 @@ export const mergerPromptNode: NodeConfig = {
       placeholder: "PromptPlaceholder",
     },
   ],
-  outputType: "text",
+  outputType: "markdown",
   hasInputHandle: true,
   section: "tools",
   helpMessage: "mergerPromptHelp",

@@ -17,7 +17,7 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
 
         self.nb_output = 0
         self.model = "gpt-4-1106-preview"
-        self.api_key = context.get_value("session_openai_api_key")
+        self.api_key = context.get_value("openai_api_key")
 
         if custom_llm_factory is None:
             custom_llm_factory = self._get_default_llm_factory()

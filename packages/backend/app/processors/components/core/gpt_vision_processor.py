@@ -14,7 +14,6 @@ class GPTVisionProcessor(ContextAwareProcessor):
         super().__init__(config, context)
 
         self.model = config.get("model", GPTVisionProcessor.DEFAULT_MODEL)
-        self.api_key = context.get_value("session_openai_api_key")
 
     def process(self):
         self.vision_inputs = {
@@ -34,8 +33,9 @@ class GPTVisionProcessor(ContextAwareProcessor):
         if not self.is_valid_url(self.vision_inputs["image_url"]):
             return "Invalid URL provided."
 
+        api_key = self._processor_context.get_value("openai_api_key")
         client = OpenAI(
-            api_key=self.api_key,
+            api_key=api_key,
         )
         response = client.chat.completions.create(
             model=self.model,

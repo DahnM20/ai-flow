@@ -29,7 +29,7 @@ export const llmPromptNodeConfig: NodeConfig = {
       placeholder: "PromptPlaceholder",
     },
   ],
-  outputType: "text",
+  outputType: "markdown",
   hasInputHandle: true,
   section: "models",
   helpMessage: "llmPromptHelp",

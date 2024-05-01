@@ -34,7 +34,7 @@ export const gptVisionNodeConfig: NodeConfig = {
       placeholder: "VisionPromptPlaceholder",
     },
   ],
-  outputType: "text",
+  outputType: "markdown",
   hasInputHandle: true,
   section: "models",
   helpMessage: "gptVisionPromptHelp",
