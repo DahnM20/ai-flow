@@ -40,6 +40,7 @@ COPY app /app/app/
 COPY templates /app/templates
 COPY tests/ /app/tests/
 COPY server.py README.md /app/
+COPY config.yaml /app/
 
 EXPOSE 5000
 
