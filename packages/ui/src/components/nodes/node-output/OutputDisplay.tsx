@@ -55,8 +55,6 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
         return <AudioUrlOutput url={output} name={data.name} />;
       case "pdfUrl":
         return <PdfUrlOutput url={output} name={data.name} />;
-      case "text":
-        return <p>{output}</p>;
       case "fileUrl":
         return (
           <a href={output} target="_blank" rel="noreferrer">
@@ -97,7 +95,7 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
   const outputType = getOutputType();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex w-full flex-col">
       {nbOutput > 1 && typeof data.outputData !== "string" && (
         <div
           className="mt-2 flex flex-row items-center justify-center space-x-4 p-1"

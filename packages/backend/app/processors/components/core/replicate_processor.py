@@ -43,6 +43,8 @@ class ReplicateProcessor(ContextAwareProcessor):
 
                 if input_type == "integer":
                     output = int(output)
+                if input_type == "number":
+                    output = float(output)
 
                 self.config[name] = output
 

@@ -26,7 +26,7 @@ const getNodeFieldTypeFromProp: (prop: any) => Field["type"] = (prop: any) => {
     return "slider";
   }
   if (prop.type === "boolean") return "boolean";
-  if (prop.type === "integer") return "inputInt";
+  if (prop.type === "integer" || prop.type == "number") return "numericfield";
 
   return "input";
 };

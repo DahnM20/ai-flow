@@ -1,7 +1,7 @@
 from ..env_config import is_cloud_env
 
-MAX_NODES_IN_LIVE_DEMO = 15
-MAX_URL_INPUT_NODE_IN_LIVE_DEMO = 3
+MAX_NODES_IN_LIVE_DEMO = 20
+MAX_URL_INPUT_NODE_IN_LIVE_DEMO = 5
 
 
 def max_nodes(flow_data):
@@ -10,7 +10,7 @@ def max_nodes(flow_data):
 
     if len(flow_data) > MAX_NODES_IN_LIVE_DEMO:
         raise Exception(
-            f"You've created too many nodes for the live demo (>{MAX_NODES_IN_LIVE_DEMO}). If you want to not be limited, please install the tool locally."
+            f"You've created too many nodes for this flow (>{MAX_NODES_IN_LIVE_DEMO})."
         )
 
 
@@ -24,7 +24,7 @@ def max_url_input_nodes(flow_data):
 
     if count_url_input > MAX_URL_INPUT_NODE_IN_LIVE_DEMO:
         raise Exception(
-            f"You cannot have more than {MAX_URL_INPUT_NODE_IN_LIVE_DEMO} url_input nodes in the live demo. Create another flow, or install the tool locally to not be limited."
+            f"You cannot have more than {MAX_URL_INPUT_NODE_IN_LIVE_DEMO} web extractor nodes in this flow. Please, create another flow."
         )
 
 
