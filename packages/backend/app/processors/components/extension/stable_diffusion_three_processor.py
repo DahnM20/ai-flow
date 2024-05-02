@@ -1,7 +1,10 @@
+import logging
 import os
 import requests
+
+from ..node_config_builder import FieldBuilder, NodeConfigBuilder
 from ...context.processor_context import ProcessorContext
-from ..model import Field, NodeConfig, Option
+from ..model import Option
 from .extension_processor import ContextAwareExtensionProcessor
 from datetime import datetime
 
@@ -15,117 +18,90 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
             "STABLE_DIFFUSION_STABILITYAI_API_HOST", "https://api.stability.ai"
         )
 
-    def get_schema(self):
-        prompt = Field(
-            name="prompt",
-            label="prompt",
-            type="textfield",
-            required=True,
-            placeholder="InputTextPlaceholder",
-            hasHandle=True,
+    def get_node_config(self):
+        prompt = (
+            FieldBuilder()
+            .set_name("prompt")
+            .set_label("Prompt")
+            .set_type("textfield")
+            .set_required(True)
+            .set_placeholder("GenericPromptPlaceholder")
+            .set_has_handle(True)
+            .build()
         )
 
-        negative_prompt = Field(
-            name="negative_prompt",
-            label="negative_prompt",
-            type="textfield",
-            placeholder="InputTextPlaceholder",
-            hasHandle=True,
+        negative_prompt = (
+            FieldBuilder()
+            .set_name("negative_prompt")
+            .set_label("Negative Prompt")
+            .set_type("textfield")
+            .set_placeholder("GenericNegativePromptPlaceholder")
+            .set_has_handle(True)
+            .build()
         )
 
         model_options = [
-            Option(
-                default=True,
-                value="sd3",
-                label="Stable Diffusion 3",
-            ),
-            Option(
-                default=False,
-                value="sd3-turbo",
-                label="Stable Diffusion 3 Turbo",
-            ),
+            Option(default=True, value="sd3", label="Stable Diffusion 3"),
+            Option(default=False, value="sd3-turbo", label="Stable Diffusion 3 Turbo"),
         ]
 
-        model = Field(name="model", label="model", type="select", options=model_options)
+        model = (
+            FieldBuilder()
+            .set_name("model")
+            .set_label("Model")
+            .set_type("select")
+            .set_options(model_options)
+            .build()
+        )
 
         aspect_ratio_options = [
-            Option(
-                default=True,
-                value="1:1",
-                label="1:1",
-            ),
-            Option(
-                default=False,
-                value="16:9",
-                label="16:9",
-            ),
-            Option(
-                default=False,
-                value="3:2",
-                label="3:2",
-            ),
-            Option(
-                default=False,
-                value="2:3",
-                label="2:3",
-            ),
-            Option(
-                default=False,
-                value="4:5",
-                label="4:5",
-            ),
-            Option(
-                default=False,
-                value="5:4",
-                label="5:4",
-            ),
-            Option(
-                default=False,
-                value="9:16",
-                label="9:16",
-            ),
-            Option(
-                default=False,
-                value="9:21",
-                label="9:21",
-            ),
-            Option(
-                default=False,
-                value="21:9",
-                label="21:9",
-            ),
+            Option(default=True, value="1:1", label="1:1"),
+            Option(default=False, value="16:9", label="16:9"),
+            Option(default=False, value="3:2", label="3:2"),
+            Option(default=False, value="2:3", label="2:3"),
+            Option(default=False, value="4:5", label="4:5"),
+            Option(default=False, value="5:4", label="5:4"),
+            Option(default=False, value="9:16", label="9:16"),
+            Option(default=False, value="9:21", label="9:21"),
+            Option(default=False, value="21:9", label="21:9"),
         ]
 
-        aspect_ratio = Field(
-            name="aspect_ratio",
-            label="aspect_ratio",
-            type="select",
-            options=aspect_ratio_options,
+        aspect_ratio = (
+            FieldBuilder()
+            .set_name("aspect_ratio")
+            .set_label("Aspect Ratio")
+            .set_type("select")
+            .set_options(aspect_ratio_options)
+            .build()
         )
 
-        seed = Field(
-            name="seed",
-            label="seed",
-            type="numericfield",
-            placeholder="seed",
-            defaultValue=0,
-            hasHandle=True,
+        seed = (
+            FieldBuilder()
+            .set_name("seed")
+            .set_label("Seed")
+            .set_type("numericfield")
+            .set_placeholder("Enter a numeric seed")
+            .set_default_value(0)
+            .set_has_handle(True)
+            .build()
         )
 
-        fields = [prompt, negative_prompt, model, aspect_ratio, seed]
-
-        config = NodeConfig(
-            nodeName="Stable Diffusion 3",
-            processorType=self.processor_type,
-            icon="FaRobot",
-            fields=fields,
-            outputType="imageUrl",
-            section="models",
-            helpMessage="stableDiffusionPromptHelp",
-            showHandlesNames=True,
+        return (
+            NodeConfigBuilder()
+            .set_node_name("Stable Diffusion 3")
+            .set_processor_type(self.processor_type)
+            .set_icon("FaRobot")
+            .set_section("models")
+            .set_help_message("stableDiffusionPromptHelp")
+            .set_output_type("imageUrl")
+            .set_show_handles(True)
+            .add_field(prompt)
+            .add_field(negative_prompt)
+            .add_field(model)
+            .add_field(aspect_ratio)
+            .add_field(seed)
+            .build()
         )
-
-        return config
 
     def process(self):
         prompt = self.get_input_by_name("prompt")
@@ -161,7 +137,10 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
 
     def prepare_and_process_response(self, response):
         if response.status_code != 200:
-            raise Exception("Non-200 response: " + str(response.text))
+            logging.error(
+                f"API call failed with status {response.status_code}: {response.text}"
+            )
+            raise Exception(f"API call failed: {response.text}")
 
         storage = self.get_storage()
         timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")

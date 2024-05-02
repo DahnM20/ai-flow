@@ -29,8 +29,8 @@ def _load_all_extension_schemas():
             if isinstance(attribute, type) and issubclass(
                 attribute, ExtensionProcessor
             ):
-                if hasattr(attribute, "get_schema"):
-                    schema = attribute.get_schema(attribute)
+                if hasattr(attribute, "get_node_config"):
+                    schema = attribute.get_node_config(attribute)
                     if schema is not None:
                         schemas.append(schema)
     return schemas

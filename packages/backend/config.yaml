@@ -10,12 +10,3 @@ core:
   replicate_api_key:
     tag: "core"
     description: "API key for accessing Replicate services."
-
-extension:
-  number_1_api_key:
-    tag: "extension"
-    description: "Description of what this parameter controls."
-  
-  number_2_api_key:
-    tag: "extension"
-    description: "An example numerical parameter."

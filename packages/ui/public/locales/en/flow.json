@@ -96,5 +96,7 @@
     "textToSpeechHelp": "Convert a text to an audio file using OpenAI tts model",
     "error.upload_failed": "Upload failed",
     "InputTextPlaceholder": "Enter your text here",
-    "DownloadFile": "Download File"
+    "DownloadFile": "Download File",
+    "GenericPromptPlaceholder": "Enter your prompt here",
+    "GenericNegativePromptPlaceholder": "Enter your negative prompt here"
 }

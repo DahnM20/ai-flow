@@ -1,5 +1,7 @@
 import requests
 
+from ..node_config_builder import FieldBuilder, NodeConfigBuilder
+
 from ....utils.processor_utils import (
     create_temp_file_with_bytes_content,
     get_max_file_size_in_mb,
@@ -32,31 +34,30 @@ class DocumentToText(BasicExtensionProcessor):
         }
         self.accepted_mime_types = self.loaders.keys()
 
-    def get_schema(self):
-        urlInput = Field(
-            name="url",
-            label="url",
-            type="textfield",
-            required=True,
-            placeholder="URLPlaceholder",
-            hasHandle=True,
+    def get_node_config(self) -> NodeConfig:
+        urlField = (
+            FieldBuilder()
+            .set_name("document_url")
+            .set_label("document_url")
+            .set_type("textfield")
+            .set_required(True)
+            .set_placeholder("URLPlaceholder")
+            .set_has_handle(True)
+            .build()
         )
 
-        fields = [urlInput]
-
-        config = NodeConfig(
-            nodeName="DocumentToText",
-            processorType=self.processor_type,
-            icon="FaFile",
-            fields=fields,
-            outputType="text",
-            section="tools",
-            helpMessage="documentToTextHelp",
-            hasInputHandle=True,
-            showHandlesNames=True,
+        return (
+            NodeConfigBuilder()
+            .set_node_name("DocumentToText")
+            .set_processor_type(self.processor_type)
+            .set_icon("FaFile")
+            .set_section("tools")
+            .set_help_message("documentToTextHelp")
+            .set_show_handles(True)
+            .set_output_type("text")
+            .add_field(urlField)
+            .build()
         )
-
-        return config
 
     def get_loader_for_mime_type(self, mime_type, path):
         """Return an instance of the loader class associated with the given mime_type."""
@@ -67,7 +68,7 @@ class DocumentToText(BasicExtensionProcessor):
             return None
 
     def process(self):
-        url = self.get_input_by_name("url")
+        url = self.get_input_by_name("document_url")
 
         if not is_valid_url(url):
             raise ValueError("Invalid URL")

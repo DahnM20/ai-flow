@@ -1,7 +1,5 @@
 import logging
 
-from ....utils.processor_utils import is_valid_url
-
 from ....utils.replicate_utils import (
     get_input_schema_from_open_API_schema,
     get_model_openapi_schema,

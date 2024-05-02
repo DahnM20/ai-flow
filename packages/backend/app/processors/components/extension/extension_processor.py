@@ -1,3 +1,4 @@
+from ..model import NodeConfig
 from ...context.processor_context import ProcessorContext
 from ..processor import BasicProcessor, ContextAwareProcessor
 
@@ -5,7 +6,7 @@ from ..processor import BasicProcessor, ContextAwareProcessor
 class ExtensionProcessor:
     """Base interface for extension processors"""
 
-    def get_schema(self):
+    def get_node_config(self) -> NodeConfig:
         pass
 
 

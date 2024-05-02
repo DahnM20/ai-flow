@@ -11,7 +11,7 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
     def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)
 
-    def get_schema(self):
+    def get_node_config(self):
         text = Field(
             name="text",
             label="text",
