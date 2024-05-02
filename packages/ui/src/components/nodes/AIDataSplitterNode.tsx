@@ -81,7 +81,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
             nodeName={data.name}
             onClick={handlePlayClick}
           />
-          {!collapsed && (
+          {!(collapsed || (!collapsed && !selected)) && (
             <ForceNbOutputInput
               className="border border-slate-200/20 bg-gray-800"
               id="nbOutput"
@@ -130,7 +130,7 @@ const DataSplitterNodeContainer = styled.div<{
 }>`
   min-height: 250px;
   height: ${(props) => props.nbOutput * 30 + 100}px;
-  width: ${(props) => (props.collapsed ? "auto" : "120px")};
+  width: ${(props) => (props.collapsed || !props.selected ? "auto" : "120px")};
   transition: all 0.3s ease-in-out;
 `;
 
