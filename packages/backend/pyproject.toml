@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ai-flow-back"
-version = "0.6.3"
+version = "0.6.4"
 description = ""
 authors = ["DahnM20 <you@example.com>"]
 readme = "README.md"

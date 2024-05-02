@@ -19,12 +19,13 @@
 </p>
 <div align="center">
 
-## 🎉🚀 v0.6.3 is Now Available 🚀🎉
+## 🎉🚀 v0.6.4 is Now Available 🚀🎉
 
-🚀 **New Replicate Node** | ✨ **Access to a lot of open-source models </br> (LLama, Mistral, Face Swap, MusicGen, ...)**
+🚀 **New Nodes : Stable Diffusion 3, Text-to-Speech, Document-to-Text**
+
+✨ **Expand the App**: Learn how to add your own nodes in our [Contribution Guidelines](https://docs.ai-flow.net/docs/category/contribute).
 </br>
 </br>
-🌟 **New Standalone Desktop Release**
 
 </div>
 
@@ -64,8 +65,6 @@ Whether you encounter bugs, have enhancements to propose, or want to add entirel
 **Expanding AI-FLOW:**
 
 - Interested in adding new nodes? Check out our comprehensive [Contributor Documentation](https://docs.ai-flow.net/docs/category/contribute) to learn how you can build and integrate new nodes.
-
-Your contributions help make AI-FLOW better for everyone !
 
 ## Installation
 
