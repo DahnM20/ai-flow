@@ -29,9 +29,6 @@ const ButtonRunAll: React.FC<ButtonRunAllProps> = ({
                 rounded-md
                 px-2 py-2 transition-all hover:text-sky-100 hover:ring-sky-500`}
         onClick={onClick}
-        data-tooltip-id={"app-tooltip"}
-        data-tooltip-content={small ? "RUN ALL" : undefined}
-        data-tooltip-place="left"
       >
         {isRunning ? <Spinner className="text-xl " /> : <FaPlay />}
         {!isRunning && !small && <div className="hidden md:flex">RUN ALL</div>}

@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
       </SidebarToggle>
       <ButtonsContainer show={show}>
         <div
-          className={`absolute flex flex-col space-y-3 ${show ? "opacity-100" : "-z-50 opacity-0"} transition-all duration-300 ease-out`}
+          className={`absolute flex flex-col space-y-3 ${show ? "z-50 opacity-100" : "pointer-events-none -z-50 opacity-0"} transition-all duration-300 ease-out`}
         >
           <ButtonRunAll
             small
