@@ -42,7 +42,7 @@ const ImageUrlOutput: React.FC<ImageUrlOutputProps> = ({ url, name }) => {
   return (
     <OutputImageContainer>
       {hasError ? (
-        <p> {t("ExpiredURL")}</p>
+        <p className="text-center"> {t("ExpiredURL")}</p>
       ) : (
         <>
           <OutputImage

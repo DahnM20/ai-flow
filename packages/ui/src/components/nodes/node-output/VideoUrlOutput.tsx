@@ -37,7 +37,7 @@ const VideoUrlOutput: React.FC<VideoUrlOutputProps> = ({ url, name }) => {
   return (
     <OutputVideoContainer>
       {hasError ? (
-        <p> {t("ExpiredURL")}</p>
+        <p className="text-center"> {t("ExpiredURL")}</p>
       ) : (
         <>
           <OutputVideo
