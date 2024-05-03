@@ -298,3 +298,10 @@ export const LoadingIcon = styled(FaSpinner)`
 export const LoadingSpinner = styled(FaSpinner)`
   animation: ${spin} 1s linear infinite;
 `;
+
+export const LoadingScreenSpinner = styled.div`
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-left-color: rgb(132, 250, 176);
+  animation: ${spin} 1s ease infinite;
+`;

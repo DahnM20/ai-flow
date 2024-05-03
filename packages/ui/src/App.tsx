@@ -13,7 +13,10 @@ import { loadExtensions } from "./nodes-configuration/nodeConfig";
 import { loadAllNodesTypes } from "./utils/mappings";
 import { loadParameters } from "./components/popups/config-popup/parameters";
 import { SocketProvider } from "./providers/SocketProvider";
-import { LoadingSpinner } from "./components/nodes/Node.styles";
+import {
+  LoadingScreenSpinner,
+  LoadingSpinner,
+} from "./components/nodes/Node.styles";
 
 const App = () => {
   const { dark } = useContext(ThemeContext);
@@ -75,7 +78,7 @@ const App = () => {
       <div className="flex h-screen w-full items-center justify-center">
         <div className="flex h-full w-1/6 flex-col items-center justify-center space-y-5">
           <img src="./logo.svg" className="w-1/2" />
-          <LoadingSpinner className="text-3xl" />
+          <LoadingScreenSpinner className="h-8 w-8" />
         </div>
       </div>
     );
