@@ -1,11 +1,7 @@
-import { copyToClipboard } from "../../../utils/navigatorUtils";
 import MarkdownOutput from "./MarkdownOutput";
-import { NodeLogs, NodeLogsText } from "../Node.styles";
 import { NodeData } from "../types/node";
-import { toastFastInfoMessage } from "../../../utils/toastUtils";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
-import { FiCopy, FiFile } from "react-icons/fi";
+import { FiFile } from "react-icons/fi";
 import ImageUrlOutput from "./ImageUrlOutput";
 import ImageBase64Output from "./ImageBase64Output";
 import VideoUrlOutput from "./VideoUrlOutput";
@@ -91,8 +87,6 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
 
     return outputType;
   }
-
-  const outputType = getOutputType();
 
   return (
     <div

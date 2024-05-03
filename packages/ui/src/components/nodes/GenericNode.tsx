@@ -277,17 +277,6 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
               />
             );
           })}
-          {/* <HandleWrapper
-            id={outputHandleId}
-            position={
-              !!data?.handles && data.handles[outputHandleId]
-                ? data.handles[outputHandleId]
-                : Position.Right
-            }
-            linkedHandlePositions={allHandlePositions}
-            onChangeHandlePosition={handleChangeHandlePosition}
-            isOutput
-          /> */}
           <NodePlayButton
             isPlaying={isPlaying}
             hasRun={!!data.lastRun}
