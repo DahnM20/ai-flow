@@ -97,6 +97,7 @@
     "error.upload_failed": "Upload failed",
     "InputTextPlaceholder": "Enter your text here",
     "DownloadFile": "Download File",
+    "FileUploaded": "File uploaded",
     "GenericPromptPlaceholder": "Enter your prompt here",
     "GenericNegativePromptPlaceholder": "Enter your negative prompt here"
 }

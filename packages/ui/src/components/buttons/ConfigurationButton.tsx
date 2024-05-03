@@ -18,7 +18,7 @@ const RightIconButton: React.FC<RightButtonProps> = ({
 }) => {
   return (
     <StyledRightButton
-      className="config-button fixed right-0 z-20 mx-auto w-11 items-center rounded-l-lg py-1 pl-1 hover:bg-slate-700"
+      className="config-button fixed right-0 z-20 mx-auto w-11 items-center rounded-l-lg py-1 pl-1 transition-all duration-150 ease-linear hover:bg-slate-700"
       color={color}
       bottom={bottom}
       onClick={onClick}

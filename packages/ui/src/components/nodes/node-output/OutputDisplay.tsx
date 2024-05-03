@@ -56,7 +56,7 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
           <a href={output} target="_blank" rel="noreferrer">
             <div className="flex flex-row items-center justify-center space-x-2 py-2 hover:text-sky-400">
               <FiFile className="text-4xl" />
-              <p>{t("DownloadFile")}</p>
+              <p>{t("FileUploaded")}</p>
             </div>
           </a>
         );
