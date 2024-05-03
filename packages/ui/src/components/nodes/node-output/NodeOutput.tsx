@@ -67,7 +67,8 @@ export default function NodeOutput({
     <NodeLogs
       showLogs={showLogs}
       noPadding={outputIsMedia && showLogs}
-      onClick={onClickOutput}
+      onDoubleClick={onClickOutput}
+      onClick={!showLogs ? onClickOutput : undefined}
       className={`relative flex h-auto w-full flex-grow justify-center p-4 ${showLogs ? "nodrag nowheel" : ""}`}
     >
       {showLogs && data.outputData && !outputIsMedia && (

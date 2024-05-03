@@ -95,12 +95,13 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
   const outputType = getOutputType();
 
   return (
-    <div className="flex w-full flex-col">
+    <div
+      className="flex w-full flex-col"
+      onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+    >
       {nbOutput > 1 && typeof data.outputData !== "string" && (
-        <div
-          className="mt-2 flex flex-row items-center justify-center space-x-4 p-1"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="mt-2 flex flex-row items-center justify-center space-x-4 p-1">
           {data?.outputData?.map((output, index) => (
             <button
               className={`rounded-full ${index === indexDisplayed ? "bg-orange-400" : "bg-slate-200 hover:bg-orange-200"} p-1.5`}

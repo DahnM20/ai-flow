@@ -26,6 +26,7 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({ data }) => {
 const StyledReactMarkdown = styled(ReactMarkdown)`
   background-color: transparent !important;
   font-size: 1.05em;
+  user-select: text;
 `;
 
 export default memo(MarkdownOutput);
