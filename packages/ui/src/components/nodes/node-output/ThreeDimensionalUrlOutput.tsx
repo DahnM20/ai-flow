@@ -31,21 +31,36 @@ const ThreeDimensionalUrlOutput: React.FC<ThreeDimensionalUrlOutputProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const loadObj = (url: string, scene: Scene) => {
-    new OBJLoader().load(url, (obj: any) => {
-      setIsLoading(false);
-      scene.add(obj);
-    });
+    new OBJLoader().load(
+      url,
+      (obj: any) => {
+        setIsLoading(false);
+        setHasError(false);
+        scene.add(obj);
+      },
+      undefined,
+      () => {
+        setHasError(true);
+      },
+    );
   };
 
   const loadGlb = (url: string, scene: Scene) => {
-    new GLTFLoader().load(url, (gltf: any) => {
-      setIsLoading(false);
-      scene.add(gltf.scene);
-    });
+    new GLTFLoader().load(
+      url,
+      (gltf: any) => {
+        setIsLoading(false);
+        setHasError(false);
+        scene.add(gltf.scene);
+      },
+      undefined,
+      () => {
+        setHasError(true);
+      },
+    );
   };
 
   useEffect(() => {
-    setHasError(false);
     const container = containerRef.current;
     if (!container) return;
 
@@ -105,38 +120,28 @@ const ThreeDimensionalUrlOutput: React.FC<ThreeDimensionalUrlOutputProps> = ({
     link.click();
   };
 
-  const handleError = () => {
-    setHasError(true);
-  };
-
-  const handleLoad = () => {
-    setHasError(false);
-  };
+  if (hasError) {
+    return <p className="p-3 text-center"> {t("ExpiredURL")}</p>;
+  }
 
   return (
     <OutputContainer>
-      {hasError ? (
-        <p className="text-center"> {t("ExpiredURL")}</p>
-      ) : (
-        <>
-          {isLoading ? (
-            <LoadingSpinner className="absolute w-full text-4xl" />
-          ) : null}
-          <div
-            className={`three-container flex h-full w-full`}
-            ref={containerRef}
-            key={url}
-            onClick={(e) => e.stopPropagation()}
-          />
-          {}
-          <div
-            className="absolute right-3 top-2 rounded-md bg-slate-600/75 px-1 py-1 text-2xl text-slate-100 hover:bg-sky-600/90"
-            onClick={handleDownloadClick}
-          >
-            <FaDownload />
-          </div>
-        </>
-      )}
+      {isLoading ? (
+        <LoadingSpinner className="absolute w-full text-4xl" />
+      ) : null}
+      <div
+        className={`three-container flex h-full w-full`}
+        ref={containerRef}
+        key={url}
+        onClick={(e) => e.stopPropagation()}
+      />
+      {}
+      <div
+        className="absolute right-3 top-2 rounded-md bg-slate-600/75 px-1 py-1 text-2xl text-slate-100 hover:bg-sky-600/90"
+        onClick={handleDownloadClick}
+      >
+        <FaDownload />
+      </div>
     </OutputContainer>
   );
 };
