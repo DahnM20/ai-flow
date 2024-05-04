@@ -10,7 +10,6 @@ import React, { useEffect, useRef } from "react";
 import { generateIdForHandle } from "../utils/flowUtils";
 import { Slider } from "@mantine/core";
 import { Switch } from "@mantine/core";
-import "rc-slider/assets/index.css";
 import NodeField from "../components/nodes/node-input/NodeField";
 import SelectAutocomplete from "../components/selectors/SelectAutocomplete";
 import NodeTextField from "../components/nodes/node-input/NodeTextField";
