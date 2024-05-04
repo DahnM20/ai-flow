@@ -1,9 +1,9 @@
 import React from "react";
 import { FaDownload } from "react-icons/fa";
 import styled from "styled-components";
-import { getGeneratedFileName } from "./outputUtils";
-import AudioPlayer from "react-h5-audio-player";
-import "react-h5-audio-player/lib/styles.css";
+import { getFileTypeFromUrl, getGeneratedFileName } from "./outputUtils";
+
+import VideoJS from "../../players/VideoJS";
 
 interface AudioUrlOutputProps {
   url: string;
@@ -11,6 +11,35 @@ interface AudioUrlOutputProps {
 }
 
 const AudioUrlOutput: React.FC<AudioUrlOutputProps> = ({ url, name }) => {
+  const playerRef = React.useRef(null);
+
+  const videoJsOptions = {
+    controls: true,
+    autoplay: false,
+    loop: false,
+    muted: false,
+    fluid: true,
+    bigPlayButton: false,
+    plugins: {
+      wavesurfer: {
+        backend: "MediaElement",
+        displayMilliseconds: false,
+        debug: false,
+        waveColor: "rgb(72, 159, 159)",
+        progressColor: "rgba(32, 32, 32, 0.719)",
+        cursorColor: "rgba(226, 226, 226, 0.616)",
+        hideScrollbar: true,
+      },
+    },
+  };
+
+  const handlePlayerReady = (player: any) => {
+    playerRef.current = player;
+
+    const mimeType = `audio/${getFileTypeFromUrl(url)}`;
+    player.src({ src: url, type: mimeType });
+  };
+
   const handleDownloadClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     const link = document.createElement("a");
@@ -21,8 +50,8 @@ const AudioUrlOutput: React.FC<AudioUrlOutputProps> = ({ url, name }) => {
   };
 
   return (
-    <OutputAudioContainer className="audio-player w-full pt-12">
-      <StyledAudioPlayer src={url} className="w-full" />
+    <OutputAudioContainer className="audio-player w-full">
+      <VideoJS options={videoJsOptions} onReady={handlePlayerReady} key={url} />
       <div
         className="absolute right-3 top-2 rounded-md bg-slate-600/75 px-1 py-1 text-2xl text-slate-100 hover:bg-sky-600/90"
         onClick={handleDownloadClick}
@@ -32,8 +61,6 @@ const AudioUrlOutput: React.FC<AudioUrlOutputProps> = ({ url, name }) => {
     </OutputAudioContainer>
   );
 };
-
-const StyledAudioPlayer = styled(AudioPlayer)``;
 
 const OutputAudioContainer = styled.div`
   display: flex;
