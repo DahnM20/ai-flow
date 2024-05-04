@@ -17,6 +17,7 @@ export const templateTags = [
   "image",
   "video",
   "sound",
+  "3d",
 ] as const;
 
 export type TemplateTag = (typeof templateTags)[number];
