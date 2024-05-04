@@ -22,10 +22,12 @@ const extensionToTypeMap: { [key: string]: OutputType } = {
   // Audio extensions
   ".mp3": "audioUrl",
   ".wav": "audioUrl",
+  // 3D extensions
+  ".obj": "3dUrl",
+  ".glb": "3dUrl",
   // Other extensions
   ".pdf": "fileUrl",
   ".txt": "fileUrl",
-  ".glb": "fileUrl",
 };
 
 export function getOutputTypeFromExtension(output: string): OutputType {
@@ -34,4 +36,13 @@ export function getOutputTypeFromExtension(output: string): OutputType {
     output.endsWith(ext),
   );
   return extension ? extensionToTypeMap[extension] : "markdown";
+}
+
+export function getFileTypeFromUrl(url: string) {
+  const lastDotIndex = url.lastIndexOf(".");
+  const urlWithoutParams = url.includes("?")
+    ? url.substring(0, url.indexOf("?"))
+    : url;
+  const fileType = urlWithoutParams.substring(lastDotIndex + 1);
+  return fileType;
 }

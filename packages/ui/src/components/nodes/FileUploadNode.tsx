@@ -57,6 +57,10 @@ const accept = {
   "image/gif": [".gif"],
   "text/plain": [".txt"],
   "application/pdf": [".pdf"],
+  "model/gltf-binary": [".glb"],
+  "model/gltf+json": [".gltf"],
+  "model/gltf": [".gltf"],
+  "model/obj": [".obj"],
 };
 
 const FileUploadNode = ({ data, id }: GenericNodeProps) => {

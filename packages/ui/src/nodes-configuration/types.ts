@@ -20,7 +20,8 @@ export type OutputType =
   | "imageBase64"
   | "markdown"
   | "text"
-  | "fileUrl";
+  | "fileUrl"
+  | "3dUrl";
 
 export interface Option {
   label: string;

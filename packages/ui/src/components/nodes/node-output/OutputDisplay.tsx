@@ -10,6 +10,7 @@ import { getOutputTypeFromExtension } from "./outputUtils";
 import PdfUrlOutput from "./PdfUrlOutput";
 import { OutputType } from "../../../nodes-configuration/types";
 import { useState } from "react";
+import ThreeDimensionalUrlOutput from "./ThreeDimensionalUrlOutput";
 
 interface OutputDisplayProps {
   data: NodeData;
@@ -49,6 +50,8 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
         return <VideoUrlOutput url={output} name={data.name} />;
       case "audioUrl":
         return <AudioUrlOutput url={output} name={data.name} />;
+      case "3dUrl":
+        return <ThreeDimensionalUrlOutput url={output} name={data.name} />;
       case "pdfUrl":
         return <PdfUrlOutput url={output} name={data.name} />;
       case "fileUrl":
@@ -98,6 +101,7 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
         <div className="mt-2 flex flex-row items-center justify-center space-x-4 p-1">
           {data?.outputData?.map((output, index) => (
             <button
+              key={index}
               className={`rounded-full ${index === indexDisplayed ? "bg-orange-400" : "bg-slate-200 hover:bg-orange-200"} p-1.5`}
               onClick={() => setIndexDisplayed(index)}
             />

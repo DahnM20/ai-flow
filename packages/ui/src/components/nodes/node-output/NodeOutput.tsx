@@ -60,7 +60,8 @@ export default function NodeOutput({
       outputType === "imageBase64" ||
       outputType === "videoUrl" ||
       outputType === "audioUrl" ||
-      outputType === "pdfUrl") &&
+      outputType === "pdfUrl" ||
+      outputType === "3dUrl") &&
     !!data.outputData;
 
   return (
