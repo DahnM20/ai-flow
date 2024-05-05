@@ -3,18 +3,18 @@ import { Fragment, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
 
-export interface SelectItem {
-  name?: string;
-  value: any;
+export interface SelectItem<T> {
+  name: string;
+  value: T;
 }
 
 interface SelectAutocompleteProps<T> {
-  values: T[];
+  values: SelectItem<T>[];
   selectedValue?: T;
   onChange: (value: T) => void;
 }
 
-function SelectAutocomplete<T extends SelectItem>({
+function SelectAutocomplete<T>({
   values,
   selectedValue,
   onChange,
@@ -60,9 +60,9 @@ function SelectAutocomplete<T extends SelectItem>({
                 Nothing found.
               </div>
             ) : (
-              filteredItems.map((item) => (
+              filteredItems.map((item, index) => (
                 <Combobox.Option
-                  key={item.value}
+                  key={item.value + "-" + index}
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 ${
                       active ? "bg-teal-600 text-white" : "text-slate-100"
@@ -77,7 +77,7 @@ function SelectAutocomplete<T extends SelectItem>({
                           selected ? "font-medium" : "font-normal"
                         }`}
                       >
-                        {item.name ?? item.value}
+                        {item.name}
                       </span>
                       {selected ? (
                         <span
