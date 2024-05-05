@@ -19,9 +19,13 @@ class LLMPromptProcessor(ContextAwareProcessor):
 
         self.model = config.get("model", LLMPromptProcessor.DEFAULT_MODEL)
         self.prompt = config["prompt"]
-        self.api_key = context.get_api_key_for_model(self.model)
 
     def process(self):
+        api_key = self._processor_context.get_value("openai_api_key")
+
+        if api_key is None:
+            raise Exception("No OpenAI API key found")
+
         input_data = None
         if self.get_input_processor() is not None:
             input_data = self.get_input_processor().get_output(
@@ -32,12 +36,12 @@ class LLMPromptProcessor(ContextAwareProcessor):
             input_data, self.model
         ) > max_token_for_model(self.model):
             prompt_engine = VectorIndexPromptEngine(
-                model=self.model, api_key=self.api_key, init_data=input_data
+                model=self.model, api_key=api_key, init_data=input_data
             )
             awnser = prompt_engine.prompt(self.prompt)
         else:
             self.init_context(input_data)
-            prompt_engine = SimplePromptEngine(model=self.model, api_key=self.api_key)
+            prompt_engine = SimplePromptEngine(model=self.model, api_key=api_key)
             stream_chat_response = prompt_engine.prompt_stream(self.messages)
             awnser = ""
             for r in stream_chat_response:

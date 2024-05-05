@@ -107,6 +107,10 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
             return None
 
         api_key = self._processor_context.get_value("openai_api_key")
+
+        if api_key is None:
+            raise Exception("No OpenAI API key found")
+
         client = OpenAI(api_key=api_key)
 
         response = client.audio.speech.create(

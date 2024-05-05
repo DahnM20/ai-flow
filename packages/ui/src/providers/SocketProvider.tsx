@@ -114,7 +114,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       return false;
     }
 
-    if (params.openai_api_key) {
+    if (
+      params.openai_api_key ||
+      params.stabilityai_api_key ||
+      params.replicate_api_key
+    ) {
       return true;
     }
 
