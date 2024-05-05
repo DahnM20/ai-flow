@@ -6,6 +6,7 @@ export interface FlowOnProgressEventData<T = any> {
 
 export interface FlowOnErrorEventData {
   instanceName: string;
+  nodeName: string;
   error: string;
 }
 

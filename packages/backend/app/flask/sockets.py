@@ -157,7 +157,7 @@ def handle_run_node(data):
     except Exception as e:
         emit(
             "error",
-            {"error": str({node_name}) + " - " + str(e), "node_name": node_name},
+            {"error": str(e), "nodeName": node_name},
         )
         traceback.print_exc()
         logging.error(f"An error occurred: {node_name} - {str(e)}")

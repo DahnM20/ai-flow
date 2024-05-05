@@ -125,7 +125,11 @@ function Flow(props: FlowProps) {
     setCurrentNodesRunning((previous) => {
       return previous.filter((node) => node != data.instanceName);
     });
-    setCurrentUserMessage({ content: data.error, type: MessageType.Error });
+    setCurrentUserMessage({
+      content: data.error,
+      nodeId: data.instanceName ?? data.nodeName,
+      type: MessageType.Error,
+    });
     setErrorCount((prevErrorCount) => prevErrorCount + 1);
     setIsPopupOpen(true);
   }
