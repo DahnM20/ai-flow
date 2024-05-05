@@ -48,10 +48,9 @@ function NodePane({
     setPopupOpen(true);
   }
 
-  function handleSetText() {
-    console.log("index", index);
+  function handleSetText(text?: string) {
     if (!!onAttachText && index != null) {
-      onAttachText(index, "Hello World");
+      onAttachText(index, text ?? "<Enter Your Text>");
     }
   }
 
@@ -114,7 +113,15 @@ function NodePane({
 
   function renderPaneBody() {
     if (isTextPane) {
-      return <div className="p-2 text-center text-lg">{paneData.text}</div>;
+      return (
+        <div className="h-full p-2">
+          <textarea
+            value={paneData.text}
+            className="h-full w-full bg-transparent text-center text-lg outline-none"
+            onChange={(e) => handleSetText(e.target.value)}
+          />
+        </div>
+      );
     }
     if (isCurrentNodeRunning) {
       return (
@@ -152,7 +159,7 @@ function NodePane({
         />
         <FiFeather
           className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300"
-          onClick={handleSetText}
+          onClick={() => handleSetText()}
         />
       </div>
     );
