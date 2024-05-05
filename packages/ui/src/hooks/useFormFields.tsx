@@ -18,7 +18,7 @@ export interface DisplayParams {
   showHandles?: boolean;
   showLabels?: boolean;
   showOnlyConnectedFields?: boolean;
-  specificField?: string;
+  specificFields?: string[];
 }
 
 export function useFormFields(
@@ -240,8 +240,8 @@ export function useFormFields(
         : true,
     )
     .filter((field: Field) =>
-      displayParams?.specificField
-        ? field.name === displayParams.specificField
+      displayParams?.specificFields
+        ? displayParams.specificFields.includes(field.name)
         : true,
     )
     .map((field: Field, index: number) => {

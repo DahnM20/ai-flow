@@ -1,34 +1,43 @@
-import { FiPlus } from "react-icons/fi";
-import { LayoutIndex } from "../RenderLayout";
+import { FiFeather, FiPlus } from "react-icons/fi";
+import { BasicPane, LayoutIndex, TextOptions } from "../RenderLayout";
 import { useContext, useMemo, useState } from "react";
 import { NodeContext } from "../../../providers/NodeProvider";
 import AttachNodeDialog from "../AttachNodeDialog";
-import { Field } from "../../../nodes-configuration/types";
 import { useFormFields } from "../../../hooks/useFormFields";
-import MarkdownOutput from "../../nodes/node-output/MarkdownOutput";
-import ImageUrlOutput from "../../nodes/node-output/ImageUrlOutput";
 import { LoadingIcon } from "../../nodes/Node.styles";
-import VideoUrlOutput from "../../nodes/node-output/VideoUrlOutput";
-import AudioUrlOutput from "../../nodes/node-output/AudioUrlOutput";
 import OutputDisplay from "../../nodes/node-output/OutputDisplay";
 
 interface NodePaneProps {
   nodeId?: string;
-  fieldName?: string;
+  fieldNames?: string[];
   index?: LayoutIndex;
+  paneData: BasicPane;
   onAttachNode?: (
     index: LayoutIndex,
     nodeId?: string,
-    fieldName?: string,
+    fieldNames?: string[],
+  ) => void;
+  onAttachText?: (
+    index: LayoutIndex,
+    text: string,
+    options?: TextOptions,
   ) => void;
 }
 
-function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
+function NodePane({
+  nodeId,
+  fieldNames,
+  onAttachNode,
+  onAttachText,
+  index,
+  paneData,
+}: NodePaneProps) {
   const outputFieldName = "outputData";
 
   const { nodes, onUpdateNodeData, currentNodesRunning, isRunning } =
     useContext(NodeContext);
   const [popupOpen, setPopupOpen] = useState(false);
+  const [isAttachNodeVisible, setIsAttachNodeVisible] = useState(false);
 
   const currentNode = useMemo(
     () => nodes.find((n) => n.data.name === nodeId),
@@ -39,17 +48,16 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
     setPopupOpen(true);
   }
 
-  function handleSubmit(nodeName: string, fieldName: string) {
-    if (!!onAttachNode && index != null) {
-      onAttachNode(index, nodeName, fieldName);
+  function handleSetText() {
+    console.log("index", index);
+    if (!!onAttachText && index != null) {
+      onAttachText(index, "Hello World");
     }
   }
 
-  function getFieldConfig(): Field | undefined {
-    if (!!currentNode?.data?.config) {
-      return currentNode?.data.config.fields.find(
-        (field: Field) => field.name === fieldName,
-      );
+  function handleSubmit(nodeName: string, fieldNames: string[]) {
+    if (!!onAttachNode && index != null) {
+      onAttachNode(index, nodeName, fieldNames);
     }
   }
 
@@ -69,62 +77,31 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
     () => {},
     () => {},
     {
-      specificField: getFieldConfig()?.name,
+      specificFields: fieldNames,
+      showLabels: true,
     },
   );
-
-  const fieldConfig = getFieldConfig();
-  const isTextField =
-    fieldName &&
-    fieldConfig &&
-    ["input", "textarea"].includes(fieldConfig.type);
 
   const isCurrentNodeRunning =
     !!nodeId &&
     currentNodesRunning.includes(nodeId) &&
     isRunning &&
-    outputFieldName === fieldName;
+    fieldNames?.includes(outputFieldName);
 
-  const renderLoadingIcon = () => {
-    return (
-      <div className="flex h-full w-full items-center justify-center text-sky-300">
-        <LoadingIcon className="h-[10%] w-[10%] " />
-      </div>
-    );
-  };
+  const isTextPane = paneData.text != null;
 
-  const isOutputDataField = fieldName === outputFieldName;
+  const hasOutputDataField = fieldNames?.includes(outputFieldName);
 
   return (
     <div
       className="group min-h-0 w-full flex-grow"
-      key={`${nodeId}-${fieldName}-${index}`}
+      key={`${nodeId}-${fieldNames}-${index}`}
+      onMouseEnter={() => setIsAttachNodeVisible(true)}
+      onMouseLeave={() =>
+        setIsAttachNodeVisible(currentNode != null && fieldNames != null)
+      }
     >
-      {isCurrentNodeRunning ? (
-        renderLoadingIcon()
-      ) : currentNode != null && fieldName ? (
-        <div
-          className={`flex h-full w-full justify-center overflow-y-auto px-3 py-2 text-justify text-lg text-slate-300 
-                                        ${isTextField || fieldName === "outputData" ? "" : "items-center"}`}
-        >
-          {isOutputDataField ? (
-            <OutputDisplay data={currentNode.data} />
-          ) : (
-            formFields
-          )}
-        </div>
-      ) : (
-        <div
-          className="flex h-full w-full 
-                                      items-center justify-center 
-                                      text-4xl text-sky-600  "
-        >
-          <FiPlus
-            className="invisible rounded-full ring-2 ring-sky-600/50 transition-opacity duration-300  ease-linear hover:text-sky-300 group-hover:visible"
-            onClick={handleAttachNode}
-          />
-        </div>
-      )}
+      {renderPaneBody()}
 
       <AttachNodeDialog
         isOpen={popupOpen}
@@ -134,6 +111,52 @@ function NodePane({ nodeId, fieldName, onAttachNode, index }: NodePaneProps) {
       />
     </div>
   );
+
+  function renderPaneBody() {
+    if (isTextPane) {
+      return <div className="p-2 text-center text-lg">{paneData.text}</div>;
+    }
+    if (isCurrentNodeRunning) {
+      return (
+        <div className="flex h-full w-full items-center justify-center text-sky-300">
+          <LoadingIcon className="h-[10%] w-[10%] " />
+        </div>
+      );
+    }
+    if (currentNode != null && fieldNames) {
+      return (
+        <div
+          className={`flex h-full w-full flex-col overflow-y-auto px-2 text-justify text-lg text-slate-300`}
+        >
+          {hasOutputDataField ? (
+            <OutputDisplay data={currentNode.data} />
+          ) : (
+            formFields
+          )}
+        </div>
+      );
+    }
+    return renderAttachActions();
+  }
+
+  function renderAttachActions() {
+    return (
+      <div
+        className={`flex h-full w-full items-center
+                                      justify-center space-x-3 
+                                      text-4xl text-sky-600 transition-all duration-500 ease-in-out ${isAttachNodeVisible ? "opacity-100" : "opacity-0"}`}
+      >
+        <FiPlus
+          className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300"
+          onClick={handleAttachNode}
+        />
+        <FiFeather
+          className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300"
+          onClick={handleSetText}
+        />
+      </div>
+    );
+  }
 }
 
 export default NodePane;

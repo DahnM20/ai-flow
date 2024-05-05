@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import RenderLayout, { BasicPane, Layout, LayoutIndex } from "./RenderLayout";
+import RenderLayout, {
+  BasicPane,
+  Layout,
+  LayoutIndex,
+  TextOptions,
+} from "./RenderLayout";
 import { Node, Edge } from "reactflow";
 import { NodeProvider } from "../../providers/NodeProvider";
 import { useSocketListeners } from "../../hooks/useFlowSocketListeners";
@@ -10,6 +15,7 @@ import {
   deletePane,
   layoutIsEmpty,
   updateLayoutSize,
+  attachText,
 } from "./utils/layoutUtils";
 import {
   FlowOnCurrentNodeRunningEventData,
@@ -112,15 +118,29 @@ function SmartView({
   function handleAttachNode(
     index: LayoutIndex,
     nodeId?: string,
-    fieldName?: string,
+    fieldNames?: string[],
   ) {
     setCurrentLayout((currentLayout) => {
-      if (nodeId != null && fieldName != null && !!currentLayout) {
-        return attachNode(currentLayout, index, nodeId, fieldName);
+      if (nodeId != null && fieldNames != null && !!currentLayout) {
+        return attachNode(currentLayout, index, nodeId, fieldNames);
       }
       return currentLayout;
     });
   }
+
+  function handleAttachText(
+    index: LayoutIndex,
+    text?: string,
+    options?: TextOptions,
+  ) {
+    setCurrentLayout((currentLayout) => {
+      if (text != null && !!currentLayout) {
+        return attachText(currentLayout, index, text, options);
+      }
+      return currentLayout;
+    });
+  }
+
   function updateLayout(
     layout: Layout,
     index: LayoutIndex,
@@ -207,6 +227,7 @@ function SmartView({
               onSplitVertical={handleSplitVertical}
               onDelete={handleDeletePane}
               onAttachNode={handleAttachNode}
+              onAttachText={handleAttachText}
               onChangePaneSize={handleChangePaneSize}
             />
           )}

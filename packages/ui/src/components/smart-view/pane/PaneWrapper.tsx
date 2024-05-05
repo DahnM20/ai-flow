@@ -4,11 +4,12 @@ import { MdOutlineVerticalSplit, MdHorizontalSplit } from "react-icons/md";
 import { getConfigViaType } from "../../../nodes-configuration/nodeConfig";
 import { ICON_MAP } from "../../nodes/utils/NodeIcons";
 import NodePlayButton from "../../nodes/node-button/NodePlayButton";
+import { useState } from "react";
 
 interface PaneWrapperProps {
   children: JSX.Element;
   name?: string;
-  fieldName?: string;
+  fieldNames?: string[];
   showTools: boolean;
   onSplitHorizontal: () => void;
   onSplitVertical: () => void;
@@ -18,7 +19,7 @@ interface PaneWrapperProps {
 function PaneWrapper({
   children,
   name,
-  fieldName,
+  fieldNames,
   showTools,
   onSplitHorizontal,
   onSplitVertical,
@@ -31,14 +32,28 @@ function PaneWrapper({
   }
   const NodeIconComponent = nodeConfig ? ICON_MAP[nodeConfig?.icon] : null;
 
+  const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(false);
+
   return (
     <div
-      className={`relative flex h-full flex-col ${showTools ? "rounded-xl bg-subtle-gradient" : ""}`}
+      className={`relative flex h-full flex-col transition-all duration-500 ease-in-out ${showTools ? "rounded-xl" : ""}`}
+      style={{
+        border:
+          showTools && isHeaderVisible
+            ? "1px solid rgb(241 245 249 / 0.1)"
+            : showTools
+              ? "1px solid rgb(0 0 0 / 0)"
+              : "",
+      }}
+      onMouseEnter={() => setIsHeaderVisible(true)}
+      onMouseLeave={() => setIsHeaderVisible(false)}
     >
       {showTools && (
-        <div className="h-8 w-full">
+        <div
+          className={`h-8 w-full transition-all duration-500 ease-in-out ${isHeaderVisible ? "opacity-100" : "opacity-0"}`}
+        >
           <div
-            className="group flex items-center justify-center rounded-t-xl p-4
+            className="flex items-center justify-center rounded-t-xl p-4
                                 text-center text-slate-100/80 hover:text-slate-100"
           >
             <div
@@ -47,15 +62,11 @@ function PaneWrapper({
                                     py-1 pl-2 text-center"
             >
               {NodeIconComponent && <NodeIconComponent />}
-              {nodeType && <p>{nodeType + " - " + fieldName}</p>}
+              {nodeType && <p>{nodeType + " - " + fieldNames}</p>}
             </div>
             <div
               className={`absolute right-0 space-x-2 px-2 
-                        ${
-                          name
-                            ? "invisible rounded-xl bg-[#1E1E1F] transition-opacity duration-200 ease-linear group-hover:visible group-hover:opacity-100"
-                            : ""
-                        }`}
+                        ${name ? "rounded-xl bg-[#1E1E1F]" : ""}`}
             >
               {name && <NodePlayButton nodeName={name} />}
               <PaneWrapperButton onClick={onSplitHorizontal}>
