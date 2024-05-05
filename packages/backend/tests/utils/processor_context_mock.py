@@ -28,4 +28,6 @@ class ProcessorContextMock(ProcessorContext):
         return super().get_parameter_names()
 
     def get_value(self, name):
+        if "api_key" in name:
+            return self.api_key
         return super().get_value(name)
