@@ -51,7 +51,8 @@ export const theme = {
     nodeBg: "rgba(28, 28, 30, 0.685)",
     nodeGradientBg:
       "linear-gradient(rgb(32 32 32), rgba(24, 20, 57, 0.08)) rgb(41 44 58)",
-    outputBg: "rgba(18, 15, 20, 0.84)",
+    //outputBg: "rgba(18, 15, 20, 0.84)",
+    outputBg: "rgb(22 20 24)",
     nodeInputBg: "rgb(54 54 54 / 43%)",
     nodeColor: "#f9f9f9",
     nodeBorder: "#888",
