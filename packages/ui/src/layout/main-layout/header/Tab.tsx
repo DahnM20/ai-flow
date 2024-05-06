@@ -26,7 +26,7 @@ const Tab = ({
   name,
 }: TabProps) => {
   const { t } = useTranslation("flow");
-  const [showActions, setShowActions] = useState(true);
+  const [showActions, setShowActions] = useState(false);
   const [editName, setEditName] = useState(false);
 
   const buttonRef = useRef(null);
