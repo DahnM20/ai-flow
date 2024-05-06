@@ -5,7 +5,7 @@ import { FaCopy, FaEraser } from "react-icons/fa";
 import { NodeResizer } from "reactflow";
 import { GiResize } from "react-icons/gi";
 import ActionGroup, { Action } from "../selectors/ActionGroup";
-import { MdEdit, MdMenuOpen } from "react-icons/md";
+import { MdDelete, MdEdit, MdMenuOpen } from "react-icons/md";
 import { useVisibility } from "../../providers/VisibilityProvider";
 import { useTranslation } from "react-i18next";
 import ColorSelector from "../selectors/ColorSelector";
@@ -145,7 +145,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       onClick: () => clearNodeOutput(nodeId),
     },
     {
-      icon: <AiOutlineClose />,
+      icon: <MdDelete />,
       name: t("RemoveNode"),
       value: "remove",
       onClick: () => {
@@ -199,6 +199,11 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
               onChange={(e) =>
                 updateNodeAppearance(nodeId, { customName: e.target.value })
               }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setShowTextField(false);
+                }
+              }}
             />
           </div>
         </div>
