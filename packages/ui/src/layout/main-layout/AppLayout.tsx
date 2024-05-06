@@ -237,6 +237,14 @@ const FlowTabs = () => {
     setCurrentTab(flowTabs.tabs.length - 1);
   };
 
+  const handleChangeTabName = (index: number, name: string) => {
+    const updatedTabs = flowTabs.tabs.map((tab, i) =>
+      i === index ? { ...tab, name } : tab,
+    );
+    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
+    setFlowTabs(updatedFlowTabs);
+  };
+
   return (
     <FlowManagerContainer className="relative flex h-screen flex-col">
       <TabHeader
@@ -245,6 +253,7 @@ const FlowTabs = () => {
         onDeleteTab={handleDeleteFlow}
         onAddFlowTab={addFlowTab}
         onChangeTab={handleChangeTab}
+        onChangeTabName={handleChangeTabName}
         tabPrefix={t("Flow")}
       >
         <div className="ml-auto flex flex-row items-center space-x-2">

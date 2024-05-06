@@ -102,5 +102,6 @@
     "GenericNegativePromptPlaceholder": "Entrez vos instructions négatives ici",
     "EnterCustomName": "Nom personalisé :",
     "NodeColor": "Couleur du noeud",
-    "ChangeName": "Changer le nom"
+    "ChangeName": "Changer le nom",
+    "RemoveFlow": "Supprimer le flow"
 }

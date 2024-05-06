@@ -9,6 +9,7 @@ interface TabHeaderProps {
   onChangeTab: (index: number) => void;
   onDeleteTab: (index: number) => void;
   onAddFlowTab: () => void;
+  onChangeTabName?: (index: number, name: string) => void;
   tabPrefix: string;
   children: React.ReactNode;
 }
@@ -19,6 +20,7 @@ const TabHeader = ({
   onChangeTab,
   onDeleteTab,
   onAddFlowTab,
+  onChangeTabName,
   tabPrefix,
   children,
 }: TabHeaderProps) => {
@@ -35,9 +37,9 @@ const TabHeader = ({
             active={index === currentTab}
             onChangeTab={onChangeTab}
             onDeleteTab={onDeleteTab}
-          >
-            {tabPrefix} {index + 1}
-          </Tab>
+            onChangeTabName={onChangeTabName}
+            name={!!tab.name ? tab.name : tabPrefix + " " + (index + 1)}
+          />
         ))}
       </Tabs>
       <AddTabButton

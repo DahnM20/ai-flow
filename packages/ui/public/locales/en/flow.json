@@ -102,5 +102,6 @@
     "GenericNegativePromptPlaceholder": "Enter your negative prompt here",
     "EnterCustomName": "Enter custom name",
     "NodeColor": "Change node color",
-    "ChangeName": "Change name"
+    "ChangeName": "Change name",
+    "RemoveFlow": "Remove flow"
 }
