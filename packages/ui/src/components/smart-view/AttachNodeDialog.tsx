@@ -123,14 +123,17 @@ function AttachNodeDialog({
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-4">
                   {getValidFieldsOptionsForSelectedNode().map((option) => {
                     return (
-                      <div className="flex flex-row space-x-2" key={option.key}>
+                      <div
+                        className="flex flex-row space-x-2"
+                        key={option.value}
+                      >
                         <Checkbox
                           label={option.key}
                           variant="outline"
                           size="md"
                           darkHidden={false}
-                          checked={selectedFields?.includes(option.key)}
-                          onChange={() => handleCheckField(option.key)}
+                          checked={selectedFields?.includes(option.value)}
+                          onChange={() => handleCheckField(option.value)}
                           styles={{
                             input: {
                               borderColor: "white",
