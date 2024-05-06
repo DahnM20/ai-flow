@@ -25,7 +25,7 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({ data }) => {
 
 const StyledReactMarkdown = styled(ReactMarkdown)`
   background-color: transparent !important;
-  color: #e6edf3;
+  color: #f5f5f5;
   font-size: 1.05em;
   user-select: text;
 `;
