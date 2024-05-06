@@ -6,8 +6,9 @@ import { useIsPlaying } from "../../hooks/useIsPlaying";
 import NodePlayButton from "./node-button/NodePlayButton";
 import HandleWrapper from "../handles/HandleWrapper";
 import useHandlePositions from "../../hooks/useHandlePositions";
+import { GenericNodeData } from "./types/node";
 
-interface TransitionNodeData {
+interface TransitionNodeData extends GenericNodeData {
   handles: any;
   id: string;
   name: string;
@@ -64,9 +65,13 @@ const TransitionNode: React.FC<TransitionNodeProps> = React.memo(
     return (
       <div
         key={id}
+        style={{
+          borderColor: data?.appearance?.color
+            ? data?.appearance?.color
+            : "rgb(34 197 94)",
+        }}
         className="flex flex-col items-center justify-between 
-                    rounded-lg border 
-                    border-green-500 bg-gray-800 p-4 
+                    rounded-lg border bg-gray-800 p-4 
                     text-white shadow-lg transition 
                     duration-300 ease-in-out hover:bg-gray-700"
       >

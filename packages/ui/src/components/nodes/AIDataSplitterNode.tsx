@@ -7,8 +7,9 @@ import NodePlayButton from "./node-button/NodePlayButton";
 import { generateIdForHandle } from "../../utils/flowUtils";
 import { InputHandle, NodeTitle, OutputHandle } from "./Node.styles";
 import { useIsPlaying } from "../../hooks/useIsPlaying";
+import { GenericNodeData } from "./types/node";
 
-interface AIDataSplitterNodeData {
+interface AIDataSplitterNodeData extends GenericNodeData {
   id: string;
   name: string;
   processorType: string;
@@ -73,7 +74,12 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
         collapsed={collapsed}
         key={id}
         onDoubleClick={handleCollapseClick}
-        className={`flex flex-col items-center justify-center rounded-lg  border border-green-500 bg-gray-800 p-4 hover:bg-gray-700/50`}
+        style={{
+          borderColor: data?.appearance?.color
+            ? data?.appearance?.color
+            : "rgb(34 197 94)",
+        }}
+        className={`flex flex-col items-center justify-center rounded-lg  border  bg-gray-800 p-4 hover:bg-gray-700/50`}
       >
         <div className="flex flex-col items-center justify-center space-y-10">
           <NodePlayButton

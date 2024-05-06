@@ -179,7 +179,7 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       />
       {children}
       <div
-        className={`absolute right-1/2 top-0 flex -translate-y-14 translate-x-1/2 transition-all duration-300 ease-in-out  ${showActions ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        className={`nodrag absolute right-1/2 top-0 flex -translate-y-14 translate-x-1/2 transition-all duration-300 ease-in-out  ${showActions ? "opacity-100" : "pointer-events-none opacity-0"}`}
         onMouseEnter={clearHideActionsTimeout}
       >
         <ActionGroup actions={actions} showIcon />
