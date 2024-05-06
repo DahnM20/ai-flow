@@ -256,7 +256,9 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
             </>
           )}
           <NodeIcon>{NodeIconComponent && <NodeIconComponent />}</NodeIcon>
-          <NodeTitle>{t(data.config.nodeName)}</NodeTitle>
+          <NodeTitle>
+            {data.appearance?.customName ?? t(data.config.nodeName)}
+          </NodeTitle>
           {outputHandleIds.map((id, index) => {
             return (
               <HandleWrapper

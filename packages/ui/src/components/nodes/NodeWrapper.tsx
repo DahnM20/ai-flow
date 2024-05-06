@@ -5,19 +5,25 @@ import { FaCopy, FaEraser } from "react-icons/fa";
 import { NodeResizer } from "reactflow";
 import { GiResize } from "react-icons/gi";
 import ActionGroup, { Action } from "../selectors/ActionGroup";
-import { MdMenuOpen } from "react-icons/md";
+import { MdEdit, MdMenuOpen } from "react-icons/md";
 import { useVisibility } from "../../providers/VisibilityProvider";
 import { useTranslation } from "react-i18next";
-import { FiCircle } from "react-icons/fi";
-import { BsFillCircleFill } from "react-icons/bs";
 import ColorSelector from "../selectors/ColorSelector";
+import NodeTextField from "./node-input/NodeTextField";
+import InputWithButton from "../inputs/InputWithButton";
 
 type NodeWrapperProps = {
   children: React.ReactNode;
   nodeId: string;
 };
 
-type NodeActions = "clear" | "duplicate" | "remove" | "sidepane" | "color";
+type NodeActions =
+  | "clear"
+  | "duplicate"
+  | "remove"
+  | "sidepane"
+  | "color"
+  | "name";
 
 function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   const { t } = useTranslation("flow");
@@ -35,6 +41,11 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
 
   const currentNode = findNode(nodeId);
   const currentNodeColor = currentNode?.data?.appearance?.color;
+
+  const currentNodeName =
+    currentNode?.data?.appearance?.customName ??
+    t(currentNode?.data?.config?.nodeName);
+
   const currentNodeIsMissingFields =
     currentNode?.data?.missingFields?.length > 0;
 
@@ -42,12 +53,14 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
 
   const [showActions, setShowActions] = useState(false);
   const [showColors, setShowColors] = useState(false);
+  const [showTextField, setShowTextField] = useState(false);
 
   let hideActionsTimeout: ReturnType<typeof setTimeout>;
 
   const hideActionsWithDelay = () => {
     hideActionsTimeout = setTimeout(() => {
       setShowColors(false);
+      setShowTextField(false);
       setShowActions(false);
     }, 2000);
   };
@@ -99,7 +112,19 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       name: t("NodeColor"),
       value: "color",
       tooltipPosition: "left",
-      onClick: () => setShowColors(!showColors),
+      onClick: () => {
+        setShowColors(!showColors);
+        setShowTextField(false);
+      },
+    },
+    {
+      icon: <MdEdit />,
+      name: t("ChangeName"),
+      value: "name",
+      onClick: () => {
+        setShowTextField(!showTextField);
+        setShowColors(false);
+      },
     },
     {
       icon: <FaCopy />,
@@ -162,6 +187,20 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
           className={`absolute flex -translate-x-1/3 -translate-y-10 items-center justify-center space-x-2 rounded-full bg-slate-200/10 p-2 ${showColors ? "opacity-100 " : "pointer-events-none opacity-0"} transition-all duration-300 ease-in-out `}
         >
           <ColorSelector onChangeColor={handleChangeNodeColor} />
+        </div>
+        <div
+          className={`absolute flex -translate-y-20 translate-x-5 items-center justify-center  ${showTextField ? "opacity-100 " : "pointer-events-none opacity-0"} transition-all duration-300 ease-in-out `}
+        >
+          <div className="flex flex-col items-center justify-center rounded-lg bg-slate-200/10 p-2 text-center">
+            <p> {t("EnterCustomName")}</p>
+            <input
+              className="bg-zinc-900/90 px-1 text-center"
+              value={currentNodeName}
+              onChange={(e) =>
+                updateNodeAppearance(nodeId, { customName: e.target.value })
+              }
+            />
+          </div>
         </div>
       </div>
     </div>

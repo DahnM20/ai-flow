@@ -99,5 +99,8 @@
     "DownloadFile": "Download File",
     "FileUploaded": "File uploaded",
     "GenericPromptPlaceholder": "Enter your prompt here",
-    "GenericNegativePromptPlaceholder": "Enter your negative prompt here"
+    "GenericNegativePromptPlaceholder": "Enter your negative prompt here",
+    "EnterCustomName": "Enter custom name",
+    "NodeColor": "Change node color",
+    "ChangeName": "Change name"
 }

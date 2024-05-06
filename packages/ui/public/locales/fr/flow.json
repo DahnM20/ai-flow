@@ -99,5 +99,8 @@
     "DownloadFile": "Télécharger le fichier",
     "FileUploaded": "Fichier hébergé",
     "GenericPromptPlaceholder": "Entrez vos instructions ici",
-    "GenericNegativePromptPlaceholder": "Entrez vos instructions négatives ici"
+    "GenericNegativePromptPlaceholder": "Entrez vos instructions négatives ici",
+    "EnterCustomName": "Nom personalisé :",
+    "NodeColor": "Couleur du noeud",
+    "ChangeName": "Changer le nom"
 }

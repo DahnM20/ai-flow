@@ -195,7 +195,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
         <NodeIcon>
           <FaFileAlt />
         </NodeIcon>
-        <NodeTitle>{t("File")}</NodeTitle>
+        <NodeTitle>{data.appearance?.customName ?? t("File")}</NodeTitle>
         <HandleWrapper
           id={generateIdForHandle(0)}
           position={
