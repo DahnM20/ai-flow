@@ -6,6 +6,11 @@ export interface NodeInput {
   inputNodeOutputKey: number;
 }
 
+export interface NodeAppearance {
+  color?: string;
+  customName?: string;
+}
+
 export interface NodeData {
   id: string;
   name: string;
@@ -17,6 +22,7 @@ export interface NodeData {
   lastRun?: string;
   missingFields?: string[];
   config: NodeConfig;
+  appearance?: NodeAppearance;
   [key: string]: any;
 }
 

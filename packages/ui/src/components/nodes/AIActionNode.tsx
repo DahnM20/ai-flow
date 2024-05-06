@@ -167,7 +167,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(
             />
           </div>
         </div>
-        <NodeBand className="h-1 w-full" />
+        <NodeBand className="h-1 w-full" color={data.appearance?.color} />
 
         <HandleWrapper
           id={outputHandleId}

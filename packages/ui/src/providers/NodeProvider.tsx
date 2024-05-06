@@ -9,6 +9,7 @@ import {
   getNodeInError,
 } from "../utils/flowChecker";
 import { createUniqNodeId } from "../utils/nodeUtils";
+import { NodeAppearance } from "../components/nodes/types/node";
 
 export type NodeDimensions = {
   width?: number | null;
@@ -31,6 +32,7 @@ interface NodeContextType {
   duplicateNode: (nodeId: string) => void;
   clearNodeOutput: (nodeId: string) => void;
   clearAllOutput: () => void;
+  updateNodeAppearance: (nodeId: string, appearance: NodeAppearance) => void;
   removeNode: (nodeId: string) => void;
   removeAll: () => void;
   findNode: (nodeId: string) => Node | undefined;
@@ -58,6 +60,7 @@ export const NodeContext = createContext<NodeContextType>({
   duplicateNode: () => undefined,
   clearNodeOutput: () => undefined,
   clearAllOutput: () => undefined,
+  updateNodeAppearance: () => undefined,
   removeNode: () => undefined,
   removeAll: () => undefined,
   findNode: () => undefined,
@@ -227,6 +230,28 @@ export const NodeProvider = ({
     return nodes.find((node) => node.id === nodeId);
   };
 
+  const updateNodeAppearance = (nodeId: string, appearance: NodeAppearance) => {
+    const nodeToUpdate = nodes.find((node) => node.id === nodeId);
+    if (nodeToUpdate) {
+      const nodesUpdated = nodes.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              appearance: {
+                ...node.data.appearance,
+                ...appearance,
+              },
+            },
+          };
+        }
+        return node;
+      });
+      onUpdateNodes(nodesUpdated, edges);
+    }
+  };
+
   return (
     <NodeContext.Provider
       value={{
@@ -245,6 +270,7 @@ export const NodeProvider = ({
         duplicateNode,
         clearNodeOutput,
         clearAllOutput,
+        updateNodeAppearance,
         removeNode,
         removeAll,
         findNode,

@@ -26,12 +26,12 @@ export const NodeHeader = styled.div`
   transition: all 0.3s ease;
 `;
 
-export const NodeBand = styled.div<{ selected?: boolean }>`
+export const NodeBand = styled.div<{ selected?: boolean; color?: string }>`
   padding: 2px;
   overflow: hidden;
   transition: height 0.2s ease-out background 0.3s ease;
-  background: ${({ theme, selected }) =>
-    selected ? theme.accentSelected : theme.accent};
+  background: ${({ theme, selected, color }) =>
+    color ? color : selected ? theme.accentSelected : theme.accent};
 `;
 
 export const NodeTitle = styled.div`

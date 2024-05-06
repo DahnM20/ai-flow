@@ -11,6 +11,7 @@ export interface Action<T> {
   value: T;
   onClick: () => void;
   hoverColor?: string;
+  tooltipPosition?: "top" | "bottom" | "left" | "right";
 }
 
 export default function ActionGroup<T>({
@@ -38,7 +39,7 @@ export default function ActionGroup<T>({
             style={{ display: showIcon ? "block" : "none" }}
             data-tooltip-id={"app-tooltip"}
             data-tooltip-content={option.name}
-            data-tooltip-place="top"
+            data-tooltip-place={option.tooltipPosition ?? "top"}
           >
             {option.icon}
           </span>

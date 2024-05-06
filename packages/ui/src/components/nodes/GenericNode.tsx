@@ -286,6 +286,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         </NodeHeader>
         <NodeBand
           selected={selected}
+          color={data.appearance?.color}
           className={`${selected ? "animate-pulse" : ""}`}
         />
         {(!hideNodeParams || data.config.showHandlesNames) && (

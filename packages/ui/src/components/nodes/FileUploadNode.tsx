@@ -213,7 +213,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
           nodeName={data.name}
         />
       </NodeHeader>
-      <NodeBand />
+      <NodeBand color={data.appearance?.color} />
 
       {!hideFields && (
         <div className="p-2 text-3xl">
