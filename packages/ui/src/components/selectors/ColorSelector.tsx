@@ -19,7 +19,7 @@ export default function ColorSelector({ onChangeColor }: ColorSelectorProps) {
       {colorList.map((color, index) => (
         <div
           key={index}
-          className="h-4 w-4 rounded-full ring-slate-200 transition-all duration-150 ease-in-out hover:ring-2"
+          className="h-4 w-4 cursor-pointer rounded-full ring-slate-200 transition-all duration-150 ease-in-out hover:ring-2"
           style={{
             backgroundColor: color,
           }}
