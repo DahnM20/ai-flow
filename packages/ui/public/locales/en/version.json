@@ -1,13 +1,13 @@
 {
     "versionInfo": {
-        "versionNumber": "v0.6.0",
-        "description": " 🚀 Here's what's new in v0.6.0"
+        "versionNumber": "v0.6.4",
+        "description": "Discover the latest features added in version 0.6.4!"
     },
     "features": [
         {
-            "title": "NEW Replicate Node",
-            "description": "Experience a diverse range of open-source models with the new Replicate Node, featuring popular models Llama, Mistral, Stable Video Diffusion, Music-gen, custom SDXL, and many more."
+            "title": "New nodes and templates available",
+            "description": "Visit the 'Templates' section to find practical use case examples of the application."
         }
     ],
-    "imageSrc": "./gif-new-version.gif"
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/gif-v0.6.4.gif"
 }

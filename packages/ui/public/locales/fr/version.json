@@ -1,13 +1,13 @@
 {
     "versionInfo": {
-        "versionNumber": "v0.6.0",
-        "description": " 🚀 Voici les nouveautés de la v0.6.0"
+        "versionNumber": "v0.6.4",
+        "description": "Voici les nouveautés de la v0.6.4"
     },
     "features": [
         {
-            "title": "NOUVEAU Nœud Replicate",
-            "description": "Découvrez une gamme variée de modèles open-source avec le nouveau Nœud Replicate, comprenant des modèles open-source populaires tels que Llama, Mistral, Stable Video Diffusion, Music-gen, SDXL personnalisé, et bien d'autres."
+            "title": "Ajout de nouveaux nœuds et modèles",
+            "description": "Explorez la section 'Modèles' pour trouver des exemples pratiques d'utilisation de l'application."
         }
     ],
-    "imageSrc": "./gif-new-version.gif"
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/gif-v0.6.4.gif"
 }
