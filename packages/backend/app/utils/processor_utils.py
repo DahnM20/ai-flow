@@ -69,3 +69,40 @@ def is_valid_url(url):
     if not all([result.scheme, result.netloc]):
         return False
     return True
+
+
+def file_downloable_check(url):
+    if is_s3_file(url):
+        return
+    if not is_accepted_url_file_size(url):
+        raise ValueError(
+            f"File size is too large. Max file size is {get_max_file_size_in_mb()} MB"
+        )
+    if not is_valid_url(url):
+        raise ValueError(f"Invalid URL: {url}")
+
+
+def download_file_as_binary(url):
+    try:
+        file_downloable_check(url)
+    except ValueError as e:
+        raise ValueError(f"Can't download file: {e}")
+
+    response = requests.get(url)
+    response.raise_for_status()
+
+    return response.content
+
+
+def stream_download_file_as_binary(url):
+    try:
+        file_downloable_check(url)
+    except ValueError as e:
+        raise ValueError(f"Can't download file: {e}")
+
+    with requests.get(url, stream=True) as response:
+        response.raise_for_status()
+        chunks = []
+        for chunk in response.iter_content(chunk_size=8192):
+            chunks.append(chunk)
+        return b"".join(chunks)
