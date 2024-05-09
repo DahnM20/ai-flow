@@ -43,6 +43,7 @@ export interface Field {
   hasHandle?: boolean;
   isLinked?: boolean;
   associatedField?: string;
+  isBinary?: boolean;
 }
 
 export interface NodeConfig {
@@ -58,4 +59,18 @@ export interface NodeConfig {
   section: SectionType;
   helpMessage?: string;
   showHandlesNames?: boolean;
+  isDynamicallyGenerated?: boolean;
 }
+
+export interface DiscriminatedNodeConfig {
+  discriminators: { [key: string]: string };
+  config: NodeConfig;
+}
+
+export interface NodeSubConfig {
+  discriminatorFields: string[];
+  subConfigurations: DiscriminatedNodeConfig[];
+}
+
+export type NodeConfigVariant = NodeSubConfig &
+  Omit<NodeConfig, "fields" | "outputType">;

@@ -11,6 +11,21 @@ export async function getNodeExtensions() {
   return response.data?.extensions;
 }
 
+export async function getDynamicConfig(processorType: string, data: any) {
+  let response;
+  const dataToSend = {
+    processorType,
+    data,
+  };
+  try {
+    response = await client.post(`/node/extensions/dynamic`, dataToSend);
+  } catch (error) {
+    console.error("Error fetching configuration:", error);
+    throw error;
+  }
+  return response.data;
+}
+
 export async function getModels(providerName: string) {
   let response;
   try {

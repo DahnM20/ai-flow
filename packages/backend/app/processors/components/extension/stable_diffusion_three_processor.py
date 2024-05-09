@@ -147,8 +147,7 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
         filename = f"{self.name}-{timestamp_str}.png"
         url = storage.save(filename, response.content)
 
-        self.set_output(url)
-        return self._output
+        return url
 
     def cancel(self):
         pass

@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, request
 
-from ...utils.node_extension_utils import get_extensions
+from ...utils.node_extension_utils import get_dynamic_extension_config, get_extensions
 
 # from ...utils.openapi_reader import OpenAPIReader
 from ...utils.replicate_utils import (
@@ -20,6 +20,21 @@ node_blueprint = Blueprint("node_blueprint", __name__)
 def get_node_extensions():
     extensions = get_extensions()
     return {"extensions": extensions}
+
+
+@node_blueprint.route("/node/extensions/dynamic", methods=["POST"])
+def get_dynamic_extension():
+    request_body = request.json
+
+    if request_body is None:
+        raise Exception("Missing data")
+
+    processor_type = request_body.get("processorType")
+    data = request_body.get("data")
+
+    config = get_dynamic_extension_config(processor_type, data)
+
+    return config.dict()
 
 
 @node_blueprint.route("/node/models")

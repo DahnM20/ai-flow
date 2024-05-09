@@ -53,8 +53,8 @@ const App = () => {
     const startTime = Date.now();
 
     try {
-      await loadExtensions();
       await loadParameters();
+      await loadExtensions();
     } catch (error) {
       console.error("Failed to load app data:", error);
       console.error("Default parameters will be loaded");

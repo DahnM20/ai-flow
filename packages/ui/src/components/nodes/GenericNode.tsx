@@ -22,6 +22,7 @@ import HandleWrapper from "../handles/HandleWrapper";
 import useHandlePositions from "../../hooks/useHandlePositions";
 import { useFormFields } from "../../hooks/useFormFields";
 import NodeOutput from "./node-output/NodeOutput";
+import { getDynamicConfig } from "../../api/nodes";
 
 interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
@@ -45,6 +46,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     const updateNodeInternals = useUpdateNodeInternals();
 
     const [collapsed, setCollapsed] = useState<boolean>(false);
+
     const [showLogs, setShowLogs] = useState<boolean>(
       data.config?.defaultHideOutput == null
         ? true
@@ -97,7 +99,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     }, [data.lastRun, data.outputData]);
 
     useEffect(() => {
-      if (!data.config.fields.some((field) => field.hasHandle)) return;
+      if (!data.config?.fields?.some((field) => field.hasHandle)) return;
 
       const fieldsToNullify: any = {};
 
@@ -164,11 +166,11 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       }
     };
 
-    function setDefaultOptions() {
+    function getDefaultOptions(fields: Field[]) {
       const defaultOptions: any = {};
 
       //Default options
-      data.config.fields
+      fields
         .filter(
           (field) =>
             field.options?.find((option) => option.default) &&
@@ -181,13 +183,19 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         });
 
       //Default values
-      data.config.fields
+      fields
         .filter(
           (field) => field.defaultValue != null && data[field.name] == null,
         )
         .forEach((field) => {
           defaultOptions[field.name] = field.defaultValue;
         });
+
+      return defaultOptions;
+    }
+
+    function setDefaultOptions() {
+      const defaultOptions: any = getDefaultOptions(data.config.fields);
 
       onUpdateNodeData(id, {
         ...data,
@@ -232,6 +240,27 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
 
     //const dimensions = getNodeDimensions(id);
     // console.log(dimensions);
+
+    async function handleGetDynamicConfig() {
+      if (data.config.processorType == null) return;
+
+      const newConfig = await getDynamicConfig(data.config.processorType, data);
+      const defaultOptions: any = getDefaultOptions(newConfig.fields);
+
+      console.log("new config : ", newConfig);
+      console.log("default options : ", defaultOptions);
+
+      onUpdateNodeData(id, {
+        ...data,
+        ...defaultOptions,
+        config: {
+          ...newConfig,
+          isDynamicallyGenerated: false,
+        },
+      });
+
+      setFields(newConfig.fields);
+    }
 
     return (
       <NodeContainer key={id} className={`flex h-full w-full flex-col`}>
@@ -294,8 +323,17 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         {(!hideNodeParams || data.config.showHandlesNames) && (
           <NodeContent>
             <NodeForm>{formFields}</NodeForm>
+            {data.config.isDynamicallyGenerated && (
+              <button
+                className={`rounded-lg bg-sky-500 p-2 hover:bg-sky-400`}
+                onClick={handleGetDynamicConfig}
+              >
+                {"Validate"}
+              </button>
+            )}
           </NodeContent>
         )}
+
         <NodeOutput
           showLogs={showLogs}
           onClickOutput={() => setShowLogs(!showLogs)}

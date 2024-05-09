@@ -36,6 +36,7 @@ llama-index = "v0.9.46"
 setuptools = "^68.2.2"
 pypdf = "^3.16.4"
 replicate = "0.22.0"
+openapi-spec-validator = "^0.7.1"
 
 
 [tool.poetry.group.dev.dependencies]

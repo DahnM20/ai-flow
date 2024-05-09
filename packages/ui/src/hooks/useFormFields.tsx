@@ -100,7 +100,16 @@ export function useFormFields(
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
             onChange={(event) => {
               const value = event.target.value;
-              const numericValue = isNaN(+value) ? field.defaultValue : +value;
+              const defaultValue =
+                field.defaultValue != null ? +field.defaultValue : 0;
+              let numericValue = isNaN(+value) ? defaultValue : +value;
+
+              if (field.min != null && numericValue < +field.min) {
+                numericValue = +field.min;
+              }
+              if (field.max != null && numericValue > +field.max) {
+                numericValue = +field.max;
+              }
               handleNodeDataChange(field.name, numericValue, event.target);
             }}
             error={isNaN(data[field.name])}
