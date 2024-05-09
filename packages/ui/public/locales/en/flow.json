@@ -103,5 +103,7 @@
     "EnterCustomName": "Enter custom name",
     "NodeColor": "Change node color",
     "ChangeName": "Change name",
-    "RemoveFlow": "Remove flow"
+    "RemoveFlow": "Remove flow",
+    "HideHint": "Hide",
+    "TextDocumentHint": "Please note that this node only provides files as URLs. To use a document (.pdf, .txt) in text format, consider using the 'Document-to-Text' node."
 }

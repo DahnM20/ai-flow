@@ -27,6 +27,7 @@ import {
   uploadWithS3Link,
 } from "../../api/uploadFile";
 import { useLoading } from "../../hooks/useLoading";
+import HintComponent from "./utils/HintComponent";
 
 interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
@@ -255,6 +256,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
           />
         </div>
       )}
+      <HintComponent hintId="file-upload" textVar="TextDocumentHint" />
       <NodeOutput
         showLogs={showLogs}
         onClickOutput={() => setShowLogs(!showLogs)}

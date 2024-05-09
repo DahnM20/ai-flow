@@ -103,5 +103,7 @@
     "EnterCustomName": "Nom personalisé :",
     "NodeColor": "Couleur du noeud",
     "ChangeName": "Changer le nom",
-    "RemoveFlow": "Supprimer le flow"
+    "RemoveFlow": "Supprimer le flow",
+    "HideHint": "Cacher",
+    "TextDocumentHint": "Veuillez noter que ce nœud fournit les fichiers uniquement sous forme d'URLs. Pour utiliser un document (.pdf, .txt) en format texte, envisagez d'utiliser le nœud 'Document-en-Texte'."
 }
