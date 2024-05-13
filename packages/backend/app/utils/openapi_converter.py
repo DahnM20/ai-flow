@@ -20,8 +20,9 @@ class OpenAPIConverter:
             )
         return options
 
-    def convert_properties_to_fields(self, properties):
+    def convert_properties_to_fields(self, schema):
         fields = []
+        properties = schema.get("properties", {})
         for key, value in properties.items():
             field_builder = FieldBuilder()
             field_builder.set_name(key)
@@ -63,7 +64,7 @@ class OpenAPIConverter:
             if "default" in value:
                 field_builder.set_default_value(value["default"])
 
-            required_fields = schema.get("schema", {}).get("required", [])
+            required_fields = schema.get("required", [])
             if key in required_fields:
                 field_builder.set_required(True)
 
@@ -71,29 +72,24 @@ class OpenAPIConverter:
         return fields
 
     def convert_schema_to_node_config(self, schema):
-        # print(schema)
-
         schema = schema.get("schema")
         if schema.get("oneOf") and schema.get("discriminator"):
-
             builder = NodeConfigVariantBuilder()
             discriminatorName = schema.get("discriminator").get("propertyName")
             mapping = schema.get("discriminator", {}).get("mapping")
             builder.add_discriminator_field(discriminatorName)
             for key, value in mapping.items():
-                ## Faut que la value soit resolved ici.....
-                # properties = value.get("schema", {}).get("properties", {})
-                # fields = self.convert_properties_to_fields(properties)
+                fields = self.convert_properties_to_fields(value)
                 builder.add_sub_configuration(
-                    NodeConfigBuilder().add_discriminator(discriminatorName, key)
-                    # .set_fields(fields)
+                    NodeConfigBuilder()
+                    .add_discriminator(discriminatorName, key)
+                    .set_fields(fields)
                     .build()
                 )
-            print(builder.build())
         else:
             builder = NodeConfigBuilder()
-            properties = schema.get("schema", {}).get("properties", {})
-            fields = self.convert_properties_to_fields(properties)
+            print(schema)
+            fields = self.convert_properties_to_fields(schema)
             builder.set_fields(fields)
 
         return builder

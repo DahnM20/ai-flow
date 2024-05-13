@@ -11,9 +11,8 @@ from .model import (
 )
 
 
-class NodeConfigBuilder:
+class BaseNodeConfigBuilder:
     def __init__(self):
-        self.fields: List[Field] = []
         self.nodeName: Optional[str] = None
         self.processorType: Optional[str] = None
         self.icon: Optional[str] = None
@@ -21,36 +20,42 @@ class NodeConfigBuilder:
         self.section: Optional[str] = None
         self.helpMessage: Optional[str] = None
         self.showHandlesNames: Optional[bool] = False
-        self.isDynamicallyGenerated: Optional[bool] = False
-        self.discriminators: Optional[Dict[str, str]] = None
 
-    def set_node_name(self, name: str) -> "NodeConfigBuilder":
+    def set_node_name(self, name: str) -> "BaseNodeConfigBuilder":
         self.nodeName = name
         return self
 
-    def set_processor_type(self, processor_type: str) -> "NodeConfigBuilder":
+    def set_processor_type(self, processor_type: str) -> "BaseNodeConfigBuilder":
         self.processorType = processor_type
         return self
 
-    def set_icon(self, icon: str) -> "NodeConfigBuilder":
+    def set_icon(self, icon: str) -> "BaseNodeConfigBuilder":
         self.icon = icon
         return self
 
-    def set_output_type(self, output_type: str) -> "NodeConfigBuilder":
+    def set_output_type(self, output_type: str) -> "BaseNodeConfigBuilder":
         self.outputType = OutputType(root=output_type)
         return self
 
-    def set_section(self, section: str) -> "NodeConfigBuilder":
+    def set_section(self, section: str) -> "BaseNodeConfigBuilder":
         self.section = SectionType(root=section)
         return self
 
-    def set_help_message(self, help_message: str) -> "NodeConfigBuilder":
+    def set_help_message(self, help_message: str) -> "BaseNodeConfigBuilder":
         self.helpMessage = help_message
         return self
 
-    def set_show_handles(self, show: bool) -> "NodeConfigBuilder":
+    def set_show_handles(self, show: bool) -> "BaseNodeConfigBuilder":
         self.showHandlesNames = show
         return self
+
+
+class NodeConfigBuilder(BaseNodeConfigBuilder):
+    def __init__(self):
+        super().__init__()
+        self.fields: List[Field] = []
+        self.isDynamicallyGenerated: Optional[bool] = False
+        self.discriminators: Optional[Dict[str, str]] = None
 
     def set_is_dynamic(self, dyna: bool) -> "NodeConfigBuilder":
         self.isDynamicallyGenerated = dyna
@@ -90,8 +95,9 @@ class NodeConfigBuilder:
             return baseConfig
 
 
-class NodeConfigVariantBuilder:
+class NodeConfigVariantBuilder(BaseNodeConfigBuilder):
     def __init__(self):
+        super().__init__()
         self.subConfigurations: List[NodeConfig] = []
         self.discriminatorFields: Optional[List[str]] = []
 
@@ -108,6 +114,16 @@ class NodeConfigVariantBuilder:
         return self
 
     def build(self) -> NodeConfigVariant:
+        for subConfig in self.subConfigurations:
+            config = subConfig.config
+            config.showHandlesNames = self.showHandlesNames
+            config.icon = self.icon
+            config.nodeName = self.nodeName
+            config.outputType = self.outputType
+            config.section = self.section
+            config.processorType = self.processorType
+            config.helpMessage = self.helpMessage
+
         return NodeConfigVariant(
             subConfigurations=self.subConfigurations,
             discriminatorFields=self.discriminatorFields,

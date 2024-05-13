@@ -114,6 +114,27 @@ class OpenAPIReader:
             for part in resolved_parts[1:]:
                 resolved_path = OpenAPIReader.merge_schemas(resolved_path, part)
             return resolved_path
+        elif "oneOf" in schema:
+            oneOf = schema["oneOf"]
+            resolved_parts = []
+            for item in oneOf:
+                resolved_parts.append(self.resolve_schema(item))
+
+            schema["oneOf"] = resolved_parts
+
+            if "discriminator" in schema:
+                discriminator = schema["discriminator"]
+                discriminator_mapping = discriminator["mapping"]
+                discriminator_resolved = {}
+                for key, value in discriminator_mapping.items():
+                    if type(value) != str:
+                        discriminator_resolved[key] = value
+                    else:
+                        discriminator_resolved[key] = self.resolve_ref(value)
+
+                discriminator["mapping"] = discriminator_resolved
+
+            return schema
         elif schema.get("type") == "object" and "properties" in schema:
             # If the schema is of type object and has properties, recursively resolve each property
             resolved_properties = {}

@@ -12,7 +12,11 @@ import {
 import useHandleShowOutput from "../../hooks/useHandleShowOutput";
 import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
 import { ICON_MAP } from "./utils/NodeIcons";
-import { Field } from "../../nodes-configuration/types";
+import {
+  Field,
+  NodeConfig,
+  NodeSubConfig,
+} from "../../nodes-configuration/types";
 import { NodeContext } from "../../providers/NodeProvider";
 import NodePlayButton from "./node-button/NodePlayButton";
 import { useTranslation } from "react-i18next";
@@ -97,6 +101,12 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         setShowLogs(false);
       }
     }, [data.lastRun, data.outputData]);
+
+    useEffect(() => {
+      if (data.variantConfig) {
+        console.log("hey");
+      }
+    }, [data]);
 
     useEffect(() => {
       if (!data.config?.fields?.some((field) => field.hasHandle)) return;
@@ -238,28 +248,56 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     const displayInputs =
       data.config.hasInputHandle && !data.config.showHandlesNames;
 
-    //const dimensions = getNodeDimensions(id);
-    // console.log(dimensions);
-
-    async function handleGetDynamicConfig() {
-      if (data.config.processorType == null) return;
-
-      const newConfig = await getDynamicConfig(data.config.processorType, data);
-      const defaultOptions: any = getDefaultOptions(newConfig.fields);
-
-      console.log("new config : ", newConfig);
-      console.log("default options : ", defaultOptions);
+    function updateConfig(config: NodeConfig) {
+      const defaultOptions: any = getDefaultOptions(config.fields);
 
       onUpdateNodeData(id, {
         ...data,
         ...defaultOptions,
         config: {
-          ...newConfig,
+          ...config,
           isDynamicallyGenerated: false,
         },
       });
 
-      setFields(newConfig.fields);
+      setFields(config.fields);
+    }
+
+    function updateConfigVariant(variantConf: NodeSubConfig) {
+      const defaultConfigEnabled = variantConf.subConfigurations[0].config;
+      const discriminators = variantConf.subConfigurations[0].discriminators;
+
+      const defaultFields = defaultConfigEnabled.fields;
+      const defaultOptions: any = getDefaultOptions(defaultFields);
+
+      console.log("Variant Conf : ", variantConf);
+
+      onUpdateNodeData(id, {
+        ...data,
+        ...defaultOptions,
+        ...discriminators,
+        config: {
+          ...defaultConfigEnabled,
+          isDynamicallyGenerated: false,
+        },
+        variantConfig: {
+          ...variantConf,
+        },
+      });
+
+      setFields(defaultFields);
+    }
+
+    async function handleGetDynamicConfig() {
+      if (data.config.processorType == null) return;
+
+      const newConfig = await getDynamicConfig(data.config.processorType, data);
+
+      if (newConfig.subConfigurations != null) {
+        updateConfigVariant(newConfig);
+      } else {
+        updateConfig(newConfig);
+      }
     }
 
     return (
