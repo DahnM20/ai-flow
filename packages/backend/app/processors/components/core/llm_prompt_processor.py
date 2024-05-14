@@ -12,7 +12,7 @@ from llama_index.core.base.llms.base import ChatMessage
 
 class LLMPromptProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.LLM_PROMPT
-    DEFAULT_MODEL = "gpt-4"
+    DEFAULT_MODEL = "gpt-4o"
 
     def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)

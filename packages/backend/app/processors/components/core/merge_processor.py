@@ -10,7 +10,7 @@ from llama_index.core.base.llms.base import ChatMessage
 
 class MergeProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.MERGER_PROMPT
-    DEFAULT_MODEL = "gpt-4-1106-preview"
+    DEFAULT_MODEL = "gpt-4o"
 
     def __init__(self, config, context, custom_llm_factory=None):
         super().__init__(config, context)

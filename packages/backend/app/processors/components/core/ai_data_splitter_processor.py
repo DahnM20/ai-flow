@@ -16,7 +16,7 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
         super().__init__(config, context)
 
         self.nb_output = 0
-        self.model = "gpt-4-1106-preview"
+        self.model = "gpt-4o"
         self.api_key = context.get_value("openai_api_key")
 
         if custom_llm_factory is None:
