@@ -6,7 +6,7 @@ import ImageUrlOutput from "./ImageUrlOutput";
 import ImageBase64Output from "./ImageBase64Output";
 import VideoUrlOutput from "./VideoUrlOutput";
 import AudioUrlOutput from "./AudioUrlOutput";
-import { getOutputTypeFromExtension } from "./outputUtils";
+import { getOutputExtension } from "./outputUtils";
 import PdfUrlOutput from "./PdfUrlOutput";
 import { OutputType } from "../../../nodes-configuration/types";
 import { useState } from "react";
@@ -86,7 +86,7 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
       output = outputData;
     }
 
-    const outputType = getOutputTypeFromExtension(output);
+    const outputType = getOutputExtension(output);
 
     return outputType;
   }

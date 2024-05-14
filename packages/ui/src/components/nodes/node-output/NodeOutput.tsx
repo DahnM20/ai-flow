@@ -5,7 +5,7 @@ import { toastFastInfoMessage } from "../../../utils/toastUtils";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { FiCopy } from "react-icons/fi";
-import { getOutputTypeFromExtension } from "./outputUtils";
+import { getOutputExtension } from "./outputUtils";
 import { OutputType } from "../../../nodes-configuration/types";
 import OutputDisplay from "./OutputDisplay";
 
@@ -40,7 +40,7 @@ export default function NodeOutput({
       output = outputData;
     }
 
-    const outputType = getOutputTypeFromExtension(output);
+    const outputType = getOutputExtension(output);
 
     return outputType;
   }
