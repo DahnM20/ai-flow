@@ -1,7 +1,7 @@
-from llama_index.llms.base import BaseLLM
+from llama_index.core.base.llms.base import BaseLLM
 
-from llama_index.llms.base import ChatMessage
-from llama_index.llms.base import ChatResponse
+from llama_index.core.base.llms.base import ChatMessage
+from llama_index.core.base.llms.base import ChatResponse
 
 from typing import (
     Any,

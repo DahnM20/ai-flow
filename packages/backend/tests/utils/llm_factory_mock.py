@@ -1,6 +1,6 @@
 from app.llms.factory.llm_factory import LLMFactory
 from tests.utils.llm_mock import LLMMock
-from llama_index.llms.base import BaseLLM
+from llama_index.core.base.llms.base import BaseLLM
 
 
 class LLMMockFactory(LLMFactory):

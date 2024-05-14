@@ -3,7 +3,7 @@ from ..processor import ContextAwareProcessor
 from ....llms.factory.llm_factory import LLMFactory
 from ....root_injector import root_injector
 
-from llama_index.llms.base import ChatMessage
+from llama_index.core.base.llms.base import ChatMessage
 
 from .processor_type_name_utils import ProcessorType
 

@@ -7,7 +7,7 @@ from ...context.processor_context import ProcessorContext
 from ..processor import ContextAwareProcessor
 
 from .processor_type_name_utils import ProcessorType
-from llama_index.llms.base import ChatMessage
+from llama_index.core.base.llms.base import ChatMessage
 
 
 class LLMPromptProcessor(ContextAwareProcessor):

@@ -5,7 +5,7 @@ from ....root_injector import root_injector
 
 from .processor_type_name_utils import ProcessorType, MergeModeEnum
 
-from llama_index.llms.base import ChatMessage
+from llama_index.core.base.llms.base import ChatMessage
 
 
 class MergeProcessor(ContextAwareProcessor):
