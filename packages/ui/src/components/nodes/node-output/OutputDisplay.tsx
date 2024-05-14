@@ -93,7 +93,7 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
 
   return (
     <div
-      className="flex w-full flex-col"
+      className="flex h-full w-full flex-col"
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
     >

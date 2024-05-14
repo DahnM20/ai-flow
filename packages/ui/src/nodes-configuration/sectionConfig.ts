@@ -65,6 +65,12 @@ function getAllDndNode(): DnDNode[] {
       helpMessage: "transitionHelp",
       section: "tools",
     },
+    {
+      label: "Display",
+      type: "display",
+      helpMessage: "displayHelp",
+      section: "tools",
+    },
   ];
   return transformNodeConfigsToDndNode(nodeConfigs).concat(
     nonGenericNodeConfig,

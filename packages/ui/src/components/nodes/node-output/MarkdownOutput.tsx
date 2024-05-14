@@ -100,7 +100,7 @@ const IconContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 8px;
-  top: 0;
+  top: 0.5em;
   right: 0.1em;
 `;
 
