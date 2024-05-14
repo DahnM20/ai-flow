@@ -22,14 +22,6 @@ export default function NodeOutput({
 }: NodeOutputProps) {
   const { t } = useTranslation("flow");
 
-  const handleCopyToClipboard = (event: any) => {
-    event.stopPropagation();
-    if (data.outputData && typeof data.outputData == "string") {
-      copyToClipboard(data.outputData);
-      toastFastInfoMessage(t("CopiedToClipboard"));
-    }
-  };
-
   function getOutputType(): OutputType {
     if (data.config?.outputType) {
       return data.config.outputType;
@@ -72,14 +64,6 @@ export default function NodeOutput({
       onClick={!showLogs ? onClickOutput : undefined}
       className={`relative flex h-auto w-full flex-grow justify-center p-4 ${showLogs ? "nodrag nowheel" : ""}`}
     >
-      {showLogs && data.outputData && !outputIsMedia && (
-        <StyledCopyIcon
-          className="copy-icon hover:text-white"
-          onClick={(event) => {
-            handleCopyToClipboard(event);
-          }}
-        />
-      )}
       {!showLogs && data.outputData ? (
         <NodeLogsText className="flex h-auto w-full justify-center text-center">
           {t("ClickToShowOutput")}
@@ -90,10 +74,3 @@ export default function NodeOutput({
     </NodeLogs>
   );
 }
-
-const StyledCopyIcon = styled(FiCopy)`
-  position: fixed;
-  right: 15px;
-  cursor: pointer;
-  z-index: 1;
-`;
