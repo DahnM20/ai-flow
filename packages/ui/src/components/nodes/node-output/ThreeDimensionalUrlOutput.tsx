@@ -27,8 +27,22 @@ const ThreeDimensionalUrlOutput: React.FC<ThreeDimensionalUrlOutputProps> = ({
   const { t } = useTranslation("flow");
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [height, setHeight] = useState("500px");
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const threeContainerRef = useRef<HTMLDivElement>(null);
+
+  const getParentContainer = () => {
+    return containerRef?.current?.parentElement;
+  };
+
+  const updateParentHeight = () => {
+    if (containerRef.current && containerRef.current.parentElement) {
+      const parentHeight = containerRef.current.parentElement.clientHeight;
+      const newHeight = Math.max(parentHeight, 500);
+      setHeight(`${newHeight}px`);
+    }
+  };
 
   const loadObj = (url: string, scene: Scene) => {
     new OBJLoader().load(
@@ -61,7 +75,8 @@ const ThreeDimensionalUrlOutput: React.FC<ThreeDimensionalUrlOutputProps> = ({
   };
 
   useEffect(() => {
-    const container = containerRef.current;
+    updateParentHeight();
+    const container = getParentContainer();
     if (!container) return;
 
     const type = getFileTypeFromUrl(url);
@@ -77,7 +92,7 @@ const ThreeDimensionalUrlOutput: React.FC<ThreeDimensionalUrlOutputProps> = ({
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
-    container.appendChild(renderer.domElement);
+    threeContainerRef.current?.appendChild(renderer.domElement);
 
     const ambientLight = new AmbientLight(0xffffff, 1); // soft white light
     scene.add(ambientLight);
@@ -125,13 +140,13 @@ const ThreeDimensionalUrlOutput: React.FC<ThreeDimensionalUrlOutputProps> = ({
   }
 
   return (
-    <OutputContainer>
+    <OutputContainer ref={containerRef} style={{ height: height }}>
       {isLoading ? (
         <LoadingSpinner className="absolute w-full text-4xl" />
       ) : null}
       <div
         className={`three-container flex h-full w-full`}
-        ref={containerRef}
+        ref={threeContainerRef}
         key={url}
         onClick={(e) => e.stopPropagation()}
       />
@@ -153,7 +168,6 @@ const OutputContainer = styled.div`
   text-align: center;
   display: flex;
   margin-top: 10px;
-  height: 500px;
   width: auto;
 `;
 
