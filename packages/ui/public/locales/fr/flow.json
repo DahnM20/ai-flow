@@ -105,5 +105,7 @@
     "ChangeName": "Changer le nom",
     "RemoveFlow": "Supprimer le flow",
     "HideHint": "Cacher",
-    "TextDocumentHint": "Veuillez noter que ce nœud fournit les fichiers uniquement sous forme d'URLs. Pour utiliser un document (.pdf, .txt) en format texte, envisagez d'utiliser le nœud 'Document-en-Texte'."
+    "TextDocumentHint": "Veuillez noter que ce nœud fournit les fichiers uniquement sous forme d'URLs. Pour utiliser un document (.pdf, .txt) en format texte, envisagez d'utiliser le nœud 'Document-en-Texte'.",
+    "Display": "Affichage",
+    "displayHelp": "Ce noeud redimensionable permet d'afficher du contenu."
 }

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useContext, useState } from "react";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
@@ -8,22 +8,42 @@ import { FiCopy, FiMinus, FiPlus } from "react-icons/fi";
 import { copyToClipboard } from "../../../utils/navigatorUtils";
 import { toastFastInfoMessage } from "../../../utils/toastUtils";
 import { useTranslation } from "react-i18next";
+import { NodeContext } from "../../../providers/NodeProvider";
+import { NodeAppearance } from "../types/node";
 
 interface MarkdownOutputProps {
   data: string;
+  name: string;
+  appearance?: NodeAppearance;
 }
 
-const MarkdownOutput: React.FC<MarkdownOutputProps> = ({ data }) => {
+const MarkdownOutput: React.FC<MarkdownOutputProps> = ({
+  data,
+  name,
+  appearance,
+}) => {
   const { t } = useTranslation("flow");
-  const [fontSize, setFontSize] = useState(1.05);
+  const { updateNodeAppearance } = useContext(NodeContext);
+
+  const fontSize = appearance?.fontSize ?? 1.05;
 
   if (!data) return <p> </p>;
 
   const stringifiedData =
     typeof data === "string" ? data : JSON.stringify(data);
 
-  const increaseFontSize = () => setFontSize((prevSize) => prevSize + 0.1);
-  const decreaseFontSize = () => setFontSize((prevSize) => prevSize - 0.1);
+  const increaseFontSize = () => {
+    updateNodeAppearance(name, {
+      ...appearance,
+      fontSize: fontSize + 0.1,
+    });
+  };
+
+  const decreaseFontSize = () =>
+    updateNodeAppearance(name, {
+      ...appearance,
+      fontSize: fontSize - 0.1,
+    });
 
   const handleCopyToClipboard = (event: any) => {
     event.stopPropagation();

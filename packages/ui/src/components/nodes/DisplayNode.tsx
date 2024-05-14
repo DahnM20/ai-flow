@@ -94,9 +94,9 @@ const DisplayNode: React.FC<DisplayNodeProps> = React.memo(
     return (
       <div
         key={id}
-        className={`cassecouille flex h-full flex-col rounded-lg bg-zinc-900 `}
+        className={`flex h-full flex-col rounded-lg bg-zinc-900 `}
         style={{
-          width: !data.outputData ? "300px" : "100%",
+          width: !data.outputData ? "300px" : "",
         }}
       >
         {selected && (

@@ -64,7 +64,13 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
           </a>
         );
       default:
-        return <MarkdownOutput data={output} />;
+        return (
+          <MarkdownOutput
+            data={output}
+            name={data.name}
+            appearance={data.appearance}
+          />
+        );
     }
   };
 

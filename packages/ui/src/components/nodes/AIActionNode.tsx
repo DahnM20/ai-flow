@@ -191,7 +191,11 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(
                 {t("ClickToShowOutput")}
               </NodeLogsText>
             ) : (
-              <MarkdownOutput data={outputData} />
+              <MarkdownOutput
+                data={outputData}
+                name={data.name}
+                appearance={data.appearance}
+              />
             )}
           </NodeLogs>
         )}
