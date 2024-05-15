@@ -51,11 +51,11 @@ export function AppTour({ run, setRun }: AppTourProps) {
             <p>{t("firstTimeHere")}</p>
             <p>{t("discoverApp")}</p>
           </div>
-          <div className="flex flex-row justify-center space-x-4 text-sm md:text-lg">
+          <div className="flex justify-center space-x-4 text-sm md:text-lg">
             <button
               type="button"
               className="rounded-lg bg-slate-700 p-3 text-white transition duration-150 ease-in-out hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-              aria-label={"skip-tour"}
+              aria-label="skip-tour"
               onClick={() => setRun(false)}
             >
               {t("iKnowTheApp")}
@@ -63,7 +63,7 @@ export function AppTour({ run, setRun }: AppTourProps) {
             <button
               type="button"
               className="rounded-lg bg-teal-500 p-3 text-white transition duration-150 ease-in-out hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-300"
-              aria-label={"start-tour"}
+              aria-label="start-tour"
               onClick={() => setStepIndex(1)}
             >
               {t("letsStart")}
