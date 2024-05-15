@@ -72,6 +72,10 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({
             e.stopPropagation();
             increaseFontSize();
           }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            increaseFontSize();
+          }}
           aria-label="Increase text size"
           title="Increase text size"
         >
@@ -82,6 +86,10 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({
             e.stopPropagation();
             decreaseFontSize();
           }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            decreaseFontSize();
+          }}
           aria-label="Decrease text size"
           title="Decrease text size"
         >
@@ -89,6 +97,10 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({
         </IconButton>
         <IconButton
           onClick={(e) => {
+            e.stopPropagation();
+            handleCopyToClipboard(e);
+          }}
+          onTouchStart={(e) => {
             e.stopPropagation();
             handleCopyToClipboard(e);
           }}

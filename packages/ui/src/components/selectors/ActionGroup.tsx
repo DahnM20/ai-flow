@@ -25,7 +25,7 @@ export default function ActionGroup<T>({
     >
       {options.map((option) => {
         return (
-          <span
+          <button
             key={option.name}
             className={`cursor-pointer 
                         rounded-full bg-slate-200/10
@@ -36,13 +36,14 @@ export default function ActionGroup<T>({
                         ${option.hoverColor ? "hover:" + option.hoverColor : "hover:text-blue-400"}
                         `}
             onClick={option.onClick}
+            onTouchStart={option.onClick}
             style={{ display: showIcon ? "block" : "none" }}
             data-tooltip-id={"app-tooltip"}
             data-tooltip-content={option.name}
             data-tooltip-place={option.tooltipPosition ?? "top"}
           >
             {option.icon}
-          </span>
+          </button>
         );
       })}
     </div>

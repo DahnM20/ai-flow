@@ -24,6 +24,7 @@ export default function ColorSelector({ onChangeColor }: ColorSelectorProps) {
             backgroundColor: color,
           }}
           onClick={() => onChangeColor(color)}
+          onTouchStart={() => onChangeColor(color)}
         />
       ))}
     </>

@@ -19,7 +19,6 @@ export default function NodeTextField({
   return (
     <NodeInput
       value={value}
-      className="nodrag"
       onChange={(event) => onChange(event)}
       placeholder={placeholder}
     />

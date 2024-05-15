@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Tooltip } from "react-tooltip";
 
 export interface EdgeTypeIconEntry {
   src: string;
