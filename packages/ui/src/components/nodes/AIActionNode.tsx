@@ -182,7 +182,7 @@ const AIActionNode: React.FC<AIActionNodeProps> = React.memo(
         />
         {!!data.outputData && (
           <NodeLogs
-            className="w-full border-t-2 border-t-slate-800"
+            className="nodrag nowheel w-full border-t-2 border-t-slate-800"
             showLogs={showLogs}
             onClick={() => setShowLogs(!showLogs)}
           >

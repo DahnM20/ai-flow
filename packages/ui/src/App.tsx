@@ -13,16 +13,15 @@ import { loadExtensions } from "./nodes-configuration/nodeConfig";
 import { loadAllNodesTypes } from "./utils/mappings";
 import { loadParameters } from "./components/popups/config-popup/parameters";
 import { SocketProvider } from "./providers/SocketProvider";
-import {
-  LoadingScreenSpinner,
-  LoadingSpinner,
-} from "./components/nodes/Node.styles";
+import { LoadingScreenSpinner } from "./components/nodes/Node.styles";
 
 const App = () => {
   const { dark } = useContext(ThemeContext);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
   const [runTour, setRunTour] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const [appMounted, setComponentsMounted] = useState(false);
 
   useEffect(() => {
     if (dark) {
@@ -47,6 +46,12 @@ const App = () => {
 
     loadAppData();
   }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      setComponentsMounted(true);
+    }
+  }, [isLoaded]);
 
   async function loadAppData() {
     const minLoadingTime = 1000;
@@ -86,8 +91,6 @@ const App = () => {
   return (
     <VisibilityProvider>
       <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-        {runTour && <AppTour run={runTour} setRun={setRunTour} />}
-
         <SocketProvider>
           <FlowTabs />
         </SocketProvider>
@@ -95,7 +98,9 @@ const App = () => {
         {showWelcomePopup && !runTour && (
           <WelcomePopup show onClose={() => setShowWelcomePopup(false)} />
         )}
+
         <Tooltip id={`app-tooltip`} style={{ zIndex: 100 }} delayShow={500} />
+        {appMounted && runTour && <AppTour run={runTour} setRun={setRunTour} />}
       </DndProvider>
     </VisibilityProvider>
   );
