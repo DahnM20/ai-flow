@@ -1,14 +1,16 @@
-FROM node:14 as build
+FROM node:21 as build
 
 WORKDIR /app
 
 ARG VITE_APP_WS_HOST
 ARG VITE_APP_WS_PORT
+ARG VITE_APP_API_REST_PORT
 ARG VITE_APP_USE_HTTPS
 ARG VITE_APP_VERSION
 
 ENV VITE_APP_WS_HOST=$VITE_APP_WS_HOST
 ENV VITE_APP_WS_PORT=$VITE_APP_WS_PORT
+ENV VITE_APP_API_REST_PORT=$VITE_APP_API_REST_PORT
 ENV VITE_APP_USE_HTTPS=$VITE_APP_USE_HTTPS
 ENV VITE_APP_VERSION=$VITE_APP_VERSION
 
@@ -19,10 +21,11 @@ RUN npm ci
 COPY . /app/
 
 RUN npm run build
+RUN ls -al /app
 
 FROM nginx:1.21
 
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build ./app/build /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
