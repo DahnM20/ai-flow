@@ -13,6 +13,7 @@ import { Switch } from "@mantine/core";
 import NodeField from "../components/nodes/node-input/NodeField";
 import SelectAutocomplete from "../components/selectors/SelectAutocomplete";
 import NodeTextField from "../components/nodes/node-input/NodeTextField";
+import useIsTouchDevice from "./useIsTouchDevice";
 
 export interface DisplayParams {
   showHandles?: boolean;
@@ -30,6 +31,7 @@ export function useFormFields(
   displayParams?: DisplayParams,
 ) {
   const { t } = useTranslation("flow");
+  const isTouchDevice = useIsTouchDevice();
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -112,7 +114,7 @@ export function useFormFields(
             key={`${id}-${field.name}`}
             ref={textareaRef}
             name={field.name}
-            className="nowheel nodrag"
+            className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}
             value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
             onChange={handleEventNodeDataChange}
