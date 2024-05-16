@@ -6,6 +6,8 @@ import {
   NodeResizer,
   OnResizeEnd,
   ResizeParams,
+  NodeResizeControl,
+  Background,
 } from "reactflow";
 import { generateIdForHandle } from "../../utils/flowUtils";
 import { NodeContext } from "../../providers/NodeProvider";
@@ -38,6 +40,29 @@ interface DisplayNodeProps extends NodeProps {
 interface Dimensions {
   width: number;
   height: number;
+}
+
+function ResizeIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      strokeWidth="2"
+      stroke="#F36788"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ position: "absolute", right: -20, bottom: -20 }}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <polyline points="16 20 20 20 20 16" />
+      <line x1="14" y1="14" x2="20" y2="20" />
+      <polyline points="8 4 4 4 4 8" />
+      <line x1="4" y1="4" x2="10" y2="10" />
+    </svg>
+  );
 }
 
 const DisplayNode: React.FC<DisplayNodeProps> = React.memo(
@@ -101,15 +126,20 @@ const DisplayNode: React.FC<DisplayNodeProps> = React.memo(
         }}
       >
         {selected && (
-          <NodeResizer
-            isVisible
-            minWidth={450}
-            minHeight={200}
+          <NodeResizeControl
+            minWidth={300}
+            minHeight={100}
             onResizeEnd={(event, params) => {
               handleReloadDisplay();
               handleSaveDimensions(params);
             }}
-          />
+            style={{
+              backgroundColor: "transparent",
+              border: "none",
+            }}
+          >
+            <ResizeIcon />
+          </NodeResizeControl>
         )}
 
         <NodeHeader>
@@ -141,7 +171,11 @@ const DisplayNode: React.FC<DisplayNodeProps> = React.memo(
         />
 
         <div className="nodrag nowheel flex h-full w-full overflow-auto">
-          <OutputDisplay key={reloadDisplay} data={data} />
+          {data.outputData != null ? (
+            <OutputDisplay key={reloadDisplay} data={data} />
+          ) : (
+            <div className="h-10" />
+          )}
         </div>
       </div>
     );
