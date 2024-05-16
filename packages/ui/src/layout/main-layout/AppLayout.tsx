@@ -274,7 +274,7 @@ const FlowTabs = () => {
               />
 
               <FaEye
-                className="text-slate-400 hover:text-slate-50"
+                className={` ${showOnlyOutput ? "rounded-2xl text-green-400 ring-1 ring-green-400/50 hover:text-green-200" : "text-slate-400 hover:text-slate-50 "}`}
                 onClick={handleToggleOutput}
               />
             </>
