@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import DefaultPopupWrapper from "./DefaultPopup";
 import { useTranslation } from "react-i18next";
-import { MdClose } from "react-icons/md";
+import { Modal } from "@mantine/core";
 
 type Feature = {
   title: string;
@@ -39,16 +38,31 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
   const shouldShowPopup = show && (isImageLoaded || !imageUrl);
 
   return shouldShowPopup ? (
-    <DefaultPopupWrapper onClose={onClose} show={show} centered>
-      <div className="my-15 relative flex flex-col overflow-auto rounded-xl bg-zinc-900 p-10 text-slate-200 shadow">
-        <div className="absolute right-0 top-0 p-4 text-2xl">
-          <button onClick={onClose} className="hover:text-red-500">
-            <MdClose />
-          </button>
-        </div>
-        <h2 className="mb-6 text-xl font-semibold">
-          {versionInfo.description}
-        </h2>
+    <Modal
+      opened={show}
+      onClose={onClose}
+      size="70%"
+      centered
+      title={versionInfo.description}
+      styles={{
+        title: {
+          fontSize: "1.3rem",
+          fontWeight: "bold",
+          color: "white",
+          paddingLeft: "0.5rem",
+        },
+        header: {
+          backgroundColor: "rgb(24 24 27)",
+        },
+        body: {
+          backgroundColor: "rgb(24 24 27)",
+        },
+        root: {
+          borderRadius: "20rem",
+        },
+      }}
+    >
+      <div className="my-15 relative flex flex-col overflow-auto rounded-xl bg-zinc-900 px-2 text-slate-200 shadow">
         <ul className="mb-6 list-inside list-disc space-y-3">
           {!!features &&
             features.map((feature, index) => (
@@ -70,6 +84,6 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
           </div>
         )}
       </div>
-    </DefaultPopupWrapper>
+    </Modal>
   ) : null;
 }

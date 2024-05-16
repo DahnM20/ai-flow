@@ -7,7 +7,6 @@ import { youtubeTranscriptNodeConfig } from "./youtubeTranscriptNode";
 import { mergerPromptNode } from "./mergerPromptNode";
 import { gptVisionNodeConfig } from "./gptVisionNode";
 import { FieldType, NodeConfig } from "./types";
-import axios from "axios";
 import { getNodeExtensions } from "../api/nodes";
 import withCache from "../api/cache/withCache";
 
