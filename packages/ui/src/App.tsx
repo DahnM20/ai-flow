@@ -14,6 +14,7 @@ import { loadAllNodesTypes } from "./utils/mappings";
 import { loadParameters } from "./components/popups/config-popup/parameters";
 import { SocketProvider } from "./providers/SocketProvider";
 import { LoadingScreenSpinner } from "./components/nodes/Node.styles";
+import { getCurrenttAppVersion } from "./config/config";
 
 const App = () => {
   const { dark } = useContext(ThemeContext);
@@ -34,7 +35,7 @@ const App = () => {
   useEffect(() => {
     const storedVersion = localStorage.getItem("appVersion");
 
-    const currentAppVersion = process.env.REACT_APP_VERSION;
+    const currentAppVersion = getCurrenttAppVersion();
     if (!!currentAppVersion && storedVersion !== currentAppVersion) {
       if (!!currentAppVersion) {
         setRunTour(true);
