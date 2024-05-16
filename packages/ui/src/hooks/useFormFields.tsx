@@ -112,7 +112,7 @@ export function useFormFields(
             key={`${id}-${field.name}`}
             ref={textareaRef}
             name={field.name}
-            className="nowheel"
+            className="nowheel nodrag"
             value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
             onChange={handleEventNodeDataChange}
