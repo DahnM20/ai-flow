@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 services:
   backend:
     container_name: ai-flow-backend
@@ -24,5 +24,5 @@ services:
     ports:
       - 80:80
     environment:
-      - REACT_APP_WS_HOST=localhost
-      - REACT_APP_WS_PORT=5000
+      - VITE_APP_WS_HOST=localhost
+      - VITE_APP_WS_PORT=5000

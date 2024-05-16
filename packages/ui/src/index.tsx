@@ -22,13 +22,7 @@ const theme = createTheme({});
 root.render(
   <>
     <GlobalStyle />
-    <MantineProvider
-      getRootElement={() =>
-        document.querySelector<HTMLElement>("#dark-area") ?? undefined
-      }
-      cssVariablesSelector="#dark-area"
-      forceColorScheme="dark"
-    >
+    <MantineProvider theme={theme} forceColorScheme="dark">
       <ThemeProvider>
         <Suspense fallback={<Fallback />}>
           <ToastContainer />

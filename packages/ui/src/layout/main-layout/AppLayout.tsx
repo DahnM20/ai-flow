@@ -68,7 +68,7 @@ const FlowTabs = () => {
   const [openConfig, setOpenConfig] = useState(false);
   const [mode, setMode] = useState<ApplicationMode>("flow");
   const [selectedEdgeType, setSelectedEdgeType] = useState("default");
-  const useAuth = process.env.REACT_APP_USE_AUTH === "true";
+  const useAuth = import.meta.env.VITE_APP_USE_AUTH === "true";
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);

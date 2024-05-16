@@ -22,7 +22,8 @@ services:
       context: ../packages/ui/
       dockerfile: Dockerfile
       args:
-        REACT_APP_WS_HOST: localhost
-        REACT_APP_WS_PORT: 5001
+        VITE_APP_WS_HOST: localhost
+        VITE_APP_WS_PORT: 5001
+        VITE_APP_API_REST_PORT: 5001
     ports:
       - 80:80
