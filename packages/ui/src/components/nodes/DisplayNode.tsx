@@ -3,11 +3,8 @@ import {
   Position,
   NodeProps,
   useUpdateNodeInternals,
-  NodeResizer,
-  OnResizeEnd,
   ResizeParams,
   NodeResizeControl,
-  Background,
 } from "reactflow";
 import { generateIdForHandle } from "../../utils/flowUtils";
 import { NodeContext } from "../../providers/NodeProvider";
