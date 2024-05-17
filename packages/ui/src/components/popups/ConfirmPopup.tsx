@@ -1,13 +1,12 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { Modal, Text, Button } from "@mantine/core";
 
 interface ConfirmPopupProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  messageVar: string;
-  confirmButtonVar?: string;
+  message: string;
+  confirmButtonLabel?: string;
   title?: string;
 }
 
@@ -15,12 +14,10 @@ const ConfirmPopup: React.FC<ConfirmPopupProps> = ({
   isOpen,
   onConfirm,
   onClose,
-  messageVar,
-  confirmButtonVar,
+  message,
+  confirmButtonLabel,
   title,
 }) => {
-  const { t } = useTranslation("flow");
-
   return (
     <Modal
       opened={isOpen}
@@ -44,13 +41,11 @@ const ConfirmPopup: React.FC<ConfirmPopupProps> = ({
         },
         header: {
           background: "transparent",
-          // background: "url(/logo.svg) no-repeat right 0em center",
-          // backgroundSize: "contain",
         },
       }}
     >
       <Text mt="md" color="#d8dee9">
-        {messageVar}
+        {message}
       </Text>
 
       <div className="mt-5 flex justify-center space-x-3">
@@ -70,7 +65,7 @@ const ConfirmPopup: React.FC<ConfirmPopupProps> = ({
             },
           }}
         >
-          {t(confirmButtonVar ?? "Refresh")}
+          {confirmButtonLabel ?? "Confirm"}
         </Button>
         <Button
           onClick={onClose}
@@ -88,7 +83,7 @@ const ConfirmPopup: React.FC<ConfirmPopupProps> = ({
             },
           }}
         >
-          {t("Ignore")}
+          {"Ignore"}
         </Button>
       </div>
     </Modal>
