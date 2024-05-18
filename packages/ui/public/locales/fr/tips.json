@@ -9,8 +9,7 @@
         "N'oubliez pas que les modèles GPT ont des limites de tokens. Des entrées trop volumineuses peuvent provoquer des erreurs.",
         "Accédez à votre flux au format JSON via la barre latérale avec l'indicateur noir sur la droite. Sauvegardez et téléchargez votre flux depuis cet endroit.",
         "Nous ne stockons ni n'utilisons jamais vos données.",
-        "Les images générées sont disponibles environ une heure, pensez à les sauvegarder.",
-        "Si vous utilisez la version cloud, nous conservons vos images Stable Diffusion pendant 12 heures pour que vous puissiez y accéder."
+        "Les images générées sont disponibles environ une heure, pensez à les sauvegarder."
     ],
     "docAvailable": "La documentation complète est disponible ici : ",
     "tipsSection": "Astuces"

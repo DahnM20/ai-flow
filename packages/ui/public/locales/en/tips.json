@@ -8,8 +8,7 @@
         "Additional tools are available on the right sidebar.",
         "Remember, GPT models have token limits. Overly large inputs might cause errors.",
         "Access your flow in JSON format via the sidebar with the black indicator on the right. Save and upload your flow there.",
-        "Generally, images are only available during one hour, so do not forget to save them.",
-        "If you're using the cloud version, we save your Stable Diffusion images for up to 12 hours for your access."
+        "Generally, images are only available during one hour, so do not forget to save them."
     ],
     "docAvailable": "Full documentation is available here : ",
     "tipsSection": "Tips"
