@@ -31,6 +31,19 @@ export function toastErrorMessage(message: string) {
   );
 }
 
+export function toastFastSuccessMessage(message: string) {
+  toast.success(message, {
+    position: "top-center",
+    autoClose: 500,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+    progress: undefined,
+    theme: "dark",
+  });
+}
+
 export function toastFastInfoMessage(message: string) {
   toast.info(message, {
     position: "top-center",

@@ -12,6 +12,10 @@
     "parameters.core.openai_api_key": "Clé API OpenAI",
     "parameters.core.stabilityai_api_key": "Clé API StabilityAI",
     "parameters.core.replicate_api_key": "Clé API Replicate",
-    "sections.extension": "Extensions"
+    "sections.extension": "Extensions",
+    "userTabLabel": "Paramètres utilisateur",
+    "displayTabLabel": "Paramètres d'affichage",
+    "nodesDisplayed": "Nœuds activés",
+    "configUpdated": "Configuration mise à jour avec succès"
 
 }

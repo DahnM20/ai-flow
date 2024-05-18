@@ -1,19 +1,11 @@
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
 import { useContext, useState } from "react";
 import styled from "styled-components";
-import {
-  SocketContext,
-  WSConfiguration,
-} from "../../../providers/SocketProvider";
 import { useTranslation } from "react-i18next";
-import ParameterFields from "./ParametersFields";
-import {
-  Parameters,
-  getConfigParameters,
-  updateParameters,
-} from "./parameters";
 import { FiMail } from "react-icons/fi";
 import { Modal } from "@mantine/core";
+import { UserParameters } from "./UserParameters";
+import DisplayParameters from "./DisplayParameters";
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -23,34 +15,9 @@ interface ConfigPopupProps {
 
 const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
   const { t } = useTranslation("config");
-  const { updateSocket } = useContext(SocketContext);
-
-  const [parameters, setParameters] = useState<Parameters>(
-    getConfigParameters(),
-  );
-
-  const onParameterChange = (section: string, name: string, value: any) => {
-    setParameters((prevParameters) => ({
-      ...prevParameters,
-      [section]: {
-        ...prevParameters[section],
-        [name]: {
-          ...prevParameters[section][name],
-          value,
-        },
-      },
-    }));
-  };
-
-  const handleValidate = () => {
-    updateParameters(parameters);
-    const config: WSConfiguration = {};
-    updateSocket(config);
-    onClose();
-  };
+  const [activeTab, setActiveTab] = useState<string>("user");
 
   const handleClose = () => {
-    setParameters(getConfigParameters());
     onClose();
   };
 
@@ -88,26 +55,22 @@ const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
           <p>{t("openSourceDisclaimer")}</p>
           <p>{t("apiKeyDisclaimer")}</p>
         </Disclaimer>
-        <ParametersContainer>
-          <ParameterFields
-            parameters={parameters}
-            onParameterChange={onParameterChange}
-          />
-        </ParametersContainer>
-        <Actions>
-          <ActionButton
-            onClick={handleClose}
-            className="bg-slate-800 hover:bg-slate-700"
+        <Tabs className="sm:text-md text-base">
+          <Tab
+            isActive={activeTab === "user"}
+            onClick={() => setActiveTab("user")}
           >
-            {t("closeButtonLabel")}
-          </ActionButton>
-          <ActionButton
-            onClick={handleValidate}
-            className="bg-teal-500 hover:bg-teal-400"
+            {t("userTabLabel")}
+          </Tab>
+          <Tab
+            isActive={activeTab === "display"}
+            onClick={() => setActiveTab("display")}
           >
-            {t("validateButtonLabel")}
-          </ActionButton>
-        </Actions>
+            {t("displayTabLabel")}
+          </Tab>
+        </Tabs>
+        {activeTab === "user" && <UserParameters />}
+        {activeTab === "display" && <DisplayParameters />}
         <Footer>
           <Message>{t("supportProjectPrompt")}</Message>
           <Icons>
@@ -150,33 +113,27 @@ const Disclaimer = styled.div`
   color: #6b7280;
 `;
 
-const ParametersContainer = styled.div`
+const Tabs = styled.div`
   display: flex;
   justify-content: center;
-  overflow: auto;
-  width: 100%;
+  margin-bottom: 20px;
 `;
 
-const Actions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-top: 1em;
-`;
-
-const ActionButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 5px;
+const Tab = styled.button<{ isActive: boolean }>`
   padding: 10px 20px;
-  color: #fff;
-  font-size: 16px;
   font-weight: bold;
+  color: ${(props) => (props.isActive ? "#fff" : "#b4b4b4")};
+  background-color: ${(props) => (props.isActive ? "#1a1b1e" : "transparent")};
   border: none;
-  border-radius: 5px;
+  border-bottom: ${(props) => (props.isActive ? "2px solid #00bcd4" : "none")};
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  transition:
+    color 0.3s,
+    background-color 0.3s;
+
+  &:hover {
+    color: #fff;
+  }
 `;
 
 const Footer = styled.div`

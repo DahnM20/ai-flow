@@ -6,6 +6,7 @@ import { memo, useEffect, useState } from "react";
 import DraggableNode from "./DraggableNode";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useVisibility } from "../../../providers/VisibilityProvider";
+import { PARAMETER_NODES_HIDDEN_LIST_KEY_LOCAL_STORAGE } from "../../popups/config-popup/parameters";
 
 const HIDE_SIDEBAR_ANIMATION_DURATION = 300;
 
@@ -31,6 +32,21 @@ const DnDSidebar = () => {
 
     return () => clearTimeout(timeoutId);
   }, [sidebar]);
+
+  useEffect(() => {
+    const handleHiddenListChanged = (e: any) => {
+      setSections(getSections());
+    };
+
+    window.addEventListener("nodesHiddenListChanged", handleHiddenListChanged);
+
+    return () => {
+      window.removeEventListener(
+        "nodesHiddenListChanged",
+        handleHiddenListChanged,
+      );
+    };
+  }, []);
 
   return (
     <>

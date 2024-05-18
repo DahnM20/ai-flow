@@ -3,6 +3,7 @@ import { BsInputCursorText } from "react-icons/bs";
 import { FaToolbox } from "react-icons/fa";
 import { NodeConfig, SectionType } from "./types";
 import { nodeConfigs } from "./nodeConfig";
+import { getNodesHiddenList } from "../components/popups/config-popup/parameters";
 
 export type NodeSection = {
   label: string;
@@ -19,7 +20,7 @@ export type DnDNode = {
   isBeta?: boolean;
 };
 
-function transformNodeConfigsToDndNode(configs: {
+export function transformNodeConfigsToDndNode(configs: {
   [key: string]: NodeConfig | undefined;
 }): DnDNode[] {
   return Object.entries(configs).map(([type, config]) => {
@@ -32,7 +33,7 @@ function transformNodeConfigsToDndNode(configs: {
   });
 }
 
-function getAllDndNode(): DnDNode[] {
+export function getNonGenericNodeConfig() {
   const nonGenericNodeConfig: DnDNode[] = [
     {
       label: "AiAction",
@@ -71,10 +72,22 @@ function getAllDndNode(): DnDNode[] {
       helpMessage: "displayHelp",
       section: "tools",
     },
+    // {
+    //   label: "Text",
+    //   type: "text",
+    //   helpMessage: "imageHelp",
+    //   section: "visuals",
+    // },
   ];
-  return transformNodeConfigsToDndNode(nodeConfigs).concat(
-    nonGenericNodeConfig,
-  );
+  return nonGenericNodeConfig;
+}
+
+function getAllDndNode(): DnDNode[] {
+  const nodesDisabled = getNodesHiddenList();
+  const nonGenericNodeConfig = getNonGenericNodeConfig();
+  return transformNodeConfigsToDndNode(nodeConfigs)
+    .concat(nonGenericNodeConfig)
+    .filter((node) => !nodesDisabled.includes(node.type));
 }
 
 export const populateNodeSections = () => {
@@ -94,6 +107,11 @@ export const populateNodeSections = () => {
       type: "tools",
       icon: FaToolbox,
     },
+    // {
+    //   label: "Visuals",
+    //   type: "visuals",
+    //   icon: BsInputCursorText,
+    // },
   ];
   const nodes = getAllDndNode();
 
@@ -112,5 +130,3 @@ export const populateNodeSections = () => {
 };
 
 export const getSections = () => populateNodeSections();
-
-// export const nodeSectionMapping = populateNodeSections(emptyNodeSections);
