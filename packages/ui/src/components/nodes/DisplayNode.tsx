@@ -76,7 +76,10 @@ const DisplayNode: React.FC<DisplayNodeProps> = React.memo(
     const updateNodeInternals = useUpdateNodeInternals();
 
     const inputHandleId = useMemo(() => generateIdForHandle(0), []);
-    const { allHandlePositions } = useHandlePositions(data, 1, []);
+    const outputHandleId = useMemo(() => generateIdForHandle(0, true), []);
+    const { allHandlePositions } = useHandlePositions(data, 1, [
+      outputHandleId,
+    ]);
 
     useEffect(() => {
       setNodeId(`${data.name}-${Date.now()}`);
@@ -165,6 +168,18 @@ const DisplayNode: React.FC<DisplayNodeProps> = React.memo(
           }
           linkedHandlePositions={allHandlePositions}
           onChangeHandlePosition={handleChangeHandlePosition}
+        />
+
+        <HandleWrapper
+          id={outputHandleId}
+          position={
+            !!data?.handles && data.handles[outputHandleId]
+              ? data.handles[outputHandleId]
+              : Position.Right
+          }
+          linkedHandlePositions={allHandlePositions}
+          onChangeHandlePosition={handleChangeHandlePosition}
+          isOutput
         />
 
         <div className="nodrag nowheel flex h-full w-full overflow-auto">
