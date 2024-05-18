@@ -1,5 +1,5 @@
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 import {
   SocketContext,
@@ -12,8 +12,8 @@ import {
   getConfigParameters,
   updateParameters,
 } from "./parameters";
-import DefaultPopupWrapper from "../DefaultPopup";
 import { FiMail } from "react-icons/fi";
+import { Modal } from "@mantine/core";
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -21,9 +21,8 @@ interface ConfigPopupProps {
   onValidate?: () => void;
 }
 
-function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
+const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
   const { t } = useTranslation("config");
-
   const { updateSocket } = useContext(SocketContext);
 
   const [parameters, setParameters] = useState<Parameters>(
@@ -31,26 +30,21 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
   );
 
   const onParameterChange = (section: string, name: string, value: any) => {
-    const sectionParameters = parameters[section];
-    if (!sectionParameters) {
-      return;
-    }
-    const parameter = sectionParameters[name];
-    if (!parameter) {
-      return;
-    }
-    parameter.value = value;
     setParameters((prevParameters) => ({
       ...prevParameters,
-      [section]: sectionParameters,
+      [section]: {
+        ...prevParameters[section],
+        [name]: {
+          ...prevParameters[section][name],
+          value,
+        },
+      },
     }));
   };
 
   const handleValidate = () => {
     updateParameters(parameters);
-
     const config: WSConfiguration = {};
-
     updateSocket(config);
     onClose();
   };
@@ -60,37 +54,59 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
     onClose();
   };
 
-  return isOpen ? (
-    <DefaultPopupWrapper show={isOpen} onClose={handleClose} centered>
-      <Content
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        className="my-2 flex flex-col justify-between overflow-auto rounded-2xl bg-slate-100 p-5 md:h-fit"
-      >
-        <Header>
-          <Title className="text-zinc-900">{t("configurationTitle")}</Title>
-        </Header>
-        <>
-          <SoftMessage>{t("openSourceDisclaimer")}</SoftMessage>
-          <SoftMessage>{t("apiKeyDisclaimer")}</SoftMessage>
-        </>
-
-        <div className="flex w-full justify-center overflow-auto ">
-          <div className="w-11/12">
-            <ParameterFields
-              parameters={parameters}
-              onParameterChange={onParameterChange}
-            />
-          </div>
-        </div>
+  return (
+    <Modal
+      opened={isOpen}
+      onClose={handleClose}
+      withCloseButton={false}
+      size="auto"
+      centered
+      styles={{
+        content: {
+          borderRadius: "0.75em",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          background: "linear-gradient(135deg, #101113, #1a1b1e)",
+          padding: "2em",
+          color: "#d8dee9",
+        },
+        title: {
+          fontSize: "1.25rem",
+          color: "#d8dee9",
+          fontWeight: "bold",
+          marginBottom: "0.5em",
+        },
+        header: {
+          background: "transparent",
+        },
+      }}
+    >
+      <Content>
+        <h2 className="mb-5 text-center text-2xl font-bold">
+          {t("configurationTitle")}
+        </h2>
+        <Disclaimer>
+          <p>{t("openSourceDisclaimer")}</p>
+          <p>{t("apiKeyDisclaimer")}</p>
+        </Disclaimer>
+        <ParametersContainer>
+          <ParameterFields
+            parameters={parameters}
+            onParameterChange={onParameterChange}
+          />
+        </ParametersContainer>
         <Actions>
-          <Button onClick={onClose} className="bg-[#9B8D8A]">
+          <ActionButton
+            onClick={handleClose}
+            className="bg-slate-800 hover:bg-slate-700"
+          >
             {t("closeButtonLabel")}
-          </Button>
-          <Button onClick={handleValidate} className="bg-[#72CCA5]">
+          </ActionButton>
+          <ActionButton
+            onClick={handleValidate}
+            className="bg-teal-500 hover:bg-teal-400"
+          >
             {t("validateButtonLabel")}
-          </Button>
+          </ActionButton>
         </Actions>
         <Footer>
           <Message>{t("supportProjectPrompt")}</Message>
@@ -115,51 +131,30 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
           </Icons>
         </Footer>
       </Content>
-    </DefaultPopupWrapper>
-  ) : (
-    <></>
+    </Modal>
   );
-}
-
-export const Popup = styled.div<{ isOpen: boolean }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.2s ease;
-  opacity: ${(props) => (props.isOpen ? 1 : 0)};
-  pointer-events: ${(props) => (props.isOpen ? "all" : "none")};
-`;
+};
 
 const Content = styled.div`
-  position: relative;
-  width: 500px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: auto;
+`;
+
+const Disclaimer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 1em;
+  color: #6b7280;
 `;
 
-const Header = styled.div`
+const ParametersContainer = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0;
+  overflow: auto;
+  width: 100%;
 `;
 
 const Actions = styled.div`
@@ -167,9 +162,10 @@ const Actions = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-top: 1em;
 `;
 
-const Button = styled.button`
+const ActionButton = styled.button`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -180,11 +176,7 @@ const Button = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #555;
-  }
+  transition: background-color 0.3s ease-in-out;
 `;
 
 const Footer = styled.div`
@@ -193,17 +185,10 @@ const Footer = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 14px;
-  color: #777;
 `;
 
 const Message = styled.p`
   margin-bottom: 10px;
-`;
-
-const SoftMessage = styled.p`
-  text-align: center;
-  color: #888;
-  margin-bottom: 20px;
 `;
 
 const Icons = styled.div`
@@ -212,12 +197,12 @@ const Icons = styled.div`
 `;
 
 const Icon = styled.a`
-  font-size: 24px;
-  color: #555;
+  font-size: 1.75em;
   cursor: pointer;
+  transition: color 0.3s ease-in-out;
 
   &:hover {
-    color: #000;
+    color: #b3edff;
   }
 `;
 

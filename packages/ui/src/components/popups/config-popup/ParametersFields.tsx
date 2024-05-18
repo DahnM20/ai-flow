@@ -16,13 +16,14 @@ const ParameterFields = ({
   onParameterChange,
 }: ParameterFieldsProps) => {
   const { t } = useTranslation("config");
+
   return (
     <>
       {Object.entries(parameters).map(([section, keys]) => (
-        <Section key={section} className="w-full">
+        <Section key={section}>
           <SectionTitle>{t(`sections.${section}`)}</SectionTitle>
           {Object.entries(keys).map(([key, { value, type }]) => (
-            <Field key={key} className="text-zinc-800">
+            <Field key={key}>
               <Label htmlFor={`parameter-${section}-${key}`}>
                 {t(`parameters.${section}.${key}`)}
               </Label>
@@ -30,6 +31,7 @@ const ParameterFields = ({
                 type={type === "boolean" ? "checkbox" : "text"}
                 id={`parameter-${section}-${key}`}
                 value={type === "boolean" ? undefined : value?.toString()}
+                checked={type === "boolean" ? (value as boolean) : undefined}
                 onChange={(e) =>
                   onParameterChange(
                     section,
@@ -48,6 +50,31 @@ const ParameterFields = ({
 
 export default ParameterFields;
 
+const Section = styled.div`
+  margin-bottom: 30px;
+  width: 100%;
+`;
+
+const SectionTitle = styled.h3`
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #d8d8d8;
+`;
+
+const Field = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #b4b4b4;
+`;
+
 const Input = styled.input`
   padding: 10px;
   border-radius: 5px;
@@ -55,28 +82,5 @@ const Input = styled.input`
   font-size: 16px;
   width: 100%;
   background-color: #80808012;
-`;
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  width: 100%;
-`;
-
-const Label = styled.label`
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 5px;
-`;
-
-const Section = styled.div`
-  margin-bottom: 30px;
-`;
-
-const SectionTitle = styled.h3`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
+  color: #cecece;
 `;

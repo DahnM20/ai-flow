@@ -6,7 +6,7 @@
     "closeButtonLabel": "Close",
     "validateButtonLabel": "Validate",
     "likeProjectPrompt": "If you like this project, you can add a star on:",
-    "supportProjectPrompt": "You can support the future of the project and contact us through :",
+    "supportProjectPrompt": "You can support the future of the project and contact us through",
     "Logout": "Logout",
     "sections.core":"Base parameters",
     "parameters.core.openai_api_key": "OpenAI API Key",
