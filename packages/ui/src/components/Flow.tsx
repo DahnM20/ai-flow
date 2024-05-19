@@ -158,7 +158,10 @@ function Flow(props: FlowProps) {
   const onConnect: OnConnect = useCallback(
     (connection) =>
       setEdges((eds) => {
-        if (isHandleAlreadyTargeted(connection, eds)) {
+        if (
+          isHandleAlreadyTargeted(connection, eds) ||
+          isSameNodeTargeted(connection)
+        ) {
           return eds;
         }
         return addEdge(
@@ -231,6 +234,13 @@ function Flow(props: FlowProps) {
           edge.target === connection.target,
       ).length > 0
     ) {
+      return true;
+    }
+    return false;
+  };
+
+  const isSameNodeTargeted = (connection: Connection) => {
+    if (connection.source === connection.target) {
       return true;
     }
     return false;
