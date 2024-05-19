@@ -1,72 +1,89 @@
-import { useEffect, useState } from 'react';
-import DefaultPopupWrapper from './DefaultPopup';
-import { useTranslation } from 'react-i18next';
-import { MdClose } from 'react-icons/md';
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Modal } from "@mantine/core";
 
 type Feature = {
-    title: string;
-    description: string;
-}
+  title: string;
+  description: string;
+};
 
 type VersionInfo = {
-    versionNumber: string;
-    description: string;
-}
+  versionNumber: string;
+  description: string;
+};
 
 interface WelcomePopupProps {
-    show: boolean;
-    onClose: () => void;
+  show: boolean;
+  onClose: () => void;
 }
 export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
+  const { t } = useTranslation("version");
 
-    const { t } = useTranslation('version');
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-    const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const versionInfo = t("versionInfo", { returnObjects: true }) as VersionInfo;
+  const features = t("features", { returnObjects: true }) as Feature[];
+  const imageUrl = t("imageUrl");
 
-    const versionInfo = t('versionInfo', { returnObjects: true }) as VersionInfo;
-    const features = t('features', { returnObjects: true }) as Feature[];
-    const imageSrc = t('imageSrc');
+  useEffect(() => {
+    if (imageUrl) {
+      const img = new Image();
+      img.onload = () => setIsImageLoaded(true);
+      img.src = imageUrl;
+    } else {
+      setIsImageLoaded(true);
+    }
+  }, [imageUrl]);
 
-    useEffect(() => {
-        if (imageSrc) {
-            const img = new Image();
-            img.onload = () => setIsImageLoaded(true);
-            img.src = imageSrc;
-        } else {
-            setIsImageLoaded(true);
-        }
-    }, [imageSrc]);
+  const shouldShowPopup = show && (isImageLoaded || !imageUrl);
 
-    const shouldShowPopup = show && (isImageLoaded || !imageSrc);
-
-    return shouldShowPopup ? (
-        <DefaultPopupWrapper onClose={onClose} show={show} centered>
-            <div className='flex flex-col relative bg-zinc-900 shadow text-slate-200 rounded-xl p-10 overflow-auto my-15'>
-                <div className='absolute top-0 right-0 p-4 text-2xl'>
-                    <button onClick={onClose} className='hover:text-red-500'>
-                        <MdClose />
-                    </button>
-                </div>
-                <h2 className="text-xl font-semibold mb-6">{versionInfo.description}</h2>
-                <ul className="list-disc list-inside mb-6 space-y-3">
-                    {!!features && features.map((feature, index) => (
-                        <li key={index} className="text-base">
-                            <span className='font-medium text-sky-500'>{feature.title}</span>
-                            {feature?.description && ` : ${feature.description}`}
-                        </li>
-                    ))}
-                </ul>
-                {
-                    imageSrc && (
-                        <div className='flex justify-center mb-4'>
-                            <img
-                                src={imageSrc}
-                                alt="Version Updates"
-                                className="rounded-md max-w-full h-auto"
-                            />
-                        </div>
-                    )
-                }
-            </div >
-        </DefaultPopupWrapper >) : null;
-};
+  return shouldShowPopup ? (
+    <Modal
+      opened={show}
+      onClose={onClose}
+      size="70%"
+      centered
+      title={versionInfo.description}
+      styles={{
+        title: {
+          fontSize: "1.3rem",
+          fontWeight: "bold",
+          color: "white",
+          paddingLeft: "0.5rem",
+        },
+        header: {
+          backgroundColor: "rgb(24 24 27)",
+        },
+        body: {
+          backgroundColor: "rgb(24 24 27)",
+        },
+        root: {
+          borderRadius: "20rem",
+        },
+      }}
+    >
+      <div className="my-15 relative flex flex-col overflow-auto rounded-xl bg-zinc-900 px-2 text-slate-200 shadow">
+        <ul className="mb-6 list-inside list-disc space-y-3">
+          {!!features &&
+            features.map((feature, index) => (
+              <li key={index} className="text-base">
+                <span className="font-medium text-sky-500">
+                  {feature.title}
+                </span>
+                {feature?.description && ` : ${feature.description}`}
+              </li>
+            ))}
+        </ul>
+        {imageUrl && (
+          <div className="mb-4 flex justify-center">
+            <img
+              src={imageUrl}
+              alt="Version Updates"
+              className="h-auto max-w-full rounded-md"
+            />
+          </div>
+        )}
+      </div>
+    </Modal>
+  ) : null;
+}

@@ -1,19 +1,11 @@
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
-import {
-  SocketContext,
-  WSConfiguration,
-} from "../../../providers/SocketProvider";
 import { useTranslation } from "react-i18next";
-import ParameterFields from "./ParametersFields";
-import {
-  Parameters,
-  getConfigParameters,
-  updateParameters,
-} from "./parameters";
-import DefaultPopupWrapper from "../DefaultPopup";
 import { FiMail } from "react-icons/fi";
+import { Modal } from "@mantine/core";
+import { UserParameters } from "./UserParameters";
+import DisplayParameters from "./DisplayParameters";
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -21,77 +13,64 @@ interface ConfigPopupProps {
   onValidate?: () => void;
 }
 
-function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
+const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
   const { t } = useTranslation("config");
-
-  const { updateSocket } = useContext(SocketContext);
-
-  const [parameters, setParameters] = useState<Parameters>(
-    getConfigParameters(),
-  );
-
-  const onParameterChange = (section: string, name: string, value: any) => {
-    const sectionParameters = parameters[section];
-    if (!sectionParameters) {
-      return;
-    }
-    const parameter = sectionParameters[name];
-    if (!parameter) {
-      return;
-    }
-    parameter.value = value;
-    setParameters((prevParameters) => ({
-      ...prevParameters,
-      [section]: sectionParameters,
-    }));
-  };
-
-  const handleValidate = () => {
-    updateParameters(parameters);
-
-    const config: WSConfiguration = {};
-
-    updateSocket(config);
-    onClose();
-  };
+  const [activeTab, setActiveTab] = useState<string>("user");
 
   const handleClose = () => {
-    setParameters(getConfigParameters());
     onClose();
   };
 
-  return isOpen ? (
-    <DefaultPopupWrapper show={isOpen} onClose={handleClose} centered>
-      <Content
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        className="my-2 flex flex-col justify-between overflow-auto rounded-2xl bg-slate-100 p-5 md:h-fit"
-      >
-        <Header>
-          <Title className="text-zinc-900">{t("configurationTitle")}</Title>
-        </Header>
-        <>
-          <SoftMessage>{t("openSourceDisclaimer")}</SoftMessage>
-          <SoftMessage>{t("apiKeyDisclaimer")}</SoftMessage>
-        </>
-
-        <div className="flex w-full justify-center overflow-auto ">
-          <div className="w-11/12">
-            <ParameterFields
-              parameters={parameters}
-              onParameterChange={onParameterChange}
-            />
-          </div>
-        </div>
-        <Actions>
-          <Button onClick={onClose} className="bg-[#9B8D8A]">
-            {t("closeButtonLabel")}
-          </Button>
-          <Button onClick={handleValidate} className="bg-[#72CCA5]">
-            {t("validateButtonLabel")}
-          </Button>
-        </Actions>
+  return (
+    <Modal
+      opened={isOpen}
+      onClose={handleClose}
+      withCloseButton={false}
+      size="auto"
+      centered
+      styles={{
+        content: {
+          borderRadius: "0.75em",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          background: "linear-gradient(135deg, #101113, #1a1b1e)",
+          padding: "2em",
+          color: "#d8dee9",
+        },
+        title: {
+          fontSize: "1.25rem",
+          color: "#d8dee9",
+          fontWeight: "bold",
+          marginBottom: "0.5em",
+        },
+        header: {
+          background: "transparent",
+        },
+      }}
+    >
+      <Content>
+        <h2 className="mb-5 text-center text-2xl font-bold">
+          {t("configurationTitle")}
+        </h2>
+        <Disclaimer>
+          <p>{t("openSourceDisclaimer")}</p>
+          <p>{t("apiKeyDisclaimer")}</p>
+        </Disclaimer>
+        <Tabs className="sm:text-md text-base">
+          <Tab
+            isActive={activeTab === "user"}
+            onClick={() => setActiveTab("user")}
+          >
+            {t("userTabLabel")}
+          </Tab>
+          <Tab
+            isActive={activeTab === "display"}
+            onClick={() => setActiveTab("display")}
+          >
+            {t("displayTabLabel")}
+          </Tab>
+        </Tabs>
+        {activeTab === "user" && <UserParameters />}
+        {activeTab === "display" && <DisplayParameters />}
         <Footer>
           <Message>{t("supportProjectPrompt")}</Message>
           <Icons>
@@ -115,75 +94,45 @@ function ConfigPopup({ isOpen, onClose, onValidate }: ConfigPopupProps) {
           </Icons>
         </Footer>
       </Content>
-    </DefaultPopupWrapper>
-  ) : (
-    <></>
+    </Modal>
   );
-}
-
-export const Popup = styled.div<{ isOpen: boolean }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.2s ease;
-  opacity: ${(props) => (props.isOpen ? 1 : 0)};
-  pointer-events: ${(props) => (props.isOpen ? "all" : "none")};
-`;
+};
 
 const Content = styled.div`
-  position: relative;
-  width: 500px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: auto;
+`;
+
+const Disclaimer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 1em;
+  color: #6b7280;
 `;
 
-const Header = styled.div`
+const Tabs = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
   margin-bottom: 20px;
 `;
 
-const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0;
-`;
-
-const Actions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-`;
-
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 5px;
+const Tab = styled.button<{ isActive: boolean }>`
   padding: 10px 20px;
-  color: #fff;
-  font-size: 16px;
   font-weight: bold;
+  color: ${(props) => (props.isActive ? "#fff" : "#b4b4b4")};
+  background-color: ${(props) => (props.isActive ? "#1a1b1e" : "transparent")};
   border: none;
-  border-radius: 5px;
+  border-bottom: ${(props) => (props.isActive ? "2px solid #00bcd4" : "none")};
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition:
+    color 0.3s,
+    background-color 0.3s;
 
   &:hover {
-    background-color: #555;
+    color: #fff;
   }
 `;
 
@@ -193,17 +142,10 @@ const Footer = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 14px;
-  color: #777;
 `;
 
 const Message = styled.p`
   margin-bottom: 10px;
-`;
-
-const SoftMessage = styled.p`
-  text-align: center;
-  color: #888;
-  margin-bottom: 20px;
 `;
 
 const Icons = styled.div`
@@ -212,12 +154,12 @@ const Icons = styled.div`
 `;
 
 const Icon = styled.a`
-  font-size: 24px;
-  color: #555;
+  font-size: 1.75em;
   cursor: pointer;
+  transition: color 0.3s ease-in-out;
 
   &:hover {
-    color: #000;
+    color: #b3edff;
   }
 `;
 

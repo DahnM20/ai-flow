@@ -196,6 +196,8 @@ export const NodeProvider = ({
             data: {
               ...node.data,
               outputData: undefined,
+              lastRun: undefined,
+              isDone: false,
             },
           };
         }

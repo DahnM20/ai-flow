@@ -6,7 +6,7 @@ import { Node, Edge } from "reactflow";
 import { ThemeContext } from "../../providers/ThemeProvider";
 import { darken, em, lighten } from "polished";
 import { useTranslation } from "react-i18next";
-import { FaEye, FaSitemap } from "react-icons/fa";
+import { FaEye, FaSitemap, FaToolbox } from "react-icons/fa";
 import {
   convertFlowToJson,
   convertJsonToFlow,
@@ -68,7 +68,7 @@ const FlowTabs = () => {
   const [openConfig, setOpenConfig] = useState(false);
   const [mode, setMode] = useState<ApplicationMode>("flow");
   const [selectedEdgeType, setSelectedEdgeType] = useState("default");
-  const useAuth = process.env.REACT_APP_USE_AUTH === "true";
+  const useAuth = import.meta.env.VITE_APP_USE_AUTH === "true";
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);
@@ -182,9 +182,9 @@ const FlowTabs = () => {
         jsonFile: JSON.stringify(flowFile),
       },
     };
-    emitEvent(event);
+    const success = emitEvent(event);
 
-    setIsRunning(true);
+    setIsRunning(success);
   };
 
   const handleChangeRun = (runStatus: boolean) => {
@@ -256,26 +256,37 @@ const FlowTabs = () => {
         onChangeTabName={handleChangeTabName}
         tabPrefix={t("Flow")}
       >
-        <div className="ml-auto flex flex-row items-center space-x-2">
-          <div className="h-auto w-6">
-            <EdgeTypeButton
-              edgeType={selectedEdgeType}
-              onChangeEdgeType={(newEdgeType) =>
-                setSelectedEdgeType(newEdgeType)
-              }
+        <div className="ml-auto flex flex-row items-center space-x-2 ">
+          {mode === "flow" && (
+            <>
+              <div className="hidden h-auto w-6 md:flex">
+                <EdgeTypeButton
+                  edgeType={selectedEdgeType}
+                  onChangeEdgeType={(newEdgeType) =>
+                    setSelectedEdgeType(newEdgeType)
+                  }
+                />
+              </div>
+
+              <FaSitemap
+                className="hidden -rotate-90 text-slate-400 hover:text-slate-50 md:flex"
+                onClick={handleFormatFlow}
+              />
+
+              <FaEye
+                className={` ${showOnlyOutput ? "rounded-2xl text-green-400 ring-1 ring-green-400/50 hover:text-green-200" : "text-slate-400 hover:text-slate-50 "}`}
+                onClick={handleToggleOutput}
+              />
+            </>
+          )}
+
+          {/* {mode === "view" && (
+            <FaToolbox
+              className="hidden  text-slate-400 hover:text-slate-50 md:flex"
+              onClick={handleFormatFlow}
             />
-          </div>
-
-          <FaSitemap
-            className="-rotate-90 text-slate-400 hover:text-slate-50"
-            onClick={handleFormatFlow}
-          />
-
-          <FaEye
-            className="text-slate-400 hover:text-slate-50"
-            onClick={handleToggleOutput}
-          />
-          <div className="h-6 border-l-2 border-l-slate-500/50 pl-2"></div>
+          )} */}
+          <div className="hidden h-6 border-l-2 border-l-slate-500/50 pl-2 md:flex"></div>
           <div className="pr-2">
             <ButtonRunAll
               onClick={handleRunAllCurrentFlow}

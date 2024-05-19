@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ai-flow-back"
-version = "0.6.4"
+version = "0.7.0"
 description = ""
 authors = ["DahnM20 <you@example.com>"]
 readme = "README.md"
@@ -10,7 +10,7 @@ packages = [{ include = "app" }]
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
 python-dotenv = "^1.0.0"
-openai = "1.1.0"
+openai = "1.29.0"
 flask = "^2.2.3"
 flask-socketio = "^5.3.3"
 flask-cors = "^3.0.10"
@@ -32,10 +32,13 @@ jwcrypto = "^1.5.0"
 python-jose = "^3.3.0"
 cachetools = "^5.3.1"
 flask-injector = "^0.15.0"
-llama-index = "v0.9.46"
 setuptools = "^68.2.2"
-pypdf = "^3.16.4"
+pypdf = "4.2.0"
 replicate = "0.22.0"
+tiktoken = "0.7.0"
+llama-index-llms-openai = "0.1.19"
+llama-index-multi-modal-llms-openai = "^0.1.6"
+llama-index = "^0.10.36"
 openapi-spec-validator = "^0.7.1"
 
 

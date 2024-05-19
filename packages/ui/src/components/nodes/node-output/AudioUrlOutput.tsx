@@ -29,6 +29,8 @@ const AudioUrlOutput: React.FC<AudioUrlOutputProps> = ({ url, name }) => {
         progressColor: "rgba(32, 32, 32, 0.719)",
         cursorColor: "rgba(226, 226, 226, 0.616)",
         hideScrollbar: true,
+        autoplay: false,
+        height: "auto",
       },
     },
   };
@@ -50,7 +52,7 @@ const AudioUrlOutput: React.FC<AudioUrlOutputProps> = ({ url, name }) => {
   };
 
   return (
-    <OutputAudioContainer className="audio-player w-full">
+    <OutputAudioContainer className="audio-player h-full w-full">
       <VideoJS options={videoJsOptions} onReady={handlePlayerReady} key={url} />
       <div
         className="absolute right-3 top-2 rounded-md bg-slate-600/75 px-1 py-1 text-2xl text-slate-100 hover:bg-sky-600/90"

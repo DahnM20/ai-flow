@@ -6,6 +6,7 @@ import { memo, useEffect, useState } from "react";
 import DraggableNode from "./DraggableNode";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useVisibility } from "../../../providers/VisibilityProvider";
+import { PARAMETER_NODES_HIDDEN_LIST_KEY_LOCAL_STORAGE } from "../../popups/config-popup/parameters";
 
 const HIDE_SIDEBAR_ANIMATION_DURATION = 300;
 
@@ -32,6 +33,21 @@ const DnDSidebar = () => {
     return () => clearTimeout(timeoutId);
   }, [sidebar]);
 
+  useEffect(() => {
+    const handleHiddenListChanged = (e: any) => {
+      setSections(getSections());
+    };
+
+    window.addEventListener("nodesHiddenListChanged", handleHiddenListChanged);
+
+    return () => {
+      window.removeEventListener(
+        "nodesHiddenListChanged",
+        handleHiddenListChanged,
+      );
+    };
+  }, []);
+
   return (
     <>
       <div
@@ -44,15 +60,16 @@ const DnDSidebar = () => {
           text-2xl font-bold
           text-slate-300 hover:font-extrabold hover:text-slate-100`}
           onClick={sidebar.toggle}
-          data-tooltip-id={`dnd-tooltip`}
-          data-tooltip-content={`${sidebar.isVisible ? t("HideSidebar") : t("ShowSidebar")}`}
-          data-tooltip-place="right"
+          // data-tooltip-id={`dnd-tooltip`}
+          // data-tooltip-content={`${sidebar.isVisible ? t("HideSidebar") : t("ShowSidebar")}`}
+          // data-tooltip-place="right"
         >
           {!sidebar.isVisible ? <FiChevronRight /> : <FiChevronLeft />}
         </div>
         {contentVisible && (
           <DnDSidebarContainer
             className={` font-sm md:font-md flex transform flex-col overflow-hidden  border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md hover:overflow-y-auto`}
+            onClick={(e) => e.stopPropagation()}
           >
             {contentVisible
               ? sections.map((section, index) => (

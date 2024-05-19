@@ -65,7 +65,7 @@ function PaneWrapper({
               {nodeType && <p>{nodeType + " - " + fieldNames}</p>}
             </div>
             <div
-              className={`absolute right-0 space-x-2 px-2 
+              className={`absolute right-0 space-x-2 px-2 ${showTools ? "" : "pointer-events-none"}
                         ${name ? "rounded-xl bg-[#1E1E1F]" : ""}`}
             >
               {name && <NodePlayButton nodeName={name} />}

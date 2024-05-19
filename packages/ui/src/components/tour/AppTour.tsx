@@ -33,7 +33,6 @@ export function AppTour({ run, setRun }: AppTourProps) {
   const [joyrideKey, setJoyrideKey] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
 
-  // const { isSidebarVisible, showSidebar, hideSidebar } = useSidebarVisibility();
   const { getElement } = useVisibility();
 
   const { t } = useTranslation("tour");
@@ -47,26 +46,26 @@ export function AppTour({ run, setRun }: AppTourProps) {
       target: ".sidebar-dnd-node",
       content: (
         <div className="space-y-10">
-          <div className="space-y-2 text-lg">
+          <div className="space-y-5 text-lg">
             <p>{t("firstTimeHere")}</p>
             <p>{t("discoverApp")}</p>
           </div>
-          <div className="flex flex-row justify-center space-x-4 text-sm md:text-lg">
+          <div className="flex flex-col justify-center space-y-4 text-sm md:text-lg">
             <button
               type="button"
-              className="rounded-lg bg-slate-700 p-3 text-white transition duration-150 ease-in-out hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-              aria-label={"skip-tour"}
-              onClick={() => setRun(false)}
-            >
-              {t("iKnowTheApp")}
-            </button>
-            <button
-              type="button"
-              className="rounded-lg bg-teal-500 p-3 text-white transition duration-150 ease-in-out hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-300"
-              aria-label={"start-tour"}
+              className="w-full max-w-xs rounded-lg bg-teal-500 px-4 py-3 text-base text-white transition duration-150 ease-in-out hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-300 sm:text-xl"
+              aria-label="start-tour"
               onClick={() => setStepIndex(1)}
             >
               {t("letsStart")}
+            </button>
+            <button
+              type="button"
+              className="w-full max-w-xs rounded-lg  bg-slate-700 px-4 py-3 text-base text-white shadow-sm transition duration-150 ease-in-out hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 sm:text-xl"
+              aria-label="skip-tour"
+              onClick={() => setRun(false)}
+            >
+              {t("iKnowTheApp")}
             </button>
           </div>
         </div>
@@ -256,13 +255,15 @@ export function AppTour({ run, setRun }: AppTourProps) {
   const buttonBase = {
     backgroundColor: "transparent",
     border: 0,
-    borderRadius: 0,
     color: "#555",
     cursor: "pointer",
-    fontSize: 16,
     lineHeight: 1,
     padding: 8,
     WebkitAppearance: "none" as const,
+    fontSize: "1rem",
+    fontWeight: "bold",
+    borderRadius: "0.5em",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
   };
 
   return (
@@ -303,20 +304,25 @@ export function AppTour({ run, setRun }: AppTourProps) {
           width: "100%",
         },
         tooltip: {
-          backgroundColor: theme.dark.bg,
-          borderRadius: 5,
+          // backgroundColor: theme.dark.bg,
+          background: "linear-gradient(135deg, #101113, #1a1b1e)",
+          borderRadius: "0.75em",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           boxSizing: "border-box" as const,
           color: theme.dark.text,
-          fontSize: 16,
+          fontSize: "1.25rem",
           maxWidth: "100%",
-          padding: 15,
-          position: "relative" as const,
+          padding: "2em",
         },
         buttonBack: {
           ...buttonBase,
           color: theme.dark.text,
           marginLeft: "auto",
           marginRight: 5,
+          fontSize: "1rem",
+          fontWeight: "bold",
+          borderRadius: "0.5em",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
         },
         buttonClose: {
           ...buttonBase,

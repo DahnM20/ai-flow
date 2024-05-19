@@ -3,7 +3,7 @@
     "inputs": [],
     "name": "3jexlwros#llm-prompt",
     "processorType": "llm-prompt",
-    "model": "gpt-4-turbo-preview",
+    "model": "gpt-4o",
     "x": -1130.048690482733,
     "y": -885.266525660136
   }

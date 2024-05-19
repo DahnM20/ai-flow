@@ -19,9 +19,9 @@
 </p>
 <div align="center">
 
-## 🎉🚀 v0.6.4 is Now Available 🚀🎉
+## 🎉🚀 v0.7.0 is Now Available 🚀🎉
 
-🚀 **New Nodes : Stable Diffusion 3, Text-to-Speech, Document-to-Text**
+🚀 **New Nodes : Resizeable Display Node, Stable Diffusion 3, Text-to-Speech, Document-to-Text**
 
 ✨ **Expand the App**: Learn how to add your own nodes in our [Contribution Guidelines](https://docs.ai-flow.net/docs/category/contribute).
 </br>

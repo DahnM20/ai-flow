@@ -1,3 +1,5 @@
+import "./init";
+
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -22,13 +24,7 @@ const theme = createTheme({});
 root.render(
   <>
     <GlobalStyle />
-    <MantineProvider
-      getRootElement={() =>
-        document.querySelector<HTMLElement>("#dark-area") ?? undefined
-      }
-      cssVariablesSelector="#dark-area"
-      forceColorScheme="dark"
-    >
+    <MantineProvider theme={theme} forceColorScheme="dark">
       <ThemeProvider>
         <Suspense fallback={<Fallback />}>
           <ToastContainer />

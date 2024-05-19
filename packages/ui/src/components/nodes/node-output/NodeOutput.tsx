@@ -5,7 +5,7 @@ import { toastFastInfoMessage } from "../../../utils/toastUtils";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { FiCopy } from "react-icons/fi";
-import { getOutputTypeFromExtension } from "./outputUtils";
+import { getOutputExtension } from "./outputUtils";
 import { OutputType } from "../../../nodes-configuration/types";
 import OutputDisplay from "./OutputDisplay";
 
@@ -21,14 +21,6 @@ export default function NodeOutput({
   onClickOutput,
 }: NodeOutputProps) {
   const { t } = useTranslation("flow");
-
-  const handleCopyToClipboard = (event: any) => {
-    event.stopPropagation();
-    if (data.outputData && typeof data.outputData == "string") {
-      copyToClipboard(data.outputData);
-      toastFastInfoMessage(t("CopiedToClipboard"));
-    }
-  };
 
   function getOutputType(): OutputType {
     if (data.config?.outputType) {
@@ -48,7 +40,7 @@ export default function NodeOutput({
       output = outputData;
     }
 
-    const outputType = getOutputTypeFromExtension(output);
+    const outputType = getOutputExtension(output);
 
     return outputType;
   }
@@ -72,14 +64,6 @@ export default function NodeOutput({
       onClick={!showLogs ? onClickOutput : undefined}
       className={`relative flex h-auto w-full flex-grow justify-center p-4 ${showLogs ? "nodrag nowheel" : ""}`}
     >
-      {showLogs && data.outputData && !outputIsMedia && (
-        <StyledCopyIcon
-          className="copy-icon hover:text-white"
-          onClick={(event) => {
-            handleCopyToClipboard(event);
-          }}
-        />
-      )}
       {!showLogs && data.outputData ? (
         <NodeLogsText className="flex h-auto w-full justify-center text-center">
           {t("ClickToShowOutput")}
@@ -90,10 +74,3 @@ export default function NodeOutput({
     </NodeLogs>
   );
 }
-
-const StyledCopyIcon = styled(FiCopy)`
-  position: fixed;
-  right: 15px;
-  cursor: pointer;
-  z-index: 1;
-`;

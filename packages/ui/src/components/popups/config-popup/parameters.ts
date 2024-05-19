@@ -1,5 +1,6 @@
 import withCache from "../../../api/cache/withCache";
 import { getParameters } from "../../../api/parameters";
+import { getDefaultNodesHiddenList } from "../../../config/config";
 
 export interface ParameterDetail {
   value?: string | number | boolean;
@@ -34,6 +35,7 @@ const defaultParameters: Parameters = {
 let parameters: Parameters = {};
 
 const PARAMETERS_KEY_LOCAL_STORAGE = "parameters";
+export const PARAMETER_NODES_HIDDEN_LIST_KEY_LOCAL_STORAGE = "nodes_hidden";
 
 export async function updateParameters(parameters: Parameters) {
   window.localStorage.setItem(
@@ -124,4 +126,30 @@ export function migrateOldParameters() {
   window.localStorage.removeItem("apiKeys");
 
   return newParams;
+}
+
+let loadedNodesHiddenList = loadNodesHiddenList();
+
+export function loadNodesHiddenList(): string[] {
+  if (
+    !window.localStorage.getItem(PARAMETER_NODES_HIDDEN_LIST_KEY_LOCAL_STORAGE)
+  )
+    return getDefaultNodesHiddenList();
+  return JSON.parse(
+    window.localStorage.getItem(
+      PARAMETER_NODES_HIDDEN_LIST_KEY_LOCAL_STORAGE,
+    ) || "[]",
+  );
+}
+export function getNodesHiddenList(): string[] {
+  return loadedNodesHiddenList;
+}
+
+export function saveNodesHiddenList(nodesHiddenList: string[]) {
+  window.localStorage.setItem(
+    PARAMETER_NODES_HIDDEN_LIST_KEY_LOCAL_STORAGE,
+    JSON.stringify(nodesHiddenList),
+  );
+  loadedNodesHiddenList = loadNodesHiddenList();
+  window.dispatchEvent(new CustomEvent("nodesHiddenListChanged", {}));
 }

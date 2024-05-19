@@ -28,6 +28,7 @@ const Tab = ({
   const { t } = useTranslation("flow");
   const [showActions, setShowActions] = useState(false);
   const [editName, setEditName] = useState(false);
+  const [editableName, setTabName] = useState(name);
 
   const buttonRef = useRef(null);
 
@@ -37,6 +38,9 @@ const Tab = ({
     hideActionsTimeout = setTimeout(() => {
       setShowActions(false);
       setEditName(false);
+      if (name !== editableName) {
+        setTabName(name);
+      }
     }, 1500);
   };
 
@@ -46,14 +50,25 @@ const Tab = ({
     }
   };
 
+  const handleChangeTabName = (name: string) => {
+    if (onChangeTabName) {
+      setTabName(name);
+    }
+  };
+
+  const handleSaveTabName = () => {
+    if (onChangeTabName) {
+      onChangeTabName(index, editableName);
+      setEditName(false);
+    }
+  };
+
   const actions: Action<TabActions>[] = [
     {
       icon: editName ? <FaCheck /> : <MdEdit />,
       name: t("ChangeName"),
       value: "name",
-      onClick: () => {
-        setEditName(!editName);
-      },
+      onClick: editName ? handleSaveTabName : () => setEditName(true),
       tooltipPosition: "bottom",
     },
     {
@@ -67,7 +82,6 @@ const Tab = ({
       tooltipPosition: "bottom",
     },
   ];
-
   return (
     <>
       <TabButton
@@ -94,13 +108,13 @@ const Tab = ({
         {editName ? (
           <input
             type="text"
-            value={name}
+            value={editableName}
             onChange={(e) => {
-              !!onChangeTabName && onChangeTabName(index, e.target.value);
+              handleChangeTabName(e.target.value);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setEditName(false);
+                handleSaveTabName();
               }
             }}
           />

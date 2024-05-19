@@ -30,11 +30,17 @@ const extensionToTypeMap: { [key: string]: OutputType } = {
   ".txt": "fileUrl",
 };
 
-export function getOutputTypeFromExtension(output: string): OutputType {
+export function getOutputExtension(output: string): OutputType {
   if (!output) return "markdown";
-  const extension = Object.keys(extensionToTypeMap).find((ext) =>
+
+  let extension = Object.keys(extensionToTypeMap).find((ext) =>
     output.endsWith(ext),
   );
+
+  if (!extension) {
+    extension = "." + getFileTypeFromUrl(output);
+  }
+
   return extension ? extensionToTypeMap[extension] : "markdown";
 }
 

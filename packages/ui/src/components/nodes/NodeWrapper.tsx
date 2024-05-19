@@ -27,7 +27,6 @@ type NodeActions =
 
 function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   const { t } = useTranslation("flow");
-  const [resize, setResize] = useState(false);
   const { getElement, setSidepaneActiveTab } = useVisibility();
 
   const {
@@ -49,8 +48,6 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   const currentNodeIsMissingFields =
     currentNode?.data?.missingFields?.length > 0;
 
-  let hideResizeTimeout: ReturnType<typeof setTimeout>;
-
   const [showActions, setShowActions] = useState(false);
   const [showColors, setShowColors] = useState(false);
   const [showTextField, setShowTextField] = useState(false);
@@ -70,20 +67,6 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       clearTimeout(hideActionsTimeout);
     }
   };
-
-  const hideResizeWithDelay = () => {
-    hideResizeTimeout = setTimeout(() => setResize(false), 5000);
-  };
-
-  const clearHideResizeTimeout = () => {
-    if (hideResizeTimeout) {
-      clearTimeout(hideResizeTimeout);
-    }
-  };
-
-  function handleEnableResize(): void {
-    setResize(!resize);
-  }
 
   function handleOpenSidepane(): void {
     getElement("sidebar").show();
@@ -166,17 +149,9 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
       }}
       onMouseLeave={() => {
         hideActionsWithDelay();
-        hideResizeWithDelay();
       }}
       onMouseEnter={clearHideActionsTimeout}
     >
-      <NodeResizer
-        isVisible={resize}
-        minWidth={450}
-        maxWidth={1500}
-        minHeight={200}
-        maxHeight={1000}
-      />
       {children}
       <div
         className={`nodrag absolute right-1/2 top-0 flex -translate-y-14 translate-x-1/2 transition-all duration-300 ease-in-out  ${showActions ? "opacity-100" : "pointer-events-none opacity-0"}`}

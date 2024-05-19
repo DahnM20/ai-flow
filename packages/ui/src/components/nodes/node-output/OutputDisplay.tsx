@@ -6,7 +6,7 @@ import ImageUrlOutput from "./ImageUrlOutput";
 import ImageBase64Output from "./ImageBase64Output";
 import VideoUrlOutput from "./VideoUrlOutput";
 import AudioUrlOutput from "./AudioUrlOutput";
-import { getOutputTypeFromExtension } from "./outputUtils";
+import { getOutputExtension } from "./outputUtils";
 import PdfUrlOutput from "./PdfUrlOutput";
 import { OutputType } from "../../../nodes-configuration/types";
 import { useState } from "react";
@@ -64,7 +64,13 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
           </a>
         );
       default:
-        return <MarkdownOutput data={output} />;
+        return (
+          <MarkdownOutput
+            data={output}
+            name={data.name}
+            appearance={data.appearance}
+          />
+        );
     }
   };
 
@@ -86,14 +92,14 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
       output = outputData;
     }
 
-    const outputType = getOutputTypeFromExtension(output);
+    const outputType = getOutputExtension(output);
 
     return outputType;
   }
 
   return (
     <div
-      className="flex w-full flex-col"
+      className="flex h-full w-full flex-col"
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
     >

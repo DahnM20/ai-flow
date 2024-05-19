@@ -1,6 +1,6 @@
 from .llm_prompt_processor import LLMPromptProcessor
 
-from llama_index.llms.base import ChatMessage
+from llama_index.core.base.llms.base import ChatMessage
 
 
 from .processor_type_name_utils import ProcessorType

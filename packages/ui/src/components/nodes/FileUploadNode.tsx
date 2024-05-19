@@ -17,7 +17,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { toastErrorMessage } from "../../utils/toastUtils";
 import { GenericNodeData } from "./types/node";
-import { getOutputTypeFromExtension } from "./node-output/outputUtils";
+import { getOutputExtension } from "./node-output/outputUtils";
 import NodeOutput from "./node-output/NodeOutput";
 import OptionSelector, { Option } from "../selectors/OptionSelector";
 import InputWithButton from "../inputs/InputWithButton";
@@ -27,6 +27,7 @@ import {
   uploadWithS3Link,
 } from "../../api/uploadFile";
 import { useLoading } from "../../hooks/useLoading";
+import HintComponent from "./utils/HintComponent";
 
 interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
@@ -114,7 +115,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
       if (uploadError) return;
     }
 
-    const outputType = getOutputTypeFromExtension(files[0].name);
+    const outputType = getOutputExtension(files[0].name);
 
     onUpdateNodeData(id, {
       ...data,
@@ -163,7 +164,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
   const handleSetFileViaURL = () => {
     if (!url) return;
 
-    const outputType = getOutputTypeFromExtension(url);
+    const outputType = getOutputExtension(url);
     onUpdateNodeData(id, {
       ...data,
       fileUrl: url,
@@ -255,6 +256,7 @@ const FileUploadNode = ({ data, id }: GenericNodeProps) => {
           />
         </div>
       )}
+      <HintComponent hintId="file-upload" textVar="TextDocumentHint" />
       <NodeOutput
         showLogs={showLogs}
         onClickOutput={() => setShowLogs(!showLogs)}

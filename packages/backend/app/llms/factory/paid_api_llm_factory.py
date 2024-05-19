@@ -1,6 +1,8 @@
 from .llm_factory import LLMFactory
 from injector import singleton
-from llama_index.llms.base import BaseLLM
+
+
+from llama_index.core.base.llms.base import BaseLLM
 
 
 @singleton
@@ -9,17 +11,10 @@ class PaidAPILLMFactory(LLMFactory):
 
     def create_llm(self, model: str, **kwargs) -> BaseLLM:
         if "gpt" in model:
-            from llama_index.llms import OpenAI
+            from llama_index.llms.openai import OpenAI
 
             return OpenAI(
                 model=model, api_key=kwargs.get(PaidAPILLMFactory.API_KEY_FIELD)
             )
-        elif model == "claude-2":
-            from llama_index.llms import Anthropic
-
-            return Anthropic(
-                model=model, api_key=kwargs.get(PaidAPILLMFactory.API_KEY_FIELD)
-            )
-
         else:
             raise ValueError(f"Unknown model {model}")

@@ -9,6 +9,7 @@ import NodeWrapper from "../components/nodes/NodeWrapper";
 import TransitionNode from "../components/nodes/TransitionNode";
 import ReplicateNode from "../components/nodes/ReplicateNode";
 import { nodeConfigs } from "../nodes-configuration/nodeConfig";
+import DisplayNode from "../components/nodes/DisplayNode";
 
 let allNodeTypes: string[] = [];
 
@@ -23,6 +24,7 @@ export const specificNodeTypes: Partial<Record<string, React.FC<NodeProps>>> = {
   file: FileUploadNode,
   replicate: ReplicateNode,
   transition: TransitionNode,
+  display: DisplayNode,
 };
 
 export const loadAllNodesTypes = () => {

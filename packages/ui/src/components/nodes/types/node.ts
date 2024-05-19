@@ -9,6 +9,7 @@ export interface NodeInput {
 export interface NodeAppearance {
   color?: string;
   customName?: string;
+  fontSize?: number;
 }
 
 export interface NodeData {
