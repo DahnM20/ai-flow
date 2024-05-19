@@ -182,9 +182,9 @@ const FlowTabs = () => {
         jsonFile: JSON.stringify(flowFile),
       },
     };
-    emitEvent(event);
+    const success = emitEvent(event);
 
-    setIsRunning(true);
+    setIsRunning(success);
   };
 
   const handleChangeRun = (runStatus: boolean) => {
