@@ -107,5 +107,6 @@
     "HideHint": "Hide",
     "TextDocumentHint": "Please note that this node only provides files as URLs. To use a document (.pdf, .txt) in text format, consider using the 'Document-to-Text' node.",
     "Display": "Display",
-    "displayHelp": "This resizable node allows you to display content."
+    "displayHelp": "This resizable node allows you to display content.",
+    "Validate": "Validate"
 }

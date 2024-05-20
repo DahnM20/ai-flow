@@ -33,6 +33,14 @@ export const generateIdForHandle = (key: number, isOutput?: boolean) =>
     ? `${handleInPrefix}${handleSeparator}${key}`
     : `${handleOutPrefix}${handleSeparator}${key}`;
 
+export const generateIdForHandles = (nbHandle: number, isOutput?: boolean) => {
+  const handles = [];
+  for (let i = 0; i < nbHandle; ++i) {
+    handles.push(generateIdForHandle(i, isOutput));
+  }
+  return handles;
+};
+
 export function nodesTopologicalSort(
   nodes: BasicNode[],
   edges: BasicEdge[],

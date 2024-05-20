@@ -10,8 +10,11 @@ import {
   NodeBand,
 } from "./Node.styles";
 import useHandleShowOutput from "../../hooks/useHandleShowOutput";
-import { generateIdForHandle, getTargetHandleKey } from "../../utils/flowUtils";
-import { ICON_MAP } from "./utils/NodeIcons";
+import {
+  generateIdForHandles,
+  getTargetHandleKey,
+} from "../../utils/flowUtils";
+import { getIconComponent } from "./utils/NodeIcons";
 import {
   Field,
   NodeConfig,
@@ -21,12 +24,19 @@ import { NodeContext } from "../../providers/NodeProvider";
 import NodePlayButton from "./node-button/NodePlayButton";
 import { useTranslation } from "react-i18next";
 import { useIsPlaying } from "../../hooks/useIsPlaying";
-import { GenericNodeData } from "./types/node";
+import { GenericNodeData, NodeData } from "./types/node";
 import HandleWrapper from "../handles/HandleWrapper";
 import useHandlePositions from "../../hooks/useHandlePositions";
 import { useFormFields } from "../../hooks/useFormFields";
 import NodeOutput from "./node-output/NodeOutput";
 import { getDynamicConfig } from "../../api/nodes";
+import {
+  getAdequateConfigFromDiscriminators,
+  getDefaultOptions,
+  getNbInputs,
+  getNbOutputs,
+  hasDiscriminatorChanged,
+} from "../../utils/nodeConfigurationUtils";
 
 interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
@@ -39,15 +49,12 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
   ({ data, id, selected, nodeFields }) => {
     const { t } = useTranslation("flow");
 
-    const {
-      hasParent,
-      showOnlyOutput,
-      onUpdateNodeData,
-      getNodeDimensions,
-      getIncomingEdges,
-    } = useContext(NodeContext);
+    const { hasParent, showOnlyOutput, onUpdateNodeData, getIncomingEdges } =
+      useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
+
+    const nbOutput = getNbOutputs(data);
 
     const [collapsed, setCollapsed] = useState<boolean>(false);
 
@@ -56,40 +63,12 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         ? true
         : !data.config.defaultHideOutput,
     );
-    const [isPlaying, setIsPlaying] = useIsPlaying();
     const [fields, setFields] = useState<Field[]>(
       !!data.config?.fields
         ? data.config.fields
         : !!nodeFields
           ? nodeFields
           : [],
-    );
-
-    const nbOutput =
-      data.outputData != null && typeof data.outputData !== "string"
-        ? data.outputData.length
-        : 1;
-
-    const outputHandleIds = useMemo(() => {
-      return new Array(nbOutput)
-        .fill(0)
-        .map((_, index) => generateIdForHandle(index, true));
-    }, [nbOutput]);
-
-    const nbInput = useMemo(() => {
-      if (!!data.config.inputNames) {
-        return data.config.inputNames.length;
-      }
-      if (!!fields && fields.some((field) => field.hasHandle)) {
-        return fields.length;
-      }
-      return 1;
-    }, []);
-
-    const { allInputHandleIds, allHandlePositions } = useHandlePositions(
-      data,
-      nbInput,
-      outputHandleIds,
     );
 
     useEffect(() => {
@@ -101,12 +80,6 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         setShowLogs(false);
       }
     }, [data.lastRun, data.outputData]);
-
-    useEffect(() => {
-      if (data.variantConfig) {
-        console.log("hey");
-      }
-    }, [data]);
 
     useEffect(() => {
       if (!data.config?.fields?.some((field) => field.hasHandle)) return;
@@ -141,77 +114,20 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       });
     }, [getIncomingEdges(id)?.length]);
 
+    const outputHandleIds = useMemo(
+      () => generateIdForHandles(nbOutput, true),
+      [nbOutput],
+    );
+
+    const nbInput = useMemo(() => getNbInputs(data, fields), []);
+
+    const [isPlaying, setIsPlaying] = useIsPlaying();
+
     useHandleShowOutput({
       showOnlyOutput,
       setCollapsed: setCollapsed,
       setShowLogs: setShowLogs,
     });
-
-    const toggleCollapsed = () => {
-      setCollapsed(!collapsed);
-    };
-
-    const handlePlayClick = () => {
-      setIsPlaying(true);
-    };
-
-    const handleNodeDataChange = (
-      fieldName: string,
-      value: any,
-      target?: any,
-    ) => {
-      const selectionStart = target?.selectionStart;
-      const selectionEnd = target?.selectionEnd;
-
-      onUpdateNodeData(id, {
-        ...data,
-        [fieldName]: value,
-      });
-
-      if (!!target) {
-        requestAnimationFrame(() => {
-          target.selectionStart = selectionStart;
-          target.selectionEnd = selectionEnd;
-        });
-      }
-    };
-
-    function getDefaultOptions(fields: Field[]) {
-      const defaultOptions: any = {};
-
-      //Default options
-      fields
-        .filter(
-          (field) =>
-            field.options?.find((option) => option.default) &&
-            !data[field.name],
-        )
-        .forEach((field) => {
-          defaultOptions[field.name] = field.options?.find(
-            (option) => option.default,
-          )?.value;
-        });
-
-      //Default values
-      fields
-        .filter(
-          (field) => field.defaultValue != null && data[field.name] == null,
-        )
-        .forEach((field) => {
-          defaultOptions[field.name] = field.defaultValue;
-        });
-
-      return defaultOptions;
-    }
-
-    function setDefaultOptions() {
-      const defaultOptions: any = getDefaultOptions(data.config.fields);
-
-      onUpdateNodeData(id, {
-        ...data,
-        ...defaultOptions,
-      });
-    }
 
     const formFields = useFormFields(
       data,
@@ -226,13 +142,76 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       },
     );
 
-    const hideNodeParams =
-      (hasParent(id) && data.config.hideFieldsIfParent) || collapsed;
+    const { allInputHandleIds, allHandlePositions } = useHandlePositions(
+      data,
+      nbInput,
+      outputHandleIds,
+    );
 
-    const handleChangeHandlePosition = (
+    const toggleCollapsed = () => {
+      setCollapsed(!collapsed);
+    };
+
+    const handlePlayClick = () => {
+      setIsPlaying(true);
+    };
+
+    function updateConfigWithDiscriminator(nodeData: NodeData) {
+      const newConfig = getAdequateConfigFromDiscriminators(nodeData)?.config;
+      if (!newConfig) return;
+
+      const defaultOptions: any = getDefaultOptions(newConfig.fields, nodeData);
+
+      if (!!newConfig) {
+        onUpdateNodeData(id, {
+          ...nodeData,
+          ...defaultOptions,
+          config: {
+            ...newConfig,
+            isDynamicallyGenerated: false,
+          },
+        });
+
+        setFields(newConfig.fields);
+      }
+    }
+
+    function handleNodeDataChange(fieldName: string, value: any, target?: any) {
+      const selectionStart = target?.selectionStart;
+      const selectionEnd = target?.selectionEnd;
+
+      const newNodeData = {
+        ...data,
+        [fieldName]: value,
+      };
+
+      onUpdateNodeData(id, newNodeData);
+
+      if (hasDiscriminatorChanged(fieldName, newNodeData)) {
+        updateConfigWithDiscriminator(newNodeData);
+      }
+
+      if (!!target) {
+        requestAnimationFrame(() => {
+          target.selectionStart = selectionStart;
+          target.selectionEnd = selectionEnd;
+        });
+      }
+    }
+
+    function setDefaultOptions() {
+      const defaultOptions: any = getDefaultOptions(data.config.fields, data);
+
+      onUpdateNodeData(id, {
+        ...data,
+        ...defaultOptions,
+      });
+    }
+
+    function handleChangeHandlePosition(
       newPosition: Position,
       handleId: string,
-    ) => {
+    ) {
       onUpdateNodeData(id, {
         ...data,
         handles: {
@@ -241,15 +220,10 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         },
       });
       updateNodeInternals(id);
-    };
-
-    const NodeIconComponent = ICON_MAP[data.config.icon];
-
-    const displayInputs =
-      data.config.hasInputHandle && !data.config.showHandlesNames;
+    }
 
     function updateConfig(config: NodeConfig) {
-      const defaultOptions: any = getDefaultOptions(config.fields);
+      const defaultOptions: any = getDefaultOptions(config.fields, data);
 
       onUpdateNodeData(id, {
         ...data,
@@ -268,9 +242,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       const discriminators = variantConf.subConfigurations[0].discriminators;
 
       const defaultFields = defaultConfigEnabled.fields;
-      const defaultOptions: any = getDefaultOptions(defaultFields);
-
-      console.log("Variant Conf : ", variantConf);
+      const defaultOptions: any = getDefaultOptions(defaultFields, data);
 
       onUpdateNodeData(id, {
         ...data,
@@ -299,6 +271,14 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         updateConfig(newConfig);
       }
     }
+
+    const NodeIconComponent = getIconComponent(data.config.icon);
+
+    const displayInputs =
+      data.config.hasInputHandle && !data.config.showHandlesNames;
+
+    const hideNodeParams =
+      (hasParent(id) && data.config.hideFieldsIfParent) || collapsed;
 
     return (
       <NodeContainer key={id} className={`flex h-full w-full flex-col`}>
@@ -366,7 +346,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
                 className={`rounded-lg bg-sky-500 p-2 hover:bg-sky-400`}
                 onClick={handleGetDynamicConfig}
               >
-                {"Validate"}
+                {t("Validate")}
               </button>
             )}
           </NodeContent>
