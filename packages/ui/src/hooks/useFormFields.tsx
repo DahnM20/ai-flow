@@ -79,6 +79,8 @@ export function useFormFields(
 
   const renderField = (field: Field) => {
     switch (field.type) {
+      case "textToDisplay":
+        return <p>{field.defaultValue}</p>;
       case "input":
       case "textfield":
         return (

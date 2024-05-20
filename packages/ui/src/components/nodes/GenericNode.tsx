@@ -183,7 +183,10 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       //Default values
       data.config.fields
         .filter(
-          (field) => field.defaultValue != null && data[field.name] == null,
+          (field) =>
+            field.defaultValue != null &&
+            field.type != "textToDisplay" &&
+            data[field.name] == null,
         )
         .forEach((field) => {
           defaultOptions[field.name] = field.defaultValue;
