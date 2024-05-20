@@ -10,7 +10,8 @@ export type FieldType =
   | "slider"
   | "textfield"
   | "numericfield"
-  | "switch";
+  | "switch"
+  | "textToDisplay";
 
 export type OutputType =
   | "imageUrl"
@@ -43,6 +44,7 @@ export interface Field {
   hasHandle?: boolean;
   isLinked?: boolean;
   associatedField?: string;
+  description?: string;
 }
 
 export interface NodeConfig {
