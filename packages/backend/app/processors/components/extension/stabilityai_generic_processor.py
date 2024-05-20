@@ -3,6 +3,7 @@ import os
 import time
 import requests
 import eventlet
+from ..node_config_utils import get_sub_configuration
 
 from ....utils.openapi_client import Client
 
@@ -203,15 +204,6 @@ class StabilityAIGenericProcessor(
 
         return url
 
-    def get_sub_configuration(self, discriminators_values):
-        for subconfig in self.final_node_config.subConfigurations:
-            subconfig_discriminator_values = [
-                subconfig.discriminators[discriminator]
-                for discriminator in subconfig.discriminators
-            ]
-            if subconfig_discriminator_values == discriminators_values:
-                return subconfig
-
     def get_fields_from_config(self):
         if self.final_node_config is None:
             return []
@@ -224,7 +216,9 @@ class StabilityAIGenericProcessor(
             value = self.get_input_by_name(discriminator_name)
             discriminators_values.append(value)
 
-        corresponding_config = self.get_sub_configuration(discriminators_values)
+        corresponding_config = get_sub_configuration(
+            discriminators_values, self.final_node_config
+        )
         if corresponding_config is None:
             return []
 
