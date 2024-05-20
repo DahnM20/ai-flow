@@ -7081,7 +7081,10 @@
             "title": "GenerationMode"
           },
           "image": {
-            "description": "The image to use as the starting point for the generation.\n\nSupported formats:\n  - jpeg\n  - png\n  - webp\n\nSupported dimensions:\n  - Every side must be at least 64 pixels"
+            "type": "string",
+            "description": "The image you wish to inpaint.\n\nSupported Formats:\n- jpeg\n- png\n- webp\n\nImage Dimensions:\n- Every side must be at least 64 pixels\n- The total pixel count cannot exceed 9,437,184 pixels (e.g. 3072x3072, 4096x2304, etc.)",
+            "format": "binary",
+            "example": "./some/image.png"
           },
           "strength": {
             "type": "number",

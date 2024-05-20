@@ -36,6 +36,8 @@ class StabilityAIGenericProcessor(
         re.compile(r"/user/"),  # Contains 'user'
         re.compile(r"/engines/"),  # Contains 'engines'
         re.compile(r"/result/"),  # Contains 'engines'
+        # Temporary
+        re.compile(r"/inpaint"),
     ]
     api_reader = None
     all_paths_cache = None
@@ -196,15 +198,42 @@ class StabilityAIGenericProcessor(
             filename = f"{self.name}-{timestamp_str}.{extension}"
         else:
             extension = self.response_content_type.split("/")[-1]
-            filename = f"{self.name}-{timestamp_str}.{extension}"  # Hmmm
+            filename = f"{self.name}-{timestamp_str}.{extension}"
         url = storage.save(filename, response)
 
         return url
 
+    def get_sub_configuration(self, discriminators_values):
+        for subconfig in self.final_node_config.subConfigurations:
+            subconfig_discriminator_values = [
+                subconfig.discriminators[discriminator]
+                for discriminator in subconfig.discriminators
+            ]
+            if subconfig_discriminator_values == discriminators_values:
+                return subconfig
+
+    def get_fields_from_config(self):
+        if self.final_node_config is None:
+            return []
+
+        if isinstance(self.final_node_config, NodeConfig):
+            return self.final_node_config.fields
+
+        discriminators_values = []
+        for discriminator_name in self.final_node_config.discriminatorFields:
+            value = self.get_input_by_name(discriminator_name)
+            discriminators_values.append(value)
+
+        corresponding_config = self.get_sub_configuration(discriminators_values)
+        if corresponding_config is None:
+            return []
+
+        return corresponding_config.config.fields
+
     def process(self):
 
         api_key = self._processor_context.get_value("stabilityai_api_key")
-        fields = self.final_node_config.fields
+        fields = self.get_fields_from_config()
         data = {field.name: self.get_input_by_name(field.name) for field in fields}
         binaryFieldNames = [field.name for field in fields if field.isBinary]
         files = {} if len(binaryFieldNames) > 0 else {"none": (None, "")}
