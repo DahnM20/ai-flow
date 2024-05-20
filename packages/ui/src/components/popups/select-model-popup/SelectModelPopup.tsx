@@ -160,41 +160,37 @@ export default function SelectModelPopup({
   if (!models && !collections) return null;
 
   return (
-    <Modal
-      opened={show}
+    <DefaultPopupWrapper
+      show={show}
       onClose={onClose}
-      withCloseButton={false}
-      size="auto"
       centered
-      styles={{
-        content: {
-          borderRadius: "0.75em",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          background: "linear-gradient(135deg, #101113, #1a1b1e)",
-          color: "#d8dee9",
-        },
+      popupClassNames="overflow-auto w-5/6 h-5/6 flex rounded-xl p-4 shadow-lg"
+      style={{
+        background: "linear-gradient(135deg, #101113, #1a1b1e)",
       }}
     >
-      <div className="flex w-full flex-col rounded-xl  text-slate-200 lg:flex-row">
-        <div className="flex h-fit w-fit">
-          <FilterGrid
-            filters={collections}
-            selectedFilter={selectedCollection}
-            onSelectFilter={handleSelectCollection}
-          />
-        </div>
+      <div className="flex h-full">
+        <div className="flex w-full flex-col rounded-xl   text-slate-200 lg:flex-row">
+          <div className="flex h-fit w-full lg:w-fit">
+            <FilterGrid
+              filters={collections}
+              selectedFilter={selectedCollection}
+              onSelectFilter={handleSelectCollection}
+            />
+          </div>
 
-        <div className="flex flex-col gap-2 lg:w-3/4">
-          {renderModelSections()}
+          <div className="flex flex-col gap-2 lg:w-3/4">
+            {renderModelSections()}
 
-          <LoadMoreButton
-            loading={loading}
-            cursor={cursor}
-            onLoadMore={handleLoadMore}
-          />
+            <LoadMoreButton
+              loading={loading}
+              cursor={cursor}
+              onLoadMore={handleLoadMore}
+            />
+          </div>
         </div>
       </div>
-    </Modal>
+    </DefaultPopupWrapper>
   );
 }
 
