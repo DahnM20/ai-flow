@@ -14,6 +14,7 @@ import {
   getHighlightedModels,
   getPublicModels,
 } from "../../../api/replicateModels";
+import { Modal } from "@mantine/core";
 
 interface SelectModelPopupProps {
   show: boolean;
@@ -159,9 +160,23 @@ export default function SelectModelPopup({
   if (!models && !collections) return null;
 
   return (
-    <DefaultPopupWrapper onClose={onClose} show={show}>
-      <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow lg:flex-row">
-        <div className="flex lg:w-1/4">
+    <Modal
+      opened={show}
+      onClose={onClose}
+      withCloseButton={false}
+      size="auto"
+      centered
+      styles={{
+        content: {
+          borderRadius: "0.75em",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          background: "linear-gradient(135deg, #101113, #1a1b1e)",
+          color: "#d8dee9",
+        },
+      }}
+    >
+      <div className="flex w-full flex-col rounded-xl  text-slate-200 lg:flex-row">
+        <div className="flex h-fit w-fit">
           <FilterGrid
             filters={collections}
             selectedFilter={selectedCollection}
@@ -179,7 +194,7 @@ export default function SelectModelPopup({
           />
         </div>
       </div>
-    </DefaultPopupWrapper>
+    </Modal>
   );
 }
 
@@ -206,11 +221,12 @@ const ModelsSection = ({ title, models, onValidate }: ModelSectionProps) => {
 
   return (
     <>
-      {title && <h2>{title}</h2>}
+      {title && <h2 className="p-1 text-xl">{title}</h2>}
       <Grid
         items={models}
         onValidate={onValidate}
         renderItem={renderModelItem}
+        numberColMax={5}
       />
     </>
   );

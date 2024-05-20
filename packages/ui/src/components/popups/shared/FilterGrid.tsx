@@ -15,7 +15,7 @@ function FilterGrid({
   onSelectFilter,
 }: FilterGridProps) {
   return (
-    <div className="grid w-full grid-cols-1 gap-4 px-4 py-2">
+    <div className="grid w-full grid-cols-1 gap-4 px-4">
       {filters &&
         filters.map((filter) => (
           <div

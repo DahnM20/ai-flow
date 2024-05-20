@@ -114,6 +114,7 @@ export default function TemplatePopup({
               }
               onValidate={handleSelectTemplate}
               renderItem={renderTemplate}
+              numberColMax={2}
             />
           </>
         )}
