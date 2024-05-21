@@ -32,7 +32,12 @@ const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
         content: {
           borderRadius: "0.75em",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          background: "linear-gradient(135deg, #101113, #1a1b1e)",
+          background:
+            "linear-gradient(135deg, #101113, #1a1b1e), url('/backgrounds/g-simple.png')",
+          backgroundBlendMode: "overlay",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
           padding: "2em",
           color: "#d8dee9",
         },

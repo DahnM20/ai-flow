@@ -46,6 +46,7 @@ export default function DisplayParameters() {
                 label={t(node.label ?? node.type)}
                 size="sm"
                 darkHidden={false}
+                color="cyan"
                 checked={!nodesHidden?.includes(node.type)}
                 onChange={() => handleCheckField(node.type)}
               />
