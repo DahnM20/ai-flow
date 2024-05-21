@@ -87,9 +87,10 @@ export function convertOpenAPISchemaToNodeConfig(schema: any, config?: Config) {
 
       const field: Field = {
         name,
+        description: prop.description,
         type: fieldType,
         label: name,
-        placeholder: prop.description,
+        // placeholder: prop.description,
         defaultValue: prop.default,
         max: prop.maximum,
         min: prop.minimum,
