@@ -17,32 +17,34 @@ class Model(RootModel[Any]):
 class FieldType(
     RootModel[
         Literal[
-            'boolean',
-            'input',
-            'inputInt',
-            'inputNameBar',
-            'numericfield',
-            'option',
-            'select',
-            'slider',
-            'switch',
-            'textarea',
-            'textfield',
+            "boolean",
+            "input",
+            "inputInt",
+            "inputNameBar",
+            "numericfield",
+            "option",
+            "select",
+            "slider",
+            "switch",
+            "textToDisplay",
+            "textarea",
+            "textfield",
         ]
     ]
 ):
     root: Literal[
-        'boolean',
-        'input',
-        'inputInt',
-        'inputNameBar',
-        'numericfield',
-        'option',
-        'select',
-        'slider',
-        'switch',
-        'textarea',
-        'textfield',
+        "boolean",
+        "input",
+        "inputInt",
+        "inputNameBar",
+        "numericfield",
+        "option",
+        "select",
+        "slider",
+        "switch",
+        "textToDisplay",
+        "textarea",
+        "textfield",
     ]
 
 
@@ -55,38 +57,39 @@ class Option(BaseModel):
 class OutputType(
     RootModel[
         Literal[
-            '3dUrl',
-            'audioUrl',
-            'fileUrl',
-            'imageBase64',
-            'imageUrl',
-            'markdown',
-            'pdfUrl',
-            'text',
-            'videoUrl',
+            "3dUrl",
+            "audioUrl",
+            "fileUrl",
+            "imageBase64",
+            "imageUrl",
+            "markdown",
+            "pdfUrl",
+            "text",
+            "videoUrl",
         ]
     ]
 ):
     root: Literal[
-        '3dUrl',
-        'audioUrl',
-        'fileUrl',
-        'imageBase64',
-        'imageUrl',
-        'markdown',
-        'pdfUrl',
-        'text',
-        'videoUrl',
+        "3dUrl",
+        "audioUrl",
+        "fileUrl",
+        "imageBase64",
+        "imageUrl",
+        "markdown",
+        "pdfUrl",
+        "text",
+        "videoUrl",
     ]
 
 
-class SectionType(RootModel[Literal['image-generation', 'input', 'models', 'tools']]):
-    root: Literal['image-generation', 'input', 'models', 'tools']
+class SectionType(RootModel[Literal["image-generation", "input", "models", "tools"]]):
+    root: Literal["image-generation", "input", "models", "tools"]
 
 
 class Field(BaseModel):
     associatedField: Optional[str] = None
     defaultValue: Optional[Union[str, float]] = None
+    description: Optional[str] = None
     hasHandle: Optional[bool] = None
     hideIfParent: Optional[bool] = None
     isBinary: Optional[bool] = None

@@ -27,6 +27,7 @@ class OpenAPIConverter:
             field_builder = FieldBuilder()
             field_builder.set_name(key)
             field_builder.set_label(key)
+            field_builder.set_description(value.get("description"))
             field_type = value.get("type")
 
             if field_type == "string":

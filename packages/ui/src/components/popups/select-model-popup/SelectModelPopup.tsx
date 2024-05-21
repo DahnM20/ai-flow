@@ -14,6 +14,7 @@ import {
   getHighlightedModels,
   getPublicModels,
 } from "../../../api/replicateModels";
+import { Modal } from "@mantine/core";
 
 interface SelectModelPopupProps {
   show: boolean;
@@ -159,24 +160,34 @@ export default function SelectModelPopup({
   if (!models && !collections) return null;
 
   return (
-    <DefaultPopupWrapper onClose={onClose} show={show}>
-      <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow lg:flex-row">
-        <div className="flex lg:w-1/4">
-          <FilterGrid
-            filters={collections}
-            selectedFilter={selectedCollection}
-            onSelectFilter={handleSelectCollection}
-          />
-        </div>
+    <DefaultPopupWrapper
+      show={show}
+      onClose={onClose}
+      centered
+      popupClassNames="overflow-auto w-5/6 h-5/6 flex rounded-xl p-4 shadow-lg"
+      style={{
+        background: "linear-gradient(135deg, #101113, #1a1b1e)",
+      }}
+    >
+      <div className="flex h-full">
+        <div className="flex w-full flex-col rounded-xl   text-slate-200 lg:flex-row">
+          <div className="flex h-fit w-full lg:w-fit">
+            <FilterGrid
+              filters={collections}
+              selectedFilter={selectedCollection}
+              onSelectFilter={handleSelectCollection}
+            />
+          </div>
 
-        <div className="flex flex-col gap-2 lg:w-3/4">
-          {renderModelSections()}
+          <div className="flex flex-col gap-2 lg:w-3/4">
+            {renderModelSections()}
 
-          <LoadMoreButton
-            loading={loading}
-            cursor={cursor}
-            onLoadMore={handleLoadMore}
-          />
+            <LoadMoreButton
+              loading={loading}
+              cursor={cursor}
+              onLoadMore={handleLoadMore}
+            />
+          </div>
         </div>
       </div>
     </DefaultPopupWrapper>
@@ -206,11 +217,12 @@ const ModelsSection = ({ title, models, onValidate }: ModelSectionProps) => {
 
   return (
     <>
-      {title && <h2>{title}</h2>}
+      {title && <h2 className="p-1 text-xl">{title}</h2>}
       <Grid
         items={models}
         onValidate={onValidate}
         renderItem={renderModelItem}
+        numberColMax={5}
       />
     </>
   );

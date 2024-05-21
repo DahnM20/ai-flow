@@ -166,7 +166,7 @@ const JSONViewButton = styled.button<{ dangerous?: boolean }>`
   align-items: center;
   gap: 5px;
   padding: 5px 10px;
-  background-color: ${(props) => (props.dangerous ? "#e6816f" : "#72CCA5")};
+  background-color: ${(props) => (props.dangerous ? "#c47769" : "#67a58a")};
   color: white;
   font-size: 0.8em;
   font-weight: bold;

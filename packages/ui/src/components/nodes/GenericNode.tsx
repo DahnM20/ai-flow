@@ -49,8 +49,13 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
   ({ data, id, selected, nodeFields }) => {
     const { t } = useTranslation("flow");
 
-    const { hasParent, showOnlyOutput, onUpdateNodeData, getIncomingEdges } =
-      useContext(NodeContext);
+    const {
+      hasParent,
+      showOnlyOutput,
+      onUpdateNodeData,
+      getIncomingEdges,
+      removeNodeIncomingEdges,
+    } = useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
 

@@ -9,6 +9,7 @@ import NodeWrapper from "../components/nodes/NodeWrapper";
 import TransitionNode from "../components/nodes/TransitionNode";
 import ReplicateNode from "../components/nodes/ReplicateNode";
 import { nodeConfigs } from "../nodes-configuration/nodeConfig";
+import TextNode from "../components/nodes/TextNode";
 import DisplayNode from "../components/nodes/DisplayNode";
 
 let allNodeTypes: string[] = [];
@@ -25,6 +26,7 @@ export const specificNodeTypes: Partial<Record<string, React.FC<NodeProps>>> = {
   replicate: ReplicateNode,
   transition: TransitionNode,
   display: DisplayNode,
+  text: TextNode,
 };
 
 export const loadAllNodesTypes = () => {

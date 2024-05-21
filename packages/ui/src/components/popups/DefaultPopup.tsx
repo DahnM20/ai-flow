@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import ReactDOM from "react-dom";
 import EaseOut from "../shared/motions/EaseOut";
 
@@ -6,6 +6,8 @@ interface DefaultPopupWrapperProps {
   show: boolean;
   onClose: () => void;
   centered?: boolean;
+  popupClassNames?: string;
+  style?: CSSProperties;
   children: React.ReactNode;
 }
 
@@ -13,6 +15,8 @@ export default function DefaultPopupWrapper({
   show,
   onClose,
   centered,
+  popupClassNames,
+  style,
   children,
 }: DefaultPopupWrapperProps) {
   if (!show) return null;
@@ -24,11 +28,12 @@ export default function DefaultPopupWrapper({
       onTouchEnd={onClose}
     >
       <div
-        className={`flex max-h-full w-10/12 flex-col items-center md:w-4/6 ${centered ? "" : "mb-auto"}`}
+        className={`${!!popupClassNames ? popupClassNames : "h-5/6 w-5/6"} flex flex-col items-center ${centered ? "" : "mb-auto"}`}
         onClick={(e) => {
           e.stopPropagation();
         }}
         onTouchEnd={(e) => e.stopPropagation()}
+        style={{ ...style }}
       >
         <EaseOut>{children}</EaseOut>
       </div>

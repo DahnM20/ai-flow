@@ -21,6 +21,7 @@ interface NodeContextType {
   runAllNodes: () => void;
   hasParent: (id: string) => boolean;
   getIncomingEdges: (id: string) => Edge[] | undefined;
+  removeNodeIncomingEdges: (id: string) => void;
   getEdgeIndex: (id: string) => Edge | undefined;
   showOnlyOutput?: boolean;
   isRunning: boolean;
@@ -49,6 +50,7 @@ export const NodeContext = createContext<NodeContextType>({
   runAllNodes: () => undefined,
   hasParent: () => false,
   getIncomingEdges: () => undefined,
+  removeNodeIncomingEdges: () => undefined,
   getEdgeIndex: () => undefined,
   showOnlyOutput: false,
   isRunning: false,
@@ -145,6 +147,11 @@ export const NodeProvider = ({
 
   const getIncomingEdges = (id: string) => {
     return edges.filter((edge) => edge.target === id);
+  };
+
+  const removeNodeIncomingEdges = (id: string) => {
+    const edgesUpdated = edges.filter((edge) => edge.target !== id);
+    onUpdateNodes(nodes, edgesUpdated);
   };
 
   const getEdgeIndex = (id: string) => {
@@ -261,6 +268,7 @@ export const NodeProvider = ({
         runAllNodes,
         hasParent,
         getIncomingEdges,
+        removeNodeIncomingEdges,
         getEdgeIndex,
         showOnlyOutput,
         isRunning,

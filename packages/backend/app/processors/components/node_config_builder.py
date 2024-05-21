@@ -142,6 +142,10 @@ class FieldBuilder:
         self._field.label = label
         return self
 
+    def set_description(self, description: str) -> "FieldBuilder":
+        self._field.description = description
+        return self
+
     def set_type(self, field_type: str) -> "FieldBuilder":
         self._field.type = FieldType(root=field_type)
         return self

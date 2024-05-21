@@ -141,7 +141,7 @@ export function convertFlowToJson(
 ): NodeData[] {
   return nodes.map((node: BasicNode) => {
     const { data, id, position } = node;
-    const { config, ...nodeValues } = data;
+    const { config, variantConfig, ...nodeValues } = data;
 
     const inputEdges = edges.filter((edge: any) => edge.target === id);
 
