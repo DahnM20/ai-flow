@@ -1,7 +1,11 @@
+from queue import Empty, Queue
+import time
 import requests
+import eventlet
 
 from ..node_config_builder import FieldBuilder, NodeConfigBuilder
 
+from ....tasks.generic_task import add_task
 from ....utils.processor_utils import (
     create_temp_file_with_bytes_content,
     get_max_file_size_in_mb,
@@ -22,6 +26,7 @@ from langchain.document_loaders import (
 
 class DocumentToText(BasicExtensionProcessor):
     processor_type = "document-to-text-processor"
+    WAIT_TIMEOUT = 60
 
     def __init__(self, config):
         super().__init__(config)
@@ -67,6 +72,25 @@ class DocumentToText(BasicExtensionProcessor):
         else:
             return None
 
+    def load_document(self, loader):
+
+        results_queue = Queue()
+        add_task("document_loader", loader, results_queue)
+        start_time = time.time()
+        document = None
+        while True:
+            try:
+                document = results_queue.get_nowait()
+                break
+            except Empty:
+                if time.time() - start_time > DocumentToText.WAIT_TIMEOUT:
+                    raise ValueError(
+                        "Timeout - The document has taken too long to be loaded"
+                    )
+
+            eventlet.sleep(0.1)  # Sleep to prevent high CPU usage
+        return document
+
     def process(self):
         url = self.get_input_by_name("document_url")
 
@@ -92,8 +116,9 @@ class DocumentToText(BasicExtensionProcessor):
         file_path = str(temp_file)
 
         loader = self.get_loader_for_mime_type(mime_type, file_path)
+
         try:
-            document = loader.load()
+            document = self.load_document(loader)
             if len(document) > 0:
                 output = document[0].page_content
                 return output

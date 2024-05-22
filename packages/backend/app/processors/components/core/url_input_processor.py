@@ -1,6 +1,7 @@
 from queue import Empty, Queue
 import time
 import eventlet
+from ....tasks.generic_task import add_task
 from ..processor import BasicProcessor
 
 from ....tasks.shared_ressources import scrapping_task_queue
@@ -21,7 +22,8 @@ class URLInputProcessor(BasicProcessor):
         results_queue = Queue()
 
         content = None
-        scrapping_task_queue.put((results_queue, urls))
+
+        add_task("scrapping", urls, results_queue)
 
         start_time = time.time()
 
