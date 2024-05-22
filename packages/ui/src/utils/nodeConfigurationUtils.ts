@@ -16,7 +16,7 @@ export function getAdequateConfigFromDiscriminators(nodeData: NodeData) {
       JSON.stringify(discriminatorValues)
     );
   });
-  return newConfig;
+  return structuredClone(newConfig);
 }
 
 export const hasDiscriminatorChanged = (

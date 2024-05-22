@@ -54,7 +54,8 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       showOnlyOutput,
       onUpdateNodeData,
       getIncomingEdges,
-      removeNodeIncomingEdges,
+      overrideConfigForNode,
+      findNode,
     } = useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
@@ -108,15 +109,19 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         return field;
       });
 
-      onUpdateNodeData(id, {
-        ...data,
-        ...fieldsToNullify,
-        config: {
-          ...data.config,
-          fields: fieldsUpdated,
-          inputNames: fields.map((field) => field.name),
-        },
-      });
+      const currentNodeData = findNode(id)?.data;
+
+      if (!!currentNodeData) {
+        onUpdateNodeData(id, {
+          ...currentNodeData,
+          ...fieldsToNullify,
+          config: {
+            ...currentNodeData.config,
+            fields: fieldsUpdated,
+            inputNames: fields.map((field) => field.name),
+          },
+        });
+      }
     }, [getIncomingEdges(id)?.length]);
 
     const outputHandleIds = useMemo(
@@ -165,17 +170,18 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       const newConfig = getAdequateConfigFromDiscriminators(nodeData)?.config;
       if (!newConfig) return;
 
-      const defaultOptions: any = getDefaultOptions(newConfig.fields, nodeData);
+      // const defaultOptions: any = getDefaultOptions(newConfig.fields, nodeData);
 
       if (!!newConfig) {
-        onUpdateNodeData(id, {
-          ...nodeData,
-          ...defaultOptions,
-          config: {
-            ...newConfig,
-            isDynamicallyGenerated: false,
-          },
-        });
+        overrideConfigForNode(id, newConfig, nodeData);
+        // onUpdateNodeData(id, {
+        //   ...nodeData,
+        //   ...defaultOptions,
+        //   config: {
+        //     ...newConfig,
+        //     isDynamicallyGenerated: false,
+        //   },
+        // });
 
         setFields(newConfig.fields);
       }

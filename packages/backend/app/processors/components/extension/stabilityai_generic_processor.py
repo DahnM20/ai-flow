@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import time
@@ -184,12 +185,7 @@ class StabilityAIGenericProcessor(
         )
 
     def perform_pooling(self, client, path):
-        pooling_response = client.get(path=path, accept=self.pooling_path_accept)
-        while pooling_response["status"] == "in-progress":
-            print("Pooling...")
-            eventlet.sleep(0.5)
-            pooling_response = client.get(path=path, accept=self.pooling_path_accept)
-        return
+        return client.pooling(path=path, accept=self.pooling_path_accept)
 
     def prepare_and_process_response(self, response):
         storage = self.get_storage()
@@ -249,8 +245,10 @@ class StabilityAIGenericProcessor(
         )
 
         if self.pooling_path:
-            key_name = next(iter(response))
-            key_value = response[key_name]
+            response_str = response.decode("utf-8")
+            response_json = json.loads(response_str)
+            key_name = "id"
+            key_value = response_json[key_name]
             updated_pooling_path = self.pooling_path.replace(
                 "{" + key_name + "}", str(key_value)
             )

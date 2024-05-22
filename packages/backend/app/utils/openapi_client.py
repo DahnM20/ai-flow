@@ -1,5 +1,7 @@
+import logging
 from typing import Optional
 import requests
+import eventlet
 
 
 class Client:
@@ -42,7 +44,6 @@ class Client:
         )
 
         if response.status_code == 200:
-            print(response)
             if accept == "application/json":
                 return response.json()
             elif accept == "image/*":
@@ -72,12 +73,34 @@ class Client:
         )
 
         if response.status_code == 200:
-            return response.json()
+            if accept == "application/json":
+                return response.json()
+            elif accept == "image/*":
+                return response.content
+            else:
+                return response.content
         else:
             print(response.status_code)
             if response.json()["status"] == "in-progress":
                 return response.json()
             raise Exception(str(response.json()))
+
+    def pooling(
+        self,
+        path: str,
+        content_type: str = None,
+        accept: str = "application/json",
+        **kwargs,
+    ) -> dict:
+        pooling_response = self.get(path=path, accept=accept)
+        while (
+            isinstance(pooling_response, dict)
+            and pooling_response.get("status") == "in-progress"
+        ):
+            print("Pooling...")
+            eventlet.sleep(0.5)
+            pooling_response = self.get(path=path, accept=accept)
+        return pooling_response
 
 
 # if __name__ == "__main__":
