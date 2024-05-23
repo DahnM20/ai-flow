@@ -8,6 +8,7 @@ interface NodeTextFieldProps {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   error?: boolean;
+  isTouchDevice?: boolean;
 }
 
 export default function NodeTextField({
@@ -15,10 +16,12 @@ export default function NodeTextField({
   onChange,
   placeholder,
   error,
+  isTouchDevice,
 }: NodeTextFieldProps) {
   return (
     <NodeInput
       value={value}
+      className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}
       onChange={(event) => onChange(event)}
       placeholder={placeholder}
     />

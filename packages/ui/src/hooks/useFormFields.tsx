@@ -87,6 +87,7 @@ export function useFormFields(
           <NodeTextField
             value={data[field.name]}
             placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
+            isTouchDevice={isTouchDevice}
             onChange={(event) => {
               handleNodeDataChange(
                 field.name,
