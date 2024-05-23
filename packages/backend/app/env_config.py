@@ -50,3 +50,7 @@ def get_flask_secret_key() -> Optional[str]:
 
 def get_replicate_api_key() -> Optional[str]:
     return os.getenv("REPLICATE_API_KEY")
+
+
+def get_background_task_max_workers() -> int:
+    return int(os.getenv("BACKGROUND_TASK_MAX_WORKERS", "2"))

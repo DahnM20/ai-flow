@@ -1,12 +1,12 @@
 from queue import Empty, Queue
 import time
 import eventlet
-from ....tasks.generic_task import add_task
+from ....tasks.task_manager import add_task
 from ..processor import BasicProcessor
 
-from ....tasks.shared_ressources import scrapping_task_queue
-
 from .processor_type_name_utils import ProcessorType
+from ....tasks.task_manager import add_task, register_task_processor
+from ....tasks.task_exception import TaskAlreadyRegisteredError
 
 
 class URLInputProcessor(BasicProcessor):
@@ -17,12 +17,27 @@ class URLInputProcessor(BasicProcessor):
         super().__init__(config)
         self.url = config["url"]
 
+    def scrapping_task(urls):
+        from langchain.document_loaders import PlaywrightURLLoader
+
+        loader = PlaywrightURLLoader(urls=urls, remove_selectors=["header", "footer"])
+        documents = loader.load()
+        content = " ".join(doc.page_content for doc in documents)
+        return content
+
+    def register_background_task(self):
+        try:
+            register_task_processor("scrapping", self.scrapping_task)
+        except TaskAlreadyRegisteredError as e:
+            pass
+
     def process(self):
         urls = [self.url]
         results_queue = Queue()
 
         content = None
 
+        self.register_background_task()
         add_task("scrapping", urls, results_queue)
 
         start_time = time.time()

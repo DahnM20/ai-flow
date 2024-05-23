@@ -1,11 +1,13 @@
+import logging
 from queue import Empty, Queue
 import time
 import requests
 import eventlet
+from ....tasks.task_exception import TaskAlreadyRegisteredError
 
 from ..node_config_builder import FieldBuilder, NodeConfigBuilder
 
-from ....tasks.generic_task import add_task
+from ....tasks.task_manager import add_task, register_task_processor
 from ....utils.processor_utils import (
     create_temp_file_with_bytes_content,
     get_max_file_size_in_mb,
@@ -88,8 +90,17 @@ class DocumentToText(BasicExtensionProcessor):
                         "Timeout - The document has taken too long to be loaded"
                     )
 
-            eventlet.sleep(0.1)  # Sleep to prevent high CPU usage
+            eventlet.sleep(0.1)
         return document
+
+    def document_loader_task(loader):
+        return loader.load()
+
+    def register_background_task(self):
+        try:
+            register_task_processor("document_loader", self.document_loader_task)
+        except TaskAlreadyRegisteredError as e:
+            pass
 
     def process(self):
         url = self.get_input_by_name("document_url")
@@ -117,6 +128,8 @@ class DocumentToText(BasicExtensionProcessor):
 
         loader = self.get_loader_for_mime_type(mime_type, file_path)
 
+        self.register_background_task()
+
         try:
             document = self.load_document(loader)
             if len(document) > 0:
@@ -125,7 +138,7 @@ class DocumentToText(BasicExtensionProcessor):
             else:
                 return None
         except Exception as e:
-            print(f"Failed to load document from URL: {e}")
-            return None
+            logging.info(f"Failed to load document from URL: {e}")
+            raise e
         finally:
             temp_dir.cleanup()
