@@ -62,6 +62,7 @@ export interface NodeConfig {
   helpMessage?: string;
   showHandlesNames?: boolean;
   isDynamicallyGenerated?: boolean;
+  isBeta?: boolean;
 }
 
 export interface DiscriminatedNodeConfig {

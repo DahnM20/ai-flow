@@ -127,6 +127,7 @@ class StabilityAIGenericProcessor(
             .set_help_message("stableDiffusionPromptHelp")
             .set_show_handles(True)
             .add_field(path)
+            .set_is_beta(True)
             .set_is_dynamic(True)  # Important
             .build()
         )

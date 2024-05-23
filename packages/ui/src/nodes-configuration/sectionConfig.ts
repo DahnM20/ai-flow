@@ -29,6 +29,7 @@ export function transformNodeConfigsToDndNode(configs: {
       type: type,
       helpMessage: config?.helpMessage || undefined,
       section: config?.section,
+      isBeta: config?.isBeta,
     } as DnDNode;
   });
 }

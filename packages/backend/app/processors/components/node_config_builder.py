@@ -20,6 +20,7 @@ class BaseNodeConfigBuilder:
         self.section: Optional[str] = None
         self.helpMessage: Optional[str] = None
         self.showHandlesNames: Optional[bool] = False
+        self.isBeta: Optional[bool] = False
 
     def set_node_name(self, name: str) -> "BaseNodeConfigBuilder":
         self.nodeName = name
@@ -47,6 +48,10 @@ class BaseNodeConfigBuilder:
 
     def set_show_handles(self, show: bool) -> "BaseNodeConfigBuilder":
         self.showHandlesNames = show
+        return self
+
+    def set_is_beta(self, beta: bool) -> "NodeConfigBuilder":
+        self.isBeta = beta
         return self
 
 
@@ -86,6 +91,7 @@ class NodeConfigBuilder(BaseNodeConfigBuilder):
             helpMessage=self.helpMessage,
             showHandlesNames=self.showHandlesNames,
             isDynamicallyGenerated=self.isDynamicallyGenerated,
+            isBeta=self.isBeta,
         )
         if self.discriminators is not None:
             return DiscriminatedNodeConfig(
