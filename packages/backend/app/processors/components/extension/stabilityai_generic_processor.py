@@ -6,7 +6,6 @@ from ..node_config_utils import get_sub_configuration
 from ....utils.openapi_client import Client
 
 from ....utils.processor_utils import (
-    download_file_as_binary,
     stream_download_file_as_binary,
 )
 
@@ -133,7 +132,6 @@ class StabilityAIGenericProcessor(
         )
 
     def initialize_api_config(self):
-        print(f"Initializing API config for {self.path}")
         response_content_path = self.path
         response_method = "post"
 
