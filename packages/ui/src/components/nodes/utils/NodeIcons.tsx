@@ -10,7 +10,7 @@ import {
   FaEye,
 } from "react-icons/fa";
 
-export const ICON_MAP: { [key: string]: FC } = {
+const ICON_MAP: { [key: string]: FC } = {
   FaUserCircle: FaUserCircle,
   FaRobot: FaRobot,
   FaPlay: FaPlay,
@@ -21,3 +21,5 @@ export const ICON_MAP: { [key: string]: FC } = {
   AiOutlineMergeCells: AiOutlineMergeCells,
   AIFlowLogo: () => <img src="./logo.svg" alt="hi" className="w-full" />,
 };
+
+export const getIconComponent = (type: string) => ICON_MAP[type];

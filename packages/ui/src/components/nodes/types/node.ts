@@ -1,4 +1,4 @@
-import { NodeConfig } from "../../../nodes-configuration/types";
+import { NodeConfig, NodeSubConfig } from "../../../nodes-configuration/types";
 
 export interface NodeInput {
   inputName: string;
@@ -24,6 +24,7 @@ export interface NodeData {
   missingFields?: string[];
   config: NodeConfig;
   appearance?: NodeAppearance;
+  variantConfig?: NodeSubConfig;
   [key: string]: any;
 }
 

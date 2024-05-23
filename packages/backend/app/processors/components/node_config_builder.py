@@ -1,10 +1,18 @@
-from typing import List, Optional, Union
-from .model import Field, FieldType, NodeConfig, Option, OutputType, SectionType
+from typing import Dict, List, Optional, Union
+from .model import (
+    DiscriminatedNodeConfig,
+    Field,
+    FieldType,
+    NodeConfig,
+    NodeConfigVariant,
+    Option,
+    OutputType,
+    SectionType,
+)
 
 
-class NodeConfigBuilder:
+class BaseNodeConfigBuilder:
     def __init__(self):
-        self.fields: List[Field] = []
         self.nodeName: Optional[str] = None
         self.processorType: Optional[str] = None
         self.icon: Optional[str] = None
@@ -13,40 +21,62 @@ class NodeConfigBuilder:
         self.helpMessage: Optional[str] = None
         self.showHandlesNames: Optional[bool] = False
 
-    def set_node_name(self, name: str) -> "NodeConfigBuilder":
+    def set_node_name(self, name: str) -> "BaseNodeConfigBuilder":
         self.nodeName = name
         return self
 
-    def set_processor_type(self, processor_type: str) -> "NodeConfigBuilder":
+    def set_processor_type(self, processor_type: str) -> "BaseNodeConfigBuilder":
         self.processorType = processor_type
         return self
 
-    def set_icon(self, icon: str) -> "NodeConfigBuilder":
+    def set_icon(self, icon: str) -> "BaseNodeConfigBuilder":
         self.icon = icon
         return self
 
-    def set_output_type(self, output_type: str) -> "NodeConfigBuilder":
+    def set_output_type(self, output_type: str) -> "BaseNodeConfigBuilder":
         self.outputType = OutputType(root=output_type)
         return self
 
-    def set_section(self, section: str) -> "NodeConfigBuilder":
+    def set_section(self, section: str) -> "BaseNodeConfigBuilder":
         self.section = SectionType(root=section)
         return self
 
-    def set_help_message(self, help_message: str) -> "NodeConfigBuilder":
+    def set_help_message(self, help_message: str) -> "BaseNodeConfigBuilder":
         self.helpMessage = help_message
         return self
 
-    def set_show_handles(self, show: bool) -> "NodeConfigBuilder":
+    def set_show_handles(self, show: bool) -> "BaseNodeConfigBuilder":
         self.showHandlesNames = show
+        return self
+
+
+class NodeConfigBuilder(BaseNodeConfigBuilder):
+    def __init__(self):
+        super().__init__()
+        self.fields: List[Field] = []
+        self.isDynamicallyGenerated: Optional[bool] = False
+        self.discriminators: Optional[Dict[str, str]] = None
+
+    def set_is_dynamic(self, dyna: bool) -> "NodeConfigBuilder":
+        self.isDynamicallyGenerated = dyna
+        return self
+
+    def set_fields(self, fields: List[Field]) -> "NodeConfigBuilder":
+        self.fields = fields
         return self
 
     def add_field(self, field: Field) -> "NodeConfigBuilder":
         self.fields.append(field)
         return self
 
+    def add_discriminator(self, key, value) -> "NodeConfigBuilder":
+        if self.discriminators is None:
+            self.discriminators = {}
+        self.discriminators[key] = value
+        return self
+
     def build(self) -> NodeConfig:
-        return NodeConfig(
+        baseConfig = NodeConfig(
             nodeName=self.nodeName,
             processorType=self.processorType,
             icon=self.icon,
@@ -55,6 +85,48 @@ class NodeConfigBuilder:
             section=self.section,
             helpMessage=self.helpMessage,
             showHandlesNames=self.showHandlesNames,
+            isDynamicallyGenerated=self.isDynamicallyGenerated,
+        )
+        if self.discriminators is not None:
+            return DiscriminatedNodeConfig(
+                config=baseConfig, discriminators=self.discriminators
+            )
+        else:
+            return baseConfig
+
+
+class NodeConfigVariantBuilder(BaseNodeConfigBuilder):
+    def __init__(self):
+        super().__init__()
+        self.subConfigurations: List[NodeConfig] = []
+        self.discriminatorFields: Optional[List[str]] = []
+
+    def add_discriminator_field(self, field: str) -> "NodeConfigVariantBuilder":
+        if self.discriminatorFields is None:
+            self.discriminatorFields = []
+        self.discriminatorFields.append(field)
+        return self
+
+    def add_sub_configuration(
+        self, sub_configuration: NodeConfig
+    ) -> "NodeConfigVariantBuilder":
+        self.subConfigurations.append(sub_configuration)
+        return self
+
+    def build(self) -> NodeConfigVariant:
+        for subConfig in self.subConfigurations:
+            config = subConfig.config
+            config.showHandlesNames = self.showHandlesNames
+            config.icon = self.icon
+            config.nodeName = self.nodeName
+            config.outputType = self.outputType
+            config.section = self.section
+            config.processorType = self.processorType
+            config.helpMessage = self.helpMessage
+
+        return NodeConfigVariant(
+            subConfigurations=self.subConfigurations,
+            discriminatorFields=self.discriminatorFields,
         )
 
 
@@ -70,8 +142,24 @@ class FieldBuilder:
         self._field.label = label
         return self
 
+    def set_description(self, description: str) -> "FieldBuilder":
+        self._field.description = description
+        return self
+
     def set_type(self, field_type: str) -> "FieldBuilder":
         self._field.type = FieldType(root=field_type)
+        return self
+
+    def set_min(self, min: float) -> "FieldBuilder":
+        self._field.min = min
+        return self
+
+    def set_max(self, max: float) -> "FieldBuilder":
+        self._field.max = max
+        return self
+
+    def set_is_binary(self, binary: bool) -> "FieldBuilder":
+        self._field.isBinary = binary
         return self
 
     def set_placeholder(self, placeholder: str) -> "FieldBuilder":

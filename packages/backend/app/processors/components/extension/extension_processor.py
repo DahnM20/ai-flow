@@ -10,6 +10,13 @@ class ExtensionProcessor:
         pass
 
 
+class DynamicExtensionProcessor:
+    """Base interface for dynamic extension processors - These nodes config are populated by an API call after a user choice"""
+
+    def get_dynamic_node_config(self, data) -> NodeConfig:
+        pass
+
+
 class BasicExtensionProcessor(ExtensionProcessor, BasicProcessor):
     """A basic extension processor that does not depend on user-specific parameters.
 

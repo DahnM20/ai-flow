@@ -43,7 +43,7 @@ export const NodeTitle = styled.div`
 `;
 
 export const NodeContent = styled.div.attrs({
-  className: "flex h-auto w-full flex-grow justify-center p-4",
+  className: "flex flex-col h-auto w-full flex-grow justify-center p-4",
 })`
   color: ${({ theme }) => theme.text};
 `;

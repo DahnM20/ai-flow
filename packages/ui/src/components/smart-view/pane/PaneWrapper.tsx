@@ -2,7 +2,7 @@ import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 import { MdOutlineVerticalSplit, MdHorizontalSplit } from "react-icons/md";
 import { getConfigViaType } from "../../../nodes-configuration/nodeConfig";
-import { ICON_MAP } from "../../nodes/utils/NodeIcons";
+import { getIconComponent } from "../../nodes/utils/NodeIcons";
 import NodePlayButton from "../../nodes/node-button/NodePlayButton";
 import { useState } from "react";
 
@@ -30,7 +30,9 @@ function PaneWrapper({
   if (!!nodeType) {
     nodeConfig = getConfigViaType(nodeType);
   }
-  const NodeIconComponent = nodeConfig ? ICON_MAP[nodeConfig?.icon] : null;
+  const NodeIconComponent = nodeConfig
+    ? getIconComponent(nodeConfig?.icon)
+    : null;
 
   const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(false);
 

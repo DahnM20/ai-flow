@@ -9,7 +9,9 @@ import {
   getNodeInError,
 } from "../utils/flowChecker";
 import { createUniqNodeId } from "../utils/nodeUtils";
-import { NodeAppearance } from "../components/nodes/types/node";
+import { NodeAppearance, NodeData } from "../components/nodes/types/node";
+import { NodeConfig } from "../nodes-configuration/types";
+import { getDefaultOptions } from "../utils/nodeConfigurationUtils";
 
 export type NodeDimensions = {
   width?: number | null;
@@ -21,6 +23,7 @@ interface NodeContextType {
   runAllNodes: () => void;
   hasParent: (id: string) => boolean;
   getIncomingEdges: (id: string) => Edge[] | undefined;
+  removeNodeIncomingEdges: (id: string) => void;
   getEdgeIndex: (id: string) => Edge | undefined;
   showOnlyOutput?: boolean;
   isRunning: boolean;
@@ -33,6 +36,11 @@ interface NodeContextType {
   clearNodeOutput: (nodeId: string) => void;
   clearAllOutput: () => void;
   updateNodeAppearance: (nodeId: string, appearance: NodeAppearance) => void;
+  overrideConfigForNode: (
+    nodeId: string,
+    newConfig: NodeConfig,
+    newData: NodeData,
+  ) => void;
   removeNode: (nodeId: string) => void;
   removeAll: () => void;
   findNode: (nodeId: string) => Node | undefined;
@@ -49,6 +57,7 @@ export const NodeContext = createContext<NodeContextType>({
   runAllNodes: () => undefined,
   hasParent: () => false,
   getIncomingEdges: () => undefined,
+  removeNodeIncomingEdges: () => undefined,
   getEdgeIndex: () => undefined,
   showOnlyOutput: false,
   isRunning: false,
@@ -61,6 +70,7 @@ export const NodeContext = createContext<NodeContextType>({
   clearNodeOutput: () => undefined,
   clearAllOutput: () => undefined,
   updateNodeAppearance: () => undefined,
+  overrideConfigForNode: () => undefined,
   removeNode: () => undefined,
   removeAll: () => undefined,
   findNode: () => undefined,
@@ -147,6 +157,39 @@ export const NodeProvider = ({
     return edges.filter((edge) => edge.target === id);
   };
 
+  const removeNodeIncomingEdges = (id: string) => {
+    const edgesUpdated = edges.filter((edge) => edge.target !== id);
+    onUpdateNodes(nodes, edgesUpdated);
+  };
+
+  const overrideConfigForNode = (
+    id: string,
+    newConfig: NodeConfig,
+    newData: NodeData,
+  ) => {
+    const nodesUpdated = nodes.map((node) => {
+      if (node.id === id) {
+        const defaultOptions: any = getDefaultOptions(
+          newConfig.fields,
+          newData,
+        );
+        console.log(newData);
+        node.data = {
+          ...newData,
+          ...defaultOptions,
+          config: {
+            ...newConfig,
+            isDynamicallyGenerated: false,
+          },
+        };
+      }
+      return node;
+    });
+
+    const edgesUpdated = edges.filter((edge) => edge.target !== id);
+    onUpdateNodes(nodesUpdated, edgesUpdated);
+  };
+
   const getEdgeIndex = (id: string) => {
     return edges.find((edge) => edge.target === id);
   };
@@ -169,6 +212,7 @@ export const NodeProvider = ({
       const newNode = {
         ...nodeToDuplicate,
         id: newNodeId,
+        selected: false,
         data: {
           ...nodeToDuplicate.data,
           name: newNodeId,
@@ -261,6 +305,7 @@ export const NodeProvider = ({
         runAllNodes,
         hasParent,
         getIncomingEdges,
+        removeNodeIncomingEdges,
         getEdgeIndex,
         showOnlyOutput,
         isRunning,
@@ -273,6 +318,7 @@ export const NodeProvider = ({
         clearNodeOutput,
         clearAllOutput,
         updateNodeAppearance,
+        overrideConfigForNode,
         removeNode,
         removeAll,
         findNode,
