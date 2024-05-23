@@ -1,9 +1,6 @@
 import json
 import logging
 import os
-import time
-import requests
-import eventlet
 from ..node_config_utils import get_sub_configuration
 
 from ....utils.openapi_client import Client
@@ -37,7 +34,8 @@ class StabilityAIGenericProcessor(
         re.compile(r"/v1/"),  # Contains'/v1/'
         re.compile(r"/user/"),  # Contains 'user'
         re.compile(r"/engines/"),  # Contains 'engines'
-        re.compile(r"/result/"),  # Contains 'engines'
+        re.compile(r"/result/"),  # Contains 'result'
+        re.compile(r"/v2alpha/"),  # Contains 'v2alpha'
         # Temporary
         re.compile(r"/inpaint"),
     ]
@@ -82,6 +80,25 @@ class StabilityAIGenericProcessor(
                 return path
         return None
 
+    def transform_path_options_labels(options):
+        transformed_options = []
+        for option in options:
+            # Remove the first path element and split the rest
+            parts = re.sub(r"^/[^/]+/", "", option.label).split("/")
+
+            # Take the last two elements, or one if alone
+            if len(parts) > 1:
+                label = f"{parts[-2].capitalize()} - {parts[-1].replace('-', ' ').capitalize()}"
+            else:
+                label = parts[-1].replace("-", " ").capitalize()
+
+            transformed_option = Option(
+                default=option.default, value=option.value, label=label
+            )
+            transformed_options.append(transformed_option)
+
+        return transformed_options
+
     def get_node_config(self):
         if StabilityAIGenericProcessor.allowed_paths_cache is None:
             StabilityAIGenericProcessor.initialize_allowed_paths_cache()
@@ -90,6 +107,8 @@ class StabilityAIGenericProcessor(
             Option(default=(i == 0), value=name, label=name)
             for i, name in enumerate(StabilityAIGenericProcessor.allowed_paths_cache)
         ]
+
+        path_options = self.transform_path_options_labels(path_options)
 
         path = (
             FieldBuilder()
