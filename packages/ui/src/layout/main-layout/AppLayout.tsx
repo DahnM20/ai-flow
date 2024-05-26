@@ -297,6 +297,7 @@ const FlowTabs = () => {
       </TabHeader>
 
       <FlowWrapper
+        key={`flow-${currentTab}`}
         mode={mode}
         openConfig={openConfig}
         onCloseConfig={() => setOpenConfig(false)}

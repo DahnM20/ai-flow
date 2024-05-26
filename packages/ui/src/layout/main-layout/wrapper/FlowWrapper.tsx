@@ -7,6 +7,7 @@ import ModeBar from "../sidebar/ModeBar";
 import { ApplicationMenu, ApplicationMode } from "../AppLayout";
 import TemplatePopup from "../../../components/popups/TemplatePopup";
 import HelpPopup from "../../../components/popups/HelpPopup";
+import FlowErrorBoundary from "./FlowErrorBoundary";
 
 interface FlowWrapperProps {
   children?: ReactNode;
@@ -50,40 +51,42 @@ function FlowWrapper({
 
   return (
     <>
-      <div
-        className="fixed left-0 
+      <FlowErrorBoundary>
+        <div
+          className="fixed left-0 
                           z-10
                           flex
                           h-full
                           flex-row
                           pt-16"
-      >
-        <ModeBar
-          currentMode={mode}
-          onChangeMode={onChangeMode}
-          onOpenMenu={handleMenuChange}
+        >
+          <ModeBar
+            currentMode={mode}
+            onChangeMode={onChangeMode}
+            onOpenMenu={handleMenuChange}
+          />
+          {mode === "flow" && <DnDSidebar />}
+        </div>
+        <RightIconButton onClick={handleOpenConfig} />
+        <RightIconButton
+          onClick={() => handleMenuChange("help")}
+          color="#7fcce38f"
+          bottom="80px"
+          icon={<FiHelpCircle />}
         />
-        {mode === "flow" && <DnDSidebar />}
-      </div>
-      <RightIconButton onClick={handleOpenConfig} />
-      <RightIconButton
-        onClick={() => handleMenuChange("help")}
-        color="#7fcce38f"
-        bottom="80px"
-        icon={<FiHelpCircle />}
-      />
 
-      <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
-      <HelpPopup
-        isOpen={menuState["help"]}
-        onClose={() => handleMenuChange("help")}
-      />
-      <TemplatePopup
-        isOpen={menuState["template"]}
-        onValidate={onAddNewFlow}
-        onClose={() => handleMenuChange("template")}
-      />
-      {children}
+        <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
+        <HelpPopup
+          isOpen={menuState["help"]}
+          onClose={() => handleMenuChange("help")}
+        />
+        <TemplatePopup
+          isOpen={menuState["template"]}
+          onValidate={onAddNewFlow}
+          onClose={() => handleMenuChange("template")}
+        />
+        {children}
+      </FlowErrorBoundary>
     </>
   );
 }
