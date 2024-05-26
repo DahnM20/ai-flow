@@ -1,8 +1,6 @@
 import logging
-from queue import Empty, Queue
-import time
+from queue import Queue
 import requests
-import eventlet
 from ....tasks.task_exception import TaskAlreadyRegisteredError
 
 from ..node_config_builder import FieldBuilder, NodeConfigBuilder
@@ -15,7 +13,8 @@ from ....utils.processor_utils import (
     is_s3_file,
     is_valid_url,
 )
-from ..model import Field, NodeConfig
+from ....tasks.task_utils import wait_for_result
+from ..model import NodeConfig
 from .extension_processor import BasicExtensionProcessor
 from langchain.document_loaders import (
     UnstructuredPDFLoader,
@@ -78,19 +77,13 @@ class DocumentToText(BasicExtensionProcessor):
 
         results_queue = Queue()
         add_task("document_loader", loader, results_queue)
-        start_time = time.time()
         document = None
-        while True:
-            try:
-                document = results_queue.get_nowait()
-                break
-            except Empty:
-                if time.time() - start_time > DocumentToText.WAIT_TIMEOUT:
-                    raise ValueError(
-                        "Timeout - The document has taken too long to be loaded"
-                    )
 
-            eventlet.sleep(0.1)
+        try:
+            document = wait_for_result(results_queue)
+        except TimeoutError as e:
+            raise TimeoutError("Timeout - The document took too long to load")
+
         return document
 
     def document_loader_task(loader):

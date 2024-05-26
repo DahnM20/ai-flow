@@ -1,12 +1,14 @@
-from queue import Empty, Queue
-import time
-import eventlet
+from queue import Queue
+
+from ....utils.processor_utils import is_valid_url
 from ....tasks.task_manager import add_task
 from ..processor import BasicProcessor
 
 from .processor_type_name_utils import ProcessorType
 from ....tasks.task_manager import add_task, register_task_processor
 from ....tasks.task_exception import TaskAlreadyRegisteredError
+from ....tasks.task_utils import wait_for_result
+import logging
 
 
 class URLInputProcessor(BasicProcessor):
@@ -32,6 +34,8 @@ class URLInputProcessor(BasicProcessor):
             pass
 
     def process(self):
+        if not is_valid_url(self.url):
+            raise ValueError("Invalid URL")
         urls = [self.url]
         results_queue = Queue()
 
@@ -39,19 +43,10 @@ class URLInputProcessor(BasicProcessor):
 
         self.register_background_task()
         add_task("scrapping", urls, results_queue)
-
-        start_time = time.time()
-
-        while True:
-            try:
-                content = results_queue.get_nowait()
-                break
-            except Empty:
-                if time.time() - start_time > URLInputProcessor.WAIT_TIMEOUT:
-                    content = "Timeout"
-                    break
-
-            eventlet.sleep(0.1)  # Sleep to prevent high CPU usage
+        try:
+            content = wait_for_result(results_queue)
+        except TimeoutError as e:
+            raise TimeoutError("URL takes too long to load")
 
         self.set_output(content)
         return content

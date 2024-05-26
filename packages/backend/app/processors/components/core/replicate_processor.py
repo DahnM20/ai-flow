@@ -1,4 +1,6 @@
 import logging
+from queue import Empty, Queue
+
 
 from ....utils.replicate_utils import (
     get_input_schema_from_open_API_schema,
@@ -8,8 +10,10 @@ from ....utils.replicate_utils import (
 from ...context.processor_context import ProcessorContext
 from ..processor import ContextAwareProcessor
 import replicate
-
 from .processor_type_name_utils import ProcessorType
+from ....tasks.task_exception import TaskAlreadyRegisteredError
+from ....tasks.task_manager import add_task, register_task_processor
+from ....tasks.task_utils import wait_for_result
 
 
 class ReplicateProcessor(ContextAwareProcessor):
@@ -27,6 +31,36 @@ class ReplicateProcessor(ContextAwareProcessor):
 
         model_name_withouth_version = self.model.split(":")[0]
         self.schema = get_model_openapi_schema(model_name_withouth_version)
+
+    def get_prediction_result(
+        self, prediction, timeout=3600.0, initial_sleep=0.1, max_sleep=5.0
+    ):
+        results_queue = Queue()
+        add_task("replicate_prediction_wait", prediction, results_queue)
+
+        try:
+            prediction = wait_for_result(
+                results_queue, timeout, initial_sleep, max_sleep
+            )
+        except TimeoutError as e:
+            raise TimeoutError("Prediction result timed out")
+
+        return prediction
+
+    @staticmethod
+    def wait_for_prediction_task(prediction):
+        prediction.wait()
+        return prediction
+
+    def register_background_task(self):
+        try:
+            register_task_processor(
+                "replicate_prediction_wait",
+                self.wait_for_prediction_task,
+                max_concurrent_tasks=10,
+            )
+        except TaskAlreadyRegisteredError as e:
+            pass
 
     def process(self):
         input_processors = self.get_input_processors()
@@ -60,8 +94,9 @@ class ReplicateProcessor(ContextAwareProcessor):
         rest, version_id = self.model.split(":")
 
         self.prediction = api.predictions.create(version=version_id, input=self.config)
+        self.register_background_task()
 
-        self.prediction.wait()
+        self.prediction = self.get_prediction_result(self.prediction)
 
         if self.prediction.status != "succeeded":
             exception = Exception(
