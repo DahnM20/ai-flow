@@ -19,6 +19,7 @@ class URLInputProcessor(BasicProcessor):
         super().__init__(config)
         self.url = config["url"]
 
+    @staticmethod
     def scrapping_task(urls):
         from langchain.document_loaders import PlaywrightURLLoader
 

@@ -20,7 +20,8 @@ const App = () => {
   const { dark } = useContext(ThemeContext);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
   const [runTour, setRunTour] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [configLoaded, setConfigLoaded] = useState(false);
+  const [showApp, setShowApp] = useState(false);
 
   const [appMounted, setComponentsMounted] = useState(false);
 
@@ -49,10 +50,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (isLoaded) {
+    if (showApp) {
       setComponentsMounted(true);
     }
-  }, [isLoaded]);
+  }, [showApp]);
 
   async function loadAppData() {
     const minLoadingTime = 1000;
@@ -65,6 +66,9 @@ const App = () => {
       console.error("Failed to load app data:", error);
       console.error("Default parameters will be loaded");
     } finally {
+      loadAllNodesTypes();
+      setConfigLoaded(true);
+
       const endTime = Date.now();
       const timeElapsed = endTime - startTime;
 
@@ -74,36 +78,47 @@ const App = () => {
         );
       }
 
-      loadAllNodesTypes();
-      setIsLoaded(true);
+      setShowApp(true);
     }
   }
 
-  if (!isLoaded)
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="flex h-full w-1/6 flex-col items-center justify-center space-y-5">
-          <img src="./logo.svg" className="w-1/2" />
-          <LoadingScreenSpinner className="h-8 w-8" />
-        </div>
-      </div>
-    );
-
   return (
-    <VisibilityProvider>
-      <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-        <SocketProvider>
-          <FlowTabs />
-        </SocketProvider>
+    <>
+      {!showApp && (
+        <div className="absolute z-50 flex h-screen w-full items-center justify-center">
+          <div className="flex h-full w-1/6 flex-col items-center justify-center space-y-5">
+            <img src="./logo.svg" className="w-1/2" />
+            <LoadingScreenSpinner className="h-8 w-8" />
+          </div>
+        </div>
+      )}
+      {configLoaded && (
+        <div
+          className={`${showApp ? "opacity-100" : "opacity-0"} transition-all duration-300 ease-in-out`}
+        >
+          <VisibilityProvider>
+            <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+              <SocketProvider>
+                <FlowTabs />
+              </SocketProvider>
 
-        {showWelcomePopup && !runTour && (
-          <WelcomePopup show onClose={() => setShowWelcomePopup(false)} />
-        )}
+              {showWelcomePopup && !runTour && (
+                <WelcomePopup show onClose={() => setShowWelcomePopup(false)} />
+              )}
 
-        <Tooltip id={`app-tooltip`} style={{ zIndex: 100 }} delayShow={500} />
-        {appMounted && runTour && <AppTour run={runTour} setRun={setRunTour} />}
-      </DndProvider>
-    </VisibilityProvider>
+              <Tooltip
+                id={`app-tooltip`}
+                style={{ zIndex: 100 }}
+                delayShow={500}
+              />
+              {appMounted && runTour && (
+                <AppTour run={runTour} setRun={setRunTour} />
+              )}
+            </DndProvider>
+          </VisibilityProvider>
+        </div>
+      )}
+    </>
   );
 };
 
