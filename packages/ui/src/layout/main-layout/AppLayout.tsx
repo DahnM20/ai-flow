@@ -292,6 +292,7 @@ const FlowTabs = () => {
       </TabHeader>
 
       <FlowWrapper
+        key={`flow-${currentTab}`}
         mode={mode}
         onChangeMode={handleChangeMode}
         onAddNewFlow={handleAddNewFlow}
