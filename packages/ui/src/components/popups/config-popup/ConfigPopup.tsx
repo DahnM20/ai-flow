@@ -1,11 +1,11 @@
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
-import { useContext, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { FiMail } from "react-icons/fi";
 import { Modal } from "@mantine/core";
 import { UserParameters } from "./UserParameters";
 import DisplayParameters from "./DisplayParameters";
+import { useVisibility } from "../../../providers/VisibilityProvider";
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -15,10 +15,12 @@ interface ConfigPopupProps {
 
 const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
   const { t } = useTranslation("config");
-  const [activeTab, setActiveTab] = useState<string>("user");
+
+  const { getElement, configActiveTab, setConfigActiveTab } = useVisibility();
+  const configPopup = getElement("configPopup");
 
   const handleClose = () => {
-    onClose();
+    configPopup.hide();
   };
 
   return (
@@ -62,20 +64,20 @@ const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
         </Disclaimer>
         <Tabs className="sm:text-md text-base">
           <Tab
-            isActive={activeTab === "user"}
-            onClick={() => setActiveTab("user")}
+            isActive={configActiveTab === "user"}
+            onClick={() => setConfigActiveTab("user")}
           >
             {t("userTabLabel")}
           </Tab>
           <Tab
-            isActive={activeTab === "display"}
-            onClick={() => setActiveTab("display")}
+            isActive={configActiveTab === "display"}
+            onClick={() => setConfigActiveTab("display")}
           >
             {t("displayTabLabel")}
           </Tab>
         </Tabs>
-        {activeTab === "user" && <UserParameters />}
-        {activeTab === "display" && <DisplayParameters />}
+        {configActiveTab === "user" && <UserParameters />}
+        {configActiveTab === "display" && <DisplayParameters />}
         <Footer>
           <Message>{t("supportProjectPrompt")}</Message>
           <Icons>

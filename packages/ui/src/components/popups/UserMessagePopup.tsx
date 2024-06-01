@@ -1,4 +1,5 @@
 import { Modal } from "@mantine/core";
+import { ReactNode } from "react";
 
 export enum MessageType {
   Error,
@@ -14,6 +15,7 @@ export interface UserMessage {
 interface PopupProps {
   isOpen: boolean;
   message: UserMessage;
+  children?: ReactNode;
   onClose: () => void;
 }
 
@@ -43,6 +45,7 @@ function UserMessagePopup(props: PopupProps) {
           </div>
         )}
         <div className="mt-5 text-slate-300">{props.message?.content}</div>
+        {props.children}
       </div>
     </Modal>
   ) : (

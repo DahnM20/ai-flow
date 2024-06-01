@@ -7,13 +7,11 @@ import ModeBar from "../sidebar/ModeBar";
 import { ApplicationMenu, ApplicationMode } from "../AppLayout";
 import TemplatePopup from "../../../components/popups/TemplatePopup";
 import HelpPopup from "../../../components/popups/HelpPopup";
+import { useVisibility } from "../../../providers/VisibilityProvider";
 
 interface FlowWrapperProps {
   children?: ReactNode;
   mode: ApplicationMode;
-  openConfig: boolean;
-  onCloseConfig: () => void;
-  onOpenConfig: () => void;
   onChangeMode: (newMode: ApplicationMode) => void;
   onAddNewFlow: (flowData: any) => void;
 }
@@ -23,10 +21,7 @@ type MenuStateType = {
 };
 
 function FlowWrapper({
-  openConfig,
   mode,
-  onCloseConfig,
-  onOpenConfig,
   onChangeMode,
   onAddNewFlow,
   children,
@@ -35,13 +30,8 @@ function FlowWrapper({
     {} as MenuStateType,
   );
 
-  const handleConfigClose = useCallback(() => {
-    onCloseConfig();
-  }, []);
-
-  const handleOpenConfig = useCallback(() => {
-    onOpenConfig();
-  }, []);
+  const { getElement } = useVisibility();
+  const configPopup = getElement("configPopup");
 
   const handleMenuChange = useCallback((menu: ApplicationMenu) => {
     menuState[menu] = !menuState[menu];
@@ -65,7 +55,7 @@ function FlowWrapper({
         />
         {mode === "flow" && <DnDSidebar />}
       </div>
-      <RightIconButton onClick={handleOpenConfig} />
+      <RightIconButton onClick={() => configPopup.show()} />
       <RightIconButton
         onClick={() => handleMenuChange("help")}
         color="#7fcce38f"
@@ -73,7 +63,10 @@ function FlowWrapper({
         icon={<FiHelpCircle />}
       />
 
-      <ConfigPopup isOpen={openConfig} onClose={handleConfigClose} />
+      <ConfigPopup
+        isOpen={configPopup.isVisible}
+        onClose={() => configPopup.hide()}
+      />
       <HelpPopup
         isOpen={menuState["help"]}
         onClose={() => handleMenuChange("help")}

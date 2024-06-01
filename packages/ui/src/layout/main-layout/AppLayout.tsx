@@ -65,7 +65,6 @@ const FlowTabs = () => {
   const { dark, toggleTheme } = useContext(ThemeContext);
   const { emitEvent } = useContext(SocketContext);
   const [isRunning, setIsRunning] = useState(false);
-  const [openConfig, setOpenConfig] = useState(false);
   const [mode, setMode] = useState<ApplicationMode>("flow");
   const [selectedEdgeType, setSelectedEdgeType] = useState("default");
   const useAuth = import.meta.env.VITE_APP_USE_AUTH === "true";
@@ -199,10 +198,6 @@ const FlowTabs = () => {
     }
   };
 
-  const handleClickProfile = () => {
-    setOpenConfig(true);
-  };
-
   const handleChangeMode = (mode: ApplicationMode) => {
     setMode(mode);
   };
@@ -298,9 +293,6 @@ const FlowTabs = () => {
 
       <FlowWrapper
         mode={mode}
-        openConfig={openConfig}
-        onCloseConfig={() => setOpenConfig(false)}
-        onOpenConfig={() => setOpenConfig(true)}
         onChangeMode={handleChangeMode}
         onAddNewFlow={handleAddNewFlow}
       >

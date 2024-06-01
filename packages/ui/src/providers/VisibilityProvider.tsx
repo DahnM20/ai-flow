@@ -1,8 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-export type VisibilityElement = "sidebar" | "minimap" | "dragAndDropSidebar";
+export type VisibilityElement =
+  | "sidebar"
+  | "minimap"
+  | "dragAndDropSidebar"
+  | "configPopup";
 
-export type Tab = "json" | "topological" | "current_node";
+export type SidepaneTab = "json" | "topological" | "current_node";
+export type ConfigTab = "user" | "display";
 
 export interface VisibilityContextState {
   [key: string]: {
@@ -15,8 +20,10 @@ export interface VisibilityContextState {
 
 interface VisibilityContextType {
   getElement: (key: VisibilityElement) => VisibilityContextState[string];
-  sidepaneActiveTab: Tab;
-  setSidepaneActiveTab: (tab: Tab) => void;
+  sidepaneActiveTab: SidepaneTab;
+  setSidepaneActiveTab: (tab: SidepaneTab) => void;
+  configActiveTab: ConfigTab;
+  setConfigActiveTab: (tab: ConfigTab) => void;
 }
 
 export const VisibilityContext = createContext<
@@ -50,9 +57,18 @@ export const VisibilityProvider: React.FC<VisibilityProviderProps> = ({
         hide: () => setVisibility("dragAndDropSidebar", false),
         toggle: () => toggleVisibility("dragAndDropSidebar"),
       },
+      configPopup: {
+        isVisible: false,
+        show: () => setVisibility("configPopup", true),
+        hide: () => setVisibility("configPopup", false),
+        toggle: () => toggleVisibility("configPopup"),
+      },
     });
 
-  const [sidepaneActiveTab, setSidepaneActiveTab] = useState<Tab>("json");
+  const [sidepaneActiveTab, setSidepaneActiveTab] =
+    useState<SidepaneTab>("json");
+
+  const [configActiveTab, setConfigActiveTab] = useState<ConfigTab>("user");
 
   const setVisibility = (key: VisibilityElement, isVisible: boolean) => {
     setVisibilityState((prevState) => ({
@@ -82,6 +98,8 @@ export const VisibilityProvider: React.FC<VisibilityProviderProps> = ({
     getElement: getElement,
     sidepaneActiveTab: sidepaneActiveTab,
     setSidepaneActiveTab: setSidepaneActiveTab,
+    configActiveTab: configActiveTab,
+    setConfigActiveTab: setConfigActiveTab,
   };
 
   return (
