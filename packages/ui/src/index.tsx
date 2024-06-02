@@ -13,7 +13,6 @@ import { Fallback } from "./components/tools/Fallback";
 import "./i18n";
 import { ToastContainer } from "react-toastify";
 import App from "./App";
-import "allotment/dist/style.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,

@@ -15,7 +15,6 @@
     "@types/node": "^20.12.12",
     "@types/three": "^0.164.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
-    "allotment": "^1.19.3",
     "autoprefixer": "^10.4.14",
     "aws-amplify": "^5.3.11",
     "axios": "^1.6.2",
