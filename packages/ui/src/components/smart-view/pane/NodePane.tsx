@@ -10,7 +10,6 @@ import { BasicPane, LayoutIndex } from "../SmartView";
 interface NodePaneProps {
   index?: LayoutIndex;
   paneData: BasicPane;
-  onOpenPopup: () => void;
   onAttachNode?: (
     index: LayoutIndex,
     nodeId?: string,
@@ -24,7 +23,6 @@ interface NodePaneProps {
 }
 
 function NodePane({
-  onOpenPopup,
   onAttachNode,
   onAttachText,
   index,
@@ -45,7 +43,6 @@ function NodePane({
   );
 
   function handleAttachNode() {
-    onOpenPopup();
     setPopupOpen(true);
   }
 

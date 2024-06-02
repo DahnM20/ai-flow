@@ -14,6 +14,7 @@ import "react-resizable/css/styles.css";
 import NodePane from "./pane/NodePane";
 import PaneWrapper from "./pane/PaneWrapper";
 import { LayoutViewData } from "../../layout/main-layout/AppLayout";
+import SmartViewActions from "./SmartViewActions";
 export type LayoutIndex = string | number;
 
 export interface TextOptions {
@@ -207,16 +208,17 @@ function SmartView({
     onLayoutChange([...layout, newBlock]);
   };
 
-  function enableGrid() {
-    setEnabled(true);
-  }
-  function disableGrid() {
-    setEnabled(false);
+  function toggleLock() {
+    setEnabled(!enabled);
   }
 
   return (
     <div className="smart-view h-full w-full">
-      {/* <button onClick={addNewBlock}>Add Block</button> */}
+      <SmartViewActions
+        onAddPane={addNewBlock}
+        toggleLockView={toggleLock}
+        viewLocked={!enabled}
+      />
       <div className="ml-10 h-full">
         <NodeProvider
           nodes={nodes}
@@ -235,6 +237,9 @@ function SmartView({
             rowHeight={30}
             width={width}
             onLayoutChange={handleLayoutChange}
+            isDraggable={enabled}
+            isResizable={enabled}
+            isDroppable={enabled}
           >
             {layout.map((item) => (
               <div
@@ -245,14 +250,13 @@ function SmartView({
                   index={item.i}
                   name={paneData[item.i]?.nodeId}
                   onDelete={handleDeletePane}
-                  showTools={true}
+                  showTools={enabled}
                 >
                   <NodePane
                     index={item.i}
                     paneData={paneData[item.i] ?? {}}
                     onAttachNode={handleAttachNode}
                     onAttachText={handleAttachText}
-                    onOpenPopup={disableGrid}
                   />
                 </PaneWrapper>
               </div>

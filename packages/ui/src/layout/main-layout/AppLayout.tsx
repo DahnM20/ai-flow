@@ -305,12 +305,7 @@ const FlowTabs = () => {
             </>
           )}
 
-          {mode === "view" && (
-            <FaToolbox
-              className="hidden  text-slate-400 hover:text-slate-50 md:flex"
-              onClick={handleFormatFlow}
-            />
-          )}
+          {mode === "view" && <span id="view-action-portal" />}
           <div className="hidden h-6 border-l-2 border-l-slate-500/50 pl-2 md:flex"></div>
           <div className="pr-2">
             <ButtonRunAll
