@@ -65,8 +65,6 @@ function SmartView({
 
   const [width, setWidth] = useState(window.innerWidth);
 
-  const [counter, setCounter] = useState<number>(3);
-
   useEffect(() => {
     if (!tabLayout?.layout) {
       onLayoutChange(initialLayout);
@@ -197,10 +195,16 @@ function SmartView({
   };
 
   const addNewBlock = () => {
-    const newBlockId = `new_${counter}`;
-    const newBlock: Layout = { i: newBlockId, x: 0, y: Infinity, w: 5, h: 5 };
+    const maxValue = Math.max(...layout.map((item) => +item.i));
+    const newId = maxValue + 1;
+    const newBlock: Layout = {
+      i: "" + newId,
+      x: 0,
+      y: Infinity,
+      w: 5,
+      h: 5,
+    };
     onLayoutChange([...layout, newBlock]);
-    setCounter(counter + 1);
   };
 
   function enableGrid() {
@@ -212,7 +216,7 @@ function SmartView({
 
   return (
     <div className="smart-view h-full w-full">
-      <button onClick={addNewBlock}>Add Block</button>
+      {/* <button onClick={addNewBlock}>Add Block</button> */}
       <div className="ml-10 h-full">
         <NodeProvider
           nodes={nodes}
