@@ -53,8 +53,8 @@ function PaneWrapper({
           className={`h-8 w-full transition-all duration-500 ease-in-out ${isHeaderVisible ? "opacity-100" : "opacity-0"}`}
         >
           <div
-            className="flex items-center justify-center rounded-t-xl p-4
-                                text-center text-slate-100/80 hover:text-slate-100"
+            className="flex cursor-move items-center justify-center rounded-t-xl
+                                p-4 text-center text-slate-100/80 hover:text-slate-100"
           >
             <div
               className="text-md absolute left-0 flex flex-row items-center
@@ -66,6 +66,7 @@ function PaneWrapper({
             </div>
             <div
               className={`absolute right-0 space-x-2 px-2 ${showTools ? "" : "pointer-events-none"}`}
+              onMouseDown={(e) => e.stopPropagation()}
             >
               {name && <NodePlayButton nodeName={name} />}
               <PaneWrapperButton

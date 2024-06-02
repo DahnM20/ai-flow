@@ -26,20 +26,27 @@ import ButtonRunAll from "../../components/buttons/ButtonRunAll";
 import { FlowEvent, SocketContext } from "../../providers/SocketProvider";
 import LoginButton from "../../components/login/LoginButton";
 import FlowWrapper from "./wrapper/FlowWrapper";
-import SmartView from "../../components/smart-view/SmartView";
-import { Layout } from "../../components/smart-view/RenderLayout";
+import SmartView, {
+  PaneDataState,
+} from "../../components/smart-view/SmartView";
 import EdgeTypeButton from "../../components/buttons/EdgeTypeButton";
 import TabHeader from "./header/TabHeader";
 import {
   createErrorMessageForMissingFields,
   getNodeInError,
 } from "../../utils/flowChecker";
+import { Layout } from "react-grid-layout";
 
 export interface FlowTab {
   nodes: Node[];
   edges: Edge[];
-  layout?: Layout;
+  layoutViewData?: LayoutViewData;
   metadata?: FlowMetadata;
+}
+
+export interface LayoutViewData {
+  layout?: Layout[];
+  data?: PaneDataState;
 }
 
 interface FlowMetadata {
@@ -148,10 +155,33 @@ const FlowTabs = () => {
     setFlowTabs(updatedFlowTabs);
   };
 
-  const handleLayoutChange = (layout: Layout) => {
+  const handleLayoutChange = (layout: Layout[]) => {
     const updatedTabs = flowTabs.tabs.map((tab, index) => {
       if (index === currentTab) {
-        return { ...tab, layout };
+        return {
+          ...tab,
+          layoutViewData: {
+            ...tab.layoutViewData,
+            layout,
+          },
+        };
+      }
+      return tab;
+    });
+    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
+    setFlowTabs(updatedFlowTabs);
+  };
+
+  const handlePaneDataChange = (data: PaneDataState) => {
+    const updatedTabs = flowTabs.tabs.map((tab, index) => {
+      if (index === currentTab) {
+        return {
+          ...tab,
+          layoutViewData: {
+            ...tab.layoutViewData,
+            data,
+          },
+        };
       }
       return tab;
     });
@@ -275,12 +305,12 @@ const FlowTabs = () => {
             </>
           )}
 
-          {/* {mode === "view" && (
+          {mode === "view" && (
             <FaToolbox
               className="hidden  text-slate-400 hover:text-slate-50 md:flex"
               onClick={handleFormatFlow}
             />
-          )} */}
+          )}
           <div className="hidden h-6 border-l-2 border-l-slate-500/50 pl-2 md:flex"></div>
           <div className="pr-2">
             <ButtonRunAll
@@ -314,9 +344,10 @@ const FlowTabs = () => {
             key={`smartview-${currentTab}-${refresh}`}
             nodes={flowTabs.tabs[currentTab].nodes}
             edges={flowTabs.tabs[currentTab].edges}
-            tabLayout={flowTabs.tabs[currentTab].layout}
+            tabLayout={flowTabs.tabs[currentTab].layoutViewData}
             isRunning={isRunning}
             onLayoutChange={handleLayoutChange}
+            onPaneDataChange={handlePaneDataChange}
             onFlowChange={handleFlowChange}
             onRunChange={handleChangeRun}
           />

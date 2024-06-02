@@ -95,6 +95,9 @@ function NodePane({
   return (
     <div
       className="group h-full min-h-0 w-full flex-grow overflow-auto"
+      onMouseDown={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
+      onTouchEnd={(e) => e.stopPropagation()}
       key={`${nodeId}-${fieldNames}-${index}`}
     >
       {renderPaneBody()}
@@ -150,6 +153,8 @@ function NodePane({
                                       justify-center space-x-3 
                                       text-4xl text-sky-600 opacity-100 transition-all duration-500 ease-in-out`}
         onMouseDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        onTouchEnd={(e) => e.stopPropagation()}
       >
         <FiPlus
           className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300"

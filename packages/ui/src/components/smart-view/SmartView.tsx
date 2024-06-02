@@ -13,6 +13,7 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import NodePane from "./pane/NodePane";
 import PaneWrapper from "./pane/PaneWrapper";
+import { LayoutViewData } from "../../layout/main-layout/AppLayout";
 export type LayoutIndex = string | number;
 
 export interface TextOptions {
@@ -28,23 +29,22 @@ export interface BasicPane {
   options?: TextOptions;
 }
 
-interface GridViewLayout extends Layout {
-  paneData?: BasicPane;
-}
-
-type PaneDataState = {
+export type PaneDataState = {
   [key: string]: BasicPane;
 };
 
 interface SmartViewProps {
-  tabLayout?: Layout;
+  tabLayout?: LayoutViewData;
   nodes: Node[];
   edges: Edge[];
   onFlowChange?: (nodes: Node[], edges: Edge[]) => void;
-  onLayoutChange: (layout: Layout) => void;
+  onLayoutChange: (layout: Layout[]) => void;
+  onPaneDataChange: (data: PaneDataState) => void;
   isRunning: boolean;
   onRunChange: (isRunning: boolean) => void;
 }
+
+const initialLayout = [{ i: "1", x: 0, y: 0, w: 5, h: 10 }];
 
 function SmartView({
   tabLayout,
@@ -52,6 +52,7 @@ function SmartView({
   edges,
   onFlowChange,
   onLayoutChange,
+  onPaneDataChange,
   isRunning,
   onRunChange,
 }: SmartViewProps) {
@@ -64,15 +65,17 @@ function SmartView({
 
   const [width, setWidth] = useState(window.innerWidth);
 
-  const initialLayout = [
-    { i: "1", x: 0, y: 0, w: 2, h: 2 },
-    { i: "2", x: 2, y: 0, w: 2, h: 2 },
-    { i: "3", x: 4, y: 0, w: 2, h: 2 },
-  ];
-
   const [counter, setCounter] = useState<number>(3);
-  const [layout, setLayout] = useState<GridViewLayout[]>(initialLayout);
-  const [paneData, setPaneData] = useState<PaneDataState>({});
+
+  useEffect(() => {
+    if (!tabLayout?.layout) {
+      onLayoutChange(initialLayout);
+    }
+  });
+
+  const layout = tabLayout?.layout || initialLayout;
+  const paneData = tabLayout?.data || {};
+
   const [enabled, setEnabled] = useState<boolean>(true);
 
   useEffect(() => {
@@ -137,7 +140,7 @@ function SmartView({
     nodeId?: string,
     fieldNames?: string[],
   ) {
-    setPaneData({
+    onPaneDataChange({
       ...paneData,
       [paneId]: {
         nodeId: nodeId,
@@ -151,7 +154,7 @@ function SmartView({
     text?: string,
     options?: TextOptions,
   ) {
-    setPaneData({
+    onPaneDataChange({
       ...paneData,
       [paneId]: {
         text: text,
@@ -161,19 +164,22 @@ function SmartView({
   }
 
   function handleDeletePane(index: LayoutIndex) {
-    const newPaneData = { ...paneData };
-    delete newPaneData[index];
-    setPaneData(newPaneData);
+    if (!!paneData[index]?.nodeId) {
+      const newPaneData = { ...paneData };
+      delete newPaneData[index];
 
-    setLayout(
-      layout.filter((item) => {
-        return item.i !== index;
-      }),
-    );
+      onPaneDataChange(newPaneData);
+    } else {
+      onLayoutChange(
+        layout.filter((item) => {
+          return item.i !== index;
+        }),
+      );
+    }
   }
 
   function handleUpdateNodes(nodesUpdated: Node[], edgesUpdated: Edge[]): void {
-    throw new Error("Function not implemented.");
+    onFlowChange?.(nodesUpdated, edgesUpdated);
   }
 
   function handleUpdateNodeData(nodeId: string, data: any): void {
@@ -187,16 +193,17 @@ function SmartView({
   }
 
   const handleLayoutChange = (newLayout: Layout[]) => {
-    setLayout(newLayout);
+    onLayoutChange(newLayout);
   };
+
   const addNewBlock = () => {
     const newBlockId = `new_${counter}`;
-    const newBlock: Layout = { i: newBlockId, x: 0, y: Infinity, w: 2, h: 2 };
-    setLayout([...layout, newBlock]);
+    const newBlock: Layout = { i: newBlockId, x: 0, y: Infinity, w: 5, h: 5 };
+    onLayoutChange([...layout, newBlock]);
     setCounter(counter + 1);
   };
 
-  function enabbleGrid() {
+  function enableGrid() {
     setEnabled(true);
   }
   function disableGrid() {
@@ -228,7 +235,7 @@ function SmartView({
             {layout.map((item) => (
               <div
                 key={item.i}
-                className={`grid-item flex items-center justify-center rounded-md ${!item.paneData ? "bg-zinc-800" : "bg-zinc-800/20"}`}
+                className={`grid-item flex items-center justify-center rounded-md ${!paneData[item.i] ? "bg-zinc-800" : "bg-zinc-800/20"}`}
               >
                 <PaneWrapper
                   index={item.i}
