@@ -4,7 +4,7 @@ import { getConfigViaType } from "../../../nodes-configuration/nodeConfig";
 import { getIconComponent } from "../../nodes/utils/NodeIcons";
 import NodePlayButton from "../../nodes/node-button/NodePlayButton";
 import { useState } from "react";
-import { LayoutIndex } from "../SmartView";
+import { LayoutIndex } from "../LayoutView";
 
 interface PaneWrapperProps {
   index?: LayoutIndex;

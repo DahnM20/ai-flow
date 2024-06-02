@@ -5,7 +5,7 @@ import AttachNodeDialog, { TextOptions } from "../AttachNodeDialog";
 import { useFormFields } from "../../../hooks/useFormFields";
 import { LoadingIcon } from "../../nodes/Node.styles";
 import OutputDisplay from "../../nodes/node-output/OutputDisplay";
-import { BasicPane, LayoutIndex } from "../SmartView";
+import { BasicPane, LayoutIndex } from "../LayoutView";
 
 interface NodePaneProps {
   index?: LayoutIndex;

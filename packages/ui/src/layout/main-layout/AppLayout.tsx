@@ -26,9 +26,9 @@ import ButtonRunAll from "../../components/buttons/ButtonRunAll";
 import { FlowEvent, SocketContext } from "../../providers/SocketProvider";
 import LoginButton from "../../components/login/LoginButton";
 import FlowWrapper from "./wrapper/FlowWrapper";
-import SmartView, {
+import LayoutView, {
   PaneDataState,
-} from "../../components/smart-view/SmartView";
+} from "../../components/smart-view/LayoutView";
 import EdgeTypeButton from "../../components/buttons/EdgeTypeButton";
 import TabHeader from "./header/TabHeader";
 import {
@@ -335,7 +335,7 @@ const FlowTabs = () => {
           />
         )}
         {mode === "view" && (
-          <SmartView
+          <LayoutView
             key={`smartview-${currentTab}-${refresh}`}
             nodes={flowTabs.tabs[currentTab].nodes}
             edges={flowTabs.tabs[currentTab].edges}

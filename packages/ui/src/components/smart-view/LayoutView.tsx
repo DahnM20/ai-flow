@@ -14,7 +14,7 @@ import "react-resizable/css/styles.css";
 import NodePane from "./pane/NodePane";
 import PaneWrapper from "./pane/PaneWrapper";
 import { LayoutViewData } from "../../layout/main-layout/AppLayout";
-import SmartViewActions from "./SmartViewActions";
+import SmartViewActions from "./LayoutViewActions";
 export type LayoutIndex = string | number;
 
 export interface TextOptions {
@@ -47,7 +47,7 @@ interface SmartViewProps {
 
 const initialLayout = [{ i: "1", x: 0, y: 0, w: 5, h: 10 }];
 
-function SmartView({
+function LayoutView({
   tabLayout,
   nodes,
   edges,
@@ -196,7 +196,8 @@ function SmartView({
   };
 
   const addNewBlock = () => {
-    const maxValue = Math.max(...layout.map((item) => +item.i));
+    const maxValue =
+      layout.length > 0 ? Math.max(...layout.map((item) => +item.i)) : 0;
     const newId = maxValue + 1;
     const newBlock: Layout = {
       i: "" + newId,
@@ -214,11 +215,6 @@ function SmartView({
 
   return (
     <div className="smart-view h-full w-full">
-      <SmartViewActions
-        onAddPane={addNewBlock}
-        toggleLockView={toggleLock}
-        viewLocked={!enabled}
-      />
       <div className="ml-10 h-full">
         <NodeProvider
           nodes={nodes}
@@ -263,9 +259,14 @@ function SmartView({
             ))}
           </GridLayout>
         </NodeProvider>
+        <SmartViewActions
+          onAddPane={addNewBlock}
+          toggleLockView={toggleLock}
+          viewLocked={!enabled}
+        />
       </div>
     </div>
   );
 }
 
-export default SmartView;
+export default LayoutView;
