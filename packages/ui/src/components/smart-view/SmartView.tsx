@@ -1,27 +1,40 @@
 import { useEffect, useRef, useState } from "react";
-import RenderLayout, {
-  BasicPane,
-  Layout,
-  LayoutIndex,
-  TextOptions,
-} from "./RenderLayout";
 import { Node, Edge } from "reactflow";
 import { NodeProvider } from "../../providers/NodeProvider";
 import { useSocketListeners } from "../../hooks/useFlowSocketListeners";
 import { toastInfoMessage } from "../../utils/toastUtils";
 import {
-  attachNode,
-  splitPane,
-  deletePane,
-  layoutIsEmpty,
-  updateLayoutSize,
-  attachText,
-} from "./utils/layoutUtils";
-import {
   FlowOnCurrentNodeRunningEventData,
   FlowOnErrorEventData,
   FlowOnProgressEventData,
 } from "../../sockets/flowEventTypes";
+import GridLayout, { Layout } from "react-grid-layout";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
+import NodePane from "./pane/NodePane";
+import PaneWrapper from "./pane/PaneWrapper";
+export type LayoutIndex = string | number;
+
+export interface TextOptions {
+  fontSize?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+  color?: string;
+  textAlign?: "left" | "center" | "right";
+}
+
+export interface BasicPane {
+  nodeId?: string;
+  fieldNames?: string[];
+  text?: string;
+  options?: TextOptions;
+}
+
+interface GridViewLayout extends Layout {
+  paneData?: BasicPane;
+}
+
+type PaneDataState = {
+  [key: string]: BasicPane;
+};
 
 interface SmartViewProps {
   tabLayout?: Layout;
@@ -47,30 +60,34 @@ function SmartView({
     FlowOnErrorEventData,
     FlowOnProgressEventData
   >(onProgress, onError, () => {}, onCurrentNodeRunning);
-
-  const initialLayout: Layout = {
-    type: "horizontal",
-    panes: [
-      {
-        size: 200,
-        paneType: "NodePane",
-      },
-    ],
-  };
-
   const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
-  const [currentLayout, setCurrentLayout] = useState<Layout | null>(
-    !!tabLayout && !layoutIsEmpty(tabLayout) ? tabLayout : initialLayout,
-  );
+
+  const [width, setWidth] = useState(window.innerWidth);
+
+  const initialLayout = [
+    { i: "1", x: 0, y: 0, w: 2, h: 2 },
+    { i: "2", x: 2, y: 0, w: 2, h: 2 },
+    { i: "3", x: 4, y: 0, w: 2, h: 2 },
+  ];
+
+  const [counter, setCounter] = useState<number>(3);
+  const [layout, setLayout] = useState<GridViewLayout[]>(initialLayout);
+  const [paneData, setPaneData] = useState<PaneDataState>({});
+  const [enabled, setEnabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const nodesRef = useRef(nodes);
   nodesRef.current = nodes;
-
-  useEffect(() => {
-    if (!!currentLayout) {
-      onLayoutChange({ ...currentLayout });
-    }
-  }, [currentLayout?.panes]);
 
   useEffect(() => {
     const areNodesRunning = currentNodesRunning.length > 0;
@@ -116,64 +133,43 @@ function SmartView({
   }
 
   function handleAttachNode(
-    index: LayoutIndex,
+    paneId: LayoutIndex,
     nodeId?: string,
     fieldNames?: string[],
   ) {
-    setCurrentLayout((currentLayout) => {
-      if (nodeId != null && fieldNames != null && !!currentLayout) {
-        return attachNode(currentLayout, index, nodeId, fieldNames);
-      }
-      return currentLayout;
+    setPaneData({
+      ...paneData,
+      [paneId]: {
+        nodeId: nodeId,
+        fieldNames: fieldNames,
+      },
     });
   }
 
   function handleAttachText(
-    index: LayoutIndex,
+    paneId: LayoutIndex,
     text?: string,
     options?: TextOptions,
   ) {
-    setCurrentLayout((currentLayout) => {
-      if (text != null && !!currentLayout) {
-        return attachText(currentLayout, index, text, options);
-      }
-      return currentLayout;
-    });
-  }
-
-  function updateLayout(
-    layout: Layout,
-    index: LayoutIndex,
-    type: "horizontal" | "vertical",
-  ): Layout {
-    return splitPane(layout, index, type);
-  }
-
-  function handleSplitVertical(index: LayoutIndex) {
-    setCurrentLayout((currentLayout) => {
-      if (!!currentLayout) {
-        return updateLayout(currentLayout, index, "vertical");
-      }
-      return currentLayout;
-    });
-  }
-
-  function handleSplitHorizontal(index: LayoutIndex) {
-    setCurrentLayout((currentLayout) => {
-      if (!!currentLayout) {
-        return updateLayout(currentLayout, index, "horizontal");
-      }
-      return currentLayout;
+    setPaneData({
+      ...paneData,
+      [paneId]: {
+        text: text,
+        options: options,
+      },
     });
   }
 
   function handleDeletePane(index: LayoutIndex) {
-    setCurrentLayout((currentLayout) => {
-      if (!!currentLayout) {
-        return deletePane(currentLayout, index);
-      }
-      return currentLayout;
-    });
+    const newPaneData = { ...paneData };
+    delete newPaneData[index];
+    setPaneData(newPaneData);
+
+    setLayout(
+      layout.filter((item) => {
+        return item.i !== index;
+      }),
+    );
   }
 
   function handleUpdateNodes(nodesUpdated: Node[], edgesUpdated: Edge[]): void {
@@ -190,25 +186,26 @@ function SmartView({
     onFlowChange?.(updatedNodes, edges);
   }
 
-  function handleChangePaneSize(
-    sizes: number[],
-    panes: BasicPane[],
-    parentIndex?: LayoutIndex,
-  ): void {
-    setCurrentLayout((currentLayout) => {
-      if (!!currentLayout) {
-        return updateLayoutSize(
-          currentLayout,
-          parentIndex ? parentIndex : 0,
-          sizes,
-        );
-      }
-      return currentLayout;
-    });
+  const handleLayoutChange = (newLayout: Layout[]) => {
+    setLayout(newLayout);
+  };
+  const addNewBlock = () => {
+    const newBlockId = `new_${counter}`;
+    const newBlock: Layout = { i: newBlockId, x: 0, y: Infinity, w: 2, h: 2 };
+    setLayout([...layout, newBlock]);
+    setCounter(counter + 1);
+  };
+
+  function enabbleGrid() {
+    setEnabled(true);
+  }
+  function disableGrid() {
+    setEnabled(false);
   }
 
   return (
     <div className="smart-view h-full w-full">
+      <button onClick={addNewBlock}>Add Block</button>
       <div className="ml-10 h-full">
         <NodeProvider
           nodes={nodes}
@@ -220,17 +217,36 @@ function SmartView({
           onUpdateNodeData={handleUpdateNodeData}
           onUpdateNodes={handleUpdateNodes}
         >
-          {!!currentLayout && (
-            <RenderLayout
-              {...currentLayout}
-              onSplitHorizontal={handleSplitHorizontal}
-              onSplitVertical={handleSplitVertical}
-              onDelete={handleDeletePane}
-              onAttachNode={handleAttachNode}
-              onAttachText={handleAttachText}
-              onChangePaneSize={handleChangePaneSize}
-            />
-          )}
+          <GridLayout
+            className={`layout z-0`}
+            layout={layout}
+            cols={12}
+            rowHeight={30}
+            width={width}
+            onLayoutChange={handleLayoutChange}
+          >
+            {layout.map((item) => (
+              <div
+                key={item.i}
+                className={`grid-item flex items-center justify-center rounded-md ${!item.paneData ? "bg-zinc-800" : "bg-zinc-800/20"}`}
+              >
+                <PaneWrapper
+                  index={item.i}
+                  name={paneData[item.i]?.nodeId}
+                  onDelete={handleDeletePane}
+                  showTools={true}
+                >
+                  <NodePane
+                    index={item.i}
+                    paneData={paneData[item.i] ?? {}}
+                    onAttachNode={handleAttachNode}
+                    onAttachText={handleAttachText}
+                    onOpenPopup={disableGrid}
+                  />
+                </PaneWrapper>
+              </div>
+            ))}
+          </GridLayout>
         </NodeProvider>
       </div>
     </div>

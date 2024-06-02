@@ -1,28 +1,26 @@
 import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
-import { MdOutlineVerticalSplit, MdHorizontalSplit } from "react-icons/md";
 import { getConfigViaType } from "../../../nodes-configuration/nodeConfig";
 import { getIconComponent } from "../../nodes/utils/NodeIcons";
 import NodePlayButton from "../../nodes/node-button/NodePlayButton";
 import { useState } from "react";
+import { LayoutIndex } from "../SmartView";
 
 interface PaneWrapperProps {
+  index?: LayoutIndex;
   children: JSX.Element;
   name?: string;
   fieldNames?: string[];
   showTools: boolean;
-  onSplitHorizontal: () => void;
-  onSplitVertical: () => void;
-  onDelete: () => void;
+  onDelete: (index: LayoutIndex) => void;
 }
 
 function PaneWrapper({
+  index,
   children,
   name,
   fieldNames,
   showTools,
-  onSplitHorizontal,
-  onSplitVertical,
   onDelete,
 }: PaneWrapperProps) {
   const nodeType = name?.split("#")[1];
@@ -38,7 +36,7 @@ function PaneWrapper({
 
   return (
     <div
-      className={`relative flex h-full flex-col transition-all duration-500 ease-in-out ${showTools ? "rounded-xl" : ""}`}
+      className={`relative flex h-full w-full flex-col transition-all duration-500 ease-in-out ${showTools ? "rounded-xl" : ""}`}
       style={{
         border:
           showTools && isHeaderVisible
@@ -67,17 +65,12 @@ function PaneWrapper({
               {nodeType && <p>{nodeType + " - " + fieldNames}</p>}
             </div>
             <div
-              className={`absolute right-0 space-x-2 px-2 ${showTools ? "" : "pointer-events-none"}
-                        ${name ? "rounded-xl bg-[#1E1E1F]" : ""}`}
+              className={`absolute right-0 space-x-2 px-2 ${showTools ? "" : "pointer-events-none"}`}
             >
               {name && <NodePlayButton nodeName={name} />}
-              <PaneWrapperButton onClick={onSplitHorizontal}>
-                <MdOutlineVerticalSplit />
-              </PaneWrapperButton>
-              <PaneWrapperButton onClick={onSplitVertical}>
-                <MdHorizontalSplit />
-              </PaneWrapperButton>
-              <PaneWrapperButton onClick={onDelete}>
+              <PaneWrapperButton
+                onClick={() => index != null && onDelete(index)}
+              >
                 <FaTimes />
               </PaneWrapperButton>
             </div>

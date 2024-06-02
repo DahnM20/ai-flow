@@ -1,17 +1,16 @@
 import { FiFeather, FiPlus } from "react-icons/fi";
-import { BasicPane, LayoutIndex, TextOptions } from "../RenderLayout";
 import { useContext, useMemo, useState } from "react";
 import { NodeContext } from "../../../providers/NodeProvider";
-import AttachNodeDialog from "../AttachNodeDialog";
+import AttachNodeDialog, { TextOptions } from "../AttachNodeDialog";
 import { useFormFields } from "../../../hooks/useFormFields";
 import { LoadingIcon } from "../../nodes/Node.styles";
 import OutputDisplay from "../../nodes/node-output/OutputDisplay";
+import { BasicPane, LayoutIndex } from "../SmartView";
 
 interface NodePaneProps {
-  nodeId?: string;
-  fieldNames?: string[];
   index?: LayoutIndex;
   paneData: BasicPane;
+  onOpenPopup: () => void;
   onAttachNode?: (
     index: LayoutIndex,
     nodeId?: string,
@@ -25,8 +24,7 @@ interface NodePaneProps {
 }
 
 function NodePane({
-  nodeId,
-  fieldNames,
+  onOpenPopup,
   onAttachNode,
   onAttachText,
   index,
@@ -37,7 +35,9 @@ function NodePane({
   const { nodes, onUpdateNodeData, currentNodesRunning, isRunning } =
     useContext(NodeContext);
   const [popupOpen, setPopupOpen] = useState(false);
-  const [isAttachNodeVisible, setIsAttachNodeVisible] = useState(false);
+
+  const nodeId = paneData.nodeId;
+  const fieldNames = paneData.fieldNames;
 
   const currentNode = useMemo(
     () => nodes.find((n) => n.data.name === nodeId),
@@ -45,6 +45,7 @@ function NodePane({
   );
 
   function handleAttachNode() {
+    onOpenPopup();
     setPopupOpen(true);
   }
 
@@ -93,12 +94,8 @@ function NodePane({
 
   return (
     <div
-      className="group min-h-0 w-full flex-grow"
+      className="group h-full min-h-0 w-full flex-grow overflow-auto"
       key={`${nodeId}-${fieldNames}-${index}`}
-      onMouseEnter={() => setIsAttachNodeVisible(true)}
-      onMouseLeave={() =>
-        setIsAttachNodeVisible(currentNode != null && fieldNames != null)
-      }
     >
       {renderPaneBody()}
 
@@ -151,7 +148,8 @@ function NodePane({
       <div
         className={`flex h-full w-full items-center
                                       justify-center space-x-3 
-                                      text-4xl text-sky-600 transition-all duration-500 ease-in-out ${isAttachNodeVisible ? "opacity-100" : "opacity-0"}`}
+                                      text-4xl text-sky-600 opacity-100 transition-all duration-500 ease-in-out`}
+        onMouseDown={(e) => e.stopPropagation()}
       >
         <FiPlus
           className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300"

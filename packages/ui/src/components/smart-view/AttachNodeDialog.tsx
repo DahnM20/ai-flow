@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { NodeContext } from "../../providers/NodeProvider";
 import { Node } from "reactflow";
@@ -8,12 +8,19 @@ import { Checkbox, Divider } from "@mantine/core";
 import SelectAutocomplete, {
   SelectItem,
 } from "../selectors/SelectAutocomplete";
+import ReactDOM from "react-dom";
 
 interface AttachNodeDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   handleClose: () => void;
   handleSubmit: (nodeName: string, fieldNames: string[]) => void;
+}
+
+export interface TextOptions {
+  fontSize?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+  color?: string;
+  textAlign?: "left" | "center" | "right";
 }
 
 function AttachNodeDialog({
@@ -91,11 +98,12 @@ function AttachNodeDialog({
   function handleSelectNode(node: Node) {
     setSelectedNode(node);
   }
-  return (
+  return ReactDOM.createPortal(
     <Dialog
       open={isOpen}
       onClose={() => setIsOpen(false)}
-      className="relative z-50"
+      className="absolute z-50"
+      onMouseDown={(e) => e.stopPropagation()}
     >
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
@@ -157,7 +165,8 @@ function AttachNodeDialog({
           )}
         </Dialog.Panel>
       </div>
-    </Dialog>
+    </Dialog>,
+    document.body,
   );
 }
 
