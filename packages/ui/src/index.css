@@ -73,6 +73,11 @@ body.dark-theme {
   transform: initial;
 }
 
+
+.react-grid-placeholder {
+  background-color: #21FEE5 !important;
+}
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
