@@ -70,6 +70,7 @@ export const NodeTextarea = styled.textarea`
   resize: vertical;
   min-height: 8rem;
   width: 100%;
+  height: auto;
   transition:
     box-shadow 0.3s ease-in-out,
     background-color 0.3s ease;

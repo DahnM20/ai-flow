@@ -31,7 +31,7 @@ function SelectAutocomplete<T>({
 
   return (
     <Combobox value={selectedValue} onChange={onChange}>
-      <div className="relative mt-1">
+      <div className="relative mt-1 w-full">
         <div className="relative w-full cursor-default overflow-hidden rounded-lg  border-none text-left shadow-md outline-none sm:text-sm">
           <Combobox.Input
             className="w-full border-none bg-zinc-700/40 p-3 text-lg leading-5 text-slate-50 outline-none"

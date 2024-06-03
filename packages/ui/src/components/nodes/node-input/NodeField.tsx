@@ -57,7 +57,9 @@ export default function NodeField<
           )}
         </div>
       )}
-      {!field.isLinked && <div className="pb-3">{renderField(field)}</div>}
+      {!field.isLinked && (
+        <div className="flex h-full pb-3">{renderField(field)}</div>
+      )}
     </>
   );
 }
