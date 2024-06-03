@@ -1,5 +1,4 @@
 import { NodeProps } from "reactflow";
-import DataSplitterNode from "../components/nodes/DataSplitterNode";
 import FileUploadNode from "../components/nodes/FileUploadNode";
 import GenericNode from "../components/nodes/GenericNode";
 import AIDataSplitterNode from "../components/nodes/AIDataSplitterNode";
@@ -19,7 +18,6 @@ let allNodeTypes: string[] = [];
  */
 export const specificNodeTypes: Partial<Record<string, React.FC<NodeProps>>> = {
   "file-drop": FileUploadNode,
-  "data-splitter": DataSplitterNode,
   "ai-data-splitter": AIDataSplitterNode,
   "ai-action": AIActionNode,
   file: FileUploadNode,

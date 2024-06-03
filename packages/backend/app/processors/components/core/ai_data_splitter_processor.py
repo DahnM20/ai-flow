@@ -10,7 +10,7 @@ from .processor_type_name_utils import ProcessorType
 
 class AIDataSplitterProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.AI_DATA_SPLITTER
-    SPLIT_CHAR = ";"
+    DEFAULT_SEPARATOR = ";"
 
     def __init__(self, config, context: ProcessorContext, custom_llm_factory=None):
         super().__init__(config, context)
@@ -36,15 +36,27 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
             self.get_input_node_output_key()
         )
 
-        self.init_context(input_data)
+        mode = self.get_input_by_name("mode", "ai")
 
-        llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
-        chat_response = llm.chat(self.messages)
-        answer = chat_response.message.content
+        if mode == "ai":
+            self.init_context(input_data)
 
-        data_to_split = answer.encode("utf-8").decode("utf8")
-        self.set_output(data_to_split.split(AIDataSplitterProcessor.SPLIT_CHAR))
-        self.nb_output = len(self._output)
+            llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
+            chat_response = llm.chat(self.messages)
+            answer = chat_response.message.content
+
+            data_to_split = answer.encode("utf-8").decode("utf8")
+            self.set_output(
+                data_to_split.split(AIDataSplitterProcessor.DEFAULT_SEPARATOR)
+            )
+            self.nb_output = len(self._output)
+
+        if mode == "manual":
+            separator = self.get_input_by_name(
+                "separator", AIDataSplitterProcessor.DEFAULT_SEPARATOR
+            )
+            self.set_output(input_data.split(separator))
+            self.nb_output = len(self._output)
 
         return self._output
 

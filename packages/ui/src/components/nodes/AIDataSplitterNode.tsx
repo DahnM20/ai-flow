@@ -1,13 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Position, NodeProps, useUpdateNodeInternals } from "reactflow";
 import styled from "styled-components";
-import { Tooltip } from "react-tooltip";
 import { NodeContext } from "../../providers/NodeProvider";
 import NodePlayButton from "./node-button/NodePlayButton";
 import { generateIdForHandle } from "../../utils/flowUtils";
-import { InputHandle, NodeTitle, OutputHandle } from "./Node.styles";
+import {
+  InputHandle,
+  OptionButton,
+  OptionSelector,
+  OutputHandle,
+} from "./Node.styles";
 import { useIsPlaying } from "../../hooks/useIsPlaying";
 import { GenericNodeData } from "./types/node";
+import SelectAutocomplete, {
+  SelectItem,
+} from "../selectors/SelectAutocomplete";
+import { FaRobot } from "react-icons/fa";
+import { FiUser } from "react-icons/fi";
+import NodeTextField from "./node-input/NodeTextField";
+import { Switch, Tooltip } from "@mantine/core";
 
 interface AIDataSplitterNodeData extends GenericNodeData {
   id: string;
@@ -23,6 +34,33 @@ interface AIDataSplitterNodeData extends GenericNodeData {
 interface AIDataSplitterNodeProps extends NodeProps {
   data: AIDataSplitterNodeData;
 }
+
+const defaultOptions: SelectItem<string>[] = [
+  {
+    value: ",",
+    name: ",",
+  },
+  {
+    value: ";",
+    name: ";",
+  },
+  {
+    value: "\\t",
+    name: "\\t",
+  },
+  {
+    value: " ",
+    name: "Space",
+  },
+  {
+    value: "\\n",
+    name: "\\n",
+  },
+  {
+    value: "\\r",
+    name: "\\r",
+  },
+];
 
 const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
   ({ data, id, selected }) => {
@@ -67,6 +105,13 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
       });
     };
 
+    const handleChangeField = (field: string, value: any) => {
+      onUpdateNodeData(id, {
+        ...data,
+        [field]: value,
+      });
+    };
+
     return (
       <DataSplitterNodeContainer
         selected={selected}
@@ -81,19 +126,79 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
         }}
         className={`flex flex-col items-center justify-center rounded-lg  border  bg-gray-800 p-4 hover:bg-gray-700/50`}
       >
-        <div className="flex flex-col items-center justify-center space-y-10">
+        <div className="flex flex-col items-center justify-center space-y-3">
           <NodePlayButton
             isPlaying={isPlaying}
             nodeName={data.name}
             onClick={handlePlayClick}
           />
           {!(collapsed || (!collapsed && !selected)) && (
-            <ForceNbOutputInput
-              className="border border-slate-200/20 bg-gray-800"
-              id="nbOutput"
-              value={data.nbOutput}
-              onChange={handleForceNbOutputChange}
-            />
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <p className="ml-8 w-full text-left font-mono"> mode </p>
+              <div className="flex w-5/6 flex-col  space-y-2">
+                <OptionSelector>
+                  <OptionButton
+                    key={`ai`}
+                    className="flex items-center justify-center"
+                    selected={data["mode"] === "ai"}
+                    onClick={() => handleChangeField("mode", "ai")}
+                    onTouchEnd={() => handleChangeField("mode", "ai")}
+                  >
+                    <FaRobot />
+                  </OptionButton>
+                  <OptionButton
+                    key={`manual`}
+                    className="flex items-center justify-center"
+                    selected={data["mode"] === "manual"}
+                    onClick={() => handleChangeField("mode", "manual")}
+                    onTouchEnd={() => handleChangeField("mode", "manual")}
+                  >
+                    <FiUser />
+                  </OptionButton>
+                </OptionSelector>
+                {data["mode"] === "manual" && (
+                  <>
+                    <p className="w-full text-left font-mono">
+                      {" "}
+                      custom_separator{" "}
+                    </p>
+                    <Switch
+                      checked={data?.customSeparator}
+                      onChange={(e) =>
+                        handleChangeField("customSeparator", e.target.checked)
+                      }
+                    />
+                    <p className="w-full text-left font-mono"> separator * </p>
+                    {!!data["customSeparator"] ? (
+                      <NodeTextField
+                        value={data?.separator}
+                        onChange={(e) =>
+                          handleChangeField("separator", e.target.value)
+                        }
+                      />
+                    ) : (
+                      <SelectAutocomplete
+                        values={defaultOptions}
+                        selectedValue={data?.separator}
+                        onChange={(value) =>
+                          handleChangeField("separator", value)
+                        }
+                      />
+                    )}
+                  </>
+                )}
+                <p className="w-full text-left font-mono"> nb_output </p>
+                <div className="flex flex-row items-center justify-center space-x-2">
+                  <span className="h-3 w-3 bg-orange-400/40" />
+                  <ForceNbOutputInput
+                    className="w-full border border-slate-200/20 bg-gray-800"
+                    id="nbOutput"
+                    value={data.nbOutput}
+                    onChange={handleForceNbOutputChange}
+                  />
+                </div>
+              </div>
+            </div>
           )}
         </div>
         <InputHandle
@@ -104,24 +209,22 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
         <div>
           {!!data.nbOutput &&
             Array.from(Array(data.nbOutput)).map((_, index) => (
-              <OutputHandle
-                key={generateIdForHandle(index, true)}
-                data-tooltip-id={`app-tooltip`}
-                data-tooltip-content={
-                  data.outputData ? data.outputData[index] : ""
-                }
-                type="source"
-                id={generateIdForHandle(index, true)}
-                position={Position.Right}
-                style={{
-                  background: data?.outputData
-                    ? data.outputData[index]
-                      ? "rgb(224, 166, 79)"
-                      : "#ddd"
-                    : "#ddd",
-                  top: `${data.nbOutput === 1 ? 50 : (index / (data.nbOutput - 1)) * 80 + 10}%`,
-                }}
-              />
+              <Tooltip label={data.outputData ? data.outputData[index] : ""}>
+                <OutputHandle
+                  key={generateIdForHandle(index, true)}
+                  type="source"
+                  id={generateIdForHandle(index, true)}
+                  position={Position.Right}
+                  style={{
+                    background: data?.outputData
+                      ? data.outputData[index]
+                        ? "rgb(224, 166, 79)"
+                        : "#ddd"
+                      : "#ddd",
+                    top: `${data.nbOutput === 1 ? 50 : (index / (data.nbOutput - 1)) * 80 + 10}%`,
+                  }}
+                />
+              </Tooltip>
             ))}
         </div>
       </DataSplitterNodeContainer>
@@ -134,16 +237,13 @@ const DataSplitterNodeContainer = styled.div<{
   nbOutput: number;
   collapsed: boolean;
 }>`
-  min-height: 250px;
+  min-height: 350px;
   height: ${(props) => props.nbOutput * 30 + 100}px;
-  width: ${(props) => (props.collapsed || !props.selected ? "auto" : "120px")};
+  width: ${(props) => (props.collapsed || !props.selected ? "auto" : "200px")};
   transition: all 0.3s ease-in-out;
 `;
 
 const ForceNbOutputInput = styled.input`
-  margin-top: 10px;
-  width: 50%;
-  padding: 4px;
   font-size: 0.9em;
   color: ${({ theme }) => theme.text};
   padding: 5px;

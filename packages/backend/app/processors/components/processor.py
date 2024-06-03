@@ -153,8 +153,8 @@ class Processor(ABC):
             return None
         return [input.get("inputName") for input in self.inputs]
 
-    def get_input_by_name(self, name: str) -> Optional[InputItem]:
-        input = self._config.get(name, None)
+    def get_input_by_name(self, name: str, default=None) -> Optional[InputItem]:
+        input = self._config.get(name, default)
 
         input_processors = self.get_input_processors()
         input_output_keys = self.get_input_node_output_keys()
