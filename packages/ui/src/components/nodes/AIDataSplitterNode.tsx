@@ -4,21 +4,15 @@ import styled from "styled-components";
 import { NodeContext } from "../../providers/NodeProvider";
 import NodePlayButton from "./node-button/NodePlayButton";
 import { generateIdForHandle } from "../../utils/flowUtils";
-import {
-  InputHandle,
-  OptionButton,
-  OptionSelector,
-  OutputHandle,
-} from "./Node.styles";
+import { InputHandle, OutputHandle } from "./Node.styles";
 import { useIsPlaying } from "../../hooks/useIsPlaying";
 import { GenericNodeData } from "./types/node";
 import SelectAutocomplete, {
   SelectItem,
 } from "../selectors/SelectAutocomplete";
-import { FaRobot } from "react-icons/fa";
-import { FiUser } from "react-icons/fi";
 import NodeTextField from "./node-input/NodeTextField";
 import { Switch, Tooltip } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 interface AIDataSplitterNodeData extends GenericNodeData {
   id: string;
@@ -35,7 +29,7 @@ interface AIDataSplitterNodeProps extends NodeProps {
   data: AIDataSplitterNodeData;
 }
 
-const defaultOptions: SelectItem<string>[] = [
+const separatorOptions: SelectItem<string>[] = [
   {
     value: ",",
     name: ",",
@@ -64,12 +58,24 @@ const defaultOptions: SelectItem<string>[] = [
 
 const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
   ({ data, id, selected }) => {
+    const { t } = useTranslation("flow");
     const updateNodeInternals = useUpdateNodeInternals();
 
     const [isPlaying, setIsPlaying] = useIsPlaying();
     const [collapsed, setCollapsed] = useState(false);
 
     const { onUpdateNodeData } = useContext(NodeContext);
+
+    const modeOptions: SelectItem<string>[] = [
+      {
+        value: "ai",
+        name: t("AI"),
+      },
+      {
+        value: "manual",
+        name: t("Separator"),
+      },
+    ];
 
     useEffect(() => {
       const newNbOutput = data.outputData ? data.outputData.length : 0;
@@ -126,36 +132,26 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
         }}
         className={`flex flex-col items-center justify-center rounded-lg  border  bg-gray-800 p-4 hover:bg-gray-700/50`}
       >
-        <div className="flex flex-col items-center justify-center space-y-3">
+        <div className="flex flex-col items-center justify-center space-y-1">
           <NodePlayButton
             isPlaying={isPlaying}
             nodeName={data.name}
             onClick={handlePlayClick}
           />
           {!(collapsed || (!collapsed && !selected)) && (
-            <div className="flex flex-col items-center justify-center space-y-2">
+            <div
+              className="flex flex-col items-center justify-center space-y-2"
+              onDoubleClick={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+            >
               <p className="ml-8 w-full text-left font-mono"> mode </p>
               <div className="flex w-5/6 flex-col  space-y-2">
-                <OptionSelector>
-                  <OptionButton
-                    key={`ai`}
-                    className="flex items-center justify-center"
-                    selected={data["mode"] === "ai"}
-                    onClick={() => handleChangeField("mode", "ai")}
-                    onTouchEnd={() => handleChangeField("mode", "ai")}
-                  >
-                    <FaRobot />
-                  </OptionButton>
-                  <OptionButton
-                    key={`manual`}
-                    className="flex items-center justify-center"
-                    selected={data["mode"] === "manual"}
-                    onClick={() => handleChangeField("mode", "manual")}
-                    onTouchEnd={() => handleChangeField("mode", "manual")}
-                  >
-                    <FiUser />
-                  </OptionButton>
-                </OptionSelector>
+                <SelectAutocomplete
+                  values={modeOptions}
+                  selectedValue={data?.mode ?? "ai"}
+                  onChange={(value) => handleChangeField("mode", value)}
+                />
                 {data["mode"] === "manual" && (
                   <>
                     <p className="w-full text-left font-mono">
@@ -178,7 +174,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
                       />
                     ) : (
                       <SelectAutocomplete
-                        values={defaultOptions}
+                        values={separatorOptions}
                         selectedValue={data?.separator}
                         onChange={(value) =>
                           handleChangeField("separator", value)
@@ -237,7 +233,7 @@ const DataSplitterNodeContainer = styled.div<{
   nbOutput: number;
   collapsed: boolean;
 }>`
-  min-height: 350px;
+  min-height: 375px;
   height: ${(props) => props.nbOutput * 30 + 100}px;
   width: ${(props) => (props.collapsed || !props.selected ? "auto" : "200px")};
   transition: all 0.3s ease-in-out;

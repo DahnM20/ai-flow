@@ -108,5 +108,7 @@
     "TextDocumentHint": "Veuillez noter que ce nœud fournit les fichiers uniquement sous forme d'URLs. Pour utiliser un document (.pdf, .txt) en format texte, envisagez d'utiliser le nœud 'Document-en-Texte'.",
     "Display": "Affichage",
     "displayHelp": "Ce noeud redimensionable permet d'afficher du contenu.",
-    "Validate": "Valider"
+    "Validate": "Valider",
+    "AI": "IA",
+    "Separator": "Séparateur"
 }

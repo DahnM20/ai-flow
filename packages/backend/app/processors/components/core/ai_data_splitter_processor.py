@@ -11,6 +11,8 @@ from .processor_type_name_utils import ProcessorType
 class AIDataSplitterProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.AI_DATA_SPLITTER
     DEFAULT_SEPARATOR = ";"
+    AI_MODE = "ai"
+    MANUAL_MODE = "manual"
 
     def __init__(self, config, context: ProcessorContext, custom_llm_factory=None):
         super().__init__(config, context)
@@ -36,9 +38,9 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
             self.get_input_node_output_key()
         )
 
-        mode = self.get_input_by_name("mode", "ai")
+        mode = self.get_input_by_name("mode", self.AI_MODE)
 
-        if mode == "ai":
+        if mode == self.AI_MODE:
             self.init_context(input_data)
 
             llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
@@ -51,7 +53,7 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
             )
             self.nb_output = len(self._output)
 
-        if mode == "manual":
+        if mode == self.MANUAL_MODE:
             separator = self.get_input_by_name(
                 "separator", AIDataSplitterProcessor.DEFAULT_SEPARATOR
             )
