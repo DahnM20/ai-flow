@@ -10,3 +10,8 @@ core:
   replicate_api_key:
     tag: "core"
     description: "API key for accessing Replicate services."
+
+extension:
+  anthropic_api_key:
+    tag: "core"
+    description: "API key for accessing Anthropic services."

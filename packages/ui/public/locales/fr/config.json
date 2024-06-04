@@ -12,6 +12,7 @@
     "parameters.core.openai_api_key": "Clé API OpenAI",
     "parameters.core.stabilityai_api_key": "Clé API StabilityAI",
     "parameters.core.replicate_api_key": "Clé API Replicate",
+    "parameters.extension.anthropic_api_key": "Clé API Anthropic",
     "sections.extension": "Extensions",
     "userTabLabel": "Paramètres utilisateur",
     "displayTabLabel": "Paramètres d'affichage",

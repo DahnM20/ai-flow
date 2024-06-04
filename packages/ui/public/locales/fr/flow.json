@@ -110,5 +110,7 @@
     "displayHelp": "Ce noeud redimensionable permet d'afficher du contenu.",
     "Validate": "Valider",
     "AI": "IA",
-    "Separator": "Séparateur"
+    "Separator": "Séparateur",
+    "ClaudeAnthropic": "Claude",
+    "claudeAnthropichHelp": "Ce noeud utilise le modèle Claude d'Anthropic pour traiter des instructions textuelles."
 }

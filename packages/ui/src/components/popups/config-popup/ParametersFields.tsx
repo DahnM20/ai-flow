@@ -18,7 +18,7 @@ const ParameterFields = ({
   const { t } = useTranslation("config");
 
   return (
-    <>
+    <div className="flex w-full flex-col">
       {Object.entries(parameters).map(([section, keys]) => (
         <Section key={section}>
           <SectionTitle>{t(`sections.${section}`)}</SectionTitle>
@@ -44,7 +44,7 @@ const ParameterFields = ({
           ))}
         </Section>
       ))}
-    </>
+    </div>
   );
 };
 

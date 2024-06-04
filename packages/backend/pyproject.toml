@@ -40,6 +40,7 @@ llama-index-llms-openai = "0.1.19"
 llama-index-multi-modal-llms-openai = "^0.1.6"
 llama-index = "^0.10.36"
 openapi-spec-validator = "^0.7.1"
+anthropic = "^0.28.0"
 
 
 [tool.poetry.group.dev.dependencies]

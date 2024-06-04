@@ -110,5 +110,7 @@
     "displayHelp": "This resizable node allows you to display content.",
     "Validate": "Validate",
     "AI": "AI",
-    "Separator": "Separator"
+    "Separator": "Separator",
+    "ClaudeAnthropic": "Claude",
+    "claudeAnthropichHelp": "This node uses Claude from Anthropic to generate text."
 }
