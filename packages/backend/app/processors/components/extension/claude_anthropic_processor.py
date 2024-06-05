@@ -23,6 +23,15 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
             hasHandle=True,
         )
 
+        context = Field(
+            name="context",
+            label="context",
+            type="textfield",
+            placeholder="InputTextPlaceholder",
+            hasHandle=True,
+            description="Additionnal context that will be used to awnser your prompt.",
+        )
+
         temperature = Field(
             name="temperature",
             label="temperature",
@@ -72,7 +81,7 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
             required=True,
         )
 
-        fields = [prompt, model, temperature, max_token]
+        fields = [prompt, context, model, temperature, max_token]
 
         config = NodeConfig(
             nodeName="ClaudeAnthropic",
@@ -87,8 +96,13 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
 
         return config
 
+    def handle_stream_awnser(self, awnser):
+        event = ProcessorEvent(self, awnser)
+        self.notify(EventType.PROGRESS, event)
+
     def process(self):
         prompt = self.get_input_by_name("prompt")
+        context = self.get_input_by_name("context", None)
         model = self.get_input_by_name("model", "claude-3-opus-20240229")
         temperature = self.get_input_by_name("temperature", 1)
         max_tokens = self.get_input_by_name("max_tokens", 1024)
@@ -107,16 +121,27 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
 
         awnser = ""
 
-        with client.messages.stream(
-            model=model,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            messages=[{"role": "user", "content": prompt}],
-        ) as stream:
-            for text in stream.text_stream:
-                awnser += text
-                event = ProcessorEvent(self, awnser)
-                self.notify(EventType.PROGRESS, event)
+        if context is not None:
+            with client.messages.stream(
+                model=model,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                system=context,
+                messages=[{"role": "user", "content": prompt}],
+            ) as stream:
+                for text in stream.text_stream:
+                    awnser += text
+                    self.handle_stream_awnser(awnser)
+        else:
+            with client.messages.stream(
+                model=model,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                messages=[{"role": "user", "content": prompt}],
+            ) as stream:
+                for text in stream.text_stream:
+                    awnser += text
+                    self.handle_stream_awnser(awnser)
 
         return awnser
 
