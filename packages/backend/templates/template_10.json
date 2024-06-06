@@ -42,7 +42,7 @@
           }
         ],
         "nodeName": "DocumentToText",
-        "inputNames": ["url"],
+        "inputNames": ["document_url"],
         "hasInputHandle": true,
         "outputType": "text",
         "showHandlesNames": true
