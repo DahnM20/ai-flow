@@ -1,3 +1,4 @@
+import logging
 from ...context.processor_context import ProcessorContext
 from ..processor import ContextAwareProcessor
 from ....llms.factory.llm_factory import LLMFactory
@@ -6,6 +7,15 @@ from ....root_injector import root_injector
 from llama_index.core.base.llms.base import ChatMessage
 
 from .processor_type_name_utils import ProcessorType
+
+
+def interpret_escape_sequences(separator):
+    escape_dict = {
+        r"\n": "\n",
+        r"\r": "\r",
+        r"\t": "\t",
+    }
+    return escape_dict.get(separator, separator)
 
 
 class AIDataSplitterProcessor(ContextAwareProcessor):
@@ -57,6 +67,7 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
             separator = self.get_input_by_name(
                 "separator", AIDataSplitterProcessor.DEFAULT_SEPARATOR
             )
+            separator = interpret_escape_sequences(separator)
             self.set_output(input_data.split(separator))
             self.nb_output = len(self._output)
 
