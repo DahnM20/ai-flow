@@ -1,3 +1,4 @@
+import logging
 from ...context.processor_context import ProcessorContext
 from ..model import Field, NodeConfig, Option
 from .extension_processor import ContextAwareExtensionProcessor
@@ -126,8 +127,12 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
                 model=model,
                 temperature=temperature,
                 max_tokens=max_tokens,
-                system=context,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"Context: {context} \n Prompt: {prompt}",
+                    }
+                ],
             ) as stream:
                 for text in stream.text_stream:
                     awnser += text
