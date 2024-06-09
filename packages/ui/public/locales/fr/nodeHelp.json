@@ -1,0 +1,150 @@
+{
+  "input-text": {
+    "description": "Le nœud de texte peut être utilisé pour transférer une entrée de texte à d'autres nœuds.",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/Input-nodes",
+        "label": "Ajouter une entrée dans AI-FLOW"
+      }
+    ]
+  },
+  "url_input": {
+    "description": "Récupère le contenu textuel d'une page web à partir d'une URL.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/web-extractor-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/Input-nodes#url",
+        "label": "Ajouter une entrée dans AI-FLOW"
+      }
+    ]
+  },
+  "llm-prompt": {
+    "description": "Traite les entrées en utilisant les modèles GPT d'OpenAI, qui peuvent comprendre et générer des réponses en fonction du contexte fourni par l'utilisateur.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/gpt-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/fr/blog/summarize-doc-post",
+        "label": "Comment Résumer des Documents ou Poser des Questions en Utilisant AI-FLOW"
+      },
+      {
+        "url": "https://docs.ai-flow.net/fr/blog/summarize-ytb-post",
+        "label": "Comment Résumer une Vidéo YouTube en Utilisant AI-FLOW"
+      }
+    ]
+  },
+  "gpt-vision": {
+    "description": "Utilise GPT-4 Vision pour analyser une image.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/vision-demo.gif",
+    "docUrls": []
+  },
+  "youtube_transcript_input": {
+    "description": "Capture les transcriptions directement depuis l'API de YouTube, permettant un traitement ultérieur tel que la traduction, la résumé, ou l'extraction de mots clés.",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/fr/blog/summarize-ytb-post",
+        "label": "Comment Résumer une Vidéo YouTube en Utilisant AI-FLOW"
+      }
+    ]
+  },
+  "dalle-prompt": {
+    "description": "Permet aux utilisateurs de créer des descriptions détaillées pour générer des images à l'aide du modèle DALL-E 3, combinant créativité et IA pour un contenu visuel personnalisé. Veuillez noter qu'OpenAI ne permet que 5-7 images par minute. N'oubliez pas de sauvegarder votre fichier; OpenAI héberge les fichiers pendant 1H.",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/text-to-image-processing",
+        "label": "Génération d'image dans AI-FLOW"
+      }
+    ]
+  },
+  "stable-diffusion-stabilityai-prompt": {
+    "description": "Modèle Stable Diffusion SDXL par Stability AI, offrant une génération d'images rapide et à faible coût. N'oubliez pas de sauvegarder votre fichier ; les fichiers sont disponibles pendant 12 heures.",
+    "docUrls": []
+  },
+  "merger-prompt": {
+    "description": "Utilisé pour combiner deux sorties. Chaque sortie doit être utilisée avec son identifiant spécifique qui sera remplacé dynamiquement, par exemple ${input-1} et ${input-2}. Utilisez les boutons en haut du nœud pour insérer automatiquement les identifiants.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/merge-demo.gif",
+    "docUrls": []
+  },
+  "claude-anthropic-processor": {
+    "description": "Traite les entrées en utilisant Claude 3 par Anthropic, qui peut comprendre et générer des réponses en fonction du contexte fourni par l'utilisateur.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/claude-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/fr/blog/anthropic-claude-api",
+        "label": "Accédez à Claude 3 via l'API d'Anthropic grâce à AI-FLOW"
+      }
+    ]
+  },
+  "document-to-text-processor": {
+    "description": "Convertit divers formats de documents en texte brut, permettant l'extraction de texte pour le traitement et l'analyse. Ce nœud prend en charge les formats .pdf, .txt, .json, .html, .csv.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/document-to-text-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/fr/blog/summarize-doc-post",
+        "label": "Comment Résumer des Documents ou Poser des Questions en Utilisant AI-FLOW"
+      }
+    ]
+  },
+  "openai-text-to-speech-processor": {
+    "description": "Convertit le texte en parole naturelle à l'aide des modèles avancés de synthèse vocale d'OpenAI, facilitant l'accessibilité et les applications multimédia. N'oubliez pas de sauvegarder votre fichier, OpenAI héberge le fichier pendant 1H.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/tts-demo.gif",
+    "docUrls": []
+  },
+  "stabilityai-generic-processor": {
+    "description": "Un nœud polyvalent capable d'interfacer avec l'API de StabilityAI pour effectuer diverses tâches telles que supprimer l'arrière-plan, rechercher et remplacer, et plus encore. N'oubliez pas de sauvegarder votre fichier ; les fichiers sont disponibles pendant 12 heures.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/stabilityai-demo.gif",
+    "docUrls": []
+  },
+  "stabilityai-stable-diffusion-3-processor": {
+    "description": "Intègre les dernières capacités de Stable Diffusion 3 pour une génération d'images de haute qualité. N'oubliez pas de sauvegarder votre fichier ; les fichiers sont disponibles pendant 12 heures.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/sd3-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/fr/blog/stable-diffusion-3-api",
+        "label": "Access Stable Diffusion 3 API through AI-FLOW"
+      }
+    ]
+  },
+  "ai-action": {
+    "description": "Exécute une invite AI prédéfinie avec GPT-4o.",
+    "docUrls": []
+  },
+  "file": {
+    "description": "Permet d'héberger un fichier et de retourner une URL permettant d'y accéder. Supporte divers types de fichiers pour une utilisation au sein du système. Ce nœud n'extrait pas le contenu des fichiers. Les fichiers sont disponibles pendant 12H.",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/fr/blog/summarize-doc-post",
+        "label": "Comment Résumer des Documents ou Poser des Questions en Utilisant AI-FLOW"
+      }
+    ]
+  },
+  "ai-data-splitter": {
+    "description": "Divise une entrée en plusieurs sorties en utilisant deux modes disponibles : mode AI et mode Manuel. En mode Manuel, vous devez spécifier un séparateur. Cela peut être utile pour générer du contenu basé sur une liste d'idées ou de concepts. Vous pouvez spécifier un nombre estimé de sorties pour préparer votre flux en conséquence.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/splitter-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/split-input",
+        "label": "Séparer une entrée avec l'IA"
+      }
+    ]
+  },
+  "replicate": {
+    "description": "Un nœud polyvalent capable d'interfacer avec l'API Replicate. Explorez divers modèles pour la génération de texte, d'images, d'audio, de modèles 3D. Les fichiers en sortie sont accessibles 12H.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/replicate-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/replicate-node",
+        "label": "Accéder a divers modèles IA via Replicate"
+      }
+    ]
+  },
+  "transition": {
+    "description": "Utilisez ce nœud pour organiser votre flux. Le nœud de transition ne transfère la sortie qu'à un autre nœud.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/transition-demo.gif",
+    "docUrls": []
+  },
+  "display": {
+    "description": "Ce nœud redimensionnable peut être utilisé pour afficher chaque sortie à la taille que vous souhaitez. Vous pouvez également l'utiliser comme un nœud intermédiaire.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/display-demo.gif",
+    "docUrls": []
+  }
+}

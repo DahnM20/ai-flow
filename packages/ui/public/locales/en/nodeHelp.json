@@ -60,7 +60,7 @@
     "docUrls": []
   },
   "merger-prompt": {
-    "description": "Used for combining two outputs. Each output need to be used with his specific identifier that will be replaced dynamically e.g ${input-1} and ${input-2}. Use the button at the top of the node to insert the identifier automatically !",
+    "description": "Used for combining two outputs. Each output need to be used with his specific identifier that will be replaced dynamically e.g ${input-1} and ${input-2}. Use the buttons at the top of the node to insert the identifier automatically !",
     "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/merge-demo.gif",
     "docUrls": []
   },
@@ -90,7 +90,7 @@
     "docUrls": []
   },
   "stabilityai-generic-processor": {
-    "description": "A versatile node capable of interfacing with StabilityAI API to perform various task such as remove background, search and replace, ...",
+    "description": "A versatile node capable of interfacing with StabilityAI API to perform various task such as remove background, search and replace and more. Don't forget to save your file; files are available for 12 hours.  ",
     "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/stabilityai-demo.gif",
     "docUrls": []
   },
