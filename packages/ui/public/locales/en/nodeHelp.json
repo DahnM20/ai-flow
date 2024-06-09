@@ -1,0 +1,150 @@
+{
+  "input-text": {
+    "description": "Text Node can be used to transfer text input to other nodes.",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/Input-nodes",
+        "label": "Add an input in AI-FLOW"
+      }
+    ]
+  },
+  "url_input": {
+    "description": "Retrieve textual content from an URL.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/web-extractor-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/Input-nodes#url",
+        "label": "Add an input in AI-FLOW"
+      }
+    ]
+  },
+  "llm-prompt": {
+    "description": "Processes inputs using GPT models by OpenAI, which can understand and generate responses based on the context provided by the user.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/gpt-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/blog/summarize-doc-post",
+        "label": "How to Summarize Documents or Ask Questions Using AI-FLOW"
+      },
+      {
+        "url": "https://docs.ai-flow.net/blog/summarize-ytb-post",
+        "label": "How to Summarize a YouTube Video Using AI-FLOW"
+      }
+    ]
+  },
+  "gpt-vision": {
+    "description": "Use GPT-4 Vision to analyze a picture.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/vision-demo.gif",
+    "docUrls": []
+  },
+  "youtube_transcript_input": {
+    "description": "Captures transcripts directly from YouTube API, allowing for further processing like translation, summarization, or keyword extraction.",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/blog/summarize-ytb-post",
+        "label": "How to Summarize a YouTube Video Using AI-FLOW"
+      }
+    ]
+  },
+  "dalle-prompt": {
+    "description": "Allows users to create detailed prompts to generate images using the DALL-E 3 model, combining creativity and AI for custom visual content. Please note that OpenAI only allow 5-7 images per minute. Don't forget to save your file; OpenAI host files for 1H.",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/text-to-image-processing",
+        "label": "Image Generation in AI-FLOW"
+      }
+    ]
+  },
+  "stable-diffusion-stabilityai-prompt": {
+    "description": "Stable Diffusion SDXL model by Stability AI, offering quick and low cost image generation. Don't forget to save your file; files are available for 12 hours.",
+    "docUrls": []
+  },
+  "merger-prompt": {
+    "description": "Used for combining two outputs. Each output need to be used with his specific identifier that will be replaced dynamically e.g ${input-1} and ${input-2}. Use the button at the top of the node to insert the identifier automatically !",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/merge-demo.gif",
+    "docUrls": []
+  },
+  "claude-anthropic-processor": {
+    "description": "Processes inputs using Claude 3 by Anthropic, which can understand and generate responses based on the context provided by the user.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/claude-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/blog/anthropic-claude-api",
+        "label": "Access Claude 3 from Anthropic API through AI-FLOW"
+      }
+    ]
+  },
+  "document-to-text-processor": {
+    "description": "Converts various document formats into plain text, enabling text extraction for processing and analysis. This nodes supports .pdf, .txt, .json, .html, .csv.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/document-to-text-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/blog/summarize-doc-post",
+        "label": "How to Summarize Documents or Ask Questions Using AI-FLOW"
+      }
+    ]
+  },
+  "openai-text-to-speech-processor": {
+    "description": "Converts text to natural-sounding speech using OpenAI's advanced text-to-speech models, facilitating accessibility and multimedia applications. Don't forget to save your file, OpenAI host the file for 1H.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/tts-demo.gif",
+    "docUrls": []
+  },
+  "stabilityai-generic-processor": {
+    "description": "A versatile node capable of interfacing with StabilityAI API to perform various task such as remove background, search and replace, ...",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/stabilityai-demo.gif",
+    "docUrls": []
+  },
+  "stabilityai-stable-diffusion-3-processor": {
+    "description": "Integrates the latest Stable Diffusion 3 capabilities for high-quality image generation. Don't forget to save your file; files are available for 12 hours.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/sd3-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/blog/stable-diffusion-3-api",
+        "label": "Access Stable Diffusion 3 API through AI-FLOW"
+      }
+    ]
+  },
+  "ai-action": {
+    "description": "Execute predefined AI prompt with GPT-4o",
+    "docUrls": []
+  },
+  "file": {
+    "description": "Handles the uploading, storage, and retrieval of files, supporting various file types for use within the system. This node does not extract file content. Files are available 12H.",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/blog/summarize-doc-post",
+        "label": "How to Summarize Documents or Ask Questions Using AI-FLOW"
+      }
+    ]
+  },
+  "ai-data-splitter": {
+    "description": "Split an input into multiple outputs using two available modes: AI mode and Manual mode. In Manual mode, you must specify a separator. This can be useful for generating content based on a list of ideas or concepts. You can specify an estimated number of outputs to prepare your flow accordingly.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/splitter-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/split-input",
+        "label": "Split input with AI"
+      }
+    ]
+  },
+  "replicate": {
+    "description": "A versatile node capable of interfacing with the Replicate API. Explore various model for text, image, audio, 3d model generation ! Replicate cost vary per model, and per time usage. Please not that less used models needs a warmup time, for this reason, first launch can be longer. Don't forget to save your file; files are available for 12 hours.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/replicate-demo.gif",
+    "docUrls": [
+      {
+        "url": "https://docs.ai-flow.net/docs/nodes-presentation/replicate-node",
+        "label": "Access Diverse AI Models through Replicate"
+      }
+    ]
+  },
+  "transition": {
+    "description": "Use this node to organize your flow. The transition node only transfer output to another node.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/transition-demo.gif",
+    "docUrls": []
+  },
+  "display": {
+    "description": "This resizeable node can be use to display every output at the size you wish. You can also use it as an intermidiary node.",
+    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/node-help-img/display-demo.gif",
+    "docUrls": []
+  }
+}
