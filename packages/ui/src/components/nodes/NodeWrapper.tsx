@@ -1,20 +1,13 @@
 import React, { useContext, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
 import { NodeContext } from "../../providers/NodeProvider";
-import {
-  FaCopy,
-  FaEraser,
-  FaQuestion,
-  FaQuestionCircle,
-  FaRegCopy,
-} from "react-icons/fa";
+import { FaCopy, FaEraser, FaQuestionCircle, FaRegCopy } from "react-icons/fa";
 import ActionGroup, { Action } from "../selectors/ActionGroup";
 import { MdDelete, MdEdit, MdMenuOpen } from "react-icons/md";
 import { useVisibility } from "../../providers/VisibilityProvider";
 import { useTranslation } from "react-i18next";
 import ColorSelector from "../selectors/ColorSelector";
-import { Popover } from "@mantine/core";
-import { NodeHelp, NodeHelpData } from "./utils/NodeHelp";
+import { NodeHelpData } from "./utils/NodeHelp";
+import NodeHelpPopover from "./NodeHelpPopover";
 
 type NodeWrapperProps = {
   children: React.ReactNode;
@@ -169,75 +162,56 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   ];
 
   return (
-    <Popover
-      width={500}
-      opened={showHelp}
-      withArrow
-      position="right"
-      arrowSize={12}
-      offset={45}
-      withinPortal
-      clickOutsideEvents={["mouseup", "touchend"]}
-      closeOnClickOutside
-      shadow="md"
-      styles={{
-        dropdown: {
-          padding: 0,
-        },
-      }}
+    <NodeHelpPopover
+      showHelp={showHelp}
+      data={currentNodeHelp}
+      onClose={() => setShowHelp(false)}
     >
-      <Popover.Target>
-        <div
-          className={`group relative flex h-full w-full rounded-lg p-1 transition-all duration-300 ease-in-out
+      <div
+        className={`group relative flex h-full w-full rounded-lg p-1 transition-all duration-300 ease-in-out
         ${currentNodeIsMissingFields ? "border-2 border-dashed border-red-500/80" : ""}`}
-          onClick={() => {
-            setShowActions(true);
-            setCurrentNodeIdSelected(nodeId);
-          }}
-          onMouseLeave={() => {
-            hideActionsWithDelay();
-          }}
+        onClick={() => {
+          setShowActions(true);
+          setCurrentNodeIdSelected(nodeId);
+        }}
+        onMouseLeave={() => {
+          hideActionsWithDelay();
+        }}
+        onMouseEnter={clearHideActionsTimeout}
+      >
+        {children}
+        <div
+          className={`nodrag absolute right-1/2 top-0 flex -translate-y-14 translate-x-1/2 transition-all duration-300 ease-in-out  ${showActions ? "opacity-100" : "pointer-events-none opacity-0"}`}
           onMouseEnter={clearHideActionsTimeout}
         >
-          {children}
+          <ActionGroup actions={actions} showIcon />
           <div
-            className={`nodrag absolute right-1/2 top-0 flex -translate-y-14 translate-x-1/2 transition-all duration-300 ease-in-out  ${showActions ? "opacity-100" : "pointer-events-none opacity-0"}`}
-            onMouseEnter={clearHideActionsTimeout}
+            className={`absolute flex -translate-x-1/3 -translate-y-10 items-center justify-center space-x-2 rounded-full bg-slate-200/10 p-2 ${showColors ? "opacity-100 " : "pointer-events-none opacity-0"} transition-all duration-300 ease-in-out `}
           >
-            <ActionGroup actions={actions} showIcon />
-            <div
-              className={`absolute flex -translate-x-1/3 -translate-y-10 items-center justify-center space-x-2 rounded-full bg-slate-200/10 p-2 ${showColors ? "opacity-100 " : "pointer-events-none opacity-0"} transition-all duration-300 ease-in-out `}
-            >
-              <ColorSelector onChangeColor={handleChangeNodeColor} />
-            </div>
-            <div
-              className={`absolute flex -translate-y-20 translate-x-5 items-center justify-center  ${showTextField ? "opacity-100 " : "pointer-events-none opacity-0"} transition-all duration-300 ease-in-out `}
-            >
-              <div className="flex flex-col items-center justify-center rounded-lg bg-slate-200/10 p-2 text-center">
-                <p> {t("EnterCustomName")}</p>
-                <input
-                  className="bg-zinc-900/90 px-1 text-center"
-                  value={currentNodeName}
-                  onChange={(e) =>
-                    updateNodeAppearance(nodeId, { customName: e.target.value })
+            <ColorSelector onChangeColor={handleChangeNodeColor} />
+          </div>
+          <div
+            className={`absolute flex -translate-y-20 translate-x-5 items-center justify-center  ${showTextField ? "opacity-100 " : "pointer-events-none opacity-0"} transition-all duration-300 ease-in-out `}
+          >
+            <div className="flex flex-col items-center justify-center rounded-lg bg-slate-200/10 p-2 text-center">
+              <p> {t("EnterCustomName")}</p>
+              <input
+                className="bg-zinc-900/90 px-1 text-center"
+                value={currentNodeName}
+                onChange={(e) =>
+                  updateNodeAppearance(nodeId, { customName: e.target.value })
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setShowTextField(false);
                   }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      setShowTextField(false);
-                    }
-                  }}
-                />
-              </div>
+                }}
+              />
             </div>
           </div>
         </div>
-      </Popover.Target>
-      <Popover.Dropdown>
-        {currentNodeHelp && (
-          <NodeHelp data={currentNodeHelp} onClose={() => setShowHelp(false)} />
-        )}
-      </Popover.Dropdown>
-    </Popover>
+      </div>
+    </NodeHelpPopover>
   );
 }
 
