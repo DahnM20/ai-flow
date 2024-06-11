@@ -17,7 +17,7 @@ function NodeHelpPopover({
 }: NodeHelpPopoverProps) {
   return (
     <Popover
-      width={500}
+      width={"35em"}
       opened={showHelp}
       withArrow
       position="right"
