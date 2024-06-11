@@ -1,11 +1,12 @@
-import { FiFeather, FiPlus } from "react-icons/fi";
+import { FiAlignLeft, FiDatabase, FiPlus, FiType } from "react-icons/fi";
 import { useContext, useMemo, useState } from "react";
 import { NodeContext } from "../../../providers/NodeProvider";
-import AttachNodeDialog, { TextOptions } from "../AttachNodeDialog";
 import { useFormFields } from "../../../hooks/useFormFields";
 import { LoadingIcon } from "../../nodes/Node.styles";
 import OutputDisplay from "../../nodes/node-output/OutputDisplay";
-import { BasicPane, LayoutIndex } from "../LayoutView";
+import { BasicPane, LayoutIndex, TextOptions } from "../LayoutView";
+import { Menu } from "@mantine/core";
+import AttachNodeDialog from "../AttachNodeDialog";
 
 interface NodePaneProps {
   index?: LayoutIndex;
@@ -20,6 +21,7 @@ interface NodePaneProps {
     text: string,
     options?: TextOptions,
   ) => void;
+  isEnabled: boolean;
 }
 
 function NodePane({
@@ -27,6 +29,7 @@ function NodePane({
   onAttachText,
   index,
   paneData,
+  isEnabled,
 }: NodePaneProps) {
   const outputFieldName = "outputData";
 
@@ -36,6 +39,7 @@ function NodePane({
 
   const nodeId = paneData.nodeId;
   const fieldNames = paneData.fieldNames;
+  const hasMultipleFields = fieldNames && fieldNames?.length > 1;
 
   const currentNode = useMemo(
     () => nodes.find((n) => n.data.name === nodeId),
@@ -48,7 +52,17 @@ function NodePane({
 
   function handleSetText(text?: string) {
     if (!!onAttachText && index != null) {
-      onAttachText(index, text ?? "<Enter Your Text>");
+      onAttachText(index, text ?? "<Enter Your Text>", paneData.options);
+    }
+  }
+
+  function handleSetHeading(text?: string) {
+    if (!!onAttachText && index != null) {
+      onAttachText(index, text ?? "<Enter Your Text>", {
+        fontSize: "xl",
+        textAlign: "center",
+        isHeading: true,
+      });
     }
   }
 
@@ -75,7 +89,7 @@ function NodePane({
     () => {},
     {
       specificFields: fieldNames,
-      showLabels: true,
+      showLabels: hasMultipleFields,
     },
   );
 
@@ -91,7 +105,7 @@ function NodePane({
 
   return (
     <div
-      className="group h-full min-h-0 w-full flex-grow overflow-auto"
+      className={`group h-full w-full rounded-md p-3 hover:overflow-auto`}
       onMouseDown={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
       onTouchEnd={(e) => e.stopPropagation()}
@@ -110,15 +124,33 @@ function NodePane({
 
   function renderPaneBody() {
     if (isTextPane) {
-      return (
-        <div className="h-full p-2">
-          <textarea
-            value={paneData.text}
-            className="h-full w-full bg-transparent text-center text-lg outline-none"
-            onChange={(e) => handleSetText(e.target.value)}
-          />
-        </div>
-      );
+      if (paneData.options?.isHeading) {
+        return (
+          <div className="h-full w-full items-center justify-center text-2xl font-bold">
+            {isEnabled ? (
+              <textarea
+                value={paneData.text}
+                className="h-full w-full bg-transparent text-center outline-none"
+                onChange={(e) => handleSetText(e.target.value)}
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                {paneData.text}
+              </div>
+            )}
+          </div>
+        );
+      } else {
+        return (
+          <div className="h-full p-2">
+            <textarea
+              value={paneData.text}
+              className="h-full w-full bg-transparent text-center text-lg outline-none"
+              onChange={(e) => handleSetText(e.target.value)}
+            />
+          </div>
+        );
+      }
     }
     if (isCurrentNodeRunning) {
       return (
@@ -147,20 +179,37 @@ function NodePane({
     return (
       <div
         className={`flex h-full w-full items-center
-                                      justify-center space-x-3 
-                                      text-4xl text-sky-600 opacity-100 transition-all duration-500 ease-in-out`}
+                                      justify-center
+                                     text-4xl text-sky-600 opacity-100 transition-all duration-500 ease-in-out`}
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
         onTouchEnd={(e) => e.stopPropagation()}
       >
-        <FiPlus
-          className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300"
-          onClick={handleAttachNode}
-        />
-        <FiFeather
-          className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300"
-          onClick={() => handleSetText()}
-        />
+        <Menu shadow="md" width={200}>
+          <Menu.Target>
+            <span>
+              <FiPlus className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300" />
+            </span>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Label>Attach content</Menu.Label>
+            <Menu.Item leftSection={<FiDatabase />} onClick={handleAttachNode}>
+              Node Fields
+            </Menu.Item>
+            <Menu.Item
+              leftSection={<FiType />}
+              onClick={() => handleSetHeading()}
+            >
+              Heading
+            </Menu.Item>
+            <Menu.Item
+              leftSection={<FiAlignLeft />}
+              onClick={() => handleSetText()}
+            >
+              Text
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       </div>
     );
   }

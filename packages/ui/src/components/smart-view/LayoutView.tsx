@@ -21,6 +21,7 @@ export interface TextOptions {
   fontSize?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
   color?: string;
   textAlign?: "left" | "center" | "right";
+  isHeading?: boolean;
 }
 
 export interface BasicPane {
@@ -214,7 +215,7 @@ function LayoutView({
   }
 
   return (
-    <div className="smart-view h-full w-full">
+    <div className="smart-view h-auto w-full bg-app-dark-gradient">
       <div className="ml-10 h-full">
         <NodeProvider
           nodes={nodes}
@@ -226,38 +227,40 @@ function LayoutView({
           onUpdateNodeData={handleUpdateNodeData}
           onUpdateNodes={handleUpdateNodes}
         >
-          <GridLayout
-            className={`layout z-0`}
-            layout={layout}
-            cols={12}
-            rowHeight={30}
-            width={width}
-            onLayoutChange={handleLayoutChange}
-            isDraggable={enabled}
-            isResizable={enabled}
-            isDroppable={enabled}
-          >
-            {layout.map((item) => (
-              <div
-                key={item.i}
-                className={`grid-item flex items-center justify-center rounded-md ${!paneData[item.i] ? "bg-zinc-800" : "bg-zinc-800/20"}`}
+          <div className="flex justify-center">
+            <div className="w-[80%]">
+              <GridLayout
+                className={`layout`}
+                layout={layout}
+                cols={12}
+                rowHeight={30}
+                width={width * 0.8}
+                onLayoutChange={handleLayoutChange}
+                isDraggable={enabled}
+                isResizable={enabled}
+                isDroppable={enabled}
               >
-                <PaneWrapper
-                  index={item.i}
-                  name={paneData[item.i]?.nodeId}
-                  onDelete={handleDeletePane}
-                  showTools={enabled}
-                >
-                  <NodePane
-                    index={item.i}
-                    paneData={paneData[item.i] ?? {}}
-                    onAttachNode={handleAttachNode}
-                    onAttachText={handleAttachText}
-                  />
-                </PaneWrapper>
-              </div>
-            ))}
-          </GridLayout>
+                {layout.map((item) => (
+                  <div key={item.i} className={`grid-item`}>
+                    <PaneWrapper
+                      index={item.i}
+                      paneData={paneData[item.i] ?? {}}
+                      onDelete={handleDeletePane}
+                      showTools={enabled}
+                    >
+                      <NodePane
+                        index={item.i}
+                        paneData={paneData[item.i] ?? {}}
+                        onAttachNode={handleAttachNode}
+                        onAttachText={handleAttachText}
+                        isEnabled={enabled}
+                      />
+                    </PaneWrapper>
+                  </div>
+                ))}
+              </GridLayout>
+            </div>
+          </div>
         </NodeProvider>
         <SmartViewActions
           onAddPane={addNewBlock}

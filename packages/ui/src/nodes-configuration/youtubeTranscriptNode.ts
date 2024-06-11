@@ -7,12 +7,14 @@ export const youtubeTranscriptNodeConfig: NodeConfig = {
   fields: [
     {
       name: "url",
+      label: "url",
       type: "input",
       required: true,
       placeholder: "URLPlaceholder",
     },
     {
       name: "language",
+      label: "language",
       type: "select",
       options: [
         {

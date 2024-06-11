@@ -17,12 +17,6 @@ interface AttachNodeDialogProps {
   handleSubmit: (nodeName: string, fieldNames: string[]) => void;
 }
 
-export interface TextOptions {
-  fontSize?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
-  color?: string;
-  textAlign?: "left" | "center" | "right";
-}
-
 function AttachNodeDialog({
   isOpen,
   setIsOpen,
