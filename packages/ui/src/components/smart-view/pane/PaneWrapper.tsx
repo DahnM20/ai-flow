@@ -2,23 +2,25 @@ import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 import NodePlayButton from "../../nodes/node-button/NodePlayButton";
 import { useContext, useState } from "react";
-import { BasicPane, LayoutIndex, PaneDataState } from "../LayoutView";
+import { BasicPane, LayoutIndex } from "../LayoutView";
 import { NodeContext } from "../../../providers/NodeProvider";
 
 interface PaneWrapperProps {
   index?: LayoutIndex;
   children: JSX.Element;
   paneData?: BasicPane;
-  showTools: boolean;
+  isEnabled: boolean;
   onDelete: (index: LayoutIndex) => void;
+  onClickName: () => void;
 }
 
 function PaneWrapper({
   index,
   children,
   paneData,
-  showTools,
+  isEnabled,
   onDelete,
+  onClickName,
 }: PaneWrapperProps) {
   const { findNode } = useContext(NodeContext);
 
@@ -37,12 +39,12 @@ function PaneWrapper({
 
   return (
     <div
-      className={`relative flex h-full w-full flex-col rounded-xl transition-all duration-500 ease-in-out ${!isHeading ? "bg-zinc-800/50" : ""}`}
+      className={`relative flex h-full w-full flex-col rounded-xl transition-all duration-500 ease-in-out ${!isHeading ? "bg-zinc-800/50 shadow-md" : ""}`}
       style={{
         border:
-          showTools && isHeaderVisible
+          isEnabled && isHeaderVisible
             ? "1px solid rgb(241 245 249 / 0.1)"
-            : showTools
+            : isEnabled
               ? "1px solid rgb(0 0 0 / 0)"
               : "",
       }}
@@ -51,13 +53,15 @@ function PaneWrapper({
     >
       <div className={`w-full pt-2 transition-all duration-500 ease-in-out`}>
         <div
-          className="flex cursor-move flex-col items-center justify-center rounded-t-xl
-                                p-4 text-center text-slate-100 hover:text-teal-300"
+          className={`flex ${isEnabled ? "cursor-move" : ""} flex-col items-center justify-center rounded-t-xl
+                                ${node ? "p-4" : ""} text-center `}
         >
           <div
             className="absolute left-0 ml-3 flex flex-row items-center
                                     space-x-1 whitespace-nowrap 
-                                    py-1 text-center text-lg font-bold"
+                                    py-1 text-center text-lg font-bold text-slate-100 hover:text-teal-300"
+            onClick={onClickName}
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <p>
               {node && hasCustomName
@@ -71,13 +75,17 @@ function PaneWrapper({
             </p>
           </div>
           <div
-            className={`absolute right-0 space-x-2 px-2 text-slate-100 ${isHeaderVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}
+            className={`absolute right-0 space-x-2 px-2 text-slate-100 ${isHeaderVisible ? "opacity-100" : "pointer-events-none opacity-0"} ${!node ? "top-1" : ""}`}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {nodeId && <NodePlayButton nodeName={nodeId} />}
-            <PaneWrapperButton onClick={() => index != null && onDelete(index)}>
-              <FaTimes />
-            </PaneWrapperButton>
+            {isEnabled && (
+              <PaneWrapperButton
+                onClick={() => index != null && onDelete(index)}
+              >
+                <FaTimes />
+              </PaneWrapperButton>
+            )}
           </div>
         </div>
       </div>

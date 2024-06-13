@@ -33,7 +33,7 @@ function NodePane({
 }: NodePaneProps) {
   const outputFieldName = "outputData";
 
-  const { nodes, onUpdateNodeData, currentNodesRunning, isRunning } =
+  const { nodes, onUpdateNodeData, currentNodesRunning, isRunning, findNode } =
     useContext(NodeContext);
   const [popupOpen, setPopupOpen] = useState(false);
 
@@ -41,10 +41,7 @@ function NodePane({
   const fieldNames = paneData.fieldNames;
   const hasMultipleFields = fieldNames && fieldNames?.length > 1;
 
-  const currentNode = useMemo(
-    () => nodes.find((n) => n.data.name === nodeId),
-    [nodeId, nodes],
-  );
+  const currentNode = useMemo(() => findNode(nodeId ?? ""), [nodeId, nodes]);
 
   function handleAttachNode() {
     setPopupOpen(true);
@@ -105,7 +102,7 @@ function NodePane({
 
   return (
     <div
-      className={`group h-full w-full rounded-md p-3 hover:overflow-auto`}
+      className={`group h-full w-full overflow-hidden rounded-md p-3 hover:overflow-auto`}
       onMouseDown={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
       onTouchEnd={(e) => e.stopPropagation()}
@@ -126,7 +123,7 @@ function NodePane({
     if (isTextPane) {
       if (paneData.options?.isHeading) {
         return (
-          <div className="h-full w-full items-center justify-center text-2xl font-bold">
+          <div className="h-full w-full items-center justify-center text-2xl font-bold text-slate-100">
             {isEnabled ? (
               <textarea
                 value={paneData.text}
@@ -185,7 +182,7 @@ function NodePane({
         onTouchStart={(e) => e.stopPropagation()}
         onTouchEnd={(e) => e.stopPropagation()}
       >
-        <Menu shadow="md" width={200}>
+        <Menu shadow="md" width={200} closeOnClickOutside>
           <Menu.Target>
             <span>
               <FiPlus className="rounded-full p-1 ring-2 ring-sky-600/50 transition-opacity  duration-300 ease-linear hover:text-sky-300" />

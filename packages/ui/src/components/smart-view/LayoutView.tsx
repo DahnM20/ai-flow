@@ -15,6 +15,7 @@ import NodePane from "./pane/NodePane";
 import PaneWrapper from "./pane/PaneWrapper";
 import { LayoutViewData } from "../../layout/main-layout/AppLayout";
 import SmartViewActions from "./LayoutViewActions";
+import { Modal } from "@mantine/core";
 export type LayoutIndex = string | number;
 
 export interface TextOptions {
@@ -66,6 +67,9 @@ function LayoutView({
   const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
 
   const [width, setWidth] = useState(window.innerWidth);
+  const [zoomedItem, setZoomedItem] = useState<BasicPane | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     if (!tabLayout?.layout) {
@@ -214,9 +218,13 @@ function LayoutView({
     setEnabled(!enabled);
   }
 
+  function handleSetZoomedItem(pane: BasicPane) {
+    setZoomedItem(pane);
+  }
+
   return (
     <div className="smart-view h-auto w-full bg-app-dark-gradient">
-      <div className="ml-10 h-full">
+      <div className="ml-10 min-h-screen">
         <NodeProvider
           nodes={nodes}
           edges={edges}
@@ -246,7 +254,8 @@ function LayoutView({
                       index={item.i}
                       paneData={paneData[item.i] ?? {}}
                       onDelete={handleDeletePane}
-                      showTools={enabled}
+                      onClickName={() => handleSetZoomedItem(paneData[item.i])}
+                      isEnabled={enabled}
                     >
                       <NodePane
                         index={item.i}
@@ -261,6 +270,18 @@ function LayoutView({
               </GridLayout>
             </div>
           </div>
+
+          {zoomedItem && (
+            <Modal
+              opened={!!zoomedItem}
+              onClose={() => setZoomedItem(undefined)}
+              withCloseButton={true}
+              size="auto"
+              centered
+            >
+              <NodePane paneData={zoomedItem} isEnabled={false} />
+            </Modal>
+          )}
         </NodeProvider>
         <SmartViewActions
           onAddPane={addNewBlock}
