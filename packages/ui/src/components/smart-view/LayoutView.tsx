@@ -246,7 +246,7 @@ function LayoutView({
                 onLayoutChange={handleLayoutChange}
                 isDraggable={enabled}
                 isResizable={enabled}
-                isDroppable={enabled}
+                isDroppable={false}
               >
                 {layout.map((item) => (
                   <div key={item.i} className={`grid-item`}>
