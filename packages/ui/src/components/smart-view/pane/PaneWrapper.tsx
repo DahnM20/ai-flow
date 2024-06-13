@@ -53,7 +53,10 @@ function PaneWrapper({
     >
       <div className={`w-full pt-2 transition-all duration-500 ease-in-out`}>
         <div
-          className={`flex ${isEnabled ? "cursor-move" : ""} flex-col items-center justify-center rounded-t-xl
+          className={`absolute h-8 w-full ${isEnabled ? "cursor-move" : ""}`}
+        ></div>
+        <div
+          className={`flex  flex-col items-center justify-center rounded-t-xl
                                 ${node ? "p-4" : ""} text-center `}
         >
           <div
