@@ -14,6 +14,7 @@ export default function ErrorBoundary({ children }: ErrorBoundaryProps) {
   useEffect(() => {
     const handleError = (error: Error, errorInfo: ErrorInfo) => {
       if (!error) return;
+      if (error.stack?.includes("videojs-wavesurfer")) return; //TMP - But no idea how to catch them otherwise...
       console.error("Error Boundary caught an error", error, errorInfo);
       setState({ hasError: true });
     };
