@@ -16,6 +16,7 @@ const extensionToTypeMap: { [key: string]: OutputType } = {
   ".jpg": "imageUrl",
   ".gif": "imageUrl",
   ".jpeg": "imageUrl",
+  ".webp": "imageUrl",
   // Video extensions
   ".mp4": "videoUrl",
   ".mov": "videoUrl",
