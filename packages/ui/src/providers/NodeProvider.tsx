@@ -33,6 +33,7 @@ interface NodeContextType {
   onUpdateNodes: (nodesUpdated: Node[], edgesUpdated: Edge[]) => void;
   getNodeDimensions: (nodeId: string) => NodeDimensions | undefined;
   duplicateNode: (nodeId: string) => void;
+  createNodeRef: (nodeId: string) => void;
   clearNodeOutput: (nodeId: string) => void;
   clearAllOutput: () => void;
   updateNodeAppearance: (nodeId: string, appearance: NodeAppearance) => void;
@@ -67,6 +68,7 @@ export const NodeContext = createContext<NodeContextType>({
   onUpdateNodes: () => undefined,
   getNodeDimensions: () => undefined,
   duplicateNode: () => undefined,
+  createNodeRef: () => undefined,
   clearNodeOutput: () => undefined,
   clearAllOutput: () => undefined,
   updateNodeAppearance: () => undefined,
@@ -204,10 +206,20 @@ export const NodeProvider = ({
     return dimensions;
   };
 
-  const duplicateNode = (nodeId: string) => {
+  const createNodeRef = (nodeId: string) => {
     const nodeToDuplicate = nodes.find((node) => node.id === nodeId);
+
     if (nodeToDuplicate) {
       const newNodeId = createUniqNodeId(nodeToDuplicate.data.processorType);
+      if (nodeToDuplicate.data.nodeRef) {
+        nodeId = nodeToDuplicate.data.nodeRef;
+      }
+
+      nodeToDuplicate.data.metadata = {
+        refList: nodeToDuplicate.data.metadata?.refList
+          ? [...nodeToDuplicate.data.metadata.refList, newNodeId]
+          : [newNodeId],
+      };
 
       const newNode = {
         ...nodeToDuplicate,
@@ -218,6 +230,7 @@ export const NodeProvider = ({
           name: newNodeId,
           isDone: false,
           lastRun: undefined,
+          nodeRef: nodeId,
         },
         position: {
           x: nodeToDuplicate.position.x + DUPLICATED_NODE_OFFSET,
@@ -225,6 +238,26 @@ export const NodeProvider = ({
         },
       };
       const nodesUpdated = [...nodes, newNode];
+      const edgesUpdated = [...edges];
+      onUpdateNodes(nodesUpdated, edgesUpdated);
+    }
+  };
+
+  const duplicateNode = (nodeId: string) => {
+    const nodeToDuplicate = nodes.find((node) => node.id === nodeId);
+    if (nodeToDuplicate) {
+      const newNodeId = createUniqNodeId(nodeToDuplicate.data.processorType);
+
+      const deepClone = structuredClone(nodeToDuplicate);
+      deepClone.id = newNodeId;
+      deepClone.selected = false;
+      deepClone.data.name = newNodeId;
+      deepClone.data.isDone = false;
+      deepClone.data.lastRun = undefined;
+      deepClone.position.x += DUPLICATED_NODE_OFFSET;
+      deepClone.position.y += DUPLICATED_NODE_OFFSET;
+
+      const nodesUpdated = [...nodes, deepClone];
       const edgesUpdated = [...edges];
       onUpdateNodes(nodesUpdated, edgesUpdated);
     }
@@ -315,6 +348,7 @@ export const NodeProvider = ({
         onUpdateNodes,
         getNodeDimensions,
         duplicateNode,
+        createNodeRef,
         clearNodeOutput,
         clearAllOutput,
         updateNodeAppearance,
