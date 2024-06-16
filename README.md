@@ -19,11 +19,11 @@
 </p>
 <div align="center">
 
-## 🎉🚀 v0.7.0 is Now Available 🚀🎉
+## 🎉🚀 v0.7.2 is Now Available 🚀🎉
 
-🚀 **New Nodes : Resizeable Display Node, Stable Diffusion 3, Text-to-Speech, Document-to-Text**
+🚀 **New Nodes : Claude 3, StabilityAI API, Data Splitter update**
 
-✨ **Expand the App**: Learn how to add your own nodes in our [Contribution Guidelines](https://docs.ai-flow.net/docs/category/contribute).
+✨ **Layout Mode Updated**
 </br>
 </br>
 
@@ -31,7 +31,7 @@
 
 ---
 
-![image-scenario-1-1](assets/presentation.png)
+![image-scenario-1-1](assets/intro.png)
 
 **AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of multiples AI APIs such as OpenAI, StabilityAI and Replicate.
 
@@ -45,13 +45,15 @@ In a nutshell, AI Flow provides a visual platform for crafting and managing AI-d
 - 🗂️ AI models can be conveniently managed and organized
 - 💾 Workflows can be exported or imported for sharing or backup purposes
 
-## Other basic use cases
+## Models availables
 
-#### Run a diverse range of open-source models through the Replicate API
-
-LLaMA, Mistral, Stable Video Diffusion, Music-gen, and many more.
+- Every model hosted on Replicate (LLaMa, Mistral, FaceSwap, InstantMesh, MusicGen, ...)
+- OpenAI GPT-4o, GPT-4, GPT-4 vision, GPT-3.5, TTS
+- StabilityAI entire API (Stable Diffusion 3, SDXL, Stable Video Diffusion, Search and Replace, Remove background, ...)
+- Claude 3
 
 ![replicate](assets/replicate-models.png)
+![Story scenario](assets/scenario-example.png)
 
 ## Contribute to AI-FLOW
 
