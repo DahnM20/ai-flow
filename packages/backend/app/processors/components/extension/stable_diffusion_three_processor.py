@@ -41,8 +41,15 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
         )
 
         model_options = [
-            Option(default=True, value="sd3", label="Stable Diffusion 3"),
-            Option(default=False, value="sd3-turbo", label="Stable Diffusion 3 Turbo"),
+            Option(default=True, value="sd3-large", label="Stable Diffusion 3 Large"),
+            Option(
+                default=False, value="sd3-medium", label="Stable Diffusion 3 Medium"
+            ),
+            Option(
+                default=False,
+                value="sd3-large-turbo",
+                label="Stable Diffusion 3 Large Turbo",
+            ),
         ]
 
         model = (

@@ -37,6 +37,7 @@ class StabilityAIGenericProcessor(
         re.compile(r"/v2alpha/"),  # Contains 'v2alpha'
         # Temporary
         re.compile(r"/inpaint"),
+        re.compile(r"/chat"),  # api returns 404 for now
     ]
     api_reader = None
     all_paths_cache = None
@@ -257,6 +258,9 @@ class StabilityAIGenericProcessor(
             api_token=api_key,
             base_url=self.api_host,
         )
+
+        if self.response_content_type == "application/json":
+            files = None
 
         response = client.post(
             path=self.path, data=data, files=files, accept=self.path_accept

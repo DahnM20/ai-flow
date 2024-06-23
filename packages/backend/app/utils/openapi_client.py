@@ -29,20 +29,31 @@ class Client:
         accept: str = "application/json",
         **kwargs,
     ) -> dict:
-        response = requests.post(
-            f"{self._base_url}{path}",
-            headers={
-                # "Content-Type": content_type,
-                "Authorization": f"Bearer {self._api_token}",
-                "Accept": accept,
-            },
-            files=files,
-            data=data,
-            timeout=self._timeout_ms,
-            **self._client_kwargs,
-            **kwargs,
-        )
+        headers = {
+            "Authorization": f"Bearer {self._api_token}",
+            "Accept": accept,
+        }
 
+        if files:
+            response = requests.post(
+                f"{self._base_url}{path}",
+                headers=headers,
+                files=files,
+                data=data,
+                timeout=self._timeout_ms,
+                **self._client_kwargs,
+                **kwargs,
+            )
+        else:
+            logging.info("JSON BOI")
+            response = requests.post(
+                f"{self._base_url}{path}",
+                headers=headers,
+                json=data,
+                timeout=self._timeout_ms,
+                **self._client_kwargs,
+                **kwargs,
+            )
         if response.status_code == 200:
             if accept == "application/json":
                 return response.json()
@@ -51,7 +62,7 @@ class Client:
             else:
                 return response.content
         else:
-            raise Exception(str(response.json()))
+            raise Exception(response.text)
 
     def get(
         self,

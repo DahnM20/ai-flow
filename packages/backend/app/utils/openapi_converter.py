@@ -89,7 +89,7 @@ class OpenAPIConverter:
                 )
         else:
             builder = NodeConfigBuilder()
-            print(schema)
+            # print(schema)
             fields = self.convert_properties_to_fields(schema)
             builder.set_fields(fields)
 
