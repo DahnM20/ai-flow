@@ -59,6 +59,11 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
         model_options = [
             Option(
                 default=True,
+                value="claude-3-5-sonnet-20240620",
+                label="Claude 3.5 Sonnet",
+            ),
+            Option(
+                default=False,
                 value="claude-3-opus-20240229",
                 label="Claude 3 Opus",
             ),
