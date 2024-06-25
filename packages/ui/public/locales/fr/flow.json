@@ -115,5 +115,7 @@
   "claudeAnthropichHelp": "Ce noeud utilise le modèle Claude d'Anthropic pour traiter des instructions textuelles.",
   "noDataAvailableForThisNode": "Pas de données disponibles pour ce noeud.",
   "learnMore": "En apprendre plus :",
-  "Help": "Aide"
+  "Help": "Aide",
+  "cookiesConsentLabelPlaceholder": "Accepter tout",
+  "cookiesConsentLabelHelp": "Pour certaines pages, nous devons cliquer sur le bouton de consentement aux cookies pour accéder aux données. Cette instruction aide à localiser le bouton."
 }

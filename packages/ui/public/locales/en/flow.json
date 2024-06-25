@@ -115,5 +115,7 @@
   "claudeAnthropichHelp": "This node uses Claude from Anthropic to generate text.",
   "noDataAvailableForThisNode": "No data available for this node",
   "learnMore": "Learn more:",
-  "Help": "Help"
+  "Help": "Help",
+  "cookiesConsentLabelPlaceholder": "Agree to all",
+  "cookiesConsentLabelHelp": "For some pages, we need to click on the cookie consent button to access the data. This instruction helps locate the button."
 }

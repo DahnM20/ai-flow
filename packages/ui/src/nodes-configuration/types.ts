@@ -11,7 +11,8 @@ export type FieldType =
   | "textfield"
   | "numericfield"
   | "switch"
-  | "textToDisplay";
+  | "textToDisplay"
+  | "list";
 
 export type OutputType =
   | "imageUrl"
@@ -35,7 +36,7 @@ export interface Field {
   type: FieldType;
   label?: string;
   placeholder?: string;
-  defaultValue?: string | number;
+  defaultValue?: string | number | string[] | number[];
   max?: number;
   min?: number;
   options?: Option[];

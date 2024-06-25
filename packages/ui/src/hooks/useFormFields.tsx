@@ -8,7 +8,7 @@ import InputNameBar from "../components/nodes/node-button/InputNameBar";
 import { Field } from "../nodes-configuration/types";
 import React, { useEffect, useRef } from "react";
 import { generateIdForHandle } from "../utils/flowUtils";
-import { Slider } from "@mantine/core";
+import { Pill, PillsInput, Slider } from "@mantine/core";
 import { Switch } from "@mantine/core";
 import NodeField from "../components/nodes/node-input/NodeField";
 import SelectAutocomplete from "../components/selectors/SelectAutocomplete";
@@ -234,6 +234,45 @@ export function useFormFields(
               onLabel="ON"
               offLabel="OFF"
             />
+          </div>
+        );
+
+      case "list":
+        const values = data[field.name] ?? [];
+        return (
+          <div className="w-full items-center">
+            <PillsInput size="lg">
+              <Pill.Group>
+                {values.map((value: string, index: number) => (
+                  <Pill
+                    key={`${id}-${field.name}-${index}`}
+                    withRemoveButton
+                    onRemove={() => {
+                      values.splice(index, 1);
+                      handleNodeDataChange(field.name, values);
+                    }}
+                  >
+                    {value}
+                  </Pill>
+                ))}
+                <PillsInput.Field
+                  placeholder={field.placeholder}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      values.push(e.currentTarget.value);
+                      handleNodeDataChange(field.name, values);
+                      e.currentTarget.value = "";
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (!e.currentTarget.value) return;
+                    values.push(e.currentTarget.value);
+                    handleNodeDataChange(field.name, values);
+                    e.currentTarget.value = "";
+                  }}
+                />
+              </Pill.Group>
+            </PillsInput>
           </div>
         );
       default:
