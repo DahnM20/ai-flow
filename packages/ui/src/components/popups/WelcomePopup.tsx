@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal } from "@mantine/core";
+import { ImageZoomable } from "../nodes/utils/ImageZoomable";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 type Feature = {
   title: string;
   description: string;
+};
+
+type Article = {
+  title: string;
+  url: string;
 };
 
 type VersionInfo = {
@@ -23,6 +30,7 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
 
   const versionInfo = t("versionInfo", { returnObjects: true }) as VersionInfo;
   const features = t("features", { returnObjects: true }) as Feature[];
+  const articles = t("articles", { returnObjects: true }) as Article[];
   const imageUrl = t("imageUrl");
 
   useEffect(() => {
@@ -41,13 +49,13 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
     <Modal
       opened={show}
       onClose={onClose}
-      size="70%"
+      size="80%"
       centered
-      title={versionInfo.description}
+      title={"Welcome to AI-Flow"}
+      padding={"xl"}
       styles={{
         title: {
           fontSize: "1.3rem",
-          fontWeight: "bold",
           color: "white",
           paddingLeft: "0.5rem",
         },
@@ -62,27 +70,51 @@ export default function WelcomePopup({ show, onClose }: WelcomePopupProps) {
         },
       }}
     >
-      <div className="my-15 relative flex flex-col overflow-auto rounded-xl bg-zinc-900 px-2 text-slate-200 shadow">
-        <ul className="mb-6 list-inside list-disc space-y-3">
-          {!!features &&
-            features.map((feature, index) => (
-              <li key={index} className="text-base">
-                <span className="font-medium text-sky-500">
-                  {feature.title}
-                </span>
-                {feature?.description && ` : ${feature.description}`}
-              </li>
-            ))}
-        </ul>
-        {imageUrl && (
-          <div className="mb-4 flex justify-center">
-            <img
-              src={imageUrl}
-              alt="Version Updates"
-              className="h-auto max-w-full rounded-md"
-            />
+      <div className="relative flex flex-col overflow-auto rounded-xl bg-zinc-900 px-2 text-slate-200 shadow">
+        <div className="flex flex-col space-x-4 md:flex-row">
+          <div className="flex flex-col space-y-10">
+            <div className="flex flex-col space-y-5">
+              <div className="text-xl text-zinc-300">Latest features added</div>
+              {!!features &&
+                features.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col rounded-lg bg-zinc-950/30 px-3 py-2 text-base"
+                  >
+                    <span className="font-medium text-teal-500">
+                      {feature.title}
+                    </span>
+                    <span className="text-gray-300">
+                      {feature?.description && `${feature.description}`}
+                    </span>
+                  </div>
+                ))}
+            </div>
+
+            <div className="flex flex-col space-y-2">
+              <div className=" text-xl text-zinc-300">Latest articles</div>
+              {!!articles &&
+                articles.map((article, index) => (
+                  <div key={index} className="text-base">
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2"
+                    >
+                      <span className="font-medium ">{article.title} </span>
+                      <FaExternalLinkAlt className="text-xs text-zinc-400" />
+                    </a>
+                  </div>
+                ))}
+            </div>
           </div>
-        )}
+          {imageUrl && (
+            <div className="mb-4 flex h-fit w-full justify-center shadow-md md:w-3/4">
+              <ImageZoomable src={imageUrl} alt="Version Updates" />
+            </div>
+          )}
+        </div>
       </div>
     </Modal>
   ) : null;

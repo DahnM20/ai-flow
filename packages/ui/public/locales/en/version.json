@@ -1,13 +1,42 @@
 {
-    "versionInfo": {
-        "versionNumber": "v0.6.4",
-        "description": "Discover the latest features added in version 0.6.4!"
+  "versionInfo": {
+    "versionNumber": "v0.7.3",
+    "description": "Discover the latest features added in version 0.7.3"
+  },
+  "features": [
+    {
+      "title": "Improved Web Extractor",
+      "description": "You can now customized how data is extracted."
     },
-    "features": [
-        {
-            "title": "New nodes and templates available",
-            "description": "Visit the 'Templates' section to find practical use case examples of the application."
-        }
-    ],
-    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/gif-v0.6.4.gif"
+    {
+      "title": "Invite & Earn",
+      "description": "Use your referral code to invite people and earn free credits !"
+    },
+    {
+      "title": "History",
+      "description": "Your credit usage history for the last 50 runs is now available."
+    },
+    {
+      "title": "New Action: Help",
+      "description": "Each node now includes a 'Help' action that enables you to learn how to use it."
+    }
+  ],
+  "articles": [
+    {
+      "title": "Generate Consistent Characters Using AI - Part 1",
+      "url": "https://docs.ai-flow.net/blog/generate-consistent-characters-ai/"
+    },
+    {
+      "title": "How to automate story and image creation using AI - Part 2",
+      "url": "https://docs.ai-flow.net/blog/automate-story-creation-2/"
+    },
+    {
+      "title": "How to use Documents in AI-FLOW",
+      "url": "https://docs.ai-flow.net/blog/summarize-doc-post/"
+    }
+  ],
+  "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/gif-v0.7.3.gif",
+  "newVersionAvailable": "A new version is now available !",
+  "newVersionDefaultMessage": "New features and bug fixes are available. To access them, please refresh your page.",
+  "refresh": "Refresh"
 }

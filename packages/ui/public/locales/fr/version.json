@@ -1,13 +1,42 @@
 {
-    "versionInfo": {
-        "versionNumber": "v0.6.4",
-        "description": "Voici les nouveautés de la v0.6.4"
+  "versionInfo": {
+    "versionNumber": "v0.7.3",
+    "description": "Voici les nouveautés de la v0.7.3"
+  },
+  "features": [
+    {
+      "title": "Amélioration de l'extracteur Web",
+      "description": "Vous pouvez désormais mieux cibler l'extraction de données."
     },
-    "features": [
-        {
-            "title": "Ajout de nouveaux nœuds et modèles",
-            "description": "Explorez la section 'Modèles' pour trouver des exemples pratiques d'utilisation de l'application."
-        }
-    ],
-    "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/gif-v0.6.4.gif"
+    {
+      "title": "Invitez et Gagnez",
+      "description": "Utilisez votre code de parrainage pour inviter des personnes et gagner des crédits gratuits !"
+    },
+    {
+      "title": "Historique",
+      "description": "L’historique de votre utilisation de crédits pour les 50 dernières exécutions est maintenant disponible."
+    },
+    {
+      "title": "Nouvelle action : Aide",
+      "description": "Chaque noeud possède désormais une action 'Aide' qui vous permet de découvrir comment l'utiliser."
+    }
+  ],
+  "articles": [
+    {
+      "title": "Générer des Personnages Cohérents avec l'IA - Partie 1",
+      "url": "https://docs.ai-flow.net/fr/blog/generate-consistent-characters-ai/"
+    },
+    {
+      "title": "Comment automatiser la création d'histoires et d'images à l'aide de l'IA - Partie 2",
+      "url": "https://docs.ai-flow.net/fr/blog/automate-story-creation-2/"
+    },
+    {
+      "title": "Comment Utiliser des Documents dans AI-FLOW",
+      "url": "https://docs.ai-flow.net/fr/blog/summarize-doc-post/"
+    }
+  ],
+  "imageUrl": "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/gif-v0.7.3.gif",
+  "newVersionAvailable": "Une nouvelle version est maintenant disponible !",
+  "newVersionDefaultMessage": "De nouvelles fonctionnalités et des corrections de bugs sont disponibles, pour y accéder, veuillez rafraîchir votre page.",
+  "refresh": "Rafraîchir"
 }

@@ -2,6 +2,7 @@ import { url } from "inspector";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSearchPlus, FaTimes } from "react-icons/fa";
+import { ImageZoomable } from "./ImageZoomable";
 
 export type UrlWithLabel = {
   url: string;
@@ -20,7 +21,6 @@ interface NodeHelpProps {
 
 export function NodeHelp({ data, onClose }: NodeHelpProps) {
   const { t } = useTranslation("flow");
-  const [isImageZoomed, setImageZoomed] = useState(false);
 
   if (!data || !data.description) {
     return (
@@ -36,27 +36,10 @@ export function NodeHelp({ data, onClose }: NodeHelpProps) {
     );
   }
 
-  const handleImageZoom = () => setImageZoomed(true);
-  const handleCloseZoom = () => setImageZoomed(false);
-
   return (
     <div className="relative overflow-hidden">
       {data.imageUrl && (
-        <>
-          <div className="relative">
-            <img
-              src={data.imageUrl}
-              alt="Help Image"
-              className="h-auto w-fit object-cover"
-            />
-            <button
-              onClick={handleImageZoom}
-              className="absolute bottom-0 right-0 p-2 text-white"
-            >
-              <FaSearchPlus />
-            </button>
-          </div>
-        </>
+        <ImageZoomable src={data.imageUrl} alt={data.description} />
       )}
       <button
         onClick={onClose}
@@ -85,26 +68,6 @@ export function NodeHelp({ data, onClose }: NodeHelpProps) {
           </>
         )}
       </div>
-      {isImageZoomed && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={handleCloseZoom}
-        >
-          <div className="relative p-2">
-            <img
-              src={data.imageUrl}
-              alt="Zoomed Help Image"
-              className="max-h-full max-w-full"
-            />
-            <button
-              onClick={handleCloseZoom}
-              className="absolute right-1 top-1 p-2 text-white"
-            >
-              <FaTimes />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
