@@ -1,4 +1,5 @@
-import logging
+from ...launcher.event_type import EventType
+from ...launcher.processor_event import ProcessorEvent
 from ...context.processor_context import ProcessorContext
 from ..processor import ContextAwareProcessor
 from .processor_type_name_utils import ProcessorType
@@ -8,12 +9,10 @@ from urllib.parse import urlparse
 
 class GPTVisionProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.GPT_VISION
-    DEFAULT_MODEL = "gpt-4-vision-preview"
+    DEFAULT_MODEL = "gpt-4o"
 
     def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)
-
-        self.model = config.get("model", GPTVisionProcessor.DEFAULT_MODEL)
 
     def process(self):
         self.vision_inputs = {
@@ -38,14 +37,14 @@ class GPTVisionProcessor(ContextAwareProcessor):
             api_key=api_key,
         )
         response = client.chat.completions.create(
-            model=self.model,
+            model=GPTVisionProcessor.DEFAULT_MODEL,
             messages=[
                 {
                     "role": "user",
                     "content": [
                         {
                             "type": "image_url",
-                            "image_url": self.vision_inputs["image_url"],
+                            "image_url": {"url": self.vision_inputs["image_url"]},
                         },
                         {
                             "type": "text",
@@ -55,12 +54,19 @@ class GPTVisionProcessor(ContextAwareProcessor):
                 }
             ],
             max_tokens=300,
+            stream=True,
         )
 
-        answer = response.choices[0]
-        messageContent = answer.message.content
-        self.set_output(messageContent)
-        return messageContent
+        final_response = ""
+        for chunk in response:
+            if not chunk.choices[0].delta.content:
+                continue
+            final_response += chunk.choices[0].delta.content
+            event = ProcessorEvent(self, final_response)
+            self.notify(EventType.PROGRESS, event)
+
+        self.set_output(final_response)
+        return final_response
 
     def is_valid_url(self, url):
         try:
