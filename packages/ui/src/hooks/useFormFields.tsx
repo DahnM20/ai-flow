@@ -1,12 +1,8 @@
 import { useTranslation } from "react-i18next";
-import {
-  NodeTextarea,
-  OptionSelector,
-  OptionButton,
-} from "../components/nodes/Node.styles";
+import { OptionSelector, OptionButton } from "../components/nodes/Node.styles";
 import InputNameBar from "../components/nodes/node-button/InputNameBar";
 import { Field } from "../nodes-configuration/types";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { generateIdForHandle } from "../utils/flowUtils";
 import { Pill, PillsInput, Slider } from "@mantine/core";
 import { Switch } from "@mantine/core";
@@ -14,6 +10,8 @@ import NodeField from "../components/nodes/node-input/NodeField";
 import SelectAutocomplete from "../components/selectors/SelectAutocomplete";
 import NodeTextField from "../components/nodes/node-input/NodeTextField";
 import useIsTouchDevice from "./useIsTouchDevice";
+import _ from "lodash";
+import NodeTextarea from "../components/nodes/node-input/NodeTextarea";
 
 export interface DisplayParams {
   showHandles?: boolean;
@@ -76,7 +74,6 @@ export function useFormFields(
 
     return step;
   }
-
   const renderField = (field: Field) => {
     switch (field.type) {
       case "textToDisplay":
@@ -124,12 +121,12 @@ export function useFormFields(
         return (
           <NodeTextarea
             key={`${id}-${field.name}`}
-            ref={textareaRef}
-            name={field.name}
-            className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}
-            value={data[field.name]}
-            placeholder={field.placeholder ? String(t(field.placeholder)) : ""}
-            onChange={handleEventNodeDataChange}
+            textareaRef={textareaRef}
+            field={field}
+            data={data}
+            isTouchDevice={isTouchDevice}
+            onEventNodeDataChange={handleEventNodeDataChange}
+            id={id}
           />
         );
       case "select":

@@ -58,7 +58,7 @@ export const NodeForm = styled.div`
 
 export const NodeLabel = styled.label``;
 
-export const NodeTextarea = styled.textarea`
+export const StyledNodeTextarea = styled.textarea`
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
