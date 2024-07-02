@@ -157,7 +157,7 @@ const JSONViewContainer = styled.div`
 `;
 
 const JSONViewButtons = styled.div.attrs({
-  className: "flex space-x-1 justify-center",
+  className: "flex gap-2 justify-center flex-wrap",
 })``;
 
 const JSONViewButton = styled.button<{ dangerous?: boolean }>`
