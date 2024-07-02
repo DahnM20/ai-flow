@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
         </div>
       </ButtonsContainer>
       <SidebarContainer show={show}>
-        <HeaderContainer>
+        <HeaderContainer className="text-sm">
           <TabButton
             active={sidepaneActiveTab === "json"}
             onClick={() => setSidepaneActiveTab("json")}

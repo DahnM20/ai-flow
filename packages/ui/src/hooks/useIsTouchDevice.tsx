@@ -5,11 +5,7 @@ const useIsTouchDevice = (): boolean => {
 
   useEffect(() => {
     const checkTouchDevice = () => {
-      const hasTouchPoints = navigator.maxTouchPoints > 0;
-      const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-      const hasTouchEvent = "ontouchstart" in window;
-
-      setIsTouchDevice(hasTouchPoints || hasCoarsePointer || hasTouchEvent);
+      return window.matchMedia("(pointer: coarse)").matches;
     };
 
     checkTouchDevice();
