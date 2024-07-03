@@ -28,6 +28,7 @@ export function NodeHelp({ data, onClose }: NodeHelpProps) {
         <div className="p-2 text-center">{t("noDataAvailableForThisNode")}</div>
         <button
           onClick={onClose}
+          onTouchStart={onClose}
           className="absolute right-0 top-0 p-2 text-white"
         >
           <FaTimes />
@@ -43,6 +44,7 @@ export function NodeHelp({ data, onClose }: NodeHelpProps) {
       )}
       <button
         onClick={onClose}
+        onTouchStart={onClose}
         className="absolute right-0 top-0 p-2 text-white"
       >
         <FaTimes />

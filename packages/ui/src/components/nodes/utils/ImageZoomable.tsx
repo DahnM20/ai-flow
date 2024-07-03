@@ -18,6 +18,7 @@ export function ImageZoomable({ src, alt }: ImageZoomableProps) {
         <img src={src} alt={alt} className="h-auto w-fit object-cover" />
         <button
           onClick={handleImageZoom}
+          onTouchStart={handleImageZoom}
           className="absolute bottom-0 right-0 p-2 text-white"
         >
           <FaSearchPlus />

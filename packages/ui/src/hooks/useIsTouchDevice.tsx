@@ -5,7 +5,7 @@ const useIsTouchDevice = (): boolean => {
 
   useEffect(() => {
     const checkTouchDevice = () => {
-      return window.matchMedia("(pointer: coarse)").matches;
+      setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
     };
 
     checkTouchDevice();
