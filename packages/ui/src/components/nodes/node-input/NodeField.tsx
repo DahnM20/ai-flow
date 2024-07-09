@@ -3,6 +3,8 @@ import { Position } from "reactflow";
 import { Field } from "../../../nodes-configuration/types";
 import { DisplayParams } from "../../../hooks/useFormFields";
 import { FiInfo } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
+import { Tooltip } from "@mantine/core";
 
 interface NodeFieldProps<T> {
   field: T;
@@ -49,11 +51,18 @@ export default function NodeField<
             </NodeLabel>
           </div>
           {!!field.description && (
-            <FiInfo
-              data-tooltip-id={`app-tooltip`}
-              data-tooltip-content={field.description}
-              className="cursor-pointer text-xl hover:text-teal-300"
-            />
+            <Tooltip
+              label={t(field.description)}
+              openDelay={300}
+              position="top-start"
+              color="dark"
+              transitionProps={{ transition: "slide-up", duration: 300 }}
+              multiline
+            >
+              <span>
+                <FiInfo className="cursor-pointer text-xl hover:text-teal-300" />
+              </span>
+            </Tooltip>
           )}
         </div>
       )}
