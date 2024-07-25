@@ -88,8 +88,12 @@ export default function TemplatePopup({
   });
 
   return (
-    <DefaultPopupWrapper show={isOpen} onClose={onClose} centered>
-      <div className="my-4 flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow md:flex-row">
+    <DefaultPopupWrapper
+      show={isOpen}
+      onClose={onClose}
+      popupClassNames=" overflow-auto h-fit mt-5 w-5/6 "
+    >
+      <div className="flex w-full flex-col space-y-3 overflow-auto rounded-xl bg-zinc-900 p-5 text-slate-200 shadow md:flex-row">
         {loading ? (
           <LoadingIcon className="flex w-full items-center justify-center" />
         ) : (

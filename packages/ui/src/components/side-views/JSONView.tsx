@@ -1,5 +1,11 @@
 import React, { useContext, memo, useState } from "react";
-import { FiCrosshair, FiDownload, FiSave, FiUpload } from "react-icons/fi";
+import {
+  FiCloud,
+  FiCrosshair,
+  FiDownload,
+  FiSave,
+  FiUpload,
+} from "react-icons/fi";
 import { Edge, Node } from "reactflow";
 import {
   clearSelectedNodes,
@@ -12,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { NodeContext } from "../../providers/NodeProvider";
 import { FaExclamationTriangle } from "react-icons/fa";
 import DefaultSwitch from "../buttons/DefaultSwitch";
+import { isDev } from "../../config/config";
 import { toastInfoMessage } from "../../utils/toastUtils";
 import AddTemplatePopup from "../popups/AddTemplatePopup";
 import { TemplateFormData, saveTemplate } from "../../api/template";
@@ -114,15 +121,19 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
             {t("Delete All")}
           </JSONViewButton>
         </JSONViewButtons>
-        <JSONViewButtons>
-          <button
-            onClick={openAddTemplatePopup}
-            className="flex flex-row items-center justify-center space-x-1 rounded-md bg-teal-500/80 px-2 py-1 text-sm transition-all duration-300 ease-in-out hover:bg-teal-500"
-          >
-            <FiSave />
-            <p>{t("Save as template")}</p>
-          </button>
-        </JSONViewButtons>
+        {isDev() && (
+          <JSONViewButtons>
+            {
+              <button
+                onClick={openAddTemplatePopup}
+                className="flex flex-row items-center justify-center space-x-1 rounded-md bg-teal-500/80 px-2 py-1 text-sm transition-all duration-300 ease-in-out hover:bg-teal-500"
+              >
+                <FiSave />
+                <p>{t("Save as template")}</p>
+              </button>
+            }
+          </JSONViewButtons>
+        )}
         <div className="mt-2 flex flex-col">
           <div className="flex flex-row items-center space-x-2">
             <DefaultSwitch

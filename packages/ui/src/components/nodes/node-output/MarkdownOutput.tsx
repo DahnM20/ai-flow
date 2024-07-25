@@ -136,7 +136,7 @@ const IconContainer = styled.div`
   right: 0.1em;
 `;
 
-const StyledReactMarkdown = styled(ReactMarkdown)<{ fontSize: number }>`
+export const StyledReactMarkdown = styled(ReactMarkdown)<{ fontSize: number }>`
   background-color: transparent !important;
   color: #f5f5f5;
   font-size: ${(props) => props.fontSize}em;

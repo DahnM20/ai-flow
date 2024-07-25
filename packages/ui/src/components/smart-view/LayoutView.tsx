@@ -7,13 +7,17 @@ import {
   FlowOnCurrentNodeRunningEventData,
   FlowOnErrorEventData,
   FlowOnProgressEventData,
+  FlowSavedEventData,
 } from "../../sockets/flowEventTypes";
 import GridLayout, { Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import NodePane from "./pane/NodePane";
 import PaneWrapper from "./pane/PaneWrapper";
-import { LayoutViewData } from "../../layout/main-layout/AppLayout";
+import {
+  FlowMetadata,
+  LayoutViewData,
+} from "../../layout/main-layout/AppLayout";
 import SmartViewActions from "./LayoutViewActions";
 import { Modal } from "@mantine/core";
 export type LayoutIndex = string | number;
@@ -40,7 +44,8 @@ interface SmartViewProps {
   tabLayout?: LayoutViewData;
   nodes: Node[];
   edges: Edge[];
-  onFlowChange?: (nodes: Node[], edges: Edge[]) => void;
+  metadata: FlowMetadata;
+  onFlowChange?: (nodes: Node[], edges: Edge[], metadata: FlowMetadata) => void;
   onLayoutChange: (layout: Layout[]) => void;
   onPaneDataChange: (data: PaneDataState) => void;
   isRunning: boolean;
@@ -53,6 +58,7 @@ function LayoutView({
   tabLayout,
   nodes,
   edges,
+  metadata,
   onFlowChange,
   onLayoutChange,
   onPaneDataChange,
@@ -62,8 +68,9 @@ function LayoutView({
   useSocketListeners<
     FlowOnProgressEventData,
     FlowOnErrorEventData,
+    FlowSavedEventData,
     FlowOnProgressEventData
-  >(onProgress, onError, () => {}, onCurrentNodeRunning);
+  >(onProgress, onError, () => {}, onFlowSaved, onCurrentNodeRunning);
   const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
 
   const [width, setWidth] = useState(window.innerWidth);
@@ -121,7 +128,7 @@ function LayoutView({
         return node;
       });
       if (onFlowChange) {
-        onFlowChange(nodesUpdated, edges);
+        onFlowChange(nodesUpdated, edges, metadata);
       }
     }
   }
@@ -131,6 +138,19 @@ function LayoutView({
       return previous.filter((node) => node != data.instanceName);
     });
     toastInfoMessage("Error");
+  }
+
+  function onFlowSaved(data: FlowSavedEventData) {
+    const newMetadata: FlowMetadata = {
+      ...metadata,
+      hostUrl: data.url,
+      lastSave: data.ts,
+      id: data.id,
+      saveFlow: data.saveFlow,
+      isPublic: data.isPublic,
+      name: data.name,
+    };
+    onFlowChange?.(nodes, edges, newMetadata);
   }
 
   function onCurrentNodeRunning(data: FlowOnCurrentNodeRunningEventData) {
@@ -183,7 +203,7 @@ function LayoutView({
   }
 
   function handleUpdateNodes(nodesUpdated: Node[], edgesUpdated: Edge[]): void {
-    onFlowChange?.(nodesUpdated, edgesUpdated);
+    onFlowChange?.(nodesUpdated, edgesUpdated, metadata);
   }
 
   function handleUpdateNodeData(nodeId: string, data: any): void {
@@ -193,7 +213,7 @@ function LayoutView({
       }
       return node;
     });
-    onFlowChange?.(updatedNodes, edges);
+    onFlowChange?.(updatedNodes, edges, metadata);
   }
 
   const handleLayoutChange = (newLayout: Layout[]) => {
