@@ -36,11 +36,12 @@ setuptools = "^68.2.2"
 pypdf = "4.2.0"
 replicate = "0.22.0"
 tiktoken = "0.7.0"
-llama-index-llms-openai = "0.1.19"
+llama-index-llms-openai = "v0.1.26"
 llama-index-multi-modal-llms-openai = "^0.1.6"
-llama-index = "^0.10.36"
+llama-index = "v0.10.56"
 openapi-spec-validator = "^0.7.1"
 anthropic = "^0.28.0"
+pymupdf = "^1.24.7"
 
 
 [tool.poetry.group.dev.dependencies]
