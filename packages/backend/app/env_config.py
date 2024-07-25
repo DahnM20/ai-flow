@@ -53,4 +53,23 @@ def get_replicate_api_key() -> Optional[str]:
 
 
 def get_background_task_max_workers() -> int:
-    return int(os.getenv("BACKGROUND_TASK_MAX_WORKERS", "2"))
+    return int(os.getenv("BACKGROUND_TASK_MAX_WORKERS", "20"))
+
+
+def need_warmup_app() -> bool:
+    return os.getenv("WARMUP_APP", "false") == "true"
+
+
+def use_async_browser() -> bool:
+    return os.getenv("USE_ASYNC_BROWSER", "false") == "true"
+
+
+## Browser
+
+
+def get_browser_tab_pool_size() -> int:
+    return int(os.getenv("BROWSER_TAB_POOL_SIZE", 4))
+
+
+def get_browser_tab_max_usage() -> int:
+    return int(os.getenv("BROWSER_TAB_MAX_USAGE", 100))
