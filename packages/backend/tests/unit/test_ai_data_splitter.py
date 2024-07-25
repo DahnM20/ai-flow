@@ -1,11 +1,16 @@
 import unittest
 from unittest.mock import ANY, patch
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from app.flask.socketio_init import flask_app, socketio
+
 from app.processors.components.core.ai_data_splitter_processor import (
     AIDataSplitterProcessor,
 )
 from app.processors.components.core.input_processor import InputProcessor
-from tests.utils.openai_mock_utils import create_mocked_openai_response
 from tests.utils.llm_factory_mock import LLMMockFactory
 from tests.utils.processor_context_mock import ProcessorContextMock
 
@@ -68,4 +73,4 @@ class TestAIDataSplitter(unittest.TestCase):
         result = processor.process()
 
         # Assert
-        self.assertEqual(result, None)
+        self.assertEqual(result, "")

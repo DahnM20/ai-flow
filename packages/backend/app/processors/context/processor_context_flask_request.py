@@ -1,5 +1,5 @@
 from typing import List, Optional
-from ...flask.utils.constants import SESSION_USER_ID_KEY
+from ...flask.utils.constants import PARAMETER_USER_SOURCE, SESSION_USER_ID_KEY
 from .processor_context import ProcessorContext
 
 from copy import deepcopy
@@ -23,28 +23,6 @@ class ProcessorContextFlaskRequest(ProcessorContext):
 
     def get_session_id(self) -> str:
         return self.session_id
-
-    def get_api_key_for_model(self, model_name) -> str:
-        if "gpt-4" in model_name or "gpt-3.5-turbo" in model_name:
-            return self.g_context.get("session_openai_api_key")
-        elif model_name == "claude-2":
-            return self.g_context.get("session_anthropic_api_key")
-        else:
-            raise ValueError(f"Unknown model {model_name}")
-
-    def get_api_key_for_provider(self, provider) -> str:
-        """Retrieve the API key for a given provider from the stored context."""
-        provider_keys = {
-            "openai": "session_openai_api_key",
-            "anthropic": "session_anthropic_api_key",
-            "stabilityai": "session_stabilityai_api_key",
-            "replicate": "session_replicate_api_key",
-        }
-        key_name = provider_keys.get(provider)
-        if key_name:
-            return self.g_context.get(key_name)
-        else:
-            raise ValueError(f"Unknown provider {provider}")
 
     def get_parameter_names(self) -> List[str]:
         return [
