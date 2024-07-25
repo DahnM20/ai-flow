@@ -99,17 +99,33 @@ class AbstractTopologicalProcessorLauncher(ProcessorLauncher):
             processor=processor,
             error=e,
             session_id=self.context.get_session_id(),
+            processor_type=processor.processor_type,
         )
         self.notify_observers(EventType.ERROR.value, error_event_data)
 
-    def notify_progress(self, processor, output, isDone=False):
+    def notify_streaming(self, processor, output, isDone=False, duration=0):
+        streaming_event_data = ProcessorLauncherEvent(
+            instance_name=processor.name,
+            user_id=self.context.get_current_user_id(),
+            output=output,
+            processor=processor,
+            isDone=isDone,
+            processor_type=processor.processor_type,
+            session_id=self.context.get_session_id(),
+            duration=duration,
+        )
+        self.notify_observers(EventType.STREAMING.value, streaming_event_data)
+
+    def notify_progress(self, processor, output, isDone=False, duration=0):
         progress_event_data = ProcessorLauncherEvent(
             instance_name=processor.name,
             user_id=self.context.get_current_user_id(),
             output=output,
+            processor=processor,
             isDone=isDone,
             processor_type=processor.processor_type,
             session_id=self.context.get_session_id(),
+            duration=duration,
         )
         self.notify_observers(EventType.PROGRESS.value, progress_event_data)
 
@@ -119,6 +135,7 @@ class AbstractTopologicalProcessorLauncher(ProcessorLauncher):
             user_id=self.context.get_current_user_id(),
             processor=processor,
             session_id=self.context.get_session_id(),
+            processor_type=processor.processor_type,
         )
 
         self.notify_observers(

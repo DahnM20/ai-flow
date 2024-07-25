@@ -6,7 +6,7 @@ import { memo, useEffect, useState } from "react";
 import DraggableNode from "./DraggableNode";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useVisibility } from "../../../providers/VisibilityProvider";
-import { PARAMETER_NODES_HIDDEN_LIST_KEY_LOCAL_STORAGE } from "../../popups/config-popup/parameters";
+import useIsTouchDevice from "../../../hooks/useIsTouchDevice";
 
 const HIDE_SIDEBAR_ANIMATION_DURATION = 300;
 
@@ -18,6 +18,7 @@ const DnDSidebar = () => {
   const [contentVisible, setContentVisible] = useState(sidebar?.isVisible);
 
   const [sections, setSections] = useState(getSections());
+  const isTouchDevice = useIsTouchDevice();
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -68,8 +69,7 @@ const DnDSidebar = () => {
         </div>
         {contentVisible && (
           <DnDSidebarContainer
-            className={` font-sm md:font-md flex transform flex-col overflow-hidden  border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md hover:overflow-y-auto`}
-            onClick={(e) => e.stopPropagation()}
+            className={` font-sm md:font-md flex transform flex-col  border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md  ${isTouchDevice ? "overflow-y-auto" : " overflow-hidden hover:overflow-y-auto"}`}
           >
             {contentVisible
               ? sections.map((section, index) => (

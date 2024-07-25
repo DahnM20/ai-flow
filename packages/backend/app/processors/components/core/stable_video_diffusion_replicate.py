@@ -31,9 +31,8 @@ class StableVideoDiffusionReplicaterocessor(ContextAwareProcessor):
         if not self.is_valid_url(input_image_url):
             return "Invalid URL provided."
 
-        api = replicate.Client(
-            api_token=self._processor_context.get_api_key_for_provider("replicate")
-        )
+        api_key = self._processor_context.get_value("replicate_api_key")
+        api = replicate.Client(api_token=api_key)
 
         output = api.run(
             StableVideoDiffusionReplicaterocessor.stable_video_diffusion_model,
@@ -48,9 +47,7 @@ class StableVideoDiffusionReplicaterocessor(ContextAwareProcessor):
             },
         )
 
-        self.set_output(output)
-
-        return self._output
+        return output
 
     def is_valid_url(self, url):
         try:

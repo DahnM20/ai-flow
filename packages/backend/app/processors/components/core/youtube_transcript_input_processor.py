@@ -21,7 +21,6 @@ class YoutubeTranscriptInputProcessor(BasicProcessor):
 
         documents = loader.load()
         content = " ".join(doc.page_content for doc in documents)
-        self.set_output(content)
 
         if content == "":
             raise Exception(f"No transcription found for {self.url}")

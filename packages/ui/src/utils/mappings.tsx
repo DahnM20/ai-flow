@@ -72,11 +72,11 @@ export const getAllNodeWithEaseOut = (): Record<
     const NodeComponent = specificNodeTypes[type] || GenericNode;
 
     completeNodeTypes[type] = (props: NodeProps) => (
-      <EaseOut key={props.id}>
-        <NodeWrapper nodeId={props.id}>
-          <NodeComponent {...props} />
-        </NodeWrapper>
-      </EaseOut>
+      // <EaseOut key={props.id}>
+      <NodeWrapper nodeId={props.id}>
+        <NodeComponent {...props} />
+      </NodeWrapper>
+      // </EaseOut>
     );
   });
 

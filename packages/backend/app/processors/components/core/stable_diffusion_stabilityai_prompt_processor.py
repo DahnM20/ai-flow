@@ -43,11 +43,9 @@ class StableDiffusionStabilityAIPromptProcessor(ContextAwareProcessor):
         filename = f"{self.name}-{timestamp_str}.png"
         url = storage.save(filename, image_data)
 
-        self.set_output(url)
-        return self._output
+        return url
 
     def setup_data_to_send(self):
-        self.api_key = self._processor_context.get_api_key_for_provider("stabilityai")
 
         if self.get_input_processor() is not None:
             self.prompt = (
@@ -69,13 +67,14 @@ class StableDiffusionStabilityAIPromptProcessor(ContextAwareProcessor):
 
     def process(self):
         data_to_send = self.setup_data_to_send()
+        api_key = self._processor_context.get_value("stabilityai_api_key")
 
         response = requests.post(
             f"{self.api_host}/v1/generation/{self.engine_id}/text-to-image",
             headers={
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": f"Bearer {self.api_key}",
+                "Authorization": f"Bearer {api_key}",
             },
             json=data_to_send,
         )

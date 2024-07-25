@@ -127,7 +127,11 @@ export const populateNodeSections = () => {
     }
   });
 
-  return emptyNodeSections;
+  const sectionFiltered = emptyNodeSections.filter(
+    (sec) => sec.nodes && sec.nodes.length > 0,
+  );
+
+  return sectionFiltered;
 };
 
 export const getSections = () => populateNodeSections();

@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - develop
-      - vite-migration
+      - features-v0.8
 
 jobs:
   build_and_test:

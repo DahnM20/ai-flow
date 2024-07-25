@@ -20,6 +20,10 @@ class LLMPromptProcessor(ContextAwareProcessor):
         self.model = config.get("model", LLMPromptProcessor.DEFAULT_MODEL)
         self.prompt = config["prompt"]
 
+    def handle_stream_awnser(self, awnser):
+        event = ProcessorEvent(self, awnser)
+        self.notify(EventType.STREAMING, event)
+
     def process(self):
         api_key = self._processor_context.get_value("openai_api_key")
 
@@ -46,9 +50,7 @@ class LLMPromptProcessor(ContextAwareProcessor):
             awnser = ""
             for r in stream_chat_response:
                 awnser += r.delta
-                event = ProcessorEvent(self, awnser)
-                self.notify(EventType.PROGRESS, event)
-        self.set_output(awnser)
+                self.handle_stream_awnser(awnser)
         return awnser
 
     def init_context(self, input_data: str) -> None:

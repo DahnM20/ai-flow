@@ -13,7 +13,10 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import NodePane from "./pane/NodePane";
 import PaneWrapper from "./pane/PaneWrapper";
-import { LayoutViewData } from "../../layout/main-layout/AppLayout";
+import {
+  FlowMetadata,
+  LayoutViewData,
+} from "../../layout/main-layout/AppLayout";
 import SmartViewActions from "./LayoutViewActions";
 import { Modal } from "@mantine/core";
 export type LayoutIndex = string | number;
@@ -40,7 +43,8 @@ interface SmartViewProps {
   tabLayout?: LayoutViewData;
   nodes: Node[];
   edges: Edge[];
-  onFlowChange?: (nodes: Node[], edges: Edge[]) => void;
+  metadata: FlowMetadata;
+  onFlowChange?: (nodes: Node[], edges: Edge[], metadata: FlowMetadata) => void;
   onLayoutChange: (layout: Layout[]) => void;
   onPaneDataChange: (data: PaneDataState) => void;
   isRunning: boolean;
@@ -53,6 +57,7 @@ function LayoutView({
   tabLayout,
   nodes,
   edges,
+  metadata,
   onFlowChange,
   onLayoutChange,
   onPaneDataChange,
@@ -121,7 +126,7 @@ function LayoutView({
         return node;
       });
       if (onFlowChange) {
-        onFlowChange(nodesUpdated, edges);
+        onFlowChange(nodesUpdated, edges, metadata);
       }
     }
   }
@@ -183,7 +188,7 @@ function LayoutView({
   }
 
   function handleUpdateNodes(nodesUpdated: Node[], edgesUpdated: Edge[]): void {
-    onFlowChange?.(nodesUpdated, edgesUpdated);
+    onFlowChange?.(nodesUpdated, edgesUpdated, metadata);
   }
 
   function handleUpdateNodeData(nodeId: string, data: any): void {
@@ -193,7 +198,7 @@ function LayoutView({
       }
       return node;
     });
-    onFlowChange?.(updatedNodes, edges);
+    onFlowChange?.(updatedNodes, edges, metadata);
   }
 
   const handleLayoutChange = (newLayout: Layout[]) => {

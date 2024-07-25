@@ -10,5 +10,4 @@ class FileProcessor(BasicProcessor):
         self.url = config["fileUrl"]
 
     def process(self):
-        self.set_output(self.url)
         return self.url

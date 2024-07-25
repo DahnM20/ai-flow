@@ -1,4 +1,10 @@
-import { createContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useEffect,
+  useContext,
+} from "react";
 import { io } from "socket.io-client";
 import { getWsUrl } from "../config/config";
 import {
@@ -9,9 +15,12 @@ import { toastInfoMessage } from "../utils/toastUtils";
 import { useTranslation } from "react-i18next";
 import { FlowEventOut, FlowSocket } from "../sockets/flowSocket";
 
+import { FlowMetadata } from "../layout/main-layout/AppLayout";
+
 export interface FlowEventData {
   jsonFile: string;
   nodeName?: string;
+  metadata?: FlowMetadata;
 }
 
 export interface FlowEvent {
@@ -28,6 +37,8 @@ interface ISocketContext {
   config: WSConfiguration | null;
   updateSocket: (config?: WSConfiguration) => void;
   emitEvent: (event: FlowEvent) => boolean;
+  connect: () => void;
+  disconnect: () => void;
 }
 
 interface SocketProviderProps {
@@ -39,6 +50,8 @@ export const SocketContext = createContext<ISocketContext>({
   config: null,
   updateSocket: (config?: WSConfiguration) => {},
   emitEvent: (event: FlowEvent) => false,
+  connect: () => {},
+  disconnect: () => {},
 });
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
@@ -108,6 +121,18 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     return false;
   }
 
+  function connect() {
+    getActiveSocket();
+  }
+
+  function disconnect() {
+    if (socket) {
+      socket.disconnect();
+    }
+
+    return false;
+  }
+
   function verifyConfiguration(): boolean {
     const params = getConfigParametersFlat();
     if (!params) {
@@ -132,6 +157,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         config,
         updateSocket,
         emitEvent,
+        connect,
+        disconnect,
       }}
     >
       {children}

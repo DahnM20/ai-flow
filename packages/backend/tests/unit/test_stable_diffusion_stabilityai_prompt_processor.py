@@ -44,8 +44,7 @@ class TestStableDiffusionStabilityAIPromptProcessor(unittest.TestCase):
         processor.set_storage_strategy(LocalStorageStrategy())
 
         # Act
-        result = processor.process()
-        url = result[0]
+        url = processor.process()
 
         # Assert
         self.assertTrue(url_pattern.match(url))

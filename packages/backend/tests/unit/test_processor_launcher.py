@@ -6,6 +6,16 @@ from app.processors.factory.processor_factory_iter_modules import (
     ProcessorFactoryIterModules,
 )
 
+from dotenv import load_dotenv
+
+from app.tasks.single_thread_tasks.browser.browser_task import (
+    stop_browser_thread,
+)
+
+load_dotenv()
+
+from app.flask.socketio_init import socketio
+
 
 class NoInputMock(MagicMock):
     def __getattr__(self, name):
@@ -44,3 +54,5 @@ class TestProcessorLauncher(unittest.TestCase):
 
         launcher._link_processors(processors)
         processor1.add_input_processor.assert_called_once_with(processor2)
+
+        stop_browser_thread()

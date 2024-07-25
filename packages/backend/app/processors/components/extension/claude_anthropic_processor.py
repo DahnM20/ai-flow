@@ -24,7 +24,7 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
             hasHandle=True,
         )
 
-        context = Field(
+        prompt_context = Field(
             name="context",
             label="context",
             type="textfield",
@@ -87,7 +87,7 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
             required=True,
         )
 
-        fields = [prompt, context, model, temperature, max_token]
+        fields = [prompt, prompt_context, model, temperature, max_token]
 
         config = NodeConfig(
             nodeName="ClaudeAnthropic",
@@ -104,12 +104,12 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
 
     def handle_stream_awnser(self, awnser):
         event = ProcessorEvent(self, awnser)
-        self.notify(EventType.PROGRESS, event)
+        self.notify(EventType.STREAMING, event)
 
     def process(self):
         prompt = self.get_input_by_name("prompt")
-        context = self.get_input_by_name("context", None)
-        model = self.get_input_by_name("model", "claude-3-opus-20240229")
+        prompt_context = self.get_input_by_name("context", None)
+        model = self.get_input_by_name("model", "claude-3-5-sonnet-20240620")
         temperature = self.get_input_by_name("temperature", 1)
         max_tokens = self.get_input_by_name("max_tokens", 1024)
 
@@ -127,31 +127,30 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
 
         awnser = ""
 
-        if context is not None:
-            with client.messages.stream(
-                model=model,
-                temperature=temperature,
-                max_tokens=max_tokens,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": f"Context: {context} \n Prompt: {prompt}",
-                    }
-                ],
-            ) as stream:
-                for text in stream.text_stream:
-                    awnser += text
-                    self.handle_stream_awnser(awnser)
+        if prompt_context is not None:
+            messages = [
+                {
+                    "role": "user",
+                    "content": f"Context: {prompt_context} \n Prompt: {prompt}",
+                }
+            ]
         else:
-            with client.messages.stream(
-                model=model,
-                temperature=temperature,
-                max_tokens=max_tokens,
-                messages=[{"role": "user", "content": prompt}],
-            ) as stream:
+            messages = [{"role": "user", "content": prompt}]
+
+        with client.messages.stream(
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            messages=messages,
+        ) as stream:
+            try:
                 for text in stream.text_stream:
                     awnser += text
                     self.handle_stream_awnser(awnser)
+            except Exception as e:
+                logging.error(f"An error occurred during streaming : {e}")
+            finally:
+                stream.close()
 
         return awnser
 
