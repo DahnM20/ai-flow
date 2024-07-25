@@ -13,7 +13,7 @@ import json
 from flask import g, request, session
 from flask_socketio import emit
 from ..root_injector import root_injector
-from .utils.constants import PARAMETERS_FIELD_NAME, ENV_API_KEYS, SESSION_USER_ID_KEY
+from .utils.constants import PARAMETERS_FIELD_NAME, ENV_API_KEYS
 
 from ..processors.launcher.processor_launcher import ProcessorLauncher
 from ..processors.context.processor_context_flask_request import (

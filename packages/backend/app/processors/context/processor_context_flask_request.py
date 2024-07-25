@@ -1,5 +1,5 @@
 from typing import List, Optional
-from ...flask.utils.constants import PARAMETER_USER_SOURCE, SESSION_USER_ID_KEY
+from ...flask.utils.constants import SESSION_USER_ID_KEY
 from .processor_context import ProcessorContext
 
 from copy import deepcopy
