@@ -2,10 +2,7 @@ from typing import List
 from injector import Injector, Binder, Module
 from .providers.template.template_provider import TemplateProvider
 from .providers.template.static_template_provider import StaticTemplateProvider
-from .authentication.authenticator import Authenticator
-from .authentication.cognito_authenticator import CognitoAuthenticator
 from tests.utils.processor_factory_mock import ProcessorFactoryMock
-from tests.utils.aunthenticator_mock import AuthenticatorMock
 from .processors.launcher.async_processor_launcher import AsyncProcessorLauncher
 
 from .llms.factory.llm_factory import LLMFactory
@@ -21,14 +18,6 @@ from .processors.factory.processor_factory_iter_modules import (
     ProcessorFactoryIterModules,
 )
 from .processors.launcher.processor_launcher import ProcessorLauncher
-
-
-class AuthenticatorModule(Module):
-    def configure(self, binder: Binder):
-        if is_mock_env():
-            binder.bind(Authenticator, to=AuthenticatorMock)
-        else:
-            binder.bind(Authenticator, to=CognitoAuthenticator)
 
 
 class ProcessorFactoryModule(Module):
@@ -73,7 +62,6 @@ class LLMFactoryModule(Module):
 def create_application_injector() -> Injector:
     injector = Injector(
         [
-            AuthenticatorModule(),
             ProcessorFactoryModule(),
             StorageModule(),
             ProcessorLauncherModule(),

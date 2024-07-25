@@ -2,6 +2,9 @@ import logging
 import re
 import asyncio
 import threading
+
+from ....env_config import use_async_browser
+
 from ....utils.web_scrapping.async_browser_manager import (
     AsyncBrowserManager,
 )
@@ -137,12 +140,6 @@ def start_event_loop():
     event_loop.run_forever()
 
 
-def stop_event_loop():
-    event_loop.run_until_complete(browser_manager.close_browser())
-    event_loop.stop()
-    event_loop.close()
-
-
 def add_task_sync(task_data, result_queue):
     future = asyncio.run_coroutine_threadsafe(
         add_task(task_data, result_queue), event_loop
@@ -150,5 +147,6 @@ def add_task_sync(task_data, result_queue):
     return future
 
 
-event_loop_thread = threading.Thread(target=start_event_loop)
-event_loop_thread.start()
+if use_async_browser():
+    event_loop_thread = threading.Thread(target=start_event_loop)
+    event_loop_thread.start()
