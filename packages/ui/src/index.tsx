@@ -12,7 +12,7 @@ import { GlobalStyle } from "./components/nodes/Node.styles";
 import { Fallback } from "./components/tools/Fallback";
 import "./i18n";
 import { ToastContainer } from "react-toastify";
-import App from "./App";
+import Main from "./Main";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -27,7 +27,7 @@ root.render(
       <ThemeProvider>
         <Suspense fallback={<Fallback />}>
           <ToastContainer />
-          <App />
+          <Main />
         </Suspense>
       </ThemeProvider>
     </MantineProvider>

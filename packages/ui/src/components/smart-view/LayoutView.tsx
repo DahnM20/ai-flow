@@ -7,7 +7,6 @@ import {
   FlowOnCurrentNodeRunningEventData,
   FlowOnErrorEventData,
   FlowOnProgressEventData,
-  FlowSavedEventData,
 } from "../../sockets/flowEventTypes";
 import GridLayout, { Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
@@ -68,9 +67,8 @@ function LayoutView({
   useSocketListeners<
     FlowOnProgressEventData,
     FlowOnErrorEventData,
-    FlowSavedEventData,
     FlowOnProgressEventData
-  >(onProgress, onError, () => {}, onFlowSaved, onCurrentNodeRunning);
+  >(onProgress, onError, () => {}, onCurrentNodeRunning);
   const [currentNodesRunning, setCurrentNodesRunning] = useState<string[]>([]);
 
   const [width, setWidth] = useState(window.innerWidth);
@@ -138,19 +136,6 @@ function LayoutView({
       return previous.filter((node) => node != data.instanceName);
     });
     toastInfoMessage("Error");
-  }
-
-  function onFlowSaved(data: FlowSavedEventData) {
-    const newMetadata: FlowMetadata = {
-      ...metadata,
-      hostUrl: data.url,
-      lastSave: data.ts,
-      id: data.id,
-      saveFlow: data.saveFlow,
-      isPublic: data.isPublic,
-      name: data.name,
-    };
-    onFlowChange?.(nodes, edges, newMetadata);
   }
 
   function onCurrentNodeRunning(data: FlowOnCurrentNodeRunningEventData) {

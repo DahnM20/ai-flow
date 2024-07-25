@@ -46,7 +46,6 @@ const TabHeader = ({
                   ? tab.name
                   : tabPrefix + " " + (index + 1)
             }
-            isCloudSync={tab.metadata?.saveFlow ?? false}
           />
         ))}
       </Tabs>

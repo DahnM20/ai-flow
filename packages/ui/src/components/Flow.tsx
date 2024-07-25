@@ -29,7 +29,6 @@ import {
   FlowOnCurrentNodeRunningEventData,
   FlowOnErrorEventData,
   FlowOnProgressEventData,
-  FlowSavedEventData,
 } from "../sockets/flowEventTypes";
 import { useVisibility } from "../providers/VisibilityProvider";
 import { FlowMetadata } from "../layout/main-layout/AppLayout";
@@ -95,9 +94,8 @@ function Flow(props: FlowProps) {
   useSocketListeners<
     FlowOnProgressEventData,
     FlowOnErrorEventData,
-    FlowSavedEventData,
     FlowOnProgressEventData
-  >(onProgress, onError, () => {}, onFlowSaved, onCurrentNodeRunning);
+  >(onProgress, onError, () => {}, onCurrentNodeRunning);
 
   function onProgress(data: FlowOnProgressEventData) {
     const nodeToUpdate = data.instanceName;
@@ -135,24 +133,9 @@ function Flow(props: FlowProps) {
       content: data.error,
       nodeId: data.instanceName ?? data.nodeName,
       type: MessageType.Error,
-      showAddCredits: data.creditsError,
     });
     setErrorCount((prevErrorCount) => prevErrorCount + 1);
     setIsPopupOpen(true);
-  }
-
-  function onFlowSaved(data: FlowSavedEventData) {
-    if (data.id !== props.metadata.id) return;
-    const newMetadata: FlowMetadata = {
-      ...props.metadata,
-      hostUrl: data.url,
-      lastSave: data.ts,
-      id: data.id,
-      saveFlow: data.saveFlow,
-      isPublic: data.isPublic,
-      name: data.name,
-    };
-    props.onUpdateMetadata?.(newMetadata);
   }
 
   function onCurrentNodeRunning(data: FlowOnCurrentNodeRunningEventData) {
