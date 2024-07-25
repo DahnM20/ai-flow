@@ -42,7 +42,7 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
 
     def process(self):
         if self.get_input_processor() is None:
-            return None
+            return ""
 
         input_data = self.get_input_processor().get_output(
             self.get_input_node_output_key()

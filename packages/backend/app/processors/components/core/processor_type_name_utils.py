@@ -23,3 +23,8 @@ class ProcessorType(Enum):
     TRANSITION = "transition"
     DISPLAY = "display"
     FILE = "file"
+    STABLE_DIFFUSION_THREE = "stabilityai-stable-diffusion-3-processor"
+    TEXT_TO_SPEECH = "openai-text-to-speech-processor"
+    DOCUMENT_TO_TEXT = "document-to-text-processor"
+    STABILITYAI = "stabilityai-generic-processor"
+    CLAUDE = "claude-anthropic-processor"

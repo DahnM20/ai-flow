@@ -63,9 +63,8 @@ class GPTVisionProcessor(ContextAwareProcessor):
                 continue
             final_response += chunk.choices[0].delta.content
             event = ProcessorEvent(self, final_response)
-            self.notify(EventType.PROGRESS, event)
+            self.notify(EventType.STREAMING, event)
 
-        self.set_output(final_response)
         return final_response
 
     def is_valid_url(self, url):

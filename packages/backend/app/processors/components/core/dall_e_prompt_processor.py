@@ -18,7 +18,6 @@ class DallEPromptProcessor(ContextAwareProcessor):
         self.prompt = config.get("prompt")
         self.size = config.get("size", DallEPromptProcessor.DEFAULT_SIZE)
         self.quality = config.get("quality", DallEPromptProcessor.DEFAULT_QUALITY)
-        self.api_key = context.get_api_key_for_provider("openai")
 
     def process(self):
         if self.get_input_processor() is not None:
@@ -28,8 +27,9 @@ class DallEPromptProcessor(ContextAwareProcessor):
                 else self.prompt
             )
 
+        api_key = self._processor_context.get_value("openai_api_key")
         client = OpenAI(
-            api_key=self.api_key,
+            api_key=api_key,
         )
 
         response = client.images.generate(
@@ -39,9 +39,8 @@ class DallEPromptProcessor(ContextAwareProcessor):
             size=self.size,
             quality=self.quality,
         )
-        self.set_output(response.data[0].url)
 
-        return self._output
+        return response.data[0].url
 
     def cancel(self):
         pass

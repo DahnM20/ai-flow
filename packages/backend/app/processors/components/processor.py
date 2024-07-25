@@ -53,6 +53,9 @@ class Processor(ABC):
     input_processors: List["Processor"]
     """The processors set as inputs"""
 
+    is_processing: bool
+    """Flag indicating if the processor has started working, useful when using API with cold start"""
+
     is_finished: bool
     """Flag indicating if the processor's has produced his output"""
 
@@ -82,7 +85,8 @@ class Processor(ABC):
 
     def process_and_update(self):
         output = self.process()
-        self.set_output(output)
+        if output is not None:
+            self.set_output(output)
         return output
 
     @abstractmethod
@@ -111,9 +115,10 @@ class Processor(ABC):
         if output is not None and isinstance(output, list) and len(output) > 0:
             if input_key is not None:
                 if input_key < 0 or input_key >= len(output):
-                    raise BadKeyInputIndex(
+                    logging.warning(
                         f"Index {input_key} out of bounds for output of size {len(output)}."
                     )
+                    return None
                 return output[input_key]
             else:
                 return output
@@ -177,6 +182,9 @@ class Processor(ABC):
 
     def __str__(self) -> str:
         return f"Processor(name={self.name}, type={self.processor_type})"
+
+    def get_context(self) -> Optional["ProcessorContext"]:
+        return self._processor_context
 
     def get_storage(self) -> Optional["StorageStrategy"]:
         return self.storage_strategy

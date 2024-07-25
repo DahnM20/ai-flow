@@ -18,7 +18,6 @@ class MergeProcessor(ContextAwareProcessor):
         self.model = config.get("model", MergeProcessor.DEFAULT_MODEL)
         self.prompt = config["prompt"]
         self.merge_mode = MergeModeEnum(int(config["mergeMode"]))
-        self.api_key = context.get_api_key_for_model(self.model)
         if custom_llm_factory is None:
             custom_llm_factory = self._get_default_llm_factory()
 
@@ -31,9 +30,10 @@ class MergeProcessor(ContextAwareProcessor):
     def update_prompt(self, inputs):
         for idx, value in enumerate(inputs, start=1):
             placeholder = f"${{input-{idx}}}"
-            self.prompt = re.sub(re.escape(placeholder), value, self.prompt)
+            self.prompt = re.sub(re.escape(placeholder), str(value), self.prompt)
 
     def process(self):
+        api_key = self._processor_context.get_value("openai_api_key")
         inputs_processor = self.get_input_processors()
         inputs_output_keys = self.get_input_node_output_keys()
         inputs = [
@@ -44,16 +44,14 @@ class MergeProcessor(ContextAwareProcessor):
         self.update_prompt(inputs)
 
         if self.merge_mode == MergeModeEnum.MERGE:
-            self.set_output(self.prompt)
             return self.prompt
 
         self.init_context()
 
-        llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
+        llm = self.llm_factory.create_llm(self.model, api_key=api_key)
         chat_response = llm.chat(self.messages)
         answer = chat_response.message.content
 
-        self.set_output(answer)
         return answer
 
     def init_context(self) -> None:
