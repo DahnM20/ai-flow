@@ -2,6 +2,7 @@ import React from "react";
 import { FaPlus } from "react-icons/fa";
 import styled from "styled-components";
 import Tab from "./Tab";
+import { FlowTab } from "../AppLayout";
 
 interface TabHeaderProps {
   tabs: any[];
@@ -38,7 +39,14 @@ const TabHeader = ({
             onChangeTab={onChangeTab}
             onDeleteTab={onDeleteTab}
             onChangeTabName={onChangeTabName}
-            name={!!tab.name ? tab.name : tabPrefix + " " + (index + 1)}
+            name={
+              !!tab.metadata?.name
+                ? tab.metadata.name
+                : !!tab.name
+                  ? tab.name
+                  : tabPrefix + " " + (index + 1)
+            }
+            isCloudSync={tab.metadata?.saveFlow ?? false}
           />
         ))}
       </Tabs>

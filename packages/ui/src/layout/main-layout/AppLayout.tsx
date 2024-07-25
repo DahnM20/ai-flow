@@ -1,12 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Flow from "../../components/Flow";
-import { FiSun, FiMoon, FiMail } from "react-icons/fi";
 import { Node, Edge } from "reactflow";
 import { ThemeContext } from "../../providers/ThemeProvider";
-import { darken, em, lighten } from "polished";
+import { darken, lighten } from "polished";
 import { useTranslation } from "react-i18next";
-import { FaEye, FaSitemap, FaToolbox } from "react-icons/fa";
+import { FaEye, FaSitemap } from "react-icons/fa";
 import {
   convertFlowToJson,
   convertJsonToFlow,
@@ -24,7 +23,6 @@ import {
 } from "../../utils/toastUtils";
 import ButtonRunAll from "../../components/buttons/ButtonRunAll";
 import { FlowEvent, SocketContext } from "../../providers/SocketProvider";
-import LoginButton from "../../components/login/LoginButton";
 import FlowWrapper from "./wrapper/FlowWrapper";
 import LayoutView, {
   PaneDataState,
@@ -36,6 +34,14 @@ import {
   getNodeInError,
 } from "../../utils/flowChecker";
 import { Layout } from "react-grid-layout";
+import { useVisibility } from "../../providers/VisibilityProvider";
+import { FlowDataProvider } from "../../providers/FlowDataProvider";
+import {
+  getCurrentTabIndex,
+  saveCurrentTabIndex,
+  saveTabsLocally,
+} from "../../services/tabStorage";
+import { useLoading } from "../../hooks/useLoading";
 
 export interface FlowTab {
   nodes: Node[];
@@ -49,22 +55,32 @@ export interface LayoutViewData {
   data?: PaneDataState;
 }
 
-interface FlowMetadata {
-  version: string;
+export interface FlowMetadata {
+  id?: string;
+  name?: string;
+  saveFlow?: boolean;
+  version?: string;
+  hostUrl?: string;
+  lastSave?: number;
+  isPublic?: boolean;
 }
 
-interface FlowManagerState {
+export interface FlowManagerState {
+  tabs: FlowTab[];
+}
+
+export interface FlowTabsProps {
   tabs: FlowTab[];
 }
 
 export type ApplicationMode = "flow" | "view";
 export type ApplicationMenu = "template" | "config" | "help";
 
-const FlowTabs = () => {
+const FlowTabs = ({ tabs }: FlowTabsProps) => {
   const { t } = useTranslation("flow");
 
   const [flowTabs, setFlowTabs] = useState<FlowManagerState>({
-    tabs: [{ nodes: [], edges: [] }],
+    tabs: tabs,
   });
   const [currentTab, setCurrentTab] = useState(0);
   const [refresh, setRefresh] = useState(false);
@@ -75,126 +91,146 @@ const FlowTabs = () => {
   const [mode, setMode] = useState<ApplicationMode>("flow");
   const [selectedEdgeType, setSelectedEdgeType] = useState("default");
   const useAuth = import.meta.env.VITE_APP_USE_AUTH === "true";
+  const [flowIdInParams, setFlowIdInParams] = useState<string>("");
+  const { getElement, setConfigActiveTab } = useVisibility();
+  const [loading, startLoadingWith] = useLoading();
+  const configPopup = getElement("configPopup");
+
+  const currentTabRef = useRef(currentTab);
+  const flowTabsRef = useRef(flowTabs);
+
+  useEffect(() => {
+    currentTabRef.current = currentTab;
+  }, [currentTab]);
+
+  useEffect(() => {
+    flowTabsRef.current = flowTabs;
+  }, [flowTabs]);
 
   const handleToggleOutput = () => {
     setShowOnlyOutput(!showOnlyOutput);
   };
 
   useEffect(() => {
-    const savedFlowTabsJson = localStorage.getItem("flowTabs");
-    const savedCurrentTab = localStorage.getItem("currentTab");
-    if (savedFlowTabsJson) {
-      const savedFlowTabs = JSON.parse(savedFlowTabsJson) as FlowManagerState;
-      // savedFlowTabs.tabs.forEach((tab) => {
-      //   if (!isCompatibleConfigVersion(tab.metadata?.version)) {
-      //     migrateConfig(tab)
-      //   }
-      // })
-      setFlowTabs(savedFlowTabs);
-      setCurrentTab(parseInt(savedCurrentTab || "0"));
-      setRefresh(true);
-    }
+    const init = async () => {
+      const savedCurrentTab = getCurrentTabIndex();
+      await handleChangeTab(parseInt(savedCurrentTab || "0"));
+      setRefresh((prev) => !prev);
+    };
+    init();
   }, []);
 
   useEffect(() => {
-    if (flowTabs.tabs.length >= 1 && flowTabs.tabs[0].nodes.length !== 0) {
-      localStorage.setItem("flowTabs", JSON.stringify(flowTabs));
-    }
+    saveTabsLocally(flowTabs.tabs);
   }, [flowTabs]);
 
   useEffect(() => {
-    localStorage.setItem("currentTab", currentTab.toString());
+    saveCurrentTabIndex(currentTab);
   }, [currentTab]);
 
-  useEffect(() => {
-    const loadIntroFile = async () => {
-      const firstVisit = localStorage.getItem("firstVisit") !== "false";
-      const savedFlowTabs = localStorage.getItem("flowTabs");
-
-      if (firstVisit && !savedFlowTabs) {
-        try {
-          const response = await fetch("/samples/intro.json");
-          if (!response.ok) {
-            throw new Error("Failed to fetch intro file");
-          }
-          const jsonData = await response.json();
-          const newFlowTab: FlowManagerState = { tabs: [] };
-          newFlowTab.tabs.push(convertJsonToFlow(jsonData));
-
-          setFlowTabs(newFlowTab);
-          setRefresh(true);
-
-          localStorage.setItem("firstVisit", "false");
-        } catch (error) {
-          console.error("Cannot load sample file :", error);
-        }
-      }
-    };
-
-    loadIntroFile();
-  }, []);
-
-  const addFlowTab = () => {
-    const newFlowTab = { ...flowTabs };
-    newFlowTab.tabs.push({
-      nodes: [],
-      edges: [],
-      metadata: { version: "1.0.0" },
+  const addNewFlowTab = () => {
+    setFlowTabs((prevFlowTabs) => {
+      const newFlowTab = { ...prevFlowTabs };
+      newFlowTab.tabs.push({
+        nodes: [],
+        edges: [],
+        metadata: { version: "1.0.0" },
+      });
+      return newFlowTab;
     });
-    setFlowTabs(newFlowTab);
   };
 
-  const handleFlowChange = (nodes: Node[], edges: Edge[]) => {
-    const updatedTabs = flowTabs.tabs.map((tab, index) => {
-      if (index === currentTab) {
-        return { ...tab, nodes, edges };
-      }
-      return tab;
+  const addFlowTab = (tab: FlowTab) => {
+    setFlowTabs((prevFlowTabs) => {
+      const newFlowTab = { ...prevFlowTabs };
+      newFlowTab.tabs.push(tab);
+      return newFlowTab;
     });
-    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
-    setFlowTabs(updatedFlowTabs);
+  };
+
+  const handleFlowChange = (
+    nodes: Node[],
+    edges: Edge[],
+    metadata?: FlowMetadata,
+  ) => {
+    setFlowTabs((prevFlowTabs) => {
+      const updatedTabs = prevFlowTabs.tabs.map((tab, index) => {
+        if (index === currentTab) {
+          return {
+            ...tab,
+            nodes,
+            edges,
+            metadata: { ...tab.metadata, ...metadata },
+          };
+        }
+        return tab;
+      });
+      return { ...prevFlowTabs, tabs: updatedTabs };
+    });
+  };
+
+  const handleMetadataChange = (metadata: FlowMetadata) => {
+    setFlowTabs((prevFlowTabs) => {
+      const updatedTabs = prevFlowTabs.tabs.map((tab, index) => {
+        if (index === currentTab) {
+          return {
+            ...tab,
+            metadata: { ...tab.metadata, ...metadata },
+          };
+        }
+        return tab;
+      });
+      return { ...prevFlowTabs, tabs: updatedTabs };
+    });
   };
 
   const handleLayoutChange = (layout: Layout[]) => {
-    const updatedTabs = flowTabs.tabs.map((tab, index) => {
-      if (index === currentTab) {
-        return {
-          ...tab,
-          layoutViewData: {
-            ...tab.layoutViewData,
-            layout,
-          },
-        };
-      }
-      return tab;
+    setFlowTabs((prevFlowTabs) => {
+      const updatedTabs = prevFlowTabs.tabs.map((tab, index) => {
+        if (index === currentTab) {
+          return {
+            ...tab,
+            layoutViewData: {
+              ...tab.layoutViewData,
+              layout,
+            },
+          };
+        }
+        return tab;
+      });
+      return { ...prevFlowTabs, tabs: updatedTabs };
     });
-    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
-    setFlowTabs(updatedFlowTabs);
   };
 
   const handlePaneDataChange = (data: PaneDataState) => {
-    const updatedTabs = flowTabs.tabs.map((tab, index) => {
-      if (index === currentTab) {
-        return {
-          ...tab,
-          layoutViewData: {
-            ...tab.layoutViewData,
-            data,
-          },
-        };
-      }
-      return tab;
+    setFlowTabs((prevFlowTabs) => {
+      const updatedTabs = prevFlowTabs.tabs.map((tab, index) => {
+        if (index === currentTab) {
+          return {
+            ...tab,
+            layoutViewData: {
+              ...tab.layoutViewData,
+              data,
+            },
+          };
+        }
+        return tab;
+      });
+      return { ...prevFlowTabs, tabs: updatedTabs };
     });
-    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
-    setFlowTabs(updatedFlowTabs);
   };
 
   const handleRunAllCurrentFlow = () => {
     const nodes = flowTabs.tabs[currentTab].nodes;
     const edges = flowTabs.tabs[currentTab].edges;
 
+    if (nodes.length === 0) {
+      toastFastInfoMessage(t("NoNodesToRun"));
+      return;
+    }
+
     const nodesSorted = nodesTopologicalSort(nodes, edges);
-    const flowFile = convertFlowToJson(nodesSorted, edges, false, true);
+    const flowFile = convertFlowToJson(nodesSorted, edges, true, true);
 
     const nodesInError = getNodeInError(flowFile, nodesSorted);
 
@@ -209,6 +245,7 @@ const FlowTabs = () => {
       name: "process_file",
       data: {
         jsonFile: JSON.stringify(flowFile),
+        metadata: flowTabs.tabs[currentTab].metadata,
       },
     };
     const success = emitEvent(event);
@@ -220,54 +257,86 @@ const FlowTabs = () => {
     setIsRunning(runStatus);
   };
 
-  const handleChangeTab = (index: number) => {
-    if (!isRunning) {
-      setCurrentTab(index);
-    } else {
-      toastFastInfoMessage(t("CannotChangeTabWhileRunning"));
-    }
+  const replaceTab = (index: number, newTab: FlowTab) => {
+    setFlowTabs((prev) => {
+      const newTabs = prev.tabs.map((tab, i) => {
+        if (i === index) {
+          return newTab;
+        }
+        return tab;
+      });
+      return { ...prev, tabs: newTabs };
+    });
+    setRefresh((prev) => !prev);
   };
+
+  const handleChangeTab = useCallback(
+    async (index: number) => {
+      if (!isRunning) {
+        setCurrentTab(index);
+      } else {
+        toastFastInfoMessage(t("CannotChangeTabWhileRunning"));
+      }
+    },
+    [isRunning],
+  );
 
   const handleChangeMode = (mode: ApplicationMode) => {
     setMode(mode);
   };
 
-  const handleDeleteFlow = (index: number) => {
-    if (flowTabs.tabs.length === 1) {
+  const handleDeleteFlow = async (index: number) => {
+    if (flowTabsRef.current.tabs.length === 1) {
       toastInfoMessage(t("CannotDeleteLastFlow"));
       return;
     }
 
-    let updatedTabs = structuredClone(flowTabs.tabs);
-    updatedTabs = updatedTabs.filter((_: FlowTab, i: number) => i !== index);
+    setFlowTabs((prev) => {
+      let updatedTabs = structuredClone(prev.tabs);
+      updatedTabs = updatedTabs.filter((_: FlowTab, i: number) => i !== index);
+      const updatedFlowTabs = { ...prev, tabs: updatedTabs };
+      return updatedFlowTabs;
+    });
 
-    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
-    setFlowTabs(updatedFlowTabs);
     setCurrentTab(index - 1 > 0 ? index - 1 : 0);
-    setRefresh(!refresh);
+    setRefresh((prev) => !prev);
   };
 
   const handleFormatFlow = () => {
     const nodes = flowTabs.tabs[currentTab].nodes;
     const edges = flowTabs.tabs[currentTab].edges;
+    const metadata = flowTabs.tabs[currentTab].metadata;
 
     const nodesFormatted = formatFlow(nodes, edges);
 
-    handleFlowChange(nodesFormatted, edges);
-    setRefresh(!refresh);
+    handleFlowChange(nodesFormatted, edges, metadata);
+    setRefresh((prev) => !prev);
   };
 
   const handleAddNewFlow = (flowData: any) => {
-    flowTabs.tabs.push(flowData);
+    setFlowTabs((prevFlowTabs) => {
+      const newFlowTab = { ...prevFlowTabs };
+      newFlowTab.tabs.push(flowData);
+      return newFlowTab;
+    });
     setCurrentTab(flowTabs.tabs.length - 1);
   };
 
   const handleChangeTabName = (index: number, name: string) => {
-    const updatedTabs = flowTabs.tabs.map((tab, i) =>
-      i === index ? { ...tab, name } : tab,
-    );
-    const updatedFlowTabs = { ...flowTabs, tabs: updatedTabs };
-    setFlowTabs(updatedFlowTabs);
+    setFlowTabs((prevFlowTabs) => {
+      const updatedTabs = prevFlowTabs.tabs.map((tab, i) =>
+        i === index
+          ? {
+              ...tab,
+              metadata: {
+                ...tab.metadata,
+                name,
+              },
+            }
+          : tab,
+      );
+      return { ...prevFlowTabs, tabs: updatedTabs };
+    });
   };
 
   return (
@@ -276,12 +345,12 @@ const FlowTabs = () => {
         currentTab={currentTab}
         tabs={flowTabs.tabs}
         onDeleteTab={handleDeleteFlow}
-        onAddFlowTab={addFlowTab}
+        onAddFlowTab={addNewFlowTab}
         onChangeTab={handleChangeTab}
         onChangeTabName={handleChangeTabName}
         tabPrefix={t("Flow")}
       >
-        <div className="ml-auto flex flex-row items-center space-x-2 ">
+        <div className="ml-auto flex flex-row items-center space-x-2  ">
           {mode === "flow" && (
             <>
               <div className="hidden h-auto w-6 md:flex">
@@ -299,13 +368,14 @@ const FlowTabs = () => {
               />
 
               <FaEye
-                className={` ${showOnlyOutput ? "rounded-2xl text-green-400 ring-1 ring-green-400/50 hover:text-green-200" : "text-slate-400 hover:text-slate-50 "}`}
+                className={` ${showOnlyOutput ? "rounded-2xl text-green-400 ring-1 ring-green-400/50 hover:text-green-200" : "text-slate-400 hover:text-slate-50 "} hidden md:flex`}
                 onClick={handleToggleOutput}
               />
             </>
           )}
 
           {mode === "view" && <span id="view-action-portal" />}
+
           <div className="hidden h-6 border-l-2 border-l-slate-500/50 pl-2 md:flex"></div>
           <div className="pr-2">
             <ButtonRunAll
@@ -316,38 +386,46 @@ const FlowTabs = () => {
         </div>
       </TabHeader>
 
-      <FlowWrapper
-        key={`flow-${currentTab}`}
-        mode={mode}
-        onChangeMode={handleChangeMode}
-        onAddNewFlow={handleAddNewFlow}
+      <FlowDataProvider
+        flowTab={flowTabs.tabs[currentTab]}
+        onFlowChange={handleFlowChange}
       >
-        {mode === "flow" && (
-          <Flow
-            key={`flow-${currentTab}-${refresh}`}
-            nodes={flowTabs.tabs[currentTab].nodes}
-            edges={flowTabs.tabs[currentTab].edges}
-            onFlowChange={handleFlowChange}
-            showOnlyOutput={showOnlyOutput}
-            isRunning={isRunning}
-            onRunChange={handleChangeRun}
-            selectedEdgeType={selectedEdgeType}
-          />
-        )}
-        {mode === "view" && (
-          <LayoutView
-            key={`smartview-${currentTab}-${refresh}`}
-            nodes={flowTabs.tabs[currentTab].nodes}
-            edges={flowTabs.tabs[currentTab].edges}
-            tabLayout={flowTabs.tabs[currentTab].layoutViewData}
-            isRunning={isRunning}
-            onLayoutChange={handleLayoutChange}
-            onPaneDataChange={handlePaneDataChange}
-            onFlowChange={handleFlowChange}
-            onRunChange={handleChangeRun}
-          />
-        )}
-      </FlowWrapper>
+        <FlowWrapper
+          key={`flow-${currentTab}`}
+          mode={mode}
+          onChangeMode={handleChangeMode}
+          onAddNewFlow={handleAddNewFlow}
+        >
+          {mode === "flow" && (
+            <Flow
+              key={`flow-${currentTab}-${refresh}`}
+              nodes={flowTabs.tabs[currentTab]?.nodes ?? []}
+              edges={flowTabs.tabs[currentTab]?.edges ?? []}
+              metadata={flowTabs.tabs[currentTab]?.metadata ?? {}}
+              onFlowChange={handleFlowChange}
+              onUpdateMetadata={handleMetadataChange}
+              showOnlyOutput={showOnlyOutput}
+              isRunning={isRunning}
+              onRunChange={handleChangeRun}
+              selectedEdgeType={selectedEdgeType}
+            />
+          )}
+          {mode === "view" && (
+            <LayoutView
+              key={`smartview-${currentTab}-${refresh}`}
+              nodes={flowTabs.tabs[currentTab].nodes}
+              edges={flowTabs.tabs[currentTab].edges}
+              metadata={flowTabs.tabs[currentTab].metadata ?? {}}
+              tabLayout={flowTabs.tabs[currentTab].layoutViewData}
+              isRunning={isRunning}
+              onLayoutChange={handleLayoutChange}
+              onPaneDataChange={handlePaneDataChange}
+              onFlowChange={handleFlowChange}
+              onRunChange={handleChangeRun}
+            />
+          )}
+        </FlowWrapper>
+      </FlowDataProvider>
     </FlowManagerContainer>
   );
 };
