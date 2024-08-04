@@ -75,44 +75,35 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
 
     def init_context(self, input_data: str) -> None:
         """
-        Initialise the context for the OpenAI Chat model with a standard set of messages.
+        Initialize the context for the OpenAI Chat model with a set of standard messages.
         Additional user input data can be provided, which will be added to the messages.
 
-        :param input_data: additional information to be used by the assistant.
+        :param input_data: Additional information or text provided by the user that needs processing.
         """
+        # Define the system message with clear instructions and examples
         system_msg = (
-            "You are an assistant that provides direct answers to tasks without adding any meta comments or referencing yourself as an AI. "
-            "Your only task is to logically separate with a semicolon (;) ideas or concepts."
-            "To help you, here's a list of examples : "
-            """
-1st example:
-
-Input: "The main idea is that dogs are very popular pets, and many people enjoy walking them in parks. Another important concept is that dogs need a lot of exercise to stay healthy."
-Output: Dogs are very popular pets;many people enjoy walking them in parks;dogs need a lot of exercise to stay healthy.")
-
-2nd example:
-
-Input:"1) A picture of a woman 2) A video with a bird 3) Air conditioner"
-Output: A picture of a woman;A video with a bird;Air conditioner
-
-3rd example:
-
-Input:"Here are two ideas : 
-- Dogs are better than cats
-- Birds are beautiful"
-
-Output: Dogs are better than cats;Birds are beautiful
-
-4th example: 
-"Crée une interprétation artistique numérique de la ville de New York la nuit sous la pluie, mettant l'accent sur les reflets lumineux sur les surfaces mouillées."
-"Imagine et dessine un nouveau type de fleur qui n'existe pas encore dans la nature. Assure-toi qu'elle a une allure exotique et utilise des couleurs vives et uniques que l'on ne trouve pas couramment chez les fleurs."
-"Conçois une image représentant une scène du futur, avec des villes futuristes, des technologies avancées et des formes de vie artificielles coexistant avec des formes de vie naturelles."
-
-Output: Crée une interprétation artistique numérique de la ville de New York la nuit sous la pluie, mettant l'accent sur les reflets lumineux sur les surfaces mouillées.;Imagine et dessine un nouveau type de fleur qui n'existe pas encore dans la nature. Assure-toi qu'elle a une allure exotique et utilise des couleurs vives et uniques que l'on ne trouve pas couramment chez les fleurs.;Conçois une image représentant une scène du futur, avec des villes futuristes, des technologies avancées et des formes de vie artificielles coexistant avec des formes de vie naturelles.
-
-Now, be ready to do it with my next message
-"""
+            "You are an assistant whose task is to separate ideas or concepts from the input text using semicolons (;). "
+            "Do not include any meta-comments or self-references in your responses. "
+            "Here are some examples of how to perform the task: "
+            "\n\n"
+            "Example 1:\n"
+            "Input: 'The main idea is that dogs are very popular pets, and many people enjoy walking them in parks. Another important concept is that dogs need a lot of exercise to stay healthy.'\n"
+            "Output: 'Dogs are very popular pets; many people enjoy walking them in parks; dogs need a lot of exercise to stay healthy.'\n\n"
+            "Example 2:\n"
+            "Input: '1) A picture of a woman 2) A video with a bird 3) Air conditioner'\n"
+            "Output: 'A picture of a woman; A video with a bird; Air conditioner.'\n\n"
+            "Example 3:\n"
+            "Input: 'Here are two ideas: - Dogs are better than cats - Birds are beautiful'\n"
+            "Output: 'Dogs are better than cats; Birds are beautiful.'\n\n"
+            "Example 4:\n"
+            "Input: 'Crée une interprétation artistique numérique de la ville de New York la nuit sous la pluie, mettant l'accent sur les reflets lumineux sur les surfaces mouillées. Imagine et dessine un nouveau type de fleur qui n'existe pas encore dans la nature. Assure-toi qu'elle a une allure exotique et utilise des couleurs vives et uniques que l'on ne trouve pas couramment chez les fleurs. Conçois une image représentant une scène du futur, avec des villes futuristes, des technologies avancées et des formes de vie artificielles coexistant avec des formes de vie naturelles.'\n"
+            "Output: 'Crée une interprétation artistique numérique de la ville de New York la nuit sous la pluie, mettant l'accent sur les reflets lumineux sur les surfaces mouillées; Imagine et dessine un nouveau type de fleur qui n'existe pas encore dans la nature. Assure-toi qu'elle a une allure exotique et utilise des couleurs vives et uniques que l'on ne trouve pas couramment chez les fleurs; Conçois une image représentant une scène du futur, avec des villes futuristes, des technologies avancées et des formes de vie artificielles coexistant avec des formes de vie naturelles.'\n\n"
+            "After reading the input, output each distinct idea or concept separated by semicolons."
         )
+
+        user_nb_output = self.get_input_by_name("nb_output", 0)
+        if user_nb_output > 1:
+            system_msg += f"\nThe estimated number of outputs for the next message is {user_nb_output}."
 
         self.messages = [
             ChatMessage(role="system", content=system_msg),

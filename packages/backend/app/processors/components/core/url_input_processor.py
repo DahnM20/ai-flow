@@ -37,6 +37,10 @@ class URLInputProcessor(BasicProcessor):
         self.cookies_consent_label = self.get_input_by_name(
             "cookies_consent_label", None
         )
+        self.auto_consent_cookies = self.get_input_by_name(
+            "auto_consent_cookies", False
+        )
+        self.enable_ad_blocker = self.get_input_by_name("enable_ad_blocker", False)
 
         results_queue = Queue()
 
@@ -49,6 +53,8 @@ class URLInputProcessor(BasicProcessor):
             "with_html_tags": self.with_html_tags,
             "with_html_attributes": self.with_html_attributes,
             "cookies_consent_label": self.cookies_consent_label,
+            "auto_consent_cookies": self.auto_consent_cookies,
+            "enable_ad_blocker": self.enable_ad_blocker,
         }
 
         add_task_sync(task_data, results_queue)

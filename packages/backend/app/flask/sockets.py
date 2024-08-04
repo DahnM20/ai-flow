@@ -131,4 +131,3 @@ def handle_run_node(data):
 @socketio.on("disconnect")
 def handle_disconnect():
     logging.info("Client disconnected")
-    reset_session_context()

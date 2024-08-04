@@ -80,7 +80,9 @@ def get_replicate_collection_models(collection_slug: str, cursor=None):
     response = requests.get(url=url, headers=headers)
 
     if response.status_code != 200:
-        raise Exception(f"Failed to fetch collections: {response.status_code}")
+        raise Exception(
+            f"Failed to fetch collections: {collection_slug} - {response.status_code}"
+        )
 
     data = response.json()
 
@@ -126,7 +128,9 @@ def get_model_info(model_id: str):
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
-        raise Exception(f"Failed to fetch model info: {response.status_code}")
+        raise Exception(
+            f"Failed to fetch model info: {model_id} - {response.status_code}"
+        )
 
     model = response.json()
 
@@ -148,13 +152,17 @@ def get_model_openapi_schema(model_id: str):
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
-        raise Exception(f"Failed to fetch model schema: {response.status_code}")
+        raise Exception(
+            f"Failed to fetch model schema: {model_id} - {response.status_code}"
+        )
 
     version = response.json().get("latest_version")
     schema = version.get("openapi_schema", None)
 
     if not schema:
-        raise Exception("OpenAPI schema not found in the response")
+        raise Exception(
+            f"OpenAPI schema not found in the response - model_id : {model_id}"
+        )
 
     return {
         "schema": schema,

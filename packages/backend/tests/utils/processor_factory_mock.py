@@ -23,6 +23,9 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
     NON_MOCKED_PROCESSORS = [
         ProcessorType.INPUT_TEXT.value,
         ProcessorType.INPUT_IMAGE.value,
+        ProcessorType.URL_INPUT.value,
+        ProcessorType.DISPLAY.value,
+        ProcessorType.TRANSITION.value,
     ]
 
     def __init__(
@@ -31,6 +34,7 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
         fake_img_output=None,
         fake_multiple_output=None,
         with_delay=False,
+        sleep_duration=None,
     ):
         super().__init__()
         self._mock_processors = {}
@@ -58,6 +62,12 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
                     ProcessorFactoryMock.MIN_DELAY, ProcessorFactoryMock.MAX_DELAY
                 )
                 eventlet.sleep(sleep_duration)
+
+            if config.get("sleepDuration") is not None:
+                sleep_duration = config.get("sleepDuration")
+                logging.info(f"Sleeping for {sleep_duration} seconds")
+                eventlet.sleep(sleep_duration)
+                logging.info("Awake")
 
             if mock_processor.processor_type in [
                 ProcessorType.DALLE_PROMPT.value,

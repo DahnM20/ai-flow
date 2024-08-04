@@ -1,3 +1,5 @@
+import gc
+import threading
 import time
 import eventlet
 from eventlet.semaphore import Semaphore
@@ -112,11 +114,12 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
                     initialized_nodes.add(id)
                     pool.spawn(self.run_node, node)
 
-            # pool.waitall()
             eventlet.sleep(0.5)
 
             nodes = self.remove_completed_nodes(nodes)
             logging.debug(f"Remaining nodes: {[node.id for node in nodes.values()]}")
+
+        pool.waitall()
 
     def remove_completed_nodes(self, nodes: List[Node]):
         return {

@@ -1,37 +1,83 @@
 import logging
-import os
 import asyncio
 from asyncio import Queue
 from queue import Empty
+import tempfile
 import time
+import zipfile
+
 from ...env_config import get_browser_tab_max_usage, get_browser_tab_pool_size
 from playwright.async_api import async_playwright
 
 
 class AsyncBrowserManager:
-    def __init__(
-        self, pool_size=10, max_usage=10
-    ):  # Default pool size to 2 and max_usage to 10
+    def __init__(self):
         self.playwright = None
         self.browser = None
-        self.pool_size = get_browser_tab_pool_size() if pool_size is None else pool_size
-        self.max_usage = get_browser_tab_max_usage() if max_usage is None else max_usage
+        self.pool_size = get_browser_tab_pool_size()
+        self.max_usage = get_browser_tab_max_usage()
         self.lock = asyncio.Lock()
         self.tab_pool = Queue(maxsize=self.pool_size)
         self.tab_usage_count = {}
 
     async def initialize_browser(self):
         self.playwright = await async_playwright().start()
-        self.browser = await self.playwright.chromium.launch(headless=True)
         await self.initialize_pool()
         logging.info("Browser initialized")
 
+    def unzip_extension(zip_path, extract_to):
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(extract_to)
+
+    async def launch_context(self):
+        user_data_dir = tempfile.mkdtemp()
+        args = []
+        args.append("--headless=new")
+
+        context = await self.playwright.chromium.launch_persistent_context(
+            user_data_dir,
+            headless=False,
+            args=args,
+            viewport={"width": 1920, "height": 1080},
+        )
+
+        return context
+
     async def initialize_pool(self):
         for _ in range(self.pool_size):
-            context = await self.browser.new_context()
+            context = await self.launch_context()
             page = await context.new_page()
             await self.tab_pool.put((page, context))
             self.tab_usage_count[page] = 0
+
+    async def check_extensions_loaded(self, take_extensions_screenshot=False):
+        page, context = await self.get_tab()
+        await page.goto("chrome://extensions/")
+
+        # Wait for the extensions list to load
+        await page.wait_for_selector("extensions-manager")
+
+        # Extract the extensions displayed
+        extensions = await page.evaluate(
+            """() => {
+            return new Promise((resolve, reject) => {
+                try {
+                    chrome.management.getAll((extensions) => {
+                        resolve(extensions);
+                    });
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }"""
+        )
+
+        extension_names = [ext["name"] for ext in extensions]
+        logging.info(f"Extensions loaded in Chromium : {extension_names}")
+        if take_extensions_screenshot:
+            screenshot_path = "extensions_screenshot.png"
+            await page.screenshot(path=screenshot_path)
+            logging.info(f"Screenshot saved to {screenshot_path}")
 
     async def close_browser(self):
         if self.browser:
@@ -39,17 +85,12 @@ class AsyncBrowserManager:
         if self.playwright:
             await self.playwright.stop()
 
-    async def get_browser(self):
-        if not self.browser:
-            raise Exception("Browser not initialized")
-        return self.browser
-
     async def _recycle_tab(self, page, context):
         try:
             await context.close()  # Close existing context to free memory
         except Exception as e:
             logging.error(f"Error closing context: {e}")
-        context = await self.browser.new_context()
+        context = await self.launch_context()
         page = await context.new_page()
         self.tab_usage_count[page] = 1
         return page, context
@@ -74,9 +115,6 @@ class AsyncBrowserManager:
     async def release_tab(self, page, context):
         async with self.lock:
             try:
-                await page.goto(
-                    "about:blank"
-                )  # Clear the page by navigating to a blank page
                 await context.clear_cookies()
                 await self.tab_pool.put((page, context))
             except Exception as e:

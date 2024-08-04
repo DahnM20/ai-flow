@@ -1,15 +1,51 @@
 {
-    "tips": [
-        "Drag & drop nodes from the left sidebar into the application's center.",
-        "Click on a node, then press the Backspace key to delete it.",
-        "You can do the same with edges.",
-        "Double-click on node headers to collapse or expand them.",
-        "Click on the left sidebar to hide it.",
-        "Additional tools are available on the right sidebar.",
-        "Remember, GPT models have token limits. Overly large inputs might cause errors.",
-        "Access your flow in JSON format via the sidebar with the black indicator on the right. Save and upload your flow there.",
-        "Generally, images are only available during one hour, so do not forget to save them."
-    ],
-    "docAvailable": "Full documentation is available here : ",
-    "tipsSection": "Tips"
+  "tips": [
+    {
+      "title": "API Builder View",
+      "description": "This view allows you to monitor the current state of the API, learn how to use your API, and more.",
+      "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/builder-view/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
+      "newFeature": true
+    },
+    {
+      "title": "Add Webhooks to your Flow",
+      "description": "The Webhook Node is a powerful tool that allows you to send outputs as webhooks. ",
+      "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/webhooks/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
+      "newFeature": true
+    },
+    {
+      "title": "Run Flow through API",
+      "description": "Discover how to create and manage an API around a given Flow to integrate it seamlessly to other tools.",
+      "url": "https://docs.ai-flow.net/docs/category/api-builder/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
+      "newFeature": true
+    },
+    {
+      "title": "Integrate StabilityAI API with AI-FLOW",
+      "description": "This integration offer a versatile range of image processing capabilities.",
+      "url": "https://docs.ai-flow.net/blog/stabilityai-api/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-sd3.png"
+    },
+    {
+      "title": "Flexible Pricing explained",
+      "description": "Flexible Pricing strategy is now live, offering a more streamlined and cost-effective approach to using the platform.",
+      "url": "https://docs.ai-flow.net/blog/flexible-pricing-hosted-app/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-flexible-pricing.png"
+    },
+    {
+      "title": "Access Diverse AI Models through Replicate",
+      "description": "The Replicate Node serves as a gateway to a multitude of open-source models hosted on Replicate.",
+      "url": "https://docs.ai-flow.net/docs/nodes-presentation/replicate-node/",
+      "imgUrl": "https://docs.ai-flow.net/img/ai-flow-social-card.png"
+    },
+    {
+      "title": "Full Documentation",
+      "description": "The main page of AI-FLOW Documentation, accessible through https://docs.ai-flow.net/",
+      "url": "https://docs.ai-flow.net/",
+      "imgUrl": "https://docs.ai-flow.net/img/ai-flow-social-card.png"
+    }
+  ],
+  "docAvailable": "Full documentation is available here : ",
+  "tipsSection": "Tips"
 }
