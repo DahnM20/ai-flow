@@ -14,11 +14,6 @@ from app.processors.components.core.processor_type_name_utils import (
 )
 from .processor_context_mock import ProcessorContextMock
 
-from app.processors.components.core.processor_type_name_utils import (
-    ProcessorType,
-)
-from .processor_context_mock import ProcessorContextMock
-
 
 @singleton
 class ProcessorFactoryMock(ProcessorFactoryIterModules):
@@ -119,12 +114,6 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
         def fake_get_input_by_name(input_name, default_value=""):
             return default_value
 
-        def fake_has_dynamic_behavior():
-            return False
-
-        def fake_get_input_by_name(input_name, default_value=""):
-            return default_value
-
         mock_processor.process_and_update = (
             fake_process
             if config.get("raiseError", False) == False
@@ -134,6 +123,7 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
         mock_processor.get_input_processors = get_input_processors
         mock_processor.has_dynamic_behavior = fake_has_dynamic_behavior
         mock_processor.get_input_by_name = fake_get_input_by_name
+
         self._mock_processors[processor_type] = mock_processor
 
         return mock_processor
