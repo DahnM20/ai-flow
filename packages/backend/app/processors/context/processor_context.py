@@ -17,14 +17,6 @@ class ProcessorContext(ABC):
         pass
 
     @abstractmethod
-    def get_api_key_for_model(self, model_name: str) -> Optional[str]:
-        pass
-
-    @abstractmethod
-    def get_api_key_for_provider(self, provider: str) -> Optional[str]:
-        pass
-
-    @abstractmethod
     def get_parameter_names(self) -> List[str]:
         """
         List all the parameter names currently stored in the context.

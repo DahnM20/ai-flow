@@ -23,7 +23,7 @@ export default function DefaultPopupWrapper({
 
   return ReactDOM.createPortal(
     <div
-      className={`fixed left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center bg-black/50`}
+      className="fixed left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center bg-black/50"
       onClick={onClose}
       onTouchEnd={onClose}
     >

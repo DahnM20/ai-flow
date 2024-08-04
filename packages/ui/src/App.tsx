@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import FlowTabs from "./layout/main-layout/AppLayout";
+import FlowTabs, { FlowTab } from "./layout/main-layout/AppLayout";
 import { ThemeContext } from "./providers/ThemeProvider";
 import { DndProvider } from "react-dnd";
 import { MultiBackend } from "react-dnd-multi-backend";
@@ -12,15 +12,23 @@ import { loadExtensions } from "./nodes-configuration/nodeConfig";
 import { loadAllNodesTypes } from "./utils/mappings";
 import { loadParameters } from "./components/popups/config-popup/parameters";
 import { SocketProvider } from "./providers/SocketProvider";
-import { LoadingScreenSpinner } from "./components/nodes/Node.styles";
-import { getCurrenttAppVersion } from "./config/config";
+import { getCurrentAppVersion } from "./config/config";
+import { useTranslation } from "react-i18next";
+import { getAllTabs } from "./services/tabStorage";
+import { convertJsonToFlow } from "./utils/flowUtils";
 
-const App = () => {
+interface AppProps {
+  onLoadingComplete: () => void;
+}
+const App = ({ onLoadingComplete }: AppProps) => {
   const { dark } = useContext(ThemeContext);
+  const { t } = useTranslation("version");
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
+  const [isNewVersionAvailable, setIsNewVersionAvailable] = useState(false);
   const [runTour, setRunTour] = useState(false);
   const [configLoaded, setConfigLoaded] = useState(false);
   const [showApp, setShowApp] = useState(false);
+  const [allTabs, setAllTabs] = useState<FlowTab[]>([]);
 
   const [appMounted, setComponentsMounted] = useState(false);
 
@@ -34,10 +42,16 @@ const App = () => {
 
   useEffect(() => {
     const storedVersion = localStorage.getItem("appVersion");
+    const urlParams = new URLSearchParams(window.location.search);
+    const referralCode = urlParams.get("ref_code");
 
-    const currentAppVersion = getCurrenttAppVersion();
+    if (referralCode) {
+      localStorage.setItem("referralCode", referralCode);
+    }
+
+    const currentAppVersion = getCurrentAppVersion();
     if (!!currentAppVersion && storedVersion !== currentAppVersion) {
-      if (!!currentAppVersion) {
+      if (!storedVersion) {
         setRunTour(true);
       }
 
@@ -54,51 +68,62 @@ const App = () => {
     }
   }, [showApp]);
 
-  async function loadAppData() {
-    const minLoadingTime = 1000;
-    const startTime = Date.now();
+  const loadIntroFile = async () => {
+    const firstVisit = localStorage.getItem("firstVisit") !== "false";
+    const savedFlowTabs = localStorage.getItem("flowTabs");
 
+    if (firstVisit && !savedFlowTabs) {
+      try {
+        const response = await fetch("/samples/intro.json");
+        if (!response.ok) {
+          throw new Error("Failed to fetch intro file");
+        }
+        const jsonData = await response.json();
+        const defaultTab: FlowTab = convertJsonToFlow(jsonData);
+
+        localStorage.setItem("firstVisit", "false");
+
+        return [defaultTab];
+      } catch (error) {
+        console.error("Cannot load sample file :", error);
+      }
+    }
+
+    return [];
+  };
+
+  async function loadAppData() {
     try {
       await loadParameters();
       await loadExtensions();
+      const defaultTabs = await loadIntroFile();
+      const allTabs = await getAllTabs();
+      if (allTabs.length === 0) {
+        allTabs.push(...defaultTabs);
+      }
+      setAllTabs(allTabs);
     } catch (error) {
       console.error("Failed to load app data:", error);
       console.error("Default parameters will be loaded");
     } finally {
       loadAllNodesTypes();
       setConfigLoaded(true);
-
-      const endTime = Date.now();
-      const timeElapsed = endTime - startTime;
-
-      if (timeElapsed < minLoadingTime) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, minLoadingTime - timeElapsed),
-        );
-      }
-
       setShowApp(true);
+      onLoadingComplete();
     }
   }
 
   return (
     <>
-      {!showApp && (
-        <div className="absolute z-50 flex h-screen w-full items-center justify-center">
-          <div className="flex h-full w-1/6 flex-col items-center justify-center space-y-5">
-            <img src="./logo.svg" className="w-1/2" />
-            <LoadingScreenSpinner className="h-8 w-8" />
-          </div>
-        </div>
-      )}
       {configLoaded && (
         <div
-          className={`${showApp ? "opacity-100" : "opacity-0"} transition-all duration-300 ease-in-out`}
+          className={`${showApp ? "opacity-100" : "opacity-0"} transition-opacity duration-300 ease-in-out`}
+          id="main-content"
         >
           <VisibilityProvider>
             <DndProvider backend={MultiBackend} options={HTML5toTouch}>
               <SocketProvider>
-                <FlowTabs />
+                <FlowTabs tabs={allTabs} />
               </SocketProvider>
 
               {showWelcomePopup && !runTour && (

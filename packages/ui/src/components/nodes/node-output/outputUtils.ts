@@ -33,6 +33,7 @@ const extensionToTypeMap: { [key: string]: OutputType } = {
 
 export function getOutputExtension(output: string): OutputType {
   if (!output) return "markdown";
+  if (typeof output !== "string") return "markdown";
 
   let extension = Object.keys(extensionToTypeMap).find((ext) =>
     output.endsWith(ext),

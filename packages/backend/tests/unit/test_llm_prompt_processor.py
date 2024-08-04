@@ -1,6 +1,12 @@
 import unittest
 from unittest.mock import ANY, patch
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from app.flask.socketio_init import socketio
+
 from app.processors.components.core.llm_prompt_processor import (
     LLMPromptProcessor,
 )

@@ -31,11 +31,14 @@ import {
   FlowOnProgressEventData,
 } from "../sockets/flowEventTypes";
 import { useVisibility } from "../providers/VisibilityProvider";
+import { FlowMetadata } from "../layout/main-layout/AppLayout";
 
 export interface FlowProps {
-  nodes?: Node[];
-  edges?: Edge[];
-  onFlowChange?: (nodes: Node[], edges: Edge[]) => void;
+  nodes: Node[];
+  edges: Edge[];
+  metadata: FlowMetadata;
+  onFlowChange: (nodes: Node[], edges: Edge[], metadata: FlowMetadata) => void;
+  onUpdateMetadata?: (metadata: FlowMetadata) => void;
   showOnlyOutput?: boolean;
   isRunning: boolean;
   onRunChange: (isRunning: boolean) => void;
@@ -54,8 +57,9 @@ function Flow(props: FlowProps) {
   const [reactFlowInstance, setReactFlowInstance] = useState<
     ReactFlowInstance | undefined
   >(undefined);
-  const [nodes, setNodes] = useState<Node[]>(props.nodes ? props.nodes : []);
-  const [edges, setEdges] = useState<Edge[]>(props.edges ? props.edges : []);
+  const [nodes, setNodes] = useState<Node[]>(props.nodes);
+  const [edges, setEdges] = useState<Edge[]>(props.edges);
+
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [currentUserMessage, setCurrentUserMessage] = useState<UserMessage>({
     content: "",
@@ -102,9 +106,9 @@ function Flow(props: FlowProps) {
     });
 
     if (nodeToUpdate) {
-      setNodes((currentState) => {
+      setNodes((prevNodes) => {
         return [
-          ...currentState.map((node: Node) => {
+          ...prevNodes.map((node: Node) => {
             if (node.data.name == nodeToUpdate) {
               node.data = {
                 ...node.data,
@@ -142,7 +146,7 @@ function Flow(props: FlowProps) {
 
   useEffect(() => {
     if (props.onFlowChange) {
-      props.onFlowChange(nodes, edges);
+      props.onFlowChange(nodes, edges, props.metadata);
     }
   }, [nodes, edges]);
 
@@ -286,6 +290,7 @@ function Flow(props: FlowProps) {
     <NodeProvider
       nodes={nodes}
       edges={edges}
+      metadata={props.metadata}
       showOnlyOutput={props.showOnlyOutput}
       isRunning={props.isRunning}
       currentNodesRunning={currentNodesRunning}

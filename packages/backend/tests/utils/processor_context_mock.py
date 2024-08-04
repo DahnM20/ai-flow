@@ -1,3 +1,4 @@
+from typing import List
 from app.processors.context.processor_context import ProcessorContext
 from typing import List
 
@@ -10,12 +11,6 @@ class ProcessorContextMock(ProcessorContext):
         self.session_id = session_id
 
     def get_context(self):
-        return self.api_key
-
-    def get_api_key_for_model(self, model_name):
-        return self.api_key
-
-    def get_api_key_for_provider(self, provider):
         return self.api_key
 
     def get_current_user_id(self):
@@ -31,3 +26,6 @@ class ProcessorContextMock(ProcessorContext):
         if "api_key" in name:
             return self.api_key
         return super().get_value(name)
+
+    def is_using_personal_keys(self, source_name):
+        return False

@@ -25,9 +25,8 @@ class SocketIOEventEmitter(Observer):
     """
 
     def notify(self, event: EventType, data: ProcessorLauncherEvent):
-        if data.session_id is None:
-            logging.error(f"Cannot notify without session ID")
-            return
+        if event == EventType.STREAMING.value:
+            event = EventType.PROGRESS.value
 
         json_event = {}
 

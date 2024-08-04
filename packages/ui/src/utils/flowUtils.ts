@@ -28,6 +28,9 @@ export function isCompatibleConfigVersion(fileVersion: string | undefined) {
   return fileVersion === CONFIG.FLOW_VERSION;
 }
 
+export const getKeyFromHandleName = (name: string) =>
+  name.split(handleSeparator)[indexKeyHandleOut];
+
 export const generateIdForHandle = (key: number, isOutput?: boolean) =>
   !isOutput
     ? `${handleInPrefix}${handleSeparator}${key}`

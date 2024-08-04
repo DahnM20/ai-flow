@@ -59,7 +59,7 @@ export default function AddTemplatePopup({
 
   return (
     <DefaultPopupWrapper show={show} onClose={onClose} centered>
-      <div className="flex flex-col items-center justify-center space-y-3 rounded-lg bg-subtle-gradient px-6 py-4 text-slate-200 shadow-xl">
+      <div className="flex flex-col items-center justify-center space-y-3 rounded-lg bg-subtle-gradient px-6 py-4 text-slate-200  shadow-xl">
         <h3 className="text-lg font-bold text-slate-300"> Save as template</h3>
         <input
           placeholder="Name"

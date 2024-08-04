@@ -3,7 +3,7 @@ import { Node, Edge } from "reactflow";
 import { nodesTopologicalSort, convertFlowToJson } from "../utils/flowUtils";
 import { FlowEvent, SocketContext } from "./SocketProvider";
 import { useTranslation } from "react-i18next";
-import { toastErrorMessage } from "../utils/toastUtils";
+import { toastErrorMessage, toastFastInfoMessage } from "../utils/toastUtils";
 import {
   createErrorMessageForMissingFields,
   getNodeInError,
@@ -12,6 +12,7 @@ import { createUniqNodeId } from "../utils/nodeUtils";
 import { NodeAppearance, NodeData } from "../components/nodes/types/node";
 import { NodeConfig } from "../nodes-configuration/types";
 import { getDefaultOptions } from "../utils/nodeConfigurationUtils";
+import { FlowMetadata } from "../layout/main-layout/AppLayout";
 
 export type NodeDimensions = {
   width?: number | null;
@@ -23,6 +24,7 @@ interface NodeContextType {
   runAllNodes: () => void;
   hasParent: (id: string) => boolean;
   getIncomingEdges: (id: string) => Edge[] | undefined;
+  getOutgoingEdges: (id: string) => Edge[] | undefined;
   removeNodeIncomingEdges: (id: string) => void;
   getEdgeIndex: (id: string) => Edge | undefined;
   showOnlyOutput?: boolean;
@@ -58,6 +60,7 @@ export const NodeContext = createContext<NodeContextType>({
   runAllNodes: () => undefined,
   hasParent: () => false,
   getIncomingEdges: () => undefined,
+  getOutgoingEdges: () => undefined,
   removeNodeIncomingEdges: () => undefined,
   getEdgeIndex: () => undefined,
   showOnlyOutput: false,
@@ -85,6 +88,7 @@ export const NodeContext = createContext<NodeContextType>({
 export const NodeProvider = ({
   nodes,
   edges,
+  metadata,
   showOnlyOutput,
   isRunning,
   currentNodesRunning,
@@ -95,6 +99,7 @@ export const NodeProvider = ({
 }: {
   nodes: Node[];
   edges: Edge[];
+  metadata?: FlowMetadata;
   showOnlyOutput?: boolean;
   isRunning: boolean;
   currentNodesRunning: string[];
@@ -110,7 +115,7 @@ export const NodeProvider = ({
 
   const runNode = (name: string) => {
     const nodesSorted = nodesTopologicalSort(nodes, edges);
-    const flowFile = convertFlowToJson(nodesSorted, edges, false, true);
+    const flowFile = convertFlowToJson(nodesSorted, edges, true, true);
 
     const nodesInError = getNodeInError(flowFile, nodesSorted, name);
 
@@ -125,14 +130,20 @@ export const NodeProvider = ({
       data: {
         jsonFile: JSON.stringify(flowFile),
         nodeName: name,
+        metadata: metadata,
       },
     };
     return emitEvent(event);
   };
 
   const runAllNodes = () => {
+    if (nodes.length === 0) {
+      toastFastInfoMessage(t("NoNodesToRun"));
+      return;
+    }
+
     const nodesSorted = nodesTopologicalSort(nodes, edges);
-    const flowFile = convertFlowToJson(nodesSorted, edges, false, true);
+    const flowFile = convertFlowToJson(nodesSorted, edges, true, true);
 
     const nodesInError = getNodeInError(flowFile, nodesSorted);
 
@@ -146,6 +157,7 @@ export const NodeProvider = ({
       name: "process_file",
       data: {
         jsonFile: JSON.stringify(flowFile),
+        metadata: metadata,
       },
     };
     emitEvent(event);
@@ -157,6 +169,10 @@ export const NodeProvider = ({
 
   const getIncomingEdges = (id: string) => {
     return edges.filter((edge) => edge.target === id);
+  };
+
+  const getOutgoingEdges = (id: string) => {
+    return edges.filter((edge) => edge.source === id);
   };
 
   const removeNodeIncomingEdges = (id: string) => {
@@ -338,6 +354,7 @@ export const NodeProvider = ({
         runAllNodes,
         hasParent,
         getIncomingEdges,
+        getOutgoingEdges,
         removeNodeIncomingEdges,
         getEdgeIndex,
         showOnlyOutput,

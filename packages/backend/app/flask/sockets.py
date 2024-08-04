@@ -2,9 +2,6 @@ import eventlet
 
 eventlet.monkey_patch(all=False, socket=True)
 
-from ..authentication.user_details import UserDetails
-from ..authentication.authenticator import Authenticator
-
 from app.flask.socketio_init import flask_app
 from app.flask.socketio_init import socketio
 import logging
@@ -13,7 +10,7 @@ import json
 from flask import g, request, session
 from flask_socketio import emit
 from ..root_injector import root_injector
-from .utils.constants import PARAMETERS_FIELD_NAME, ENV_API_KEYS, SESSION_USER_ID_KEY
+from .utils.constants import PARAMETERS_FIELD_NAME, ENV_API_KEYS
 
 from ..processors.launcher.processor_launcher import ProcessorLauncher
 from ..processors.context.processor_context_flask_request import (
@@ -55,41 +52,9 @@ def populate_request_global_object(data):
                 raise Exception(f"No {key} provided in data.")
 
 
-def log_in_user(user_details: UserDetails):
-    """
-    This function is responsible for logging in a user by setting the session context.
-    The session is shared between multiple requests and saved with a client-side (/!\) signed cookie (using the secret_key).
-    """
-    user = get_or_create_user(user_details)
-
-    if user is not None:
-        session[SESSION_USER_ID_KEY] = user_details.get_id()
-        logging.info("Logged in")
-
-
-def reset_session_context():
-    session[SESSION_USER_ID_KEY] = None
-
-
 @socketio.on("connect")
 def handle_connect():
     logging.info("Client connected")
-
-
-@socketio.on("auth")
-def handle_connect(data):
-    logging.debug("Auth received")
-
-    authenticator = root_injector.get(Authenticator)
-
-    user_authentication_jwt = data.get("idToken")
-    user_access_jwt = data.get("accessToken")
-
-    if authenticator.authenticate_user(user_authentication_jwt, user_access_jwt):
-        user_details = authenticator.get_user_details(user_access_jwt)
-        log_in_user(user_details)
-    else:
-        reset_session_context()
 
 
 @socketio.on("process_file")

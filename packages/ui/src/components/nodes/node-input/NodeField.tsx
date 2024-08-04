@@ -28,6 +28,7 @@ export default function NodeField<
   handlePosition = Position.Left,
   handleId,
 }: NodeFieldProps<T>) {
+  const { t } = useTranslation("flow");
   return (
     <>
       {field.label && displayParams?.showLabels && (

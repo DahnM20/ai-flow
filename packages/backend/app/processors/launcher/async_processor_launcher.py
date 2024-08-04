@@ -3,9 +3,11 @@ import threading
 import time
 import eventlet
 from eventlet.semaphore import Semaphore
+from eventlet.semaphore import Semaphore
 import logging
 import traceback
 
+from typing import Dict, List
 from typing import Dict, List
 from enum import Enum
 
@@ -30,7 +32,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
     enabling efficient handling of I/O-bound tasks and improving the overall performance of processor execution.
     """
 
-    GREENTHREAD_POOL_SIZE = 25
+    GREENTHREAD_POOL_SIZE = 7
 
     class NodeState(Enum):
         PENDING = 1
@@ -46,8 +48,17 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
             self.output = None
             self.processor = processor
             self.lock = Semaphore(1)
+            self.lock = Semaphore(1)
 
         def run(self):
+            with self.lock:
+                if self.state != AsyncProcessorLauncher.NodeState.PENDING:
+                    logging.warning(
+                        f"Node {self.id} is already being processed or completed."
+                    )
+                    return self.output
+
+                self.state = AsyncProcessorLauncher.NodeState.RUNNING
             with self.lock:
                 if self.state != AsyncProcessorLauncher.NodeState.PENDING:
                     logging.warning(
@@ -62,7 +73,14 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
                 except Exception as e:
                     self.state = AsyncProcessorLauncher.NodeState.ERROR
                     raise e
+                try:
+                    self.output = self.processor.process_and_update()
+                except Exception as e:
+                    self.state = AsyncProcessorLauncher.NodeState.ERROR
+                    raise e
 
+                self.state = AsyncProcessorLauncher.NodeState.COMPLETED
+                return self.output
                 self.state = AsyncProcessorLauncher.NodeState.COMPLETED
                 return self.output
 
@@ -94,7 +112,20 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
 
         initialized_nodes = set()
 
+        logging.debug(nodes)
+
+        initialized_nodes = set()
+
         while nodes:
+            error_detected = any(
+                node.state == AsyncProcessorLauncher.NodeState.ERROR
+                for node in nodes.values()
+            )
+
+            if error_detected:
+                logging.debug("A node is in ERROR state. Halting processing.")
+                break
+
             error_detected = any(
                 node.state == AsyncProcessorLauncher.NodeState.ERROR
                 for node in nodes.values()
@@ -109,7 +140,10 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
                     node.state == AsyncProcessorLauncher.NodeState.PENDING
                     and self.can_run(node, nodes)
                     and id not in initialized_nodes
+                    and id not in initialized_nodes
                 ):
+                    logging.debug(f"Spawning green thread for node {id}.")
+                    initialized_nodes.add(id)
                     logging.debug(f"Spawning green thread for node {id}.")
                     initialized_nodes.add(id)
                     pool.spawn(self.run_node, node)
@@ -142,12 +176,17 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
                 break
 
     def run_processor(self, processor: "Processor"):
+    def run_processor(self, processor: "Processor"):
         try:
             self.notify_current_node_running(processor)
 
             start_time = time.time()
 
             output = processor.process_and_update()
+
+            end_time = time.time()
+            duration = end_time - start_time
+            self.notify_progress(processor, output, duration=duration, isDone=True)
 
             end_time = time.time()
             duration = end_time - start_time
@@ -162,7 +201,14 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
             self.notify_current_node_running(processor)
 
             start_time = time.time()
+            processor = node.get_processor()
+            self.notify_current_node_running(processor)
+
+            start_time = time.time()
             output = node.run()
+            end_time = time.time()
+            duration = end_time - start_time
+            self.notify_progress(node.get_processor(), output, duration=duration)
             end_time = time.time()
             duration = end_time - start_time
             self.notify_progress(node.get_processor(), output, duration=duration)
@@ -173,5 +219,7 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
             raise e
 
     def notify(self, event: EventType, data: ProcessorEvent):
+        if event == EventType.STREAMING:
+            self.notify_streaming(data.source, data.output)
         if event == EventType.STREAMING:
             self.notify_streaming(data.source, data.output)

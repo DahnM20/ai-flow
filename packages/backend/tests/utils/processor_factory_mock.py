@@ -14,6 +14,11 @@ from app.processors.components.core.processor_type_name_utils import (
 )
 from .processor_context_mock import ProcessorContextMock
 
+from app.processors.components.core.processor_type_name_utils import (
+    ProcessorType,
+)
+from .processor_context_mock import ProcessorContextMock
+
 
 @singleton
 class ProcessorFactoryMock(ProcessorFactoryIterModules):
@@ -46,11 +51,15 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
     def create_mock_processor(
         self, config, processor_type: ProcessorType, processor_class: str
     ):
+    def create_mock_processor(
+        self, config, processor_type: ProcessorType, processor_class: str
+    ):
         mock_processor = MagicMock(spec=processor_class)
 
         mock_processor.name = config.get("name", "default_processor_name")
         mock_processor.processor_type = processor_type
         mock_processor.input_processors = []
+        mock_processor._processor_context = ProcessorContextMock("")
         mock_processor._processor_context = ProcessorContextMock("")
 
         if config.get("inputs") is not None and config.get("inputs") != []:
@@ -72,6 +81,8 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
             if mock_processor.processor_type in [
                 ProcessorType.DALLE_PROMPT.value,
                 ProcessorType.STABLE_DIFFUSION_STABILITYAI_PROMPT.value,
+                ProcessorType.DALLE_PROMPT.value,
+                ProcessorType.STABLE_DIFFUSION_STABILITYAI_PROMPT.value,
             ]:
                 output = (
                     [self.fake_img_output]
@@ -80,6 +91,9 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
                         "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/v0.4.0-sample-1.png"
                     ]
                 )
+            elif mock_processor.processor_type in [
+                ProcessorType.AI_DATA_SPLITTER.value
+            ]:
             elif mock_processor.processor_type in [
                 ProcessorType.AI_DATA_SPLITTER.value
             ]:
@@ -95,6 +109,7 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
                     else "Lorem Ipsum"
                 )
             mock_processor.set_output(output)
+            mock_processor.is_finished = True
             mock_processor.is_finished = True
             return output
 
@@ -114,6 +129,12 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
         def fake_get_input_by_name(input_name, default_value=""):
             return default_value
 
+        def fake_has_dynamic_behavior():
+            return False
+
+        def fake_get_input_by_name(input_name, default_value=""):
+            return default_value
+
         mock_processor.process_and_update = (
             fake_process
             if config.get("raiseError", False) == False
@@ -121,6 +142,8 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
         )
         mock_processor.add_input_processor = fake_add_input_processor
         mock_processor.get_input_processors = get_input_processors
+        mock_processor.has_dynamic_behavior = fake_has_dynamic_behavior
+        mock_processor.get_input_by_name = fake_get_input_by_name
         mock_processor.has_dynamic_behavior = fake_has_dynamic_behavior
         mock_processor.get_input_by_name = fake_get_input_by_name
 

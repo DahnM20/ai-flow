@@ -12,16 +12,16 @@ export const llmPromptNodeConfig: NodeConfig = {
       type: "option",
       options: [
         {
-          label: "GPT3.5",
-          value: "gpt-3.5-turbo",
+          label: "GPT-4o-mini",
+          value: "gpt-4o-mini",
           default: true,
         },
         {
-          label: "GPT4",
+          label: "GPT-4",
           value: "gpt-4-turbo",
         },
         {
-          label: "GPT4o",
+          label: "GPT-4o",
           value: "gpt-4o",
         },
       ],
