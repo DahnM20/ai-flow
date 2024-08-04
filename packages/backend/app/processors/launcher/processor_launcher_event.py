@@ -14,3 +14,4 @@ class ProcessorLauncherEvent:
     isDone: bool = field(default=False)
     error: str = field(default=None)
     session_id: str = field(default=None)
+    duration: float = field(default=0)
