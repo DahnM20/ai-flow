@@ -51,9 +51,6 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
     def create_mock_processor(
         self, config, processor_type: ProcessorType, processor_class: str
     ):
-    def create_mock_processor(
-        self, config, processor_type: ProcessorType, processor_class: str
-    ):
         mock_processor = MagicMock(spec=processor_class)
 
         mock_processor.name = config.get("name", "default_processor_name")
@@ -91,9 +88,6 @@ class ProcessorFactoryMock(ProcessorFactoryIterModules):
                         "https://ai-flow-public-assets.s3.eu-west-3.amazonaws.com/v0.4.0-sample-1.png"
                     ]
                 )
-            elif mock_processor.processor_type in [
-                ProcessorType.AI_DATA_SPLITTER.value
-            ]:
             elif mock_processor.processor_type in [
                 ProcessorType.AI_DATA_SPLITTER.value
             ]:
