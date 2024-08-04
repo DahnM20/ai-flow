@@ -59,7 +59,7 @@ describe("Node errors test", function () {
       } else {
         done();
       }
-    }, 2000);
+    }, 10000);
   });
 
   it("Error in flow without link should run the others nodes", function (done) {

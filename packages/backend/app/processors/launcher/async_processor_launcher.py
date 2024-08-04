@@ -1,3 +1,5 @@
+import gc
+import threading
 import time
 import eventlet
 from eventlet.semaphore import Semaphore
@@ -144,7 +146,6 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
             self.notify_current_node_running(processor)
 
             start_time = time.time()
-
             output = processor.process_and_update()
 
             end_time = time.time()
