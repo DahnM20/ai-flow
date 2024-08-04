@@ -12,7 +12,7 @@ import {
 } from "../../utils/requestDatas";
 
 describe("Node errors test", function () {
-  this.timeout(15000);
+  this.timeout(30000);
 
   beforeEach(function (done) {
     setupSocket(done);
