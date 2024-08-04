@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - develop
-      - vite-migration
 
 jobs:
   build_and_test:
@@ -15,10 +14,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Move to docker directory and run docker-compose
+      - name: Move to docker directory and run docker compose
         run: |
           cd docker
-          docker-compose -f docker-compose.it.yml up -d
+          docker compose -f docker-compose.it.yml up -d
 
       - name: Run healthcheck script
         run: |
@@ -30,7 +29,7 @@ jobs:
         if: failure()
         run: |
           cd docker
-          docker-compose logs
+          docker compose logs
 
       - name: Run UI unit tests
         run: |
@@ -47,3 +46,9 @@ jobs:
           cd integration_tests
           npm i
           npm run test
+      
+      - name: Print Docker logs
+        if: failure()
+        run: |
+          cd docker
+          docker compose logs
