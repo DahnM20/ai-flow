@@ -176,7 +176,6 @@ class AsyncProcessorLauncher(AbstractTopologicalProcessorLauncher, Observer):
                 break
 
     def run_processor(self, processor: "Processor"):
-    def run_processor(self, processor: "Processor"):
         try:
             self.notify_current_node_running(processor)
 
