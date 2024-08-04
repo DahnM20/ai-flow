@@ -9,7 +9,18 @@ type RunNodeData = {
   nodeName: string;
 };
 
-const basicJsonFlow = [
+export type Node = {
+  inputs: {
+    inputName?: string;
+    inputNode: string;
+    inputNodeOutputKey: number;
+  }[];
+  name: string;
+  processorType: string;
+  [key: string]: any;
+};
+
+const basicJsonFlow: Node[] = [
   {
     inputs: [],
     name: "kbk1proh1#input-text",
@@ -20,7 +31,7 @@ const basicJsonFlow = [
   },
 ];
 
-const jsonFlowWithMissingInputText = [
+const jsonFlowWithMissingInputText: Node[] = [
   {
     inputs: [],
     name: "kbk1proh1#input-text",
@@ -30,7 +41,7 @@ const jsonFlowWithMissingInputText = [
   },
 ];
 
-export const flowWithOneNonFreeNode = [
+export const flowWithOneNonFreeNode: Node[] = [
   {
     inputs: [],
     name: "1#stable-diffusion-stabilityai-prompt",
@@ -38,7 +49,7 @@ export const flowWithOneNonFreeNode = [
   },
 ];
 
-export const sequentialFlow = [
+export const sequentialFlow: Node[] = [
   {
     inputs: [],
     name: "1#llm-prompt",
@@ -69,7 +80,7 @@ export const sequentialFlow = [
   },
 ];
 
-export const flowWithoutLinks = [
+export const flowWithoutLinks: Node[] = [
   {
     inputs: [],
     name: "1#llm-prompt",
@@ -94,7 +105,7 @@ export const flowWithoutLinks = [
   },
 ];
 
-export const flowFreeNodesWithoutLink = [
+export const flowFreeNodesWithoutLink: Node[] = [
   {
     inputs: [],
     name: "1#input-text",
@@ -112,6 +123,64 @@ export const flowFreeNodesWithoutLink = [
     name: "3#input-text",
     processorType: "input-text",
     inputText: "fake",
+  },
+];
+
+export const flowWithFourParallelNodeStep: Node[] = [
+  {
+    inputs: [],
+    name: "1#llm-prompt",
+    processorType: "llm-prompt",
+    raiseError: false,
+    sleepDuration: undefined,
+  },
+  {
+    inputs: [
+      {
+        inputNode: "1#llm-prompt",
+        inputNodeOutputKey: 0,
+      },
+    ],
+    name: "2#llm-prompt",
+    processorType: "llm-prompt",
+    raiseError: false,
+    sleepDuration: undefined,
+  },
+  {
+    inputs: [
+      {
+        inputNode: "1#llm-prompt",
+        inputNodeOutputKey: 0,
+      },
+    ],
+    name: "3#llm-prompt",
+    processorType: "llm-prompt",
+    raiseError: false,
+    sleepDuration: undefined,
+  },
+  {
+    inputs: [
+      {
+        inputNode: "1#llm-prompt",
+        inputNodeOutputKey: 0,
+      },
+    ],
+    name: "4#llm-prompt",
+    processorType: "llm-prompt",
+    raiseError: false,
+    sleepDuration: undefined,
+  },
+  {
+    inputs: [
+      {
+        inputNode: "1#llm-prompt",
+        inputNodeOutputKey: 0,
+      },
+    ],
+    name: "5#llm-prompt",
+    processorType: "llm-prompt",
+    raiseError: false,
+    sleepDuration: undefined,
   },
 ];
 

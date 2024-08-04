@@ -1,17 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { Modal } from "@mantine/core";
+import { Badge, Button, Card, Group, Modal, Image, Text } from "@mantine/core";
+import { FaTimes } from "react-icons/fa";
 
 interface HelpPopupProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface HelpArticle {
+  title: string;
+  description: string;
+  url: string;
+  imgUrl: string;
+  newFeature: boolean;
+}
+
 const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation("tips");
 
-  const tips: string[] = t("tips", { returnObjects: true });
+  const [articleSelected, setArticleSelected] = useState<
+    HelpArticle | undefined
+  >();
+
+  const articles: HelpArticle[] = t("tips", { returnObjects: true });
+
+  function selectArticle(item: HelpArticle) {
+    setArticleSelected(item);
+  }
+
+  function resetSelectedArticle() {
+    setArticleSelected(undefined);
+  }
 
   return (
     <Modal
@@ -33,41 +54,86 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
         },
         body: {
           backgroundColor: "rgb(24 24 27)",
+          padding: 0,
         },
       }}
     >
       <PopupContent>
-        <div className="flex flex-col items-center justify-center border-b-2 border-zinc-600/50 py-3 text-center text-xl font-bold">
-          <p> {t("docAvailable")}</p>
-          <a
-            href="https://docs.ai-flow.net"
-            className="text-[#8FB0A1] hover:text-slate-100 hover:underline"
-            target="_blank"
+        <div className="flex h-full w-full flex-row overflow-auto">
+          {articleSelected && (
+            <div className="relative flex w-3/4">
+              <iframe
+                src={articleSelected.url}
+                width="100%"
+                height="100%"
+                sandbox="allow-scripts allow-same-origin"
+              ></iframe>
+              <div className="absolute top-2 flex w-full justify-center">
+                <button
+                  onClick={resetSelectedArticle}
+                  onTouchStart={resetSelectedArticle}
+                  className="flex rounded-full p-1 text-slate-300/50 ring-1 ring-slate-300/50 hover:text-white hover:ring-white"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div
+            className={`mx-2 my-10 flex flex-wrap items-baseline justify-center gap-3 ${articleSelected ? "w-1/4" : "w-full"} `}
           >
-            {" "}
-            docs.ai-flow.net{" "}
-          </a>
-        </div>
+            {articles.map((article, index) => (
+              <div
+                className={`h-auto  ${articleSelected ? "w-fit" : "w-fit md:w-1/6"}`}
+              >
+                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                  <Card.Section>
+                    <div className="relative">
+                      <Image
+                        src={article.imgUrl}
+                        height={160}
+                        alt={article.title}
+                      />
+                      {article.newFeature && (
+                        <div className="absolute top-2 z-50 flex text-sm">
+                          <div className="rounded-r-lg bg-teal-600 px-2 text-white">
+                            New
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Card.Section>
 
-        <div className="flex justify-center py-2 text-xl font-bold">
-          {t("tipsSection")}
-        </div>
+                  <Group justify="space-between" mt="md" mb="xs">
+                    <Text fw={700} lineClamp={1}>
+                      {article.title}
+                    </Text>
+                  </Group>
 
-        <ul>
-          {tips.map((tip, index) => (
-            <li key={index} className="py-3">
-              {tip}
-            </li>
-          ))}
-        </ul>
+                  <Text size="sm" c="dimmed" lineClamp={3}>
+                    {article.description}
+                  </Text>
+
+                  <div
+                    className="mt-4 cursor-pointer pl-1 font-bold text-teal-400"
+                    onClick={() => selectArticle(article)}
+                    onTouchStart={() => selectArticle(article)}
+                  >
+                    Read more {">"}
+                  </div>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
       </PopupContent>
     </Modal>
   );
 };
 
 const PopupContent = styled.div.attrs({
-  className:
-    "text-slate-300 py-3 px-4 overflow-hidden hover:overflow-auto text-lg w-full rounded-lg",
+  className: "overflow-hidden hover:overflow-auto w-full",
 })``;
 
 export default HelpPopup;
