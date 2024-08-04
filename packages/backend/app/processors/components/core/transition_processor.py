@@ -10,10 +10,11 @@ class TransitionProcessor(BasicProcessor):
 
     def process(self):
         input_data = None
-        if self.get_input_processor() is not None:
-            input_data = self.get_input_processor().get_output(
-                self.get_input_node_output_key()
-            )
-            self.set_output(input_data)
+        if self.get_input_processor() is None:
+            return ""
+
+        input_data = self.get_input_processor().get_output(
+            self.get_input_node_output_key()
+        )
 
         return input_data

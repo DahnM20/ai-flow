@@ -1,5 +1,6 @@
 import logging
 from queue import Empty, Queue
+import time
 
 
 from ....utils.replicate_utils import (
@@ -12,7 +13,7 @@ from ..processor import ContextAwareProcessor
 import replicate
 from .processor_type_name_utils import ProcessorType
 from ....tasks.task_exception import TaskAlreadyRegisteredError
-from ....tasks.task_manager import add_task, register_task_processor
+from ....tasks.thread_pool_task_manager import add_task, register_task_processor
 from ....tasks.task_utils import wait_for_result
 
 
@@ -22,6 +23,8 @@ class ReplicateProcessor(ContextAwareProcessor):
     def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)
         self._has_dynamic_behavior = True
+        self.is_processing = False
+        self.precise_dynamic_cost = 0
 
         self.config = config
         self.model = config.get("model")
@@ -29,14 +32,13 @@ class ReplicateProcessor(ContextAwareProcessor):
         if self.model is None:
             self.model = config.get("config").get("nodeName")
 
-        model_name_withouth_version = self.model.split(":")[0]
-        self.schema = get_model_openapi_schema(model_name_withouth_version)
+        self.model_name_withouth_version = self.model.split(":")[0]
 
     def get_prediction_result(
-        self, prediction, timeout=3600.0, initial_sleep=0.1, max_sleep=5.0
+        self, prediction, processor, timeout=3600.0, initial_sleep=0.1, max_sleep=5.0
     ):
         results_queue = Queue()
-        add_task("replicate_prediction_wait", prediction, results_queue)
+        add_task("replicate_prediction_wait", (prediction, processor), results_queue)
 
         try:
             prediction = wait_for_result(
@@ -48,8 +50,13 @@ class ReplicateProcessor(ContextAwareProcessor):
         return prediction
 
     @staticmethod
-    def wait_for_prediction_task(prediction):
-        prediction.wait()
+    def wait_for_prediction_task(task_data):
+        prediction, processor = task_data
+        while prediction.status not in ["succeeded", "failed", "canceled"]:
+            time.sleep(prediction._client.poll_interval)
+            if prediction.status == "processing":
+                processor.is_processing = True
+            prediction.reload()
         return prediction
 
     def register_background_task(self):
@@ -57,12 +64,13 @@ class ReplicateProcessor(ContextAwareProcessor):
             register_task_processor(
                 "replicate_prediction_wait",
                 self.wait_for_prediction_task,
-                max_concurrent_tasks=10,
+                max_concurrent_tasks=45,
             )
         except TaskAlreadyRegisteredError as e:
             pass
 
     def process(self):
+        self.schema = get_model_openapi_schema(self.model_name_withouth_version)
         input_processors = self.get_input_processors()
         input_output_keys = self.get_input_node_output_keys()
         input_names = self.get_input_names()
@@ -82,9 +90,8 @@ class ReplicateProcessor(ContextAwareProcessor):
 
                 self.config[name] = output
 
-        api = replicate.Client(
-            api_token=self._processor_context.get_api_key_for_provider("replicate")
-        )
+        api_key = self._processor_context.get_value("replicate_api_key")
+        api = replicate.Client(api_token=api_key)
 
         output_schema = get_output_schema_from_open_API_schema(self.schema["schema"])
         logging.debug(f"Output schema : {output_schema}")
@@ -96,7 +103,7 @@ class ReplicateProcessor(ContextAwareProcessor):
         self.prediction = api.predictions.create(version=version_id, input=self.config)
         self.register_background_task()
 
-        self.prediction = self.get_prediction_result(self.prediction)
+        self.prediction = self.get_prediction_result(self.prediction, self)
 
         if self.prediction.status != "succeeded":
             exception = Exception(
@@ -115,8 +122,7 @@ class ReplicateProcessor(ContextAwareProcessor):
         else:
             output = str(output)
 
-        self.set_output(output)
-        return self._output
+        return output
 
     def _get_nested_input_schema_property(self, property_name, nested_key):
         return (
@@ -127,7 +133,6 @@ class ReplicateProcessor(ContextAwareProcessor):
         )
 
     def cancel(self):
-        api = replicate.Client(
-            api_token=self._processor_context.get_api_key_for_provider("replicate")
-        )
+        api_key = self._processor_context.get_value("replicate_api_key")
+        api = replicate.Client(api_token=api_key)
         api.predictions.cancel(id=self.prediction.id)

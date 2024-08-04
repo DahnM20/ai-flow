@@ -97,6 +97,7 @@ class StabilityAIGenericProcessor(
             )
             transformed_options.append(transformed_option)
 
+        transformed_options.sort(key=lambda option: option.label)
         return transformed_options
 
     def get_node_config(self):
@@ -104,11 +105,12 @@ class StabilityAIGenericProcessor(
             StabilityAIGenericProcessor.initialize_allowed_paths_cache()
 
         path_options = [
-            Option(default=(i == 0), value=name, label=name)
+            Option(default=False, value=name, label=name)
             for i, name in enumerate(StabilityAIGenericProcessor.allowed_paths_cache)
         ]
 
         path_options = self.transform_path_options_labels(path_options)
+        path_options[0].default = True
 
         path = (
             FieldBuilder()
@@ -128,7 +130,6 @@ class StabilityAIGenericProcessor(
             .set_help_message("stableDiffusionPromptHelp")
             .set_show_handles(True)
             .add_field(path)
-            .set_is_beta(True)
             .set_is_dynamic(True)  # Important
             .build()
         )

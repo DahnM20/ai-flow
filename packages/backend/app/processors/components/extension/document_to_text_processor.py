@@ -5,7 +5,7 @@ from ....tasks.task_exception import TaskAlreadyRegisteredError
 
 from ..node_config_builder import FieldBuilder, NodeConfigBuilder
 
-from ....tasks.task_manager import add_task, register_task_processor
+from ....tasks.thread_pool_task_manager import add_task, register_task_processor
 from ....utils.processor_utils import (
     create_temp_file_with_bytes_content,
     get_max_file_size_in_mb,
@@ -22,6 +22,7 @@ from langchain.document_loaders import (
     CSVLoader,
     JSONLoader,
     TextLoader,
+    PyMuPDFLoader,
 )
 
 
@@ -32,7 +33,7 @@ class DocumentToText(BasicExtensionProcessor):
     def __init__(self, config):
         super().__init__(config)
         self.loaders = {
-            "application/pdf": UnstructuredPDFLoader,
+            "application/pdf": PyMuPDFLoader,
             "text/plain": TextLoader,
             "text/csv": CSVLoader,
             "text/html": UnstructuredHTMLLoader,
@@ -61,6 +62,7 @@ class DocumentToText(BasicExtensionProcessor):
             .set_help_message("documentToTextHelp")
             .set_show_handles(True)
             .set_output_type("text")
+            .set_default_hide_output(True)
             .add_field(urlField)
             .build()
         )
@@ -86,6 +88,7 @@ class DocumentToText(BasicExtensionProcessor):
 
         return document
 
+    @staticmethod
     def document_loader_task(loader):
         return loader.load()
 
@@ -126,12 +129,14 @@ class DocumentToText(BasicExtensionProcessor):
         try:
             document = self.load_document(loader)
             if len(document) > 0:
-                output = document[0].page_content
+                output = ""
+                for doc in document:
+                    output += doc.page_content
                 return output
             else:
                 return None
         except Exception as e:
-            logging.info(f"Failed to load document from URL: {e}")
+            logging.warning(f"Failed to load document from URL: {e}")
             raise e
         finally:
             temp_dir.cleanup()

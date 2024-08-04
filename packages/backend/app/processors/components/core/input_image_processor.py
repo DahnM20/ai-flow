@@ -10,5 +10,4 @@ class InputImageProcessor(BasicProcessor):
         self.inputText = config["inputText"]
 
     def process(self):
-        self.set_output(self.inputText)
         return self.inputText
