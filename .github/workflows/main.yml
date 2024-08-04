@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - develop-features-0.8.1
 
 jobs:
   build_and_test:
