@@ -19,7 +19,7 @@
 </p>
 <div align="center">
 
-## 🎉🚀 v0.8.0 is Now Available 🚀🎉
+## 🎉🚀 v0.8.1 is Now Available 🚀🎉
 
 🚀 **New Nodes : Claude 3, StabilityAI API, Data Splitter update**
 

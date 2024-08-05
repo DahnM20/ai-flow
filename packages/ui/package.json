@@ -1,6 +1,6 @@
 {
   "name": "ai-flow-front",
-  "version": "0.7.2",
+  "version": "0.8.1",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.7.17",
