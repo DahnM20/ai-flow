@@ -4,7 +4,7 @@ import { DnDNode } from "../../../nodes-configuration/sectionConfig";
 import { ReactNode, memo } from "react";
 import styled from "styled-components";
 import { toastCustomIconInfoMessage } from "../../../utils/toastUtils";
-import { FiMove } from "react-icons/fi";
+import { FiMenu, FiMove } from "react-icons/fi";
 
 interface DraggableNodeProps {
   node: DnDNode;
@@ -57,7 +57,8 @@ const DraggableNode = (props: DraggableNodeProps) => {
       onDoubleClick={(e) => {
         showDragAndDropHelper();
       }}
-      className={`sidebar-dnd-node text-md group relative flex h-auto w-full 
+      className={`sidebar-dnd-node text-md group group relative flex h-auto 
+                  w-full
                   cursor-grab
                   flex-row items-center justify-between
                   gap-x-1 overflow-hidden rounded-md py-2
@@ -69,7 +70,10 @@ const DraggableNode = (props: DraggableNodeProps) => {
       data-tooltip-id={`dnd-tooltip`}
       data-tooltip-content={t(props.node.helpMessage ?? "")}
     >
-      <div className="flex-grow px-2 text-center">{t(props.node.label)}</div>
+      <div className="flex w-full flex-row items-center justify-between space-x-1 px-2 text-center">
+        <p className="flex-grow">{t(props.node.label)}</p>
+        <FiMenu className="text-slate-400/60 transition-colors duration-75 ease-in-out group-hover:text-slate-200" />
+      </div>
 
       {props.node.isBeta && <NodeBadge>Beta</NodeBadge>}
     </Node>
@@ -78,7 +82,7 @@ const DraggableNode = (props: DraggableNodeProps) => {
 
 const Node = styled.div`
   background:
-    linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) right / 2% no-repeat,
+    linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) left / 2% no-repeat,
     ${({ theme }) => theme.bg};
   user-select: none;
   -webkit-user-select: none;
