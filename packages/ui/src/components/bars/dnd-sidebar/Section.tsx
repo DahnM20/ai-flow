@@ -30,9 +30,15 @@ function SidebarSection({ section, index, children }: SidebarSectionProps) {
         </h2>
 
         {show ? (
-          <FiChevronDown onClick={toggleShow} />
+          <FiChevronDown
+            onClick={toggleShow}
+            className="transition-colors duration-100 ease-in-out hover:text-slate-100"
+          />
         ) : (
-          <FiChevronRight onClick={toggleShow} />
+          <FiChevronRight
+            onClick={toggleShow}
+            className="transition-colors duration-100 ease-in-out hover:text-slate-100"
+          />
         )}
       </div>
 
