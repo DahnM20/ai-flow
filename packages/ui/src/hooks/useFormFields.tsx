@@ -92,6 +92,9 @@ export function useFormFields(
                 event.target,
               );
             }}
+            onChangeValue={(value) => {
+              handleNodeDataChange(field.name, value);
+            }}
           />
         );
       case "inputInt":
@@ -126,6 +129,7 @@ export function useFormFields(
             data={data}
             isTouchDevice={isTouchDevice}
             onEventNodeDataChange={handleEventNodeDataChange}
+            onNodeDataChange={handleNodeDataChange}
             id={id}
           />
         );

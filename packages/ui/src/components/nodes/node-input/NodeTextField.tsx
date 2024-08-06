@@ -1,11 +1,11 @@
-import { TextInput } from "@mantine/core";
 import styled from "styled-components";
-import { theme } from "../../shared/theme";
 import { ChangeEvent } from "react";
+import TextAreaPopupWrapper from "./TextAreaPopupWrapper";
 
 interface NodeTextFieldProps {
   value: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChangeValue?: (value: string) => void;
   placeholder?: string;
   error?: boolean;
   isTouchDevice?: boolean;
@@ -14,17 +14,25 @@ interface NodeTextFieldProps {
 export default function NodeTextField({
   value,
   onChange,
+  onChangeValue,
   placeholder,
   error,
   isTouchDevice,
 }: NodeTextFieldProps) {
+  function handleChangeValue(value: string) {
+    if (onChangeValue) {
+      onChangeValue(value);
+    }
+  }
   return (
-    <NodeInput
-      value={value}
-      className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}
-      onChange={(event) => onChange(event)}
-      placeholder={placeholder}
-    />
+    <TextAreaPopupWrapper onChange={handleChangeValue} initValue={value}>
+      <NodeInput
+        value={value}
+        className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}
+        onChange={(event) => onChange(event)}
+        placeholder={placeholder}
+      />
+    </TextAreaPopupWrapper>
   );
 }
 
