@@ -7,6 +7,7 @@ import DraggableNode from "./DraggableNode";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useVisibility } from "../../../providers/VisibilityProvider";
 import useIsTouchDevice from "../../../hooks/useIsTouchDevice";
+import Section from "./Section";
 
 const HIDE_SIDEBAR_ANIMATION_DURATION = 300;
 
@@ -69,19 +70,13 @@ const DnDSidebar = () => {
         </div>
         {contentVisible && (
           <DnDSidebarContainer
-            className={` font-sm md:font-md flex transform flex-col  border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md  ${isTouchDevice ? "overflow-y-auto" : " overflow-hidden hover:overflow-y-auto"}`}
+            className={` font-sm md:font-md flex transform flex-col  border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md  ${isTouchDevice ? "overflow-y-auto" : " overflow-hidden hover:overflow-y-auto"}
+             ${!sidebar.isVisible ? "opacity-0" : ""} 
+                  transition-opacity duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out`}
           >
             {contentVisible
               ? sections.map((section, index) => (
-                  <Section
-                    key={index}
-                    className={`mb-5 flex flex-col gap-y-2 ${!sidebar.isVisible ? "opacity-0" : ""} 
-                  transition-opacity duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out`}
-                  >
-                    <SectionTitle className="text-md ml-1 flex flex-row items-center gap-x-2 border-b-2 border-b-slate-500/20 py-1 text-slate-300">
-                      {section.icon && <section.icon />}
-                      {t(section.label)}
-                    </SectionTitle>
+                  <Section key={index} index={index} section={section}>
                     {section.nodes?.map((node, nodeIndex) => (
                       <DraggableNode key={nodeIndex} node={node} />
                     ))}
@@ -102,9 +97,5 @@ const DnDSidebar = () => {
 };
 
 const DnDSidebarContainer = styled.div``;
-
-const Section = styled.div``;
-
-const SectionTitle = styled.h2``;
 
 export default memo(DnDSidebar);
