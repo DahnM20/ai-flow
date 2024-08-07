@@ -96,6 +96,7 @@ export function useFormFields(
               handleNodeDataChange(field.name, value);
             }}
             fieldName={field?.name}
+            withEditPopup
           />
         );
       case "inputInt":

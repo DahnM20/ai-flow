@@ -47,7 +47,7 @@ export interface Field {
   associatedField?: string;
   description?: string;
   isBinary?: boolean;
-  withModalEdit: boolean;
+  withModalEdit?: boolean;
 }
 
 export interface NodeConfig {
