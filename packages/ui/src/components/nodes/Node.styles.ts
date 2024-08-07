@@ -16,9 +16,13 @@ export const NodeHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 40px;
+  font-size: 1.4em;
+  min-height: 70px;
   background-color: ${({ theme }) => theme.nodeBg};
-  padding: 8px;
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
+  padding-left: 1em;
+  padding-right: 1em;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   cursor: pointer;
@@ -35,10 +39,7 @@ export const NodeBand = styled.div<{ selected?: boolean; color?: string }>`
 `;
 
 export const NodeTitle = styled.div`
-  font-size: 1.1em;
   font-weight: 600;
-  display: flex;
-  align-items: center;
   color: ${({ theme }) => theme.text};
 `;
 
@@ -87,13 +88,12 @@ export const NodeIcon = styled.div`
   align-items: center;
   height: 100%;
   color: ${({ theme }) => theme.text};
-  font-size: 1.5em;
-  max-width: 1em;
+  max-width: 1.3em;
+  font-size: 1.3em;
 `;
 
 export const NodeContainer = styled.div<{ width?: number }>`
   width: 35em;
-  //max-width: ${({ width }) => (!!width && width > 450 ? "1500px" : "450px")};
 
   background: ${({ theme }) => theme.nodeGradientBg};
   background-color: ${({ theme }) => theme.bg};

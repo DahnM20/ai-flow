@@ -3,7 +3,7 @@ import { NodeConfig } from "./types";
 export const youtubeTranscriptNodeConfig: NodeConfig = {
   nodeName: "YoutubeTranscriptNodeName",
   processorType: "youtube_transcript_input",
-  icon: "FaFilm",
+  icon: "YoutubeLogo",
   fields: [
     {
       name: "url",

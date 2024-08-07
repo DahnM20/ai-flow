@@ -10,6 +10,7 @@ interface NodeTextFieldProps {
   error?: boolean;
   isTouchDevice?: boolean;
   fieldName?: string;
+  withEditPopup?: boolean;
 }
 
 export default function NodeTextField({
@@ -20,12 +21,25 @@ export default function NodeTextField({
   error,
   isTouchDevice,
   fieldName,
+  withEditPopup,
 }: NodeTextFieldProps) {
   function handleChangeValue(value: string) {
     if (onChangeValue) {
       onChangeValue(value);
     }
   }
+
+  if (!withEditPopup) {
+    return (
+      <NodeInput
+        value={value}
+        className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}
+        onChange={(event) => onChange(event)}
+        placeholder={placeholder}
+      />
+    );
+  }
+
   return (
     <TextAreaPopupWrapper
       onChange={handleChangeValue}

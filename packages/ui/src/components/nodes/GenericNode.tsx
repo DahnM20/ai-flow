@@ -43,10 +43,11 @@ interface GenericNodeProps extends NodeProps {
   id: string;
   selected: boolean;
   nodeFields?: Field[];
+  iconComponent?: FC;
 }
 
 const GenericNode: React.FC<GenericNodeProps> = React.memo(
-  ({ data, id, selected, nodeFields }) => {
+  ({ data, id, selected, nodeFields, iconComponent }) => {
     const { t } = useTranslation("flow");
 
     const {
@@ -283,7 +284,9 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       }
     }
 
-    const NodeIconComponent = getIconComponent(data.config.icon);
+    const NodeIconComponent = !!iconComponent
+      ? iconComponent
+      : getIconComponent(data.config.icon);
 
     const displayInputs =
       data.config.hasInputHandle && !data.config.showHandlesNames;

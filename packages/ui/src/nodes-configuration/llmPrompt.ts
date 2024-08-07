@@ -3,7 +3,7 @@ import { NodeConfig } from "./types";
 export const llmPromptNodeConfig: NodeConfig = {
   nodeName: "LLMPrompt",
   processorType: "llm-prompt",
-  icon: "FaRobot",
+  icon: "OpenAILogo",
   inputNames: ["initData"],
   fields: [
     {

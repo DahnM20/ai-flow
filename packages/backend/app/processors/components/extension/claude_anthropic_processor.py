@@ -92,7 +92,7 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
         config = NodeConfig(
             nodeName="ClaudeAnthropic",
             processorType=self.processor_type,
-            icon="FaRobot",
+            icon="AnthropicLogo",
             fields=fields,
             outputType="markdown",
             section="models",

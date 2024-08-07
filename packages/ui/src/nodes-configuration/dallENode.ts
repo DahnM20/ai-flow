@@ -3,7 +3,7 @@ import { NodeConfig } from "./types";
 const dallENodeConfig: NodeConfig = {
   nodeName: "DALL-E 3",
   processorType: "dalle-prompt",
-  icon: "FaImage",
+  icon: "OpenAILogo",
   hasInputHandle: true,
   fields: [
     {

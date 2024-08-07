@@ -71,10 +71,6 @@ function getIconComponent(
 }
 
 const NodePlayButtonContainer = styled.button<{ disabled?: boolean }>`
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
   cursor: pointer;
   color: ${(props) => (props.disabled ? "#888" : "#7bb380")};
 
@@ -85,17 +81,14 @@ const NodePlayButtonContainer = styled.button<{ disabled?: boolean }>`
 
 const NodePlayButtonIcon = styled(FaPlay)`
   transition: transform 0.3s ease-in-out;
-  font-size: 16px;
 `;
 
 const NodeStopButtonIcon = styled(FaStop)`
   transition: transform 0.3s ease-in-out;
-  font-size: 16px;
 `;
 
 const CheckIcon = styled(FaCheck)`
   transition: transform 0.3s ease-in-out;
-  font-size: 16px;
 `;
 
 export default NodePlayButton;

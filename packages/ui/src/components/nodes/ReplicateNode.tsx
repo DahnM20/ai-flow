@@ -15,6 +15,7 @@ import withCache from "../../api/cache/withCache";
 import { toastErrorMessage } from "../../utils/toastUtils";
 import GenericNode from "./GenericNode";
 import { NodeContext } from "../../providers/NodeProvider";
+import { getIconComponent } from "./utils/NodeIcons";
 
 interface ReplicateNodeData extends NodeData {
   schema: any;
@@ -159,6 +160,8 @@ export default function ReplicateNode({
     setModel(modelInput);
   }
 
+  const NodeIconComponent = getIconComponent("ReplicateLogo");
+
   return !data.nodeLoaded ? (
     <NodeContainer
       key={id}
@@ -206,6 +209,7 @@ export default function ReplicateNode({
       yPos={yPos}
       dragging={false}
       nodeFields={fields}
+      iconComponent={NodeIconComponent}
     />
   );
 }

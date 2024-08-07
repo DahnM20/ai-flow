@@ -88,7 +88,7 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
         config = NodeConfig(
             nodeName="TextToSpeech",
             processorType=self.processor_type,
-            icon="FaRobot",
+            icon="OpenAILogo",
             fields=fields,
             outputType="audioUrl",
             section="models",

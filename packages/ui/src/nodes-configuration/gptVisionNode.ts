@@ -3,7 +3,7 @@ import { NodeConfig } from "./types";
 export const gptVisionNodeConfig: NodeConfig = {
   nodeName: "GPT Vision",
   processorType: "gpt-vision",
-  icon: "FaEye",
+  icon: "OpenAILogo",
   inputNames: ["image_url", "prompt"],
   fields: [
     // {
