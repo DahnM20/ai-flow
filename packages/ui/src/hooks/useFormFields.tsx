@@ -95,6 +95,7 @@ export function useFormFields(
             onChangeValue={(value) => {
               handleNodeDataChange(field.name, value);
             }}
+            fieldName={field?.name}
           />
         );
       case "inputInt":

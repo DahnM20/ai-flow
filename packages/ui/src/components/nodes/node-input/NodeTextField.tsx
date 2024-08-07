@@ -9,6 +9,7 @@ interface NodeTextFieldProps {
   placeholder?: string;
   error?: boolean;
   isTouchDevice?: boolean;
+  fieldName?: string;
 }
 
 export default function NodeTextField({
@@ -18,6 +19,7 @@ export default function NodeTextField({
   placeholder,
   error,
   isTouchDevice,
+  fieldName,
 }: NodeTextFieldProps) {
   function handleChangeValue(value: string) {
     if (onChangeValue) {
@@ -25,7 +27,11 @@ export default function NodeTextField({
     }
   }
   return (
-    <TextAreaPopupWrapper onChange={handleChangeValue} initValue={value}>
+    <TextAreaPopupWrapper
+      onChange={handleChangeValue}
+      initValue={value}
+      fieldName={fieldName}
+    >
       <NodeInput
         value={value}
         className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}

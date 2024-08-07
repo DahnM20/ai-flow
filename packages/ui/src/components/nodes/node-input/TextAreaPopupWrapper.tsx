@@ -7,12 +7,14 @@ interface TextAreaPopupWrapperProps {
   children: React.ReactNode;
   onChange: (value: string) => void;
   initValue: string;
+  fieldName?: string;
 }
 
 function TextAreaPopupWrapper({
   children,
   onChange,
   initValue,
+  fieldName,
 }: TextAreaPopupWrapperProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -27,7 +29,7 @@ function TextAreaPopupWrapper({
   return (
     <>
       <div className="relative w-full">
-        <span className="absolute right-2 top-2">
+        <span className="absolute right-2 top-2 cursor-pointer text-slate-400 transition-colors duration-100 ease-in-out hover:text-stone-100">
           <Tooltip label={"Open in popup"}>
             <FiExternalLink onClick={openModal} />
           </Tooltip>
@@ -37,6 +39,7 @@ function TextAreaPopupWrapper({
       {modalOpen && (
         <TextareaModal
           initValue={initValue}
+          fieldName={fieldName}
           onChange={onChange}
           onClose={closeModal}
         />

@@ -1,6 +1,7 @@
 import { Button, Textarea } from "@mantine/core";
 import { ChangeEvent, useState } from "react";
 import ReactDOM from "react-dom";
+import { useTranslation } from "react-i18next";
 import { FaTimes } from "react-icons/fa";
 
 interface TextareaModalProps {
@@ -15,6 +16,7 @@ export function TextareaModal({
   onChange,
   onClose,
 }: TextareaModalProps) {
+  const { t } = useTranslation("flow");
   const [value, setValue] = useState<string>(initValue);
 
   function handleChange(event: ChangeEvent<any>) {
@@ -39,8 +41,8 @@ export function TextareaModal({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="mb-2 flex flex-col space-y-2">
-            <div className="font-semibold"> Edit text content </div>
-            {fieldName && <p>{fieldName}</p>}
+            <div className="font-semibold">{t("EditTextContent")}</div>
+            {fieldName && <p className="font-mono">{fieldName}</p>}
           </div>
           <Textarea
             defaultValue={value}
@@ -52,7 +54,7 @@ export function TextareaModal({
           />
           <div className="flex justify-end pt-3">
             <Button color="teal" onClick={handleValidate}>
-              Validate
+              {t("Validate")}
             </Button>
           </div>
           <button

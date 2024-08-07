@@ -117,5 +117,6 @@
   "learnMore": "En apprendre plus :",
   "Help": "Aide",
   "cookiesConsentLabelPlaceholder": "Accepter tout",
-  "cookiesConsentLabelHelp": "Pour certaines pages, nous devons cliquer sur le bouton de consentement aux cookies pour accéder aux données. Cette instruction aide à localiser le bouton."
+  "cookiesConsentLabelHelp": "Pour certaines pages, nous devons cliquer sur le bouton de consentement aux cookies pour accéder aux données. Cette instruction aide à localiser le bouton.",
+  "EditTextContent": "Edit text content"
 }

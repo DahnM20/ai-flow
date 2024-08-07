@@ -42,6 +42,7 @@ export default function NodeTextarea({
     <TextAreaPopupWrapper
       onChange={(value) => onNodeDataChange(field.name, value)}
       initValue={data[field.name]}
+      fieldName={field.name}
     >
       <StyledNodeTextarea
         ref={textareaRef}
