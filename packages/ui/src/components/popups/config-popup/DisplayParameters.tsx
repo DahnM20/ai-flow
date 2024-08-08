@@ -9,10 +9,14 @@ import {
   getNonGenericNodeConfig,
   transformNodeConfigsToDndNode,
 } from "../../../nodes-configuration/sectionConfig";
+import { useVisibility } from "../../../providers/VisibilityProvider";
 
 export default function DisplayParameters() {
   const { t } = useTranslation("flow");
   const { t: tc } = useTranslation("config");
+  const { getElement } = useVisibility();
+
+  const minimap = getElement("minimap");
 
   const [nodesHidden, setNodesHidden] =
     useState<string[]>(getNodesHiddenList());
@@ -38,7 +42,17 @@ export default function DisplayParameters() {
     <div className="flex w-full justify-center">
       <div className="flex w-1/2 flex-col">
         <ParametersContainer className="flex flex-col">
-          <h3 className="mb-2 font-semibold">{tc("nodesDisplayed")}</h3>
+          <h3 className="mb-2 font-semibold">{tc("UI")}</h3>
+          <Checkbox
+            label={t("Show Minimap")}
+            size="sm"
+            darkHidden={false}
+            color="cyan"
+            checked={minimap.isVisible}
+            onChange={() => minimap.toggle()}
+          />
+
+          <h3 className="my-2 font-semibold">{tc("nodesDisplayed")}</h3>
           <div className="mb-5 flex w-full flex-col space-y-1">
             {allNodes.map((node) => {
               return (

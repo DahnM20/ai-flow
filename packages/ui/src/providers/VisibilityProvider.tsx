@@ -12,6 +12,7 @@ export type ConfigTab = "user" | "display";
 export interface VisibilityContextState {
   [key: string]: {
     isVisible: boolean;
+    persistent?: boolean;
     show: () => void;
     hide: () => void;
     toggle: () => void;
@@ -34,6 +35,13 @@ interface VisibilityProviderProps {
   children: ReactNode;
 }
 
+const VISBILITY_PROVIDER_PREFIX = "vp-";
+
+function getIsVisibleFromLocalStorage(key: string): boolean | null {
+  const value = localStorage.getItem(VISBILITY_PROVIDER_PREFIX + key);
+  return value ? JSON.parse(value) : null;
+}
+
 export const VisibilityProvider: React.FC<VisibilityProviderProps> = ({
   children,
 }) => {
@@ -46,7 +54,8 @@ export const VisibilityProvider: React.FC<VisibilityProviderProps> = ({
         toggle: () => toggleVisibility("sidebar"),
       },
       minimap: {
-        isVisible: true,
+        isVisible: (getIsVisibleFromLocalStorage("minimap") as boolean) ?? true,
+        persistent: true,
         show: () => setVisibility("minimap", true),
         hide: () => setVisibility("minimap", false),
         toggle: () => toggleVisibility("minimap"),
@@ -71,23 +80,41 @@ export const VisibilityProvider: React.FC<VisibilityProviderProps> = ({
   const [configActiveTab, setConfigActiveTab] = useState<ConfigTab>("user");
 
   const setVisibility = (key: VisibilityElement, isVisible: boolean) => {
-    setVisibilityState((prevState) => ({
-      ...prevState,
-      [key]: {
-        ...prevState[key],
-        isVisible,
-      },
-    }));
+    setVisibilityState((prevState) => {
+      if (visibilityState[key].persistent) {
+        localStorage.setItem(
+          VISBILITY_PROVIDER_PREFIX + key,
+          JSON.stringify(isVisible),
+        );
+      }
+
+      return {
+        ...prevState,
+        [key]: {
+          ...prevState[key],
+          isVisible,
+        },
+      };
+    });
   };
 
   const toggleVisibility = (key: VisibilityElement) => {
-    setVisibilityState((prevState) => ({
-      ...prevState,
-      [key]: {
-        ...prevState[key],
-        isVisible: !prevState[key].isVisible,
-      },
-    }));
+    setVisibilityState((prevState) => {
+      if (prevState[key].persistent) {
+        localStorage.setItem(
+          VISBILITY_PROVIDER_PREFIX + key,
+          JSON.stringify(!prevState[key].isVisible),
+        );
+      }
+
+      return {
+        ...prevState,
+        [key]: {
+          ...prevState[key],
+          isVisible: !prevState[key].isVisible,
+        },
+      };
+    });
   };
 
   const getElement = (key: VisibilityElement) => {
