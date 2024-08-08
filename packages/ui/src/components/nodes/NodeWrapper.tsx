@@ -94,13 +94,15 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
   const actions: Action<NodeActions>[] = [
     {
       icon: (
-        <div
-          className="h-5 w-5 rounded-full"
-          style={{
-            backgroundColor: currentNodeColor,
-            border: currentNodeColor ? "none" : "solid white 1px",
-          }}
-        ></div>
+        <div className="flex h-7 w-7 items-center justify-center">
+          <div
+            className="h-6 w-6 rounded-full"
+            style={{
+              backgroundColor: currentNodeColor,
+              border: currentNodeColor ? "none" : "solid white 1px",
+            }}
+          ></div>
+        </div>
       ),
       name: t("NodeColor"),
       value: "color",
@@ -184,7 +186,9 @@ function NodeWrapper({ children, nodeId }: NodeWrapperProps) {
           className={`nodrag absolute right-1/2 top-0 flex -translate-y-14 translate-x-1/2 transition-all duration-300 ease-in-out  ${showActions ? "opacity-100" : "pointer-events-none opacity-0"}`}
           onMouseEnter={clearHideActionsTimeout}
         >
-          <ActionGroup actions={actions} showIcon />
+          <span className="text-3xl">
+            <ActionGroup actions={actions} showIcon />
+          </span>
           <div
             className={`absolute flex -translate-x-1/3 -translate-y-10 items-center justify-center space-x-2 rounded-full bg-slate-200/10 p-2 ${showColors ? "opacity-100 " : "pointer-events-none opacity-0"} transition-all duration-300 ease-in-out `}
           >

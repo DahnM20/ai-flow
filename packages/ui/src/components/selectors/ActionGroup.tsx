@@ -30,7 +30,6 @@ export default function ActionGroup<T>({
             className={`cursor-pointer 
                         rounded-full bg-slate-200/10
                         p-2
-                        text-xl
                         text-stone-100
                         hover:bg-slate-200/20
                         ${option.hoverColor ? "hover:" + option.hoverColor : "hover:text-blue-400"}
