@@ -124,7 +124,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
         nbOutput={data.nbOutput}
         collapsed={collapsed}
         key={id}
-        onDoubleClick={handleCollapseClick}
+        // onDoubleClick={handleCollapseClick}
         style={{
           borderColor: data?.appearance?.color
             ? data?.appearance?.color
