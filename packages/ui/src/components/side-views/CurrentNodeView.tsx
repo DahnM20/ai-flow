@@ -74,7 +74,7 @@ const CurrentNodeView: React.FC<CurrentNodeViewProps> = () => {
             <p className="text-lg font-bold text-sky-100">
               {t(node?.data.config?.nodeName)}
             </p>
-            <NodePlayButton nodeName={currentNodeIdSelected} />
+            <NodePlayButton nodeName={currentNodeIdSelected} size="medium" />
           </div>
           <p className="mt-1 rounded-md bg-zinc-600/30 px-2 py-1 font-mono text-sm">
             {currentNodeIdSelected}

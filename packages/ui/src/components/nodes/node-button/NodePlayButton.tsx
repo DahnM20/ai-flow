@@ -10,6 +10,7 @@ interface NodePlayButtonProps {
   hasRun?: boolean;
   onClick?: () => void;
   nodeName: string;
+  size?: "small" | "medium" | "large";
 }
 
 const NodePlayButton: React.FC<NodePlayButtonProps> = ({
@@ -17,6 +18,7 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({
   hasRun,
   onClick,
   nodeName,
+  size,
 }) => {
   const { runNode, isRunning, currentNodesRunning } = useContext(NodeContext);
   const [isHovered, setHovered] = useState(false);
@@ -42,9 +44,15 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({
     isHovered,
   );
 
+  const tailwindClassSize = {
+    small: "text-sm",
+    medium: "text-md",
+    large: "text-3xl",
+  }[size || "large"];
+
   return (
     <NodePlayButtonContainer
-      className="node-play-button text-3xl"
+      className={`node-play-button ${tailwindClassSize}`}
       onClick={handleClick}
       disabled={isDisabled}
       onMouseEnter={handleMouseEnter}

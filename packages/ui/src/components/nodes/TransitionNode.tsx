@@ -91,6 +91,7 @@ const TransitionNode: React.FC<TransitionNodeProps> = React.memo(
           hasRun={!!data.lastRun}
           onClick={handlePlayClick}
           nodeName={data.name}
+          size="medium"
         />
 
         <HandleWrapper

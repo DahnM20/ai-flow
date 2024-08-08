@@ -137,6 +137,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
             isPlaying={isPlaying}
             nodeName={data.name}
             onClick={handlePlayClick}
+            size="medium"
           />
           {!(collapsed || (!collapsed && !selected)) && (
             <div

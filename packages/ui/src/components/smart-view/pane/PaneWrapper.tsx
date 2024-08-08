@@ -81,7 +81,7 @@ function PaneWrapper({
             className={`absolute right-0 space-x-2 px-2 text-slate-100 ${isHeaderVisible ? "opacity-100" : "pointer-events-none opacity-0"} ${!node ? "top-1" : ""}`}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            {nodeId && <NodePlayButton nodeName={nodeId} />}
+            {nodeId && <NodePlayButton nodeName={nodeId} size="medium" />}
             {isEnabled && (
               <PaneWrapperButton
                 onClick={() => index != null && onDelete(index)}
