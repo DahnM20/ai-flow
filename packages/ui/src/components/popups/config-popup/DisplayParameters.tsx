@@ -44,7 +44,7 @@ export default function DisplayParameters() {
         <ParametersContainer className="flex flex-col">
           <h3 className="mb-2 font-semibold">{tc("UI")}</h3>
           <Checkbox
-            label={t("Show Minimap")}
+            label={tc("ShowMinimap")}
             size="sm"
             darkHidden={false}
             color="cyan"
