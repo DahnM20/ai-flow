@@ -44,7 +44,7 @@ const NodePlayButton: React.FC<NodePlayButtonProps> = ({
 
   return (
     <NodePlayButtonContainer
-      className="node-play-button"
+      className="node-play-button text-3xl"
       onClick={handleClick}
       disabled={isDisabled}
       onMouseEnter={handleMouseEnter}
