@@ -53,7 +53,7 @@ const ICON_MAP: { [key: string]: FC } = {
     <img
       src="./img/stabilityai-logo.png"
       alt="stabilityai"
-      className="w-full rounded-lg bg-white px-1 py-2"
+      className="w-full rounded-lg bg-white p-1"
     />
   ),
 };
