@@ -24,7 +24,7 @@ const ICON_MAP: { [key: string]: FC } = {
     <img
       src="./img/openai-white-logomark.svg"
       alt="openai"
-      className="rounded-lg bg-zinc-950 p-1"
+      className="rounded-lg bg-teal-600 p-1"
     />
   ),
   ReplicateLogo: () => (
@@ -46,6 +46,13 @@ const ICON_MAP: { [key: string]: FC } = {
       src="./img/anthropic-logo.svg"
       alt="anthropic"
       className="w-full rounded-lg bg-white p-1"
+    />
+  ),
+  StabilityAILogo: () => (
+    <img
+      src="./img/stabilityai-logo.png"
+      alt="stabilityai"
+      className="w-full rounded-lg bg-white px-1 py-2"
     />
   ),
 };

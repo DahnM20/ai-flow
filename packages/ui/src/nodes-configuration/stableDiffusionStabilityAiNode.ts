@@ -3,7 +3,7 @@ import { NodeConfig } from "./types";
 const stableDiffusionStabilityAiNodeConfig: NodeConfig = {
   nodeName: "Stable Diffusion",
   processorType: "stable-diffusion-stabilityai-prompt",
-  icon: "FaImage",
+  icon: "StabilityAILogo",
   hasInputHandle: true,
   inputNames: ["prompt"],
   fields: [

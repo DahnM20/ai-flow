@@ -97,7 +97,7 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
             NodeConfigBuilder()
             .set_node_name("Stable Diffusion 3")
             .set_processor_type(self.processor_type)
-            .set_icon("FaRobot")
+            .set_icon("StabilityAILogo")
             .set_section("models")
             .set_help_message("stableDiffusionPromptHelp")
             .set_output_type("imageUrl")

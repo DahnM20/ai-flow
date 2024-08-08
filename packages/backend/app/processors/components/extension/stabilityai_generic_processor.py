@@ -125,7 +125,7 @@ class StabilityAIGenericProcessor(
             NodeConfigBuilder()
             .set_node_name("StabilityAI")
             .set_processor_type(self.processor_type)
-            .set_icon("FaRobot")
+            .set_icon("StabilityAILogo")
             .set_section("models")
             .set_help_message("stableDiffusionPromptHelp")
             .set_show_handles(True)
@@ -196,7 +196,7 @@ class StabilityAIGenericProcessor(
         return (
             builder.set_node_name(f"StabilityAI - {node_name}")
             .set_processor_type(self.processor_type)
-            .set_icon("FaRobot")
+            .set_icon("StabilityAILogo")
             .set_section("models")
             .set_help_message("stableDiffusionPromptHelp")
             .set_output_type(output_type)
