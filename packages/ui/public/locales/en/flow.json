@@ -31,6 +31,7 @@
   "ReplicateModel": "Replicate",
   "NoContextPrompt": "GPT Prompt",
   "PromptPlaceholder": "Enter your prompt here, for example 'Create a Twitter thread based on the data I sent you.'",
+  "MergePromptPlaceholder": "Enter your text for the merge, using ${input-1} and ${input-2} as placeholders. You can add additional text, for example: \n Answer to ${input-1} by considering ${input-2}.",
   "VisionPromptPlaceholder": "Please enter your prompt here to start the image analysis. For example, you could write 'Describe this image'",
   "VisionImageURLPlaceholder": "Enter the URL of the image you want to use.",
   "DallEPromptPlaceholder": "Enter your prompt here, for example 'A dog and a cat playing in the desert'",

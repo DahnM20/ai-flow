@@ -31,7 +31,7 @@ export const mergerPromptNode: NodeConfig = {
       name: "prompt",
       type: "textarea",
       required: true,
-      placeholder: "PromptPlaceholder",
+      placeholder: "MergePromptPlaceholder",
     },
   ],
   outputType: "markdown",

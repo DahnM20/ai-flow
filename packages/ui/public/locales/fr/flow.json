@@ -29,6 +29,7 @@
   "GPTPrompt": "GPT Prompt",
   "NoContextPrompt": "GPT Prompt",
   "PromptPlaceholder": "Entrez votre prompt ici, par exemple 'Crée un thread Twitter basé sur les données que je t'ai envoyées.'",
+  "MergePromptPlaceholder": "Entrez votre texte pour la fusion en utilisant les constantes ${input-1} et ${input-2}. Vous pouvez ajouter du texte supplémentaire, par exemple : \n Répond à ${input-1} en tenant compte de ${input-2}.",
   "VisionPromptPlaceholder": "Entrez votre prompt ici pour analyser l'image en entrée. Par exemple 'Crée une description de cette image'",
   "VisionImageURLPlaceholder": "Saisissez l'URL vers l'image que vous souhaitez utiliser",
   "DallEPromptPlaceholder": "Entrez votre prompt ici, par exemple 'Un chien et un chat jouant dans le désert'",
