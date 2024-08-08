@@ -3,7 +3,7 @@ import { NodeConfig } from "./types";
 const inputTextNodeConfig: NodeConfig = {
   nodeName: "Text",
   processorType: "input-text",
-  icon: "FaUserCircle",
+  icon: "AiOutlineEdit",
   fields: [
     {
       type: "textarea",

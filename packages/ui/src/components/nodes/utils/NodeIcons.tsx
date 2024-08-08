@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { AiOutlineMergeCells } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineMergeCells } from "react-icons/ai";
 import {
   FaUserCircle,
   FaRobot,
@@ -18,6 +18,7 @@ const ICON_MAP: { [key: string]: FC } = {
   FaFilm: FaFilm,
   FaImage: FaImage,
   FaEye: FaEye,
+  AiOutlineEdit: AiOutlineEdit,
   AiOutlineMergeCells: AiOutlineMergeCells,
   AIFlowLogo: () => <img src="./logo.svg" alt="hi" className="w-full" />,
   OpenAILogo: () => (
