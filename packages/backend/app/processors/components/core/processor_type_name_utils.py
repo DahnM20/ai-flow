@@ -28,3 +28,4 @@ class ProcessorType(Enum):
     DOCUMENT_TO_TEXT = "document-to-text-processor"
     STABILITYAI = "stabilityai-generic-processor"
     CLAUDE = "claude-anthropic-processor"
+    REPLACE_TEXT = "replace-text"
