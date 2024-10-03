@@ -8,11 +8,7 @@ import { useTranslation } from "react-i18next";
 import { FaEye, FaSitemap } from "react-icons/fa";
 import {
   convertFlowToJson,
-  convertJsonToFlow,
-  findParents,
   formatFlow,
-  isCompatibleConfigVersion,
-  migrateConfig,
   nodesTopologicalSort,
 } from "../../utils/flowUtils";
 import {
@@ -73,7 +69,7 @@ export interface FlowTabsProps {
   tabs: FlowTab[];
 }
 
-export type ApplicationMode = "flow" | "view";
+export type ApplicationMode = "flow";
 export type ApplicationMenu = "template" | "config" | "help";
 
 const FlowTabs = ({ tabs }: FlowTabsProps) => {
@@ -91,7 +87,6 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
   const [mode, setMode] = useState<ApplicationMode>("flow");
   const [selectedEdgeType, setSelectedEdgeType] = useState("default");
   const useAuth = import.meta.env.VITE_APP_USE_AUTH === "true";
-  const [flowIdInParams, setFlowIdInParams] = useState<string>("");
   const { getElement, setConfigActiveTab } = useVisibility();
   const [loading, startLoadingWith] = useLoading();
   const configPopup = getElement("configPopup");
@@ -176,42 +171,6 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
           return {
             ...tab,
             metadata: { ...tab.metadata, ...metadata },
-          };
-        }
-        return tab;
-      });
-      return { ...prevFlowTabs, tabs: updatedTabs };
-    });
-  };
-
-  const handleLayoutChange = (layout: Layout[]) => {
-    setFlowTabs((prevFlowTabs) => {
-      const updatedTabs = prevFlowTabs.tabs.map((tab, index) => {
-        if (index === currentTab) {
-          return {
-            ...tab,
-            layoutViewData: {
-              ...tab.layoutViewData,
-              layout,
-            },
-          };
-        }
-        return tab;
-      });
-      return { ...prevFlowTabs, tabs: updatedTabs };
-    });
-  };
-
-  const handlePaneDataChange = (data: PaneDataState) => {
-    setFlowTabs((prevFlowTabs) => {
-      const updatedTabs = prevFlowTabs.tabs.map((tab, index) => {
-        if (index === currentTab) {
-          return {
-            ...tab,
-            layoutViewData: {
-              ...tab.layoutViewData,
-              data,
-            },
           };
         }
         return tab;
@@ -361,22 +320,12 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
                   }
                 />
               </div>
-
-              <FaSitemap
-                className="hidden -rotate-90 text-slate-400 hover:text-slate-50 md:flex"
-                onClick={handleFormatFlow}
-              />
-
               <FaEye
                 className={` ${showOnlyOutput ? "rounded-2xl text-green-400 ring-1 ring-green-400/50 hover:text-green-200" : "text-slate-400 hover:text-slate-50 "} hidden md:flex`}
                 onClick={handleToggleOutput}
               />
             </>
           )}
-
-          {mode === "view" && <span id="view-action-portal" />}
-
-          <div className="hidden h-6 border-l-2 border-l-slate-500/50 pl-2 md:flex"></div>
           <div className="pr-2">
             <ButtonRunAll
               onClick={handleRunAllCurrentFlow}
@@ -408,20 +357,6 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
               isRunning={isRunning}
               onRunChange={handleChangeRun}
               selectedEdgeType={selectedEdgeType}
-            />
-          )}
-          {mode === "view" && (
-            <LayoutView
-              key={`smartview-${currentTab}-${refresh}`}
-              nodes={flowTabs.tabs[currentTab].nodes}
-              edges={flowTabs.tabs[currentTab].edges}
-              metadata={flowTabs.tabs[currentTab].metadata ?? {}}
-              tabLayout={flowTabs.tabs[currentTab].layoutViewData}
-              isRunning={isRunning}
-              onLayoutChange={handleLayoutChange}
-              onPaneDataChange={handlePaneDataChange}
-              onFlowChange={handleFlowChange}
-              onRunChange={handleChangeRun}
             />
           )}
         </FlowWrapper>

@@ -11,7 +11,6 @@ interface ModeBarProps {
 function ModeBar({ onChangeMode, onOpenMenu, currentMode }: ModeBarProps) {
   const modes: { name: ApplicationMode; icon: any }[] = [
     { name: "flow", icon: FaProjectDiagram },
-    { name: "view", icon: FaColumns },
   ];
 
   const menus: { name: ApplicationMenu; icon: any }[] = [
