@@ -1,18 +1,13 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import Flow from "../../components/Flow";
 import { Node, Edge } from "reactflow";
-import { ThemeContext } from "../../providers/ThemeProvider";
-import { darken, lighten } from "polished";
 import { useTranslation } from "react-i18next";
-import { FaEye, FaSitemap } from "react-icons/fa";
 import {
   convertFlowToJson,
   formatFlow,
   nodesTopologicalSort,
 } from "../../utils/flowUtils";
 import {
-  toastCustomIconInfoMessage,
   toastErrorMessage,
   toastFastInfoMessage,
   toastInfoMessage,
@@ -20,16 +15,11 @@ import {
 import ButtonRunAll from "../../components/buttons/ButtonRunAll";
 import { FlowEvent, SocketContext } from "../../providers/SocketProvider";
 import FlowWrapper from "./wrapper/FlowWrapper";
-import LayoutView, {
-  PaneDataState,
-} from "../../components/smart-view/LayoutView";
-import EdgeTypeButton from "../../components/buttons/EdgeTypeButton";
 import TabHeader from "./header/TabHeader";
 import {
   createErrorMessageForMissingFields,
   getNodeInError,
 } from "../../utils/flowChecker";
-import { Layout } from "react-grid-layout";
 import { useVisibility } from "../../providers/VisibilityProvider";
 import { FlowDataProvider } from "../../providers/FlowDataProvider";
 import {
@@ -42,13 +32,7 @@ import { useLoading } from "../../hooks/useLoading";
 export interface FlowTab {
   nodes: Node[];
   edges: Edge[];
-  layoutViewData?: LayoutViewData;
   metadata?: FlowMetadata;
-}
-
-export interface LayoutViewData {
-  layout?: Layout[];
-  data?: PaneDataState;
 }
 
 export interface FlowMetadata {
@@ -81,13 +65,12 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
-  const { dark, toggleTheme } = useContext(ThemeContext);
   const { emitEvent } = useContext(SocketContext);
   const [isRunning, setIsRunning] = useState(false);
   const [mode, setMode] = useState<ApplicationMode>("flow");
   const [selectedEdgeType, setSelectedEdgeType] = useState("default");
   const useAuth = import.meta.env.VITE_APP_USE_AUTH === "true";
-  const { getElement, setConfigActiveTab } = useVisibility();
+  const { getElement } = useVisibility();
   const [loading, startLoadingWith] = useLoading();
   const configPopup = getElement("configPopup");
 
@@ -101,10 +84,6 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
   useEffect(() => {
     flowTabsRef.current = flowTabs;
   }, [flowTabs]);
-
-  const handleToggleOutput = () => {
-    setShowOnlyOutput(!showOnlyOutput);
-  };
 
   useEffect(() => {
     const init = async () => {
@@ -131,14 +110,6 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
         edges: [],
         metadata: { version: "1.0.0" },
       });
-      return newFlowTab;
-    });
-  };
-
-  const addFlowTab = (tab: FlowTab) => {
-    setFlowTabs((prevFlowTabs) => {
-      const newFlowTab = { ...prevFlowTabs };
-      newFlowTab.tabs.push(tab);
       return newFlowTab;
     });
   };
@@ -216,19 +187,6 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
     setIsRunning(runStatus);
   };
 
-  const replaceTab = (index: number, newTab: FlowTab) => {
-    setFlowTabs((prev) => {
-      const newTabs = prev.tabs.map((tab, i) => {
-        if (i === index) {
-          return newTab;
-        }
-        return tab;
-      });
-      return { ...prev, tabs: newTabs };
-    });
-    setRefresh((prev) => !prev);
-  };
-
   const handleChangeTab = useCallback(
     async (index: number) => {
       if (!isRunning) {
@@ -261,17 +219,6 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
     setRefresh((prev) => !prev);
   };
 
-  const handleFormatFlow = () => {
-    const nodes = flowTabs.tabs[currentTab].nodes;
-    const edges = flowTabs.tabs[currentTab].edges;
-    const metadata = flowTabs.tabs[currentTab].metadata;
-
-    const nodesFormatted = formatFlow(nodes, edges);
-
-    handleFlowChange(nodesFormatted, edges, metadata);
-    setRefresh((prev) => !prev);
-  };
-
   const handleAddNewFlow = (flowData: any) => {
     setFlowTabs((prevFlowTabs) => {
       const newFlowTab = { ...prevFlowTabs };
@@ -299,7 +246,7 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
   };
 
   return (
-    <FlowManagerContainer className="relative flex h-screen flex-col">
+    <div className="relative flex h-screen flex-col">
       <TabHeader
         currentTab={currentTab}
         tabs={flowTabs.tabs}
@@ -310,23 +257,7 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
         tabPrefix={t("Flow")}
       >
         <div className="ml-auto flex flex-row items-center space-x-2  ">
-          {mode === "flow" && (
-            <>
-              <div className="hidden h-auto w-6 md:flex">
-                <EdgeTypeButton
-                  edgeType={selectedEdgeType}
-                  onChangeEdgeType={(newEdgeType) =>
-                    setSelectedEdgeType(newEdgeType)
-                  }
-                />
-              </div>
-              <FaEye
-                className={` ${showOnlyOutput ? "rounded-2xl text-green-400 ring-1 ring-green-400/50 hover:text-green-200" : "text-slate-400 hover:text-slate-50 "} hidden md:flex`}
-                onClick={handleToggleOutput}
-              />
-            </>
-          )}
-          <div className="pr-2">
+          <div className="mr-5">
             <ButtonRunAll
               onClick={handleRunAllCurrentFlow}
               isRunning={isRunning}
@@ -361,10 +292,8 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
           )}
         </FlowWrapper>
       </FlowDataProvider>
-    </FlowManagerContainer>
+    </div>
   );
 };
-
-const FlowManagerContainer = styled.div``;
 
 export default FlowTabs;

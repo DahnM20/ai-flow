@@ -104,10 +104,6 @@
       }
     ]
   },
-  "ai-action": {
-    "description": "Exécute une invite AI prédéfinie avec GPT-4o.",
-    "docUrls": []
-  },
   "file": {
     "description": "Permet d'héberger un fichier et de retourner une URL permettant d'y accéder. Supporte divers types de fichiers pour une utilisation au sein du système. Ce nœud n'extrait pas le contenu des fichiers. Les fichiers sont disponibles pendant 12H.",
     "docUrls": [

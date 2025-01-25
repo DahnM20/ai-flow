@@ -37,12 +37,6 @@ export function transformNodeConfigsToDndNode(configs: {
 export function getNonGenericNodeConfig() {
   const nonGenericNodeConfig: DnDNode[] = [
     {
-      label: "AiAction",
-      type: "ai-action",
-      helpMessage: "aiActionPromptHelp",
-      section: "tools",
-    },
-    {
       label: "File",
       type: "file",
       helpMessage: "fileUploadHelp",
@@ -59,7 +53,6 @@ export function getNonGenericNodeConfig() {
       type: "replicate",
       helpMessage: "replicateHelp",
       section: "models",
-      isBeta: true,
     },
     {
       label: "Transition",
@@ -73,12 +66,6 @@ export function getNonGenericNodeConfig() {
       helpMessage: "displayHelp",
       section: "tools",
     },
-    // {
-    //   label: "Text",
-    //   type: "text",
-    //   helpMessage: "imageHelp",
-    //   section: "visuals",
-    // },
   ];
   return nonGenericNodeConfig;
 }
@@ -108,11 +95,6 @@ export const populateNodeSections = () => {
       type: "tools",
       icon: FaToolbox,
     },
-    // {
-    //   label: "Visuals",
-    //   type: "visuals",
-    //   icon: BsInputCursorText,
-    // },
   ];
   const nodes = getAllDndNode();
 

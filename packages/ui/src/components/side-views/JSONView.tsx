@@ -1,14 +1,7 @@
 import React, { useContext, memo, useState } from "react";
-import {
-  FiCloud,
-  FiCrosshair,
-  FiDownload,
-  FiSave,
-  FiUpload,
-} from "react-icons/fi";
+import { FiCrosshair, FiDownload, FiUpload } from "react-icons/fi";
 import { Edge, Node } from "reactflow";
 import {
-  clearSelectedNodes,
   convertFlowToJson,
   convertJsonToFlow,
   nodesTopologicalSort,
@@ -18,10 +11,6 @@ import { useTranslation } from "react-i18next";
 import { NodeContext } from "../../providers/NodeProvider";
 import { FaExclamationTriangle } from "react-icons/fa";
 import DefaultSwitch from "../buttons/DefaultSwitch";
-import { isDev } from "../../config/config";
-import { toastInfoMessage } from "../../utils/toastUtils";
-import AddTemplatePopup from "../popups/AddTemplatePopup";
-import { TemplateFormData, saveTemplate } from "../../api/template";
 
 interface JSONViewProps {
   nodes: Node[];
@@ -34,7 +23,6 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
   const { removeAll, clearAllOutput } = useContext(NodeContext);
   const [showFieldsConfig, setShowFieldsConfig] = useState(false);
   const [showCoordinates, setShowCoordinates] = useState(false);
-  const [showAddTemplatePopup, setShowAddTemplatePopup] = useState(false);
 
   nodes = nodesTopologicalSort(nodes, edges);
   const data = convertFlowToJson(
@@ -82,24 +70,6 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
     link.remove();
   };
 
-  const handleSaveAsTemplate = async (data: TemplateFormData) => {
-    const nodesCleared = clearSelectedNodes(nodes);
-    const flowData = convertFlowToJson(nodesCleared, edges, true, true);
-
-    const response = await saveTemplate(data, flowData);
-
-    if (response.status === 200) {
-      toastInfoMessage("Template saved");
-      setShowAddTemplatePopup(false);
-    } else {
-      toastInfoMessage("Error saving template");
-    }
-  };
-
-  const openAddTemplatePopup = () => {
-    setShowAddTemplatePopup(true);
-  };
-
   return (
     <>
       <JSONViewContainer className="space-y-2">
@@ -121,19 +91,7 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
             {t("Delete All")}
           </JSONViewButton>
         </JSONViewButtons>
-        {isDev() && (
-          <JSONViewButtons>
-            {
-              <button
-                onClick={openAddTemplatePopup}
-                className="flex flex-row items-center justify-center space-x-1 rounded-md bg-teal-500/80 px-2 py-1 text-sm transition-all duration-300 ease-in-out hover:bg-teal-500"
-              >
-                <FiSave />
-                <p>{t("Save as template")}</p>
-              </button>
-            }
-          </JSONViewButtons>
-        )}
+
         <div className="mt-2 flex flex-col">
           <div className="flex flex-row items-center space-x-2">
             <DefaultSwitch
@@ -154,11 +112,6 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
           {JSON.stringify(data, null, 2)}
         </JSONViewContent>
       </JSONViewContainer>
-      <AddTemplatePopup
-        show={showAddTemplatePopup}
-        onClose={() => setShowAddTemplatePopup(false)}
-        onValidate={handleSaveAsTemplate}
-      />
     </>
   );
 };

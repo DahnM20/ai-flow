@@ -62,15 +62,12 @@ const DnDSidebar = () => {
           text-2xl font-bold
           text-slate-300 hover:font-extrabold hover:text-slate-100`}
           onClick={sidebar.toggle}
-          // data-tooltip-id={`dnd-tooltip`}
-          // data-tooltip-content={`${sidebar.isVisible ? t("HideSidebar") : t("ShowSidebar")}`}
-          // data-tooltip-place="right"
         >
           {!sidebar.isVisible ? <FiChevronRight /> : <FiChevronLeft />}
         </div>
         {contentVisible && (
           <DnDSidebarContainer
-            className={` font-sm md:font-md flex transform flex-col  border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md  ${isTouchDevice ? "overflow-y-auto" : " overflow-hidden hover:overflow-y-auto"}
+            className={` font-sm md:font-md flex transform flex-col  rounded-r-lg border-r-sky-900/50 bg-zinc-950/10 px-3 py-2 shadow-md backdrop-blur-md  ${isTouchDevice ? "overflow-y-auto" : " overflow-hidden hover:overflow-y-auto"}
              ${!sidebar.isVisible ? "opacity-0" : ""} 
                   transition-opacity duration-${HIDE_SIDEBAR_ANIMATION_DURATION} ease-in-out`}
           >

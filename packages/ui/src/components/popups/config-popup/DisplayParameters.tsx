@@ -40,7 +40,7 @@ export default function DisplayParameters() {
 
   return (
     <div className="flex w-full justify-center">
-      <div className="flex w-1/2 flex-col">
+      <div className="flex w-full flex-col">
         <ParametersContainer className="flex flex-col">
           <h3 className="mb-2 font-semibold">{tc("UI")}</h3>
           <Checkbox
@@ -53,7 +53,7 @@ export default function DisplayParameters() {
           />
 
           <h3 className="my-2 font-semibold">{tc("nodesDisplayed")}</h3>
-          <div className="mb-5 flex w-full flex-col space-y-1">
+          <div className="mb-5 w-full flex-col flex-wrap space-y-1">
             {allNodes.map((node) => {
               return (
                 <Checkbox

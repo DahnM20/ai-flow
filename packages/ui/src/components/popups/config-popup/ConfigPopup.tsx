@@ -1,7 +1,6 @@
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { FiMail } from "react-icons/fi";
 import { Modal } from "@mantine/core";
 import { UserParameters } from "./UserParameters";
 import DisplayParameters from "./DisplayParameters";
@@ -13,7 +12,7 @@ interface ConfigPopupProps {
   onValidate?: () => void;
 }
 
-const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
+const ConfigPopup = ({ isOpen }: ConfigPopupProps) => {
   const { t } = useTranslation("config");
 
   const { getElement, configActiveTab, setConfigActiveTab } = useVisibility();
@@ -28,7 +27,7 @@ const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
       opened={isOpen}
       onClose={handleClose}
       withCloseButton={false}
-      size="auto"
+      size="50%"
       centered
       styles={{
         content: {
@@ -58,10 +57,6 @@ const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
         <h2 className="mb-5 text-center text-2xl font-bold">
           {t("configurationTitle")}
         </h2>
-        <Disclaimer>
-          <p>{t("openSourceDisclaimer")}</p>
-          <p>{t("apiKeyDisclaimer")}</p>
-        </Disclaimer>
         <Tabs className="sm:text-md text-base">
           <Tab
             isActive={configActiveTab === "user"}
@@ -95,9 +90,6 @@ const ConfigPopup = ({ isOpen, onClose, onValidate }: ConfigPopupProps) => {
             >
               <FaXTwitter />
             </Icon>
-            <Icon href="mailto:support@ai-flow.net">
-              <FiMail />
-            </Icon>
           </Icons>
         </Footer>
       </Content>
@@ -110,14 +102,6 @@ const Content = styled.div`
   flex-direction: column;
   justify-content: space-between;
   overflow: auto;
-`;
-
-const Disclaimer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1em;
-  color: #6b7280;
 `;
 
 const Tabs = styled.div`

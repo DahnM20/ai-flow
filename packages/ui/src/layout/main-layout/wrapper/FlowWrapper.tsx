@@ -3,9 +3,7 @@ import { FiHelpCircle } from "react-icons/fi";
 import ConfigPopup from "../../../components/popups/config-popup/ConfigPopup";
 import DnDSidebar from "../../../components/bars/dnd-sidebar/DnDSidebar";
 import RightIconButton from "../../../components/buttons/ConfigurationButton";
-import ModeBar from "../sidebar/ModeBar";
 import { ApplicationMenu, ApplicationMode } from "../AppLayout";
-import TemplatePopup from "../../../components/popups/TemplatePopup";
 import HelpPopup from "../../../components/popups/HelpPopup";
 import FlowErrorBoundary from "./FlowErrorBoundary";
 import { useVisibility } from "../../../providers/VisibilityProvider";
@@ -50,11 +48,6 @@ function FlowWrapper({
                           flex-row
                           pt-16"
         >
-          <ModeBar
-            currentMode={mode}
-            onChangeMode={onChangeMode}
-            onOpenMenu={handleMenuChange}
-          />
           {mode === "flow" && <DnDSidebar />}
         </div>
         <RightIconButton onClick={() => configPopup.show()} />
@@ -72,11 +65,6 @@ function FlowWrapper({
         <HelpPopup
           isOpen={menuState["help"]}
           onClose={() => handleMenuChange("help")}
-        />
-        <TemplatePopup
-          isOpen={menuState["template"]}
-          onValidate={onAddNewFlow}
-          onClose={() => handleMenuChange("template")}
         />
         {children}
       </FlowErrorBoundary>

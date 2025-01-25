@@ -3,7 +3,6 @@ import { FiChevronsRight, FiChevronsLeft } from "react-icons/fi";
 import { Edge, Node } from "reactflow";
 import JSONView from "../side-views/JSONView";
 import styled, { css } from "styled-components";
-import TopologicalView from "../side-views/TopologicalView";
 import { useTranslation } from "react-i18next";
 import { TabButton } from "../../layout/main-layout/header/Tab";
 import { useVisibility } from "../../providers/VisibilityProvider";
@@ -55,13 +54,6 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
             <Title>{t("JsonView")}</Title>
           </TabButton>
           <TabButton
-            active={sidepaneActiveTab === "topological"}
-            onClick={() => setSidepaneActiveTab("topological")}
-            className="text-md px-1 py-2 hover:text-slate-50"
-          >
-            <Title>{t("TopologicalView")}</Title>
-          </TabButton>
-          <TabButton
             active={sidepaneActiveTab === "current_node"}
             onClick={() => setSidepaneActiveTab("current_node")}
             className="text-md px-1 py-2 hover:text-slate-50"
@@ -69,9 +61,6 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
             <Title>{t("currentNodeView")}</Title>
           </TabButton>
         </HeaderContainer>
-        {show && sidepaneActiveTab === "topological" && (
-          <TopologicalView nodes={nodes} edges={edges} />
-        )}
         {show && sidepaneActiveTab === "json" && (
           <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} />
         )}

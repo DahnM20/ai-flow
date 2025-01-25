@@ -104,10 +104,6 @@
       }
     ]
   },
-  "ai-action": {
-    "description": "Execute predefined AI prompt with GPT-4o",
-    "docUrls": []
-  },
   "file": {
     "description": "Handles the uploading, storage, and retrieval of files, supporting various file types for use within the system. This node does not extract file content. Files are available 12H.",
     "docUrls": [

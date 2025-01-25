@@ -1,7 +1,6 @@
 import logging
 import re
 
-from ..model import NodeStyle
 from ..node_config_builder import FieldBuilder, NodeConfigBuilder
 from .extension_processor import BasicExtensionProcessor
 from ..core.processor_type_name_utils import ProcessorType
