@@ -1,16 +1,25 @@
-import React, { useContext, memo, useState } from "react";
-import { FiCrosshair, FiDownload, FiUpload } from "react-icons/fi";
+import React, { useContext, memo, useState, useEffect } from "react";
+import {
+  FiCloud,
+  FiCrosshair,
+  FiDownload,
+  FiSave,
+  FiUpload,
+} from "react-icons/fi";
 import { Edge, Node } from "reactflow";
 import {
+  clearSelectedNodes,
   convertFlowToJson,
   convertJsonToFlow,
   nodesTopologicalSort,
 } from "../../utils/flowUtils";
-import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { NodeContext } from "../../providers/NodeProvider";
 import { FaExclamationTriangle } from "react-icons/fa";
-import DefaultSwitch from "../buttons/DefaultSwitch";
+import { isDev } from "../../config/config";
+import { Button, Group, Switch } from "@mantine/core";
+import { MdCopyAll } from "react-icons/md";
+import styled from "styled-components";
 
 interface JSONViewProps {
   nodes: Node[];
@@ -21,12 +30,13 @@ interface JSONViewProps {
 const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
   const { t } = useTranslation("flow");
   const { removeAll, clearAllOutput } = useContext(NodeContext);
-  const [showFieldsConfig, setShowFieldsConfig] = useState(false);
-  const [showCoordinates, setShowCoordinates] = useState(false);
+  const [showFieldsConfig, setShowFieldsConfig] = useState(isDev());
+  const [showCoordinates, setShowCoordinates] = useState(isDev());
 
-  nodes = nodesTopologicalSort(nodes, edges);
+  // Sort and convert nodes and edges to JSON
+  const sortedNodes = nodesTopologicalSort(nodes, edges);
   const data = convertFlowToJson(
-    nodes,
+    sortedNodes,
     edges,
     showCoordinates,
     showFieldsConfig,
@@ -56,15 +66,16 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
     input.click();
   };
 
+  // Handle file download
   const handleDownloadClick = () => {
-    const fullData = convertFlowToJson(nodes, edges, true, true);
+    const fullData = convertFlowToJson(sortedNodes, edges, true, true);
     const blob = new Blob([JSON.stringify(fullData, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "data.json";
+    link.download = "flow.json";
     link.click();
     URL.revokeObjectURL(url);
     link.remove();
@@ -72,76 +83,83 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
 
   return (
     <>
-      <JSONViewContainer className="space-y-2">
-        <JSONViewButtons>
-          <JSONViewButton onClick={handleUploadClick}>
-            <FiUpload />
+      <div className="space-y-4 p-3">
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <Button
+            variant="light"
+            color="blue"
+            leftSection={<FiUpload />}
+            onClick={handleUploadClick}
+          >
             {t("Upload")}
-          </JSONViewButton>
-          <JSONViewButton onClick={handleDownloadClick}>
-            <FiDownload />
+          </Button>
+          <Button
+            variant="light"
+            color="green"
+            leftSection={<FiDownload />}
+            onClick={handleDownloadClick}
+          >
             {t("Download")}
-          </JSONViewButton>
-          <JSONViewButton onClick={clearAllOutput} dangerous>
-            <FiCrosshair />
-            {t("Delete Output")}
-          </JSONViewButton>
-          <JSONViewButton onClick={removeAll} dangerous>
-            <FaExclamationTriangle />
-            {t("Delete All")}
-          </JSONViewButton>
-        </JSONViewButtons>
+          </Button>
+          <Button
+            variant="light"
+            color="orange"
+            leftSection={<FiCrosshair />}
+            onClick={clearAllOutput}
+          >
+            {t("DeleteOutputs")}
+          </Button>
+          <Button
+            variant="light"
+            color="red"
+            leftSection={<FaExclamationTriangle />}
+            onClick={removeAll}
+          >
+            {t("DeleteAll")}
+          </Button>
+        </div>
 
-        <div className="mt-2 flex flex-col">
-          <div className="flex flex-row items-center space-x-2">
-            <DefaultSwitch
-              onChange={(checked: boolean) => setShowFieldsConfig(checked)}
+        {/* Switches */}
+        <div className="flex flex-col space-y-2">
+          <Group p="left">
+            <Switch
               checked={showFieldsConfig}
+              onChange={(event) =>
+                setShowFieldsConfig(event.currentTarget.checked)
+              }
+              label={t("ShowNodesConfig")}
             />
-            <p className="text-sm">Show nodes config</p>
-          </div>
-          <div className="flex flex-row items-center space-x-2">
-            <DefaultSwitch
-              onChange={(checked: boolean) => setShowCoordinates(checked)}
+          </Group>
+          <Group p="left">
+            <Switch
               checked={showCoordinates}
+              onChange={(event) =>
+                setShowCoordinates(event.currentTarget.checked)
+              }
+              label={t("ShowCoordinates")}
             />
-            <p className="text-sm">Show coordinates</p>
+          </Group>
+        </div>
+
+        {/* JSON Viewer */}
+        <div className="relative w-full">
+          <div className="absolute right-3 top-3 text-lg text-slate-500 transition-all duration-150 ease-in-out hover:text-slate-100">
+            <MdCopyAll
+              onClick={() =>
+                navigator.clipboard.writeText(JSON.stringify(data, null, 2))
+              }
+            />
           </div>
         </div>
+
         <JSONViewContent className="mt-5">
           {JSON.stringify(data, null, 2)}
         </JSONViewContent>
-      </JSONViewContainer>
+      </div>
     </>
   );
 };
-
-const JSONViewContainer = styled.div`
-  padding: 20px;
-`;
-
-const JSONViewButtons = styled.div.attrs({
-  className: "flex gap-2 justify-center flex-wrap",
-})``;
-
-const JSONViewButton = styled.button<{ dangerous?: boolean }>`
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
-  background-color: ${(props) => (props.dangerous ? "#c47769" : "#67a58a")};
-  color: white;
-  font-size: 0.8em;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: ${(props) => (props.dangerous ? "#962121" : "#219653")};
-  }
-`;
 
 const JSONViewContent = styled.pre`
   white-space: pre-wrap;
@@ -150,10 +168,4 @@ const JSONViewContent = styled.pre`
   background-color: ${({ theme }) => theme.nodeInputBg};
 `;
 
-function arePropsEqual(prevProps: JSONViewProps, nextProps: JSONViewProps) {
-  return (
-    prevProps.nodes === nextProps.nodes && prevProps.edges === nextProps.edges
-  );
-}
-
-export default memo(JSONView, arePropsEqual);
+export default memo(JSONView);
