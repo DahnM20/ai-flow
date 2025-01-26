@@ -57,7 +57,7 @@
   "mergerPromptHelp": "This nodes allows you to merge 2 inputs.",
   "gptVisionPromptHelp": "This node uses GPT-4 Vision and takes an image URL as input.",
   "dataSplitterHelp": "This node is used to split data into several parts. You can specify upstream how many parts you want to create. You can also run it individually so that it finds the exact number of outputs to generate.",
-  "socketConnectionLost": "The connection has been lost. \n\n You can try again later or install the application locally to avoid this kind of issue in the future.",
+  "socketConnectionLost": "The connection has been lost.",
   "ClickToSelectModel": "Click to select model",
   "Or": "OR",
   "EnterModelNameDirectly": "Enter model name directly",
@@ -119,5 +119,15 @@
   "Help": "Help",
   "cookiesConsentLabelPlaceholder": "Agree to all",
   "cookiesConsentLabelHelp": "For some pages, we need to click on the cookie consent button to access the data. This instruction helps locate the button.",
-  "EditTextContent": "Edit text content"
+  "EditTextContent": "Edit text content",
+  "ShowCoordinates": "Show Coordinates",
+  "ShowNodesConfig": "Show Nodes Config",
+  "DeleteAll": "Delete All",
+  "DeleteOutputs": "Delete Outputs",
+  "ReplaceText": "Replace Text",
+  "ReplaceTextInputPlaceholder": "Enter the full text where the term will be replaced.",
+  "ReplaceTextSearchPlaceholder": "Enter the term or regex pattern to be replaced.",
+  "ReplaceTextReplacePlaceholder": "Enter the replacement term.",
+  "replaceTextNodeHelp": "Use this node to find and replace specific text or patterns within the input.",
+  "openaio1Help": "Advanced language models trained for complex reasoning, excelling in scientific, mathematical, and programming challenges."
 }

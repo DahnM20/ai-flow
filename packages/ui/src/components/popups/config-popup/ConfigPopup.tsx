@@ -41,6 +41,7 @@ const ConfigPopup = ({ isOpen }: ConfigPopupProps) => {
           backgroundPosition: "center",
           padding: "2em",
           color: "#d8dee9",
+          minHeight: "100%",
         },
         title: {
           fontSize: "1.25rem",

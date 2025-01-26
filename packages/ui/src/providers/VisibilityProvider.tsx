@@ -7,7 +7,7 @@ export type VisibilityElement =
   | "configPopup";
 
 export type SidepaneTab = "json" | "topological" | "current_node";
-export type ConfigTab = "user" | "display";
+export type ConfigTab = "user" | "display" | "app";
 
 export interface VisibilityContextState {
   [key: string]: {

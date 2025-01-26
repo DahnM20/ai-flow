@@ -15,9 +15,13 @@
   "parameters.extension.anthropic_api_key": "Clé API Anthropic",
   "sections.extension": "Extensions",
   "userTabLabel": "Paramètres utilisateur",
+  "appParametersLabel": "Paramètres de l'application",
   "displayTabLabel": "Paramètres d'affichage",
   "nodesDisplayed": "Nœuds activés",
   "configUpdated": "Configuration mise à jour avec succès",
   "ShowMinimap": "Afficher la minimap",
-  "UI": "Interface Utilisateur"
+  "UI": "Interface Utilisateur",
+  "input": "Entrées",
+  "models": "Modèles",
+  "tools": "Outils"
 }

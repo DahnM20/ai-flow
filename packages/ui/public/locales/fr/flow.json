@@ -119,5 +119,15 @@
   "Help": "Aide",
   "cookiesConsentLabelPlaceholder": "Accepter tout",
   "cookiesConsentLabelHelp": "Pour certaines pages, nous devons cliquer sur le bouton de consentement aux cookies pour accéder aux données. Cette instruction aide à localiser le bouton.",
-  "EditTextContent": "Editer le texte"
+  "EditTextContent": "Editer le texte",
+  "ShowCoordinates": "Afficher les coordonnées",
+  "ShowNodesConfig": "Afficher les configurations des noeuds",
+  "DeleteAll": "Tout supprimer",
+  "DeleteOutputs": "Supprimer les résultats",
+  "ReplaceText": "Remplacer Texte",
+  "ReplaceTextInputPlaceholder": "Entrez le texte complet où le terme sera remplacé.",
+  "ReplaceTextSearchPlaceholder": "Entrez le terme ou le motif regex à remplacer.",
+  "ReplaceTextReplacePlaceholder": "Entrez le terme de remplacement.",
+  "replaceTextNodeHelp": "Utilisez ce nœud pour rechercher et remplacer un texte spécifique ou des motifs dans l'entrée.",
+  "openaio1Help": "Des modèles de langage avancés formés pour le raisonnement complexe, excellant dans les défis scientifiques, mathématiques et de programmation."
 }

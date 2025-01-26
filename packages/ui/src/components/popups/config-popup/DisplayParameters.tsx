@@ -34,13 +34,22 @@ export default function DisplayParameters() {
     toastFastSuccessMessage(tc("configUpdated"));
   }
 
-  const allNodes = transformNodeConfigsToDndNode(nodeConfigs).concat(
+  let allNodes = transformNodeConfigsToDndNode(nodeConfigs).concat(
     getNonGenericNodeConfig(),
   );
 
+  const nodesBySection = allNodes.reduce((acc: Record<string, any[]>, node) => {
+    const section = node.section || "Default";
+    if (!acc[section]) {
+      acc[section] = [];
+    }
+    acc[section].push(node);
+    return acc;
+  }, {});
+
   return (
     <div className="flex w-full justify-center">
-      <div className="flex w-full flex-col">
+      <div className="flex flex-col">
         <ParametersContainer className="flex flex-col">
           <h3 className="mb-2 font-semibold">{tc("UI")}</h3>
           <Checkbox
@@ -52,21 +61,34 @@ export default function DisplayParameters() {
             onChange={() => minimap.toggle()}
           />
 
-          <h3 className="my-2 font-semibold">{tc("nodesDisplayed")}</h3>
-          <div className="mb-5 w-full flex-col flex-wrap space-y-1">
-            {allNodes.map((node) => {
-              return (
-                <Checkbox
-                  key={node.type}
-                  label={t(node.label ?? node.type)}
-                  size="sm"
-                  darkHidden={false}
-                  color="cyan"
-                  checked={!nodesHidden?.includes(node.type)}
-                  onChange={() => handleCheckField(node.type)}
-                />
-              );
-            })}
+          <h3 className="mb-2 mt-10 font-semibold">{tc("Core Nodes")}</h3>
+
+          <div className="flex flex-col gap-10 md:flex-row">
+            {Object.keys(nodesBySection).map((section) => (
+              <div key={section} className="mb-4">
+                <h4 className="mb-2 text-sm italic">{tc(section)}</h4>
+                <div
+                  className="mb-5 flex w-full items-center justify-center"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                    gap: "10px",
+                  }}
+                >
+                  {nodesBySection[section].map((node) => (
+                    <Checkbox
+                      key={node.type}
+                      label={t(node.label ?? node.type)}
+                      size="sm"
+                      darkHidden={false}
+                      color="cyan"
+                      checked={!nodesHidden?.includes(node.type)}
+                      onChange={() => handleCheckField(node.type)}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </ParametersContainer>
         <Actions>

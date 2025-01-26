@@ -39,6 +39,7 @@ class StabilityAIGenericProcessor(
         re.compile(r"/inpaint"),
         re.compile(r"/chat"),  # api returns 404 for now
     ]
+
     api_reader = None
     all_paths_cache = None
     pooling_paths_cache = None
@@ -120,7 +121,7 @@ class StabilityAIGenericProcessor(
             .set_options(path_options)
             .build()
         )
-
+        
         return (
             NodeConfigBuilder()
             .set_node_name("StabilityAI")
@@ -160,6 +161,17 @@ class StabilityAIGenericProcessor(
 
         print(f"Response content type {self.response_content_type}")
 
+    @staticmethod
+    def determine_output_type(path_accept):
+        if path_accept is None:
+            return None
+        elif path_accept == "video/*":
+            return "videoUrl"
+        elif "model" in path_accept:
+            return "3dUrl"
+        else:
+            return "imageUrl"
+
     def get_dynamic_node_config(self, data) -> NodeConfig:
         if StabilityAIGenericProcessor.allowed_paths_cache is None:
             StabilityAIGenericProcessor.initialize_allowed_paths_cache()
@@ -173,8 +185,7 @@ class StabilityAIGenericProcessor(
             selected_api_path, "post"
         )
 
-        output_type = "videoUrl" if path_accept == "video/*" else "imageUrl"
-
+        output_type = StabilityAIGenericProcessor.determine_output_type(path_accept)
         pooling_path = self.get_pooling_path(selected_api_path)
 
         if pooling_path is not None:
@@ -183,7 +194,9 @@ class StabilityAIGenericProcessor(
                     pooling_path, "get"
                 )
             )
-            output_type = "videoUrl" if pooling_path_accept == "video/*" else "imageUrl"
+            output_type = StabilityAIGenericProcessor.determine_output_type(
+                pooling_path_accept
+            )
 
         builder = OpenAPIConverter().convert_schema_to_node_config(schema)
 
@@ -191,18 +204,20 @@ class StabilityAIGenericProcessor(
         last_component = (
             path_components[-1] if path_components[-1] else path_components[-2]
         )
-        node_name = last_component.capitalize()
+        node_name = " ".join(word.capitalize() for word in last_component.split("-"))
 
-        return (
+        (
             builder.set_node_name(f"StabilityAI - {node_name}")
             .set_processor_type(self.processor_type)
             .set_icon("StabilityAILogo")
             .set_section("models")
             .set_help_message("stableDiffusionPromptHelp")
-            .set_output_type(output_type)
             .set_show_handles(True)
-            .build()
         )
+        if output_type is not None:
+            builder.set_output_type(output_type)
+
+        return builder.build()
 
     def perform_pooling(self, client, path):
         return client.pooling(path=path, accept=self.pooling_path_accept)
@@ -214,7 +229,10 @@ class StabilityAIGenericProcessor(
         if extension:
             filename = f"{self.name}-{timestamp_str}.{extension}"
         else:
-            extension = self.response_content_type.split("/")[-1]
+            if "gltf-binary" in self.response_content_type:
+                extension = "glb"
+            else:
+                extension = self.response_content_type.split("/")[-1]
             filename = f"{self.name}-{timestamp_str}.{extension}"
         url = storage.save(filename, response)
 
@@ -240,16 +258,31 @@ class StabilityAIGenericProcessor(
 
         return corresponding_config.config.fields
 
+    def quick_filter(self, data):
+        if "mode" in data:
+            if data["mode"] == "image-to-image":
+                if "aspect_ratio" in data:
+                    del data["aspect_ratio"]
+            if data["mode"] == "text-to-image":
+                if "strength" in data:
+                    del data["strength"]
+                if "image" in data:
+                    del data["image"]
+
     def process(self):
 
         api_key = self._processor_context.get_value("stabilityai_api_key")
         fields = self.get_fields_from_config()
         data = {field.name: self.get_input_by_name(field.name) for field in fields}
+        self.quick_filter(data)
+
         binaryFieldNames = [field.name for field in fields if field.isBinary]
         files = {} if len(binaryFieldNames) > 0 else {"none": (None, "")}
 
         for field_name in binaryFieldNames:
             url = data[field_name]
+            data[field_name] = None
+            del data[field_name]
             if url:
                 files[field_name] = stream_download_file_as_binary(url)
             else:

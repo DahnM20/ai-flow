@@ -1,4 +1,4 @@
-import React, { memo, useContext, useState } from "react";
+import React, { memo, useContext, useMemo } from "react";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
@@ -25,12 +25,14 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({
   const { t } = useTranslation("flow");
   const { updateNodeAppearance } = useContext(NodeContext);
 
-  const fontSize = appearance?.fontSize ?? 1.05;
+  const fontSize = appearance?.fontSize ?? 1.2;
+
+  const stringifiedData = useMemo(() => {
+    if (!data) return "";
+    return typeof data === "string" ? data : JSON.stringify(data);
+  }, [data]);
 
   if (!data) return <p> </p>;
-
-  const stringifiedData =
-    typeof data === "string" ? data : JSON.stringify(data);
 
   const increaseFontSize = () => {
     updateNodeAppearance(name, {
@@ -55,11 +57,11 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({
 
   return (
     <div className="relative">
-      <StyledReactMarkdown
+      <MemoizedStyledReactMarkdown
         remarkPlugins={[remarkGfm]}
         children={stringifiedData}
         fontSize={fontSize}
-        className="markdown-body px-8 pt-8 text-lg"
+        className={`markdown-body px-8 pt-8 text-lg`}
       />
       <IconContainer
         className="z-50"
@@ -136,11 +138,21 @@ const IconContainer = styled.div`
   right: 0.1em;
 `;
 
-export const StyledReactMarkdown = styled(ReactMarkdown)<{ fontSize: number }>`
+const StyledReactMarkdown = styled(ReactMarkdown)<{ fontSize: number }>`
   background-color: transparent !important;
   color: #f5f5f5;
   font-size: ${(props) => props.fontSize}em;
   user-select: text;
 `;
+
+export const MemoizedStyledReactMarkdown = memo(
+  StyledReactMarkdown,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.children === nextProps.children &&
+      prevProps.fontSize === nextProps.fontSize
+    );
+  },
+);
 
 export default memo(MarkdownOutput);
