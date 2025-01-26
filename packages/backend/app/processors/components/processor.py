@@ -157,6 +157,9 @@ class Processor(ABC):
         if self.inputs is None or len(self.inputs) == 0:
             return None
         return [input.get("inputName") for input in self.inputs]
+    
+    def get_input_names_from_config(self) -> Optional[List[str]]:
+        return self._config.get("config").get("inputNames")
 
     def get_input_by_name(self, name: str, default=None) -> Optional[InputItem]:
         input = self._config.get(name, default)

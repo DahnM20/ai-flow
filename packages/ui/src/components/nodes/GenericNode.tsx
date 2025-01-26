@@ -12,6 +12,7 @@ import {
 import useHandleShowOutput from "../../hooks/useHandleShowOutput";
 import {
   generateIdForHandles,
+  getKeyFromHandleName,
   getTargetHandleKey,
 } from "../../utils/flowUtils";
 import { getIconComponent } from "./utils/NodeIcons";
@@ -57,6 +58,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       getIncomingEdges,
       overrideConfigForNode,
       findNode,
+      removeEdgesByIds,
     } = useContext(NodeContext);
 
     const updateNodeInternals = useUpdateNodeInternals();
@@ -130,7 +132,29 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       [nbOutput],
     );
 
-    const nbInput = useMemo(() => getNbInputs(data, fields), []);
+    const nbInput = useMemo(
+      () => getNbInputs(data, fields),
+      [data?.config?.inputNames],
+    );
+
+    useEffect(() => {
+      if (data.processorType !== "merger-prompt") return;
+
+      const incomingEdges = getIncomingEdges(id) || [];
+      const incomingEdgeKeys = incomingEdges.map((edge) =>
+        getKeyFromHandleName(edge.targetHandle ?? ""),
+      );
+
+      const keysToRemove = incomingEdgeKeys.filter((key) => +key >= nbInput);
+
+      const edgesIdToRemove = incomingEdges
+        .filter((edge) =>
+          keysToRemove.includes(getKeyFromHandleName(edge.targetHandle ?? "")),
+        )
+        .map((edge) => edge.id);
+
+      if (edgesIdToRemove.length) removeEdgesByIds(edgesIdToRemove);
+    }, [data?.config?.inputNames]);
 
     const [isPlaying, setIsPlaying] = useIsPlaying();
 
@@ -208,6 +232,10 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
           target.selectionStart = selectionStart;
           target.selectionEnd = selectionEnd;
         });
+      }
+
+      if (fieldName === "config") {
+        updateNodeInternals(id);
       }
     }
 

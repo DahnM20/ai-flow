@@ -26,6 +26,7 @@ interface NodeContextType {
   getIncomingEdges: (id: string) => Edge[] | undefined;
   getOutgoingEdges: (id: string) => Edge[] | undefined;
   removeNodeIncomingEdges: (id: string) => void;
+  removeEdgesByIds: (id: string[]) => void;
   getEdgeIndex: (id: string) => Edge | undefined;
   showOnlyOutput?: boolean;
   isRunning: boolean;
@@ -62,6 +63,7 @@ export const NodeContext = createContext<NodeContextType>({
   getIncomingEdges: () => undefined,
   getOutgoingEdges: () => undefined,
   removeNodeIncomingEdges: () => undefined,
+  removeEdgesByIds: () => undefined,
   getEdgeIndex: () => undefined,
   showOnlyOutput: false,
   isRunning: false,
@@ -177,6 +179,11 @@ export const NodeProvider = ({
 
   const removeNodeIncomingEdges = (id: string) => {
     const edgesUpdated = edges.filter((edge) => edge.target !== id);
+    onUpdateNodes(nodes, edgesUpdated);
+  };
+
+  const removeEdgesByIds = (ids: string[]) => {
+    const edgesUpdated = edges.filter((edge) => !ids.includes(edge.id));
     onUpdateNodes(nodes, edgesUpdated);
   };
 
@@ -356,6 +363,7 @@ export const NodeProvider = ({
         getIncomingEdges,
         getOutgoingEdges,
         removeNodeIncomingEdges,
+        removeEdgesByIds,
         getEdgeIndex,
         showOnlyOutput,
         isRunning,

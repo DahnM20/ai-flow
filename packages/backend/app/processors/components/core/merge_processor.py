@@ -1,67 +1,27 @@
 from ..processor import ContextAwareProcessor
-import re
-from ....llms.factory.llm_factory import LLMFactory
-from ....root_injector import root_injector
-
 from .processor_type_name_utils import ProcessorType, MergeModeEnum
-
-from llama_index.core.base.llms.base import ChatMessage
-
 
 class MergeProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.MERGER_PROMPT
-    DEFAULT_MODEL = "gpt-4o"
 
-    def __init__(self, config, context, custom_llm_factory=None):
+    def __init__(self, config, context):
         super().__init__(config, context)
 
-        self.model = config.get("model", MergeProcessor.DEFAULT_MODEL)
-        self.prompt = config["prompt"]
         self.merge_mode = MergeModeEnum(int(config["mergeMode"]))
-        if custom_llm_factory is None:
-            custom_llm_factory = self._get_default_llm_factory()
-
-        self.llm_factory = custom_llm_factory
-
-    @staticmethod
-    def _get_default_llm_factory():
-        return root_injector.get(LLMFactory)
 
     def update_prompt(self, inputs):
         for idx, value in enumerate(inputs, start=1):
             placeholder = f"${{input-{idx}}}"
-            self.prompt = re.sub(re.escape(placeholder), str(value), self.prompt)
+            self.prompt = self.prompt.replace(placeholder, str(value))
 
     def process(self):
-        api_key = self._processor_context.get_value("openai_api_key")
-        inputs_processor = self.get_input_processors()
-        inputs_output_keys = self.get_input_node_output_keys()
-        inputs = [
-            processor.get_output(output_key)
-            for processor, output_key in zip(inputs_processor, inputs_output_keys)
-        ]
+        self.prompt = self.get_input_by_name("prompt", "")
+        input_names = self.get_input_names_from_config()
+        inputs = [self.get_input_by_name(name, "") for name in input_names]
 
         self.update_prompt(inputs)
 
-        if self.merge_mode == MergeModeEnum.MERGE:
-            return self.prompt
-
-        self.init_context()
-
-        llm = self.llm_factory.create_llm(self.model, api_key=api_key)
-        chat_response = llm.chat(self.messages)
-        answer = chat_response.message.content
-
-        return answer
-
-    def init_context(self) -> None:
-        system_msg = "You are an assistant that provides direct answers to tasks without adding any meta comments or referencing yourself as an AI."
-        user_msg_content = self.prompt
-
-        self.messages = [
-            ChatMessage(role="system", content=system_msg),
-            ChatMessage(role="user", content=user_msg_content),
-        ]
+        return self.prompt
 
     def cancel(self):
         pass

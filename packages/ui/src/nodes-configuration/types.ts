@@ -42,6 +42,7 @@ export interface Field {
   options?: Option[];
   hideIfParent?: boolean;
   required?: boolean;
+  hidden?: boolean;
   hasHandle?: boolean;
   isLinked?: boolean;
   associatedField?: string;

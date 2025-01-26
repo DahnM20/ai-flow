@@ -188,6 +188,26 @@ export function useFormFields(
                   currentValue + value,
                 );
               }}
+              addNewInput={() => {
+                const currentInputs = data.config.inputNames ?? [];
+                const newInput = "input-" + (currentInputs.length + 1);
+                const newInputs = [...currentInputs, newInput];
+                const newConfig = {
+                  ...data.config,
+                  inputNames: newInputs,
+                };
+                handleNodeDataChange("config", newConfig);
+              }}
+              removeInput={() => {
+                const currentInputs = data.config.inputNames ?? [];
+                if (currentInputs.length <= 2) return;
+                const newInputs = currentInputs.slice(0, -1);
+                const newConfig = {
+                  ...data.config,
+                  inputNames: newInputs,
+                };
+                handleNodeDataChange("config", newConfig);
+              }}
             />
           )
         );
@@ -302,6 +322,10 @@ export function useFormFields(
     )
     .map((field: Field, index: number) => {
       if (displayParams?.showOnlyConnectedFields && !field.isLinked) {
+        return null;
+      }
+
+      if (field.hidden) {
         return null;
       }
 

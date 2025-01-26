@@ -21,6 +21,7 @@ export const mergerPromptNode: NodeConfig = {
           default: true,
         },
       ],
+      hidden: true,
     },
     {
       name: "inputNameBar",
