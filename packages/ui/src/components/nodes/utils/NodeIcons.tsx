@@ -51,9 +51,9 @@ const ICON_MAP: { [key: string]: FC } = {
   ),
   StabilityAILogo: () => (
     <img
-      src="./img/stabilityai-logo.png"
+      src="./img/stabilityai-logo.jpg"
       alt="stabilityai"
-      className="w-full rounded-lg bg-white p-1"
+      className="w-full rounded-lg"
     />
   ),
 };

@@ -41,7 +41,15 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
         )
 
         model_options = [
-            Option(default=True, value="sd3-large", label="Stable Diffusion 3 Large"),
+            Option(
+                default=True, value="sd3.5-large", label="Stable Diffusion 3.5 Large"
+            ),
+            Option(
+                default=False,
+                value="sd3.5-large-turbo",
+                label="Stable Diffusion 3.5 Large Turbo",
+            ),
+            Option(default=False, value="sd3-large", label="Stable Diffusion 3 Large"),
             Option(
                 default=False, value="sd3-medium", label="Stable Diffusion 3 Medium"
             ),
@@ -95,7 +103,7 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
 
         return (
             NodeConfigBuilder()
-            .set_node_name("Stable Diffusion 3")
+            .set_node_name("Stable Diffusion 3.5")
             .set_processor_type(self.processor_type)
             .set_icon("StabilityAILogo")
             .set_section("models")
@@ -144,10 +152,11 @@ class StableDiffusionThreeProcessor(ContextAwareExtensionProcessor):
 
     def prepare_and_process_response(self, response):
         if response.status_code != 200:
-            logging.error(
-                f"API call failed with status {response.status_code}: {response.text}"
+            logging.warning(
+                f"API call to StabilityAI failed with status {response.status_code}: {response.text}"
             )
-            raise Exception(f"API call failed: {response.text}")
+            logging.warning("User prompt : " + self.get_input_by_name("prompt") or "")
+            raise Exception(f"Error message from StabilityAI : \n {response.text}")
 
         storage = self.get_storage()
         timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")

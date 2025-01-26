@@ -58,7 +58,7 @@ class DocumentToText(BasicExtensionProcessor):
             .set_node_name("DocumentToText")
             .set_processor_type(self.processor_type)
             .set_icon("FaFile")
-            .set_section("tools")
+            .set_section("input")
             .set_help_message("documentToTextHelp")
             .set_show_handles(True)
             .set_output_type("text")
