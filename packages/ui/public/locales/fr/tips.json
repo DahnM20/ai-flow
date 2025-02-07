@@ -1,46 +1,70 @@
 {
   "tips": [
     {
-      "titre": "Vue API Builder",
+      "title": "Bien débuter sur AI-Flow",
+      "description": "Ce guide vous montrera l'essentiel pour bien débuter.",
+      "url": "https://docs.ai-flow.net/fr/blog/getting-started-with-ai-flow/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/app-overview-r.png",
+      "newFeature": true,
+      "timeEstimated": "4min de lecture"
+    },
+    {
+      "title": "Utilisation du noeud Replicate",
+      "description": "Intégrez l'API Replicate avec AI-FLOW.",
+      "url": "https://docs.ai-flow.net/fr/blog/replicate-node/",
+      "imgUrl": "https://docs.ai-flow.net/img/page-images/replicate-node/model-popup.png",
+      "newFeature": true,
+      "timeEstimated": "2min de lecture"
+    },
+    {
+      "title": "Comment utiliser les sous-flow",
+      "description": "Cette fonctionnalité vous permet de créer des nœuds personnalisés basés sur vos flows.",
+      "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/subflow/",
+      "imgUrl": "https://docs.ai-flow.net/img/page-images/api-builder/subflow-preview-3.png",
+      "newFeature": true,
+      "timeEstimated": "2min de lecture"
+    },
+    {
+      "title": "Comment créer des boucles",
+      "description": "Cette fonctionnalité vous permet d'itérer sur un sous-flow.",
+      "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/subflow-loop/",
+      "imgUrl": "https://docs.ai-flow.net/img/page-images/api-builder/subflow-loop-4.png",
+      "newFeature": true,
+      "timeEstimated": "4min read"
+    },
+    {
+      "title": "StabilityAI avec AI-FLOW",
+      "description": "Cette intégration offre une gamme polyvalente de capacités de traitement d'image.",
+      "url": "https://docs.ai-flow.net/fr/blog/stabilityai-api/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-sd3.png",
+      "timeEstimated": "3min de lecture"
+    },
+    {
+      "title": "Vue API Builder",
       "description": "Cette vue vous permet de surveiller l'état actuel de l'API, d'apprendre à utiliser votre API, et plus encore.",
       "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/builder-view/",
       "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
-      "newFeature": true
+      "newFeature": true,
+      "timeEstimated": "3min de lecture"
     },
     {
-      "titre": "Ajouter des Webhooks à vos Flows",
+      "title": "Ajouter des Webhooks à vos Flows",
       "description": "Le nœud Webhook est un outil puissant qui vous permet d'envoyer des sorties sous forme de webhooks.",
       "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/webhooks/",
       "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
-      "newFeature": true
+      "newFeature": true,
+      "timeEstimated": "2min de lecture"
     },
     {
-      "titre": "Lancer un Flow via l'API",
+      "title": "Lancer un Flow via l'API",
       "description": "Découvrez comment créer et gérer une API autour d'un Flow donné pour l'intégrer parfaitement à d'autres outils.",
       "url": "https://docs.ai-flow.net/docs/category/api-builder/",
       "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
-      "newFeature": true
+      "newFeature": true,
+      "timeEstimated": "2min de lecture"
     },
     {
-      "titre": "StabilityAI avec AI-FLOW",
-      "description": "Cette intégration offre une gamme polyvalente de capacités de traitement d'image.",
-      "url": "https://docs.ai-flow.net/blog/stabilityai-api/",
-      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-sd3.png"
-    },
-    {
-      "titre": "Explication de la tarification flexible",
-      "description": "La stratégie de tarification flexible est maintenant en ligne, offrant une approche plus rationalisée et économique de l'utilisation de la plateforme.",
-      "url": "https://docs.ai-flow.net/blog/flexible-pricing-hosted-app/",
-      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-flexible-pricing.png"
-    },
-    {
-      "titre": "Accéder à Divers Modèles d'IA via Replicate",
-      "description": "Le nœud Replicate sert de passerelle à une multitude de modèles open-source hébergés sur Replicate.",
-      "url": "https://docs.ai-flow.net/docs/nodes-presentation/replicate-node/",
-      "imgUrl": "https://docs.ai-flow.net/img/ai-flow-social-card.png"
-    },
-    {
-      "titre": "Documentation Complète",
+      "title": "Documentation Complète",
       "description": "La page principale de la documentation AI-FLOW, accessible via https://docs.ai-flow.net/",
       "url": "https://docs.ai-flow.net/",
       "imgUrl": "https://docs.ai-flow.net/img/ai-flow-social-card.png"

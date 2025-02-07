@@ -90,10 +90,10 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Card.Section>
                     <div className="relative">
-                      <Image
+                      <img
                         src={article.imgUrl}
-                        height={160}
                         alt={article.title}
+                        className="aspect-video"
                       />
                       {article.newFeature && (
                         <div className="absolute top-2 z-50 flex text-sm">
@@ -111,7 +111,7 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose }) => {
                     </Text>
                   </Group>
 
-                  <Text size="sm" c="dimmed" lineClamp={3}>
+                  <Text size="sm" c="dimmed" lineClamp={2}>
                     {article.description}
                   </Text>
 

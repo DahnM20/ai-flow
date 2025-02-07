@@ -1,43 +1,68 @@
 {
   "tips": [
     {
-      "title": "API Builder View",
+      "title": "Getting started with AI-Flow",
+      "description": "This guide will help you get started with AI-Flow, adding nodes, connecting them, customizing workspace.",
+      "url": "https://docs.ai-flow.net/blog/getting-started-with-ai-flow/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/app-overview-r.png",
+      "newFeature": true,
+      "timeEstimated": "4min read"
+    },
+    {
+      "title": "Replicate Node Usage",
+      "description": "Seamlessly Integrate Replicate API with AI-FLOW for AI workflow automation.",
+      "url": "https://docs.ai-flow.net/blog/replicate-node/",
+      "imgUrl": "https://docs.ai-flow.net/img/page-images/replicate-node/model-popup.png",
+      "newFeature": true,
+      "timeEstimated": "2min read"
+    },
+    {
+      "title": "How to Use Subflows",
+      "description": "This feature allows you to create custom nodes based on your flows. ",
+      "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/subflow/",
+      "imgUrl": "https://docs.ai-flow.net/img/page-images/api-builder/subflow-preview-3.png",
+      "newFeature": true,
+      "timeEstimated": "2min read"
+    },
+    {
+      "title": "How to Create Loops",
+      "description": "This feature allows you loop on a Subflow. ",
+      "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/subflow-loop/",
+      "imgUrl": "https://docs.ai-flow.net/img/page-images/api-builder/subflow-loop-4.png",
+      "newFeature": true,
+      "timeEstimated": "4min read"
+    },
+    {
+      "title": "StabilityAI API with AI-FLOW",
+      "description": "This integration offer a versatile range of image processing capabilities.",
+      "url": "https://docs.ai-flow.net/blog/stabilityai-api/",
+      "imgUrl": "https://docs.ai-flow.net/img/blog-images/stabilityai.png",
+      "timeEstimated": "2min read"
+    },
+
+    {
+      "title": "Accessing the API Builder View",
       "description": "This view allows you to monitor the current state of the API, learn how to use your API, and more.",
       "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/builder-view/",
       "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
-      "newFeature": true
+      "newFeature": true,
+      "timeEstimated": "3min read"
     },
     {
       "title": "Add Webhooks to your Flow",
       "description": "The Webhook Node is a powerful tool that allows you to send outputs as webhooks. ",
       "url": "https://docs.ai-flow.net/docs/pro-features/api-builder/webhooks/",
       "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
-      "newFeature": true
+      "newFeature": true,
+      "timeEstimated": "3min read"
     },
     {
       "title": "Run Flow through API",
       "description": "Discover how to create and manage an API around a given Flow to integrate it seamlessly to other tools.",
       "url": "https://docs.ai-flow.net/docs/category/api-builder/",
       "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-api-builder-1.png",
-      "newFeature": true
-    },
-    {
-      "title": "Integrate StabilityAI API with AI-FLOW",
-      "description": "This integration offer a versatile range of image processing capabilities.",
-      "url": "https://docs.ai-flow.net/blog/stabilityai-api/",
-      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-sd3.png"
-    },
-    {
-      "title": "Flexible Pricing explained",
-      "description": "Flexible Pricing strategy is now live, offering a more streamlined and cost-effective approach to using the platform.",
-      "url": "https://docs.ai-flow.net/blog/flexible-pricing-hosted-app/",
-      "imgUrl": "https://docs.ai-flow.net/img/blog-card-images/blog-flexible-pricing.png"
-    },
-    {
-      "title": "Access Diverse AI Models through Replicate",
-      "description": "The Replicate Node serves as a gateway to a multitude of open-source models hosted on Replicate.",
-      "url": "https://docs.ai-flow.net/docs/nodes-presentation/replicate-node/",
-      "imgUrl": "https://docs.ai-flow.net/img/ai-flow-social-card.png"
+      "newFeature": true,
+      "timeEstimated": "2min read"
     },
     {
       "title": "Full Documentation",
