@@ -4,7 +4,6 @@ import { ThemeContext } from "./providers/ThemeProvider";
 import { DndProvider } from "react-dnd";
 import { MultiBackend } from "react-dnd-multi-backend";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
-import WelcomePopup from "./components/popups/WelcomePopup";
 import { AppTour } from "./components/tour/AppTour";
 import { VisibilityProvider } from "./providers/VisibilityProvider";
 import { Tooltip } from "react-tooltip";
@@ -12,8 +11,6 @@ import { loadExtensions } from "./nodes-configuration/nodeConfig";
 import { loadAllNodesTypes } from "./utils/mappings";
 import { loadParameters } from "./components/popups/config-popup/parameters";
 import { SocketProvider } from "./providers/SocketProvider";
-import { getCurrentAppVersion } from "./config/config";
-import { useTranslation } from "react-i18next";
 import { getAllTabs } from "./services/tabStorage";
 import { convertJsonToFlow } from "./utils/flowUtils";
 
@@ -22,9 +19,6 @@ interface AppProps {
 }
 const App = ({ onLoadingComplete }: AppProps) => {
   const { dark } = useContext(ThemeContext);
-  const { t } = useTranslation("version");
-  const [showWelcomePopup, setShowWelcomePopup] = useState(false);
-  const [isNewVersionAvailable, setIsNewVersionAvailable] = useState(false);
   const [runTour, setRunTour] = useState(false);
   const [configLoaded, setConfigLoaded] = useState(false);
   const [showApp, setShowApp] = useState(false);
@@ -41,24 +35,6 @@ const App = ({ onLoadingComplete }: AppProps) => {
   }, [dark]);
 
   useEffect(() => {
-    const storedVersion = localStorage.getItem("appVersion");
-    const urlParams = new URLSearchParams(window.location.search);
-    const referralCode = urlParams.get("ref_code");
-
-    if (referralCode) {
-      localStorage.setItem("referralCode", referralCode);
-    }
-
-    const currentAppVersion = getCurrentAppVersion();
-    if (!!currentAppVersion && storedVersion !== currentAppVersion) {
-      if (!storedVersion) {
-        setRunTour(true);
-      }
-
-      setShowWelcomePopup(true);
-      localStorage.setItem("appVersion", currentAppVersion);
-    }
-
     loadAppData();
   }, []);
 
@@ -125,10 +101,6 @@ const App = ({ onLoadingComplete }: AppProps) => {
               <SocketProvider>
                 <FlowTabs tabs={allTabs} />
               </SocketProvider>
-
-              {showWelcomePopup && !runTour && (
-                <WelcomePopup show onClose={() => setShowWelcomePopup(false)} />
-              )}
 
               <Tooltip
                 id={`app-tooltip`}
