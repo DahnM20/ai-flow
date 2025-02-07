@@ -1,133 +1,142 @@
 <p align="center">
-  <img src="assets/header.png" alt="AI-Flow Logo"/>
-</p>
-<p align="center">
-  <em>Open-source tool to seamlessly connect multiple AI model APIs in repeatable flow.</em>
-</p>
-<p align="center">
-    <a href="https://docs.ai-flow.net/?ref=github"> <img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"> </a>
-    <a href="https://docs.ai-flow.net/?ref=github"> <img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French"> </a>
-    <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
-    <img src="https://img.shields.io/github/v/release/DahnM20/ai-flow">
-    <a href="https://twitter.com/DahnM20"><img src="https://img.shields.io/twitter/follow/AI-Flow?style=social"></a>
+  <img src="assets/header.png" alt="AI-Flow Logo" />
 </p>
 
 <p align="center">
-<a href="https://ai-flow.net/?ref=github">🔗 Website</a>
-<span> | </span>
-<a href="https://docs.ai-flow.net/?ref=github">📚 Documentation</a>
+  <em>Open-source tool to seamlessly connect multiple AI model APIs into repeatable workflows.</em>
 </p>
+
+<p align="center">
+  <a href="https://docs.ai-flow.net/?ref=github"><img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"></a>
+  <a href="https://docs.ai-flow.net/?ref=github"><img src="https://img.shields.io/badge/lang-French-blue.svg" alt="French"></a>
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  <img src="https://img.shields.io/github/v/release/DahnM20/ai-flow">
+  <a href="https://twitter.com/DahnM20"><img src="https://img.shields.io/twitter/follow/AI-Flow?style=social" alt="Follow on Twitter"></a>
+</p>
+
+<p align="center">
+  <a href="https://ai-flow.net/?ref=github">🔗 Website</a> • 
+  <a href="https://docs.ai-flow.net/?ref=github">📚 Documentation</a>
+</p>
+
+---
+
 <div align="center">
-
-## 🎉🚀 v0.8.1 is Now Available 🚀🎉
-
-🚀 **New Nodes : Claude 3, StabilityAI API, Data Splitter update**
-
-✨ **Layout Mode Updated**
-</br>
-</br>
-
+  🎉🚀 Latest Release: v0.9.0 🚀🎉
+  <br>
+  New Nodes: Deepseek, OpenAI o3, StabilityAI API update
 </div>
 
 ---
 
-![image-scenario-1-1](assets/intro.png)
+![AI-Flow Intro](assets/flow-example.png)
 
-**AI Flow** is an open source, user-friendly UI application that empowers you to seamlessly connect multiple AI models together, specifically leveraging the capabilities of multiples AI APIs such as OpenAI, StabilityAI and Replicate.
+## Overview
+
+**AI-Flow** is an open-source, user-friendly UI that lets you visually design, manage, and monitor AI-driven workflows by seamlessly connecting multiple AI model APIs (e.g., OpenAI, StabilityAI, Replicate, Claude, Deepseek).
 
 ## Features
 
-In a nutshell, AI Flow provides a visual platform for crafting and managing AI-driven workflows, thereby facilitating diverse and dynamic AI interactions.
+- **Visual Workflow Builder:** Drag-and-drop interface for crafting AI workflows.
+- **Real-Time Monitoring:** Watch your workflow execute and track results.
+- **Parallel Processing:** Nodes run in parallel whenever possible.
+- **Model Management:** Easily organize and manage diverse AI models.
+- **Import/Export:** Share or back up your workflows effortlessly.
 
-- 🎨 It offers a drag-and-drop interface to design these workflows
-- 📊 Monitors their execution in real-time
-- 🚀 Nodes are launched in parallel whenever possible
-- 🗂️ AI models can be conveniently managed and organized
-- 💾 Workflows can be exported or imported for sharing or backup purposes
+## Supported Models
 
-## Models availables
+- **Replicate:** LLaMa, Mistral, FaceSwap, InstantMesh, MusicGen, and more.
+- **OpenAI:** GPT-4, GPT-4 Vision, GPT-3.5, TTS, o1, o3.
+- **StabilityAI:** Stable Diffusion 3, SDXL, Stable Video Diffusion, plus additional tools.
+- **Others:** Claude, Deepseek.
 
-- Every model hosted on Replicate (LLaMa, Mistral, FaceSwap, InstantMesh, MusicGen, ...)
-- OpenAI GPT-4o, GPT-4, GPT-4 vision, GPT-3.5, TTS
-- StabilityAI entire API (Stable Diffusion 3, SDXL, Stable Video Diffusion, Search and Replace, Remove background, ...)
-- Claude 3
+![Scenario Example](assets/flow-example-2.png)
 
-![replicate](assets/replicate-models.png)
-![Story scenario](assets/scenario-example.png)
+## Open Source vs. Cloud
 
-## Contribute to AI-FLOW
+**AI-Flow** is fully open source and available under the MIT License, empowering you to build and run your AI workflows on your personal machine.
 
-Whether you encounter bugs, have enhancements to propose, or want to add entirely new functionalities, we welcome your involvement.
+For those seeking enhanced functionality and a polished experience, **AI-Flow Pro** on our cloud platform ([app.ai-flow.net](https://ai-flow.net/?ref=github)) offers advanced features, including:
 
-**Getting Started:**
+- **Subflows & Loops:** Create complex, nested workflows and iterate tasks effortlessly.
+- **API-Triggered Flows:** Initiate workflows via API calls for seamless automation.
+- **Integrated Services:** Connect with external services such as Google Search, Airtable, Zapier, and Make.
+- **Simplified Interface:** Transform workflows into streamlined tools with an intuitive UI.
 
-- **Report Issues:** Spot a problem? Help us improve by [opening an issue](https://github.com/DahnM20/ai-flow/issues).
-- **Submit Pull Requests:** Have a fix or a new feature? Submit a pull request and contribute directly to the codebase.
+![Pro VS Open Source](assets/comparison-pro-vs-opensource-v2.png)
 
-**Expanding AI-FLOW:**
-
-- Interested in adding new nodes? Check out our comprehensive [Contributor Documentation](https://docs.ai-flow.net/docs/category/contribute) to learn how you can build and integrate new nodes.
+The cloud version builds upon the foundation of the open-source project, giving you more power and flexibility while still letting you use your own API keys.
 
 ## Installation
 
-### Installation (Windows executable)
+> **Note:** To unlock full functionality, AI-Flow requires S3-compatible storage (with proper CORS settings) to host resources. Without it, features like File Upload or nodes that rely on external providers (e.g., StabilityAI) may not work as expected. Also, set `REPLICATE_API_KEY` in your environment to use the Replicate node.
 
-For a quick local setup, grab the Desktop App from the [repository's releases section](https://github.com/DahnM20/ai-flow/releases).
+### Local Installation (Without Docker)
 
-You'll need to set REPLICATE_API_KEY in your env to use the Replicate Node. This API key is used exclusively for fetching model data.
+1. **Clone the Repository:**
 
-### Installation without Docker
+   ```bash
+   git clone https://github.com/DahnM20/ai-flow.git
+   cd ai-flow
+   ```
 
-### Prerequisites
+2. **UI Setup:**
 
-Before getting started, make sure you have the following dependencies installed on your system:
+   ```bash
+   cd packages/ui
+   npm install
+   ```
 
-- [Python (version 3.9.5 or later)](https://www.python.org/downloads/)
-- [Poetry (version 1.4.2 or later)](https://python-poetry.org/docs/#installation)
-- [Node.js (version 16.13.0 or later)](https://nodejs.org/en/download/)
+3. **Backend Setup:**
 
-### Clone the Repository
+   ```bash
+   cd ../backend
+   poetry install
+   ```
 
-1. Clone the repository: `git clone https://github.com/DahnM20/ai-flow.git`
-2. Change to the project directory: `cd ai-flow`
+   - **Windows Users:**
+     ```bash
+     poetry shell
+     pip install -r requirements_windows.txt
+     ```
 
-### UI Dependencies
+4. **Run the Application:**
+   - Start the backend:
+     ```bash
+     poetry run python server.py
+     ```
+   - In a new terminal, start the UI:
+     ```bash
+     cd packages/ui
+     npm start
+     ```
+   - Open your browser and navigate to [http://localhost:3000](http://localhost:3000).
 
-1. Go to the UI directory: `cd packages/ui`
-2. Install dependencies: `npm install`
+### Docker Installation
 
-### Backend Dependencies
+1. **Prepare Docker Compose:**
 
-1. Go to the backend directory: `cd packages/backend`
-2. Install Python dependencies: `poetry install`
+   - Navigate to the `docker` directory:
+     ```bash
+     cd docker
+     ```
+   - Update the `REPLICATE_API_KEY` in the YAML file.
 
-### For Windows only
+2. **Launch with Docker Compose:**
+   ```bash
+   docker-compose up -d
+   ```
+3. **Access the Application:**
+   - Open [http://localhost:80](http://localhost:80) in your browser.
+   - To stop, run:
+     ```bash
+     docker-compose stop
+     ```
 
-3. Launch poetry shell : `poetry shell`
-4. Install the windows requirements in the poetry shell : `pip install -r requirements_windows.txt`
+## Contributing
 
-## Usage
-
-You'll need to update the REPLICATE_API_KEY in the .env file to use the Replicate Node. This API key is used exclusively for fetching model data.
-
-1. Start the server: `cd backend && poetry run python server.py`
-2. Start the ui application: `cd ui && npm start`
-3. Open your browser and navigate to `http://localhost:3000`
-4. Use the drag-and-drop interface to design your AI workflow
-5. Connect AI models and define data flow between them
-6. Click "Run" to execute the AI workflow
-7. Monitor the execution progress and results in real-time
-
-### 🐳 Installation with Docker
-
-#### Docker Compose
-
-1. Go to the docker directory: `cd ./docker`
-2. You'll need to update the REPLICATE_API_KEY in the .yml file to use the Replicate Node. This API key is used exclusively for fetching model data.
-3. Launch `docker-compose up` or `docker-compose up -d`
-4. Open your browser and navigate to `http://localhost:80`
-5. Use `docker-compose stop` when you want to stop the app.
+We welcome contributions! If you encounter issues or have feature ideas, please [open an issue](https://github.com/DahnM20/ai-flow/issues) or submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+This project is released under the [MIT License](LICENSE).
