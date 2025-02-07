@@ -33,7 +33,7 @@ RUN pip install --upgrade poetry \
 
 COPY poetry.lock pyproject.toml /app/
 
-RUN poetry install --no-interaction
+RUN poetry install --no-interaction --no-root
 
 # The rest of the app
 COPY app /app/app/
