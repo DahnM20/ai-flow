@@ -46,10 +46,6 @@ class ProcessorLauncherModule(Module):
     def configure(self, binder: Binder):
         binder.bind(ProcessorLauncher, to=AsyncProcessorLauncher)
         observer_list = [SocketIOEventEmitter()]
-        if is_cloud_env():
-            from .processors.observer.simple_stats_logger import SimpleStatsLogger
-
-            observer_list.append(SimpleStatsLogger())
 
         binder.multibind(List[Observer], to=observer_list)
 

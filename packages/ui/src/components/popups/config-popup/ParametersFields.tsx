@@ -28,7 +28,13 @@ const ParameterFields = ({
                 {t(`parameters.${section}.${key}`)}
               </Label>
               <Input
-                type={type === "boolean" ? "checkbox" : "text"}
+                type={
+                  type === "boolean"
+                    ? "checkbox"
+                    : value !== undefined
+                      ? "password"
+                      : "text"
+                }
                 id={`parameter-${section}-${key}`}
                 value={type === "boolean" ? undefined : value?.toString()}
                 checked={type === "boolean" ? (value as boolean) : undefined}
@@ -50,32 +56,32 @@ const ParameterFields = ({
 
 export default ParameterFields;
 
-const Section = styled.div`
+export const Section = styled.div`
   margin-bottom: 30px;
   width: 100%;
 `;
 
-const SectionTitle = styled.h3`
+export const SectionTitle = styled.h3`
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
   color: #d8d8d8;
 `;
 
-const Field = styled.div`
+export const Field = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 5px;
   color: #b4b4b4;
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   padding: 10px;
   border-radius: 5px;
   border: none;
