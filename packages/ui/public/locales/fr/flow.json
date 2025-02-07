@@ -129,5 +129,7 @@
   "ReplaceTextSearchPlaceholder": "Entrez le terme ou le motif regex à remplacer.",
   "ReplaceTextReplacePlaceholder": "Entrez le terme de remplacement.",
   "replaceTextNodeHelp": "Utilisez ce nœud pour rechercher et remplacer un texte spécifique ou des motifs dans l'entrée.",
-  "openaio1Help": "Des modèles de langage avancés formés pour le raisonnement complexe, excellant dans les défis scientifiques, mathématiques et de programmation."
+  "openaio1Help": "Des modèles de langage avancés formés pour le raisonnement complexe, excellant dans les défis scientifiques, mathématiques et de programmation.",
+  "ContextPlaceholder": "Contexte additionnel qui sera utilisé pour répondre au prompt",
+  "deepSeekHelp": "Accédez aux LLMs DeepSeek via ce noeud."
 }

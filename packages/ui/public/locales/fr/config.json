@@ -23,5 +23,6 @@
   "UI": "Interface Utilisateur",
   "input": "Entrées",
   "models": "Modèles",
-  "tools": "Outils"
+  "tools": "Outils",
+  "parameters.extension.deepseek_api_key": "Clé API DeepSeek"
 }

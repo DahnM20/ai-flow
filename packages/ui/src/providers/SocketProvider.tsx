@@ -102,11 +102,6 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   }
 
   function emitEvent(event: FlowEvent): boolean {
-    if (!verifyConfiguration()) {
-      toastInfoMessage(t("ApiKeyRequiredMessage"));
-      return false;
-    }
-
     const activeSocket = getActiveSocket();
 
     if (activeSocket) {

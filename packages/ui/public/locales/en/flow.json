@@ -129,5 +129,7 @@
   "ReplaceTextSearchPlaceholder": "Enter the term or regex pattern to be replaced.",
   "ReplaceTextReplacePlaceholder": "Enter the replacement term.",
   "replaceTextNodeHelp": "Use this node to find and replace specific text or patterns within the input.",
-  "openaio1Help": "Advanced language models trained for complex reasoning, excelling in scientific, mathematical, and programming challenges."
+  "openaio1Help": "Advanced language models trained for complex reasoning, excelling in scientific, mathematical, and programming challenges.",
+  "ContextPlaceholder": "Additionnal context that will be used to answer your prompt.",
+  "deepSeekHelp": "Access DeepSeek LLMs through this node."
 }

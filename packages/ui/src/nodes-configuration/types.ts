@@ -31,6 +31,30 @@ export interface Option {
   default?: boolean;
 }
 
+export type Operator =
+  | "equals"
+  | "not equals"
+  | "in"
+  | "not in"
+  | "greater than"
+  | "less than"
+  | "exists"
+  | "not exists";
+
+export interface Condition {
+  field: string;
+  operator: Operator;
+  value: any;
+}
+
+export interface ConditionGroup {
+  logic: "AND" | "OR";
+  conditions: Condition[];
+}
+
+export type FieldCondition = Condition | ConditionGroup;
+
+
 export interface Field {
   name: string;
   type: FieldType;
@@ -49,6 +73,7 @@ export interface Field {
   description?: string;
   isBinary?: boolean;
   withModalEdit?: boolean;
+  condition?: FieldCondition;
 }
 
 export interface NodeConfig {

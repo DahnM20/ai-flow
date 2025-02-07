@@ -56,6 +56,13 @@ const ICON_MAP: { [key: string]: FC } = {
       className="w-full rounded-lg"
     />
   ),
+  DeepSeekLogo: () => (
+    <img
+      src="./img/deepseek-logo.png"
+      alt="deepseek"
+      className="w-full rounded-lg bg-white p-1"
+    />
+  ),
 };
 
 export const getIconComponent = (type: string) => ICON_MAP[type];

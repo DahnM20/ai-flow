@@ -1,7 +1,7 @@
 from ...launcher.event_type import EventType
 from ...launcher.processor_event import ProcessorEvent
 from ...context.processor_context import ProcessorContext
-from ..model import Field, NodeConfig, Option
+from ..model import Field, FieldCondition, NodeConfig, Option
 from .extension_processor import ContextAwareExtensionProcessor
 from openai import OpenAI
 
@@ -35,6 +35,11 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
         model_options = [
             Option(
                 default=True,
+                value="o3-mini",
+                label="o3-mini",
+            ),
+            Option(
+                default=False,
                 value="o1-mini",
                 label="o1-mini",
             ),
@@ -52,10 +57,40 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
             required=True,
         )
 
-        fields = [model, context, text]
+        reasoning_effort_options = [
+            Option(
+                default=False,
+                value="low",
+                label="low",
+            ),
+            Option(
+                default=True,
+                value="medium",
+                label="medium",
+            ),
+            Option(
+                default=False,
+                value="high",
+                label="high",
+            ),
+        ]
+
+        reasoning_effort = Field(
+            name="reasoning_effort",
+            label="reasoning_effort",
+            type="select",
+            options=reasoning_effort_options,
+            condition=FieldCondition(
+                field="model",
+                operator="equals",
+                value="o3-mini",
+            ),
+        )
+
+        fields = [model, reasoning_effort, context, text]
 
         config = NodeConfig(
-            nodeName="OpenAI o1",
+            nodeName="OpenAI o-series",
             processorType=self.processor_type,
             icon="OpenAILogo",
             fields=fields,
@@ -71,6 +106,7 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
         prompt = self.get_input_by_name("prompt")
         context = self.get_input_by_name("context", "")
         model = self.get_input_by_name("model")
+        reasoning_effort = self.get_input_by_name("reasoning_effort", "medium")
 
         if prompt is None:
             return None
@@ -82,16 +118,29 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
 
         client = OpenAI(api_key=api_key)
 
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"{context} {prompt}",
-                }
-            ],
-            stream=self.streaming,
-        )
+        if "o3" in model:
+            response = client.chat.completions.create(
+                model=model,
+                reasoning_effort=reasoning_effort,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"{context} {prompt}",
+                    }
+                ],
+                stream=self.streaming,
+            )
+        else:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"{context} {prompt}",
+                    }
+                ],
+                stream=self.streaming,
+            )
 
         if self.streaming:
             final_response = ""

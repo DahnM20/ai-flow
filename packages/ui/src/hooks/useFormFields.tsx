@@ -12,6 +12,7 @@ import NodeTextField from "../components/nodes/node-input/NodeTextField";
 import useIsTouchDevice from "./useIsTouchDevice";
 import _ from "lodash";
 import NodeTextarea from "../components/nodes/node-input/NodeTextarea";
+import { evaluateCondition } from "../utils/evaluateConditions";
 
 export interface DisplayParams {
   showHandles?: boolean;
@@ -320,6 +321,11 @@ export function useFormFields(
         ? displayParams.specificFields.includes(field.name)
         : true,
     )
+    .filter((field: Field) => {
+      if (!field.condition) return true;
+
+      return evaluateCondition(field.condition, data);
+    })
     .map((field: Field, index: number) => {
       if (displayParams?.showOnlyConnectedFields && !field.isLinked) {
         return null;

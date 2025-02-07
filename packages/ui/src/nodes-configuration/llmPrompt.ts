@@ -17,10 +17,6 @@ export const llmPromptNodeConfig: NodeConfig = {
           default: true,
         },
         {
-          label: "GPT-4",
-          value: "gpt-4-turbo",
-        },
-        {
           label: "GPT-4o",
           value: "gpt-4o",
         },
