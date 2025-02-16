@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Position, NodeProps, useUpdateNodeInternals } from "reactflow";
 import styled from "styled-components";
 import { NodeContext } from "../../providers/NodeProvider";
@@ -62,7 +62,6 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
     const updateNodeInternals = useUpdateNodeInternals();
 
     const [isPlaying, setIsPlaying] = useIsPlaying();
-    const [collapsed, setCollapsed] = useState(false);
 
     const { onUpdateNodeData } = useContext(NodeContext);
 
@@ -96,10 +95,6 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
       setIsPlaying(true);
     };
 
-    const handleCollapseClick = () => {
-      setCollapsed(!collapsed);
-    };
-
     const handleForceNbOutputChange = (
       event: React.ChangeEvent<HTMLInputElement>,
     ) => {
@@ -120,26 +115,25 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
 
     return (
       <DataSplitterNodeContainer
-        selected={selected}
         nbOutput={data.nbOutput}
-        collapsed={collapsed}
         key={id}
-        // onDoubleClick={handleCollapseClick}
         style={{
           borderColor: data?.appearance?.color
             ? data?.appearance?.color
             : "rgb(34 197 94)",
         }}
-        className={`flex flex-col items-center justify-center rounded-lg  border  bg-gray-800 p-4 hover:bg-gray-700/50`}
+        className={`flex flex-col items-center justify-center rounded-lg  border  bg-gray-800 p-5 hover:bg-gray-700/50`}
       >
         <div className="flex flex-col items-center justify-center space-y-1">
-          <NodePlayButton
-            isPlaying={isPlaying}
-            nodeName={data.name}
-            onClick={handlePlayClick}
-            size="medium"
-          />
-          {!(collapsed || (!collapsed && !selected)) && (
+          <div className="mt-3 flex">
+            <NodePlayButton
+              isPlaying={isPlaying}
+              nodeName={data.name}
+              onClick={handlePlayClick}
+              size="medium"
+            />
+          </div>
+          {
             <div
               className="flex flex-col items-center justify-center space-y-2"
               onDoubleClick={(e) => e.stopPropagation()}
@@ -196,7 +190,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
                 </div>
               </div>
             </div>
-          )}
+          }
         </div>
         <InputHandle
           className="handle"
@@ -230,13 +224,10 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
 );
 
 const DataSplitterNodeContainer = styled.div<{
-  selected: boolean;
   nbOutput: number;
-  collapsed: boolean;
 }>`
-  min-height: 375px;
-  height: ${(props) => props.nbOutput * 30 + 100}px;
-  width: ${(props) => (props.collapsed || !props.selected ? "auto" : "200px")};
+  min-height: ${(props) => props.nbOutput * 30 + 100}px;
+  width: 200px;
   transition: all 0.3s ease-in-out;
 `;
 
