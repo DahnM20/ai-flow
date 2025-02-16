@@ -59,7 +59,7 @@ export const NodeForm = styled.div`
 
 export const NodeLabel = styled.label``;
 
-export const StyledNodeTextarea = styled.textarea`
+export const StyledNodeTextarea = styled.textarea<{ withMinHeight?: boolean }>`
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
@@ -69,7 +69,7 @@ export const StyledNodeTextarea = styled.textarea`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.text};
   resize: vertical;
-  min-height: 8rem;
+  min-height: ${({ withMinHeight }) => (withMinHeight ? "8rem" : undefined)};
   width: 100%;
   height: auto;
   transition:
@@ -121,7 +121,6 @@ export const NodeLogs = styled.div<{ showLogs: boolean; noPadding?: boolean }>`
   cursor: pointer;
   max-height: 700px;
   overflow-y: auto;
-  white-space: pre-wrap;
   overflow-wrap: break-word;
 `;
 

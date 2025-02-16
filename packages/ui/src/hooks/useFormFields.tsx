@@ -131,6 +131,7 @@ export function useFormFields(
             field={field}
             data={data}
             isTouchDevice={isTouchDevice}
+            withMinHeight
             onEventNodeDataChange={handleEventNodeDataChange}
             onNodeDataChange={handleNodeDataChange}
             id={id}

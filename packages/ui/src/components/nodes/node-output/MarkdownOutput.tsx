@@ -10,6 +10,8 @@ import { toastFastInfoMessage } from "../../../utils/toastUtils";
 import { useTranslation } from "react-i18next";
 import { NodeContext } from "../../../providers/NodeProvider";
 import { NodeAppearance } from "../types/node";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { tomorrow as theme } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface MarkdownOutputProps {
   data: string;
@@ -55,6 +57,13 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({
     }
   };
 
+  const handleElementCopyToClipboard = (element: any) => {
+    if (element) {
+      copyToClipboard(element);
+      toastFastInfoMessage(t("CopiedToClipboard"));
+    }
+  };
+
   return (
     <div className="relative">
       <MemoizedStyledReactMarkdown
@@ -62,6 +71,56 @@ const MarkdownOutput: React.FC<MarkdownOutputProps> = ({
         children={stringifiedData}
         fontSize={fontSize}
         className={`markdown-body px-8 pt-8 text-lg`}
+        components={{
+          code(props: any) {
+            const { children, className, node, ...rest } = props;
+            const match = /language-(\w+)/.exec(className || "");
+            return match ? (
+              <div className="flex flex-col">
+                <div className=" flex justify-between rounded-t-xl bg-zinc-800 px-1 py-2 text-zinc-300">
+                  <div> {match[1]} </div>
+                  <div className="mr-2">
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleElementCopyToClipboard(children);
+                      }}
+                      onTouchStart={(e) => {
+                        e.stopPropagation();
+                        handleElementCopyToClipboard(children);
+                      }}
+                      className="copy-icon"
+                      aria-label="Copy text"
+                      title="Copy text"
+                    >
+                      <div className=" flex items-center text-sm">
+                        <FiCopy />
+
+                        <div> Copy </div>
+                      </div>
+                    </IconButton>
+                  </div>
+                </div>
+                <div className="rounded-b-xl bg-zinc-800 px-1 pb-1">
+                  <SyntaxHighlighter
+                    {...rest}
+                    PreTag="div"
+                    children={String(children).replace(/\n$/, "")}
+                    language={match[1]}
+                    style={theme}
+                    customStyle={{
+                      margin: "0px",
+                    }}
+                  />
+                </div>
+              </div>
+            ) : (
+              <code {...rest} className={className}>
+                {children}
+              </code>
+            );
+          },
+        }}
       />
       <IconContainer
         className="z-50"

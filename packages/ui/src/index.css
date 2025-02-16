@@ -78,6 +78,15 @@ body.dark-theme {
   background-color: #21FEE5 !important;
 }
 
+.markdown-body {
+  color: #f5f5f5 !important; 
+}
+
+.markdown-body pre {
+  background-color: transparent !important;
+}
+
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
