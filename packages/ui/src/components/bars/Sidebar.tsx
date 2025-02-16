@@ -1,20 +1,23 @@
-import React, { useContext, useState } from "react";
-import { FiChevronsRight, FiChevronsLeft } from "react-icons/fi";
+import React, { useContext } from "react";
 import { Edge, Node } from "reactflow";
 import JSONView from "../side-views/JSONView";
 import styled, { css } from "styled-components";
 import { useTranslation } from "react-i18next";
-import { TabButton } from "../../layout/main-layout/header/Tab";
 import { useVisibility } from "../../providers/VisibilityProvider";
 import CurrentNodeView from "../side-views/CurrentNodeView";
 import ButtonRunAll from "../buttons/ButtonRunAll";
 import { NodeContext } from "../../providers/NodeProvider";
+import { Tabs, rem } from "@mantine/core";
+import { FaFile } from "react-icons/fa";
+import { MdCenterFocusStrong } from "react-icons/md";
+import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 
 interface SidebarProps {
   nodes: Node[];
   edges: Edge[];
   onChangeFlow: (nodes: Node[], edges: Edge[]) => void;
 }
+
 const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
   const { t } = useTranslation("flow");
   const { runAllNodes, currentNodesRunning } = useContext(NodeContext);
@@ -22,9 +25,10 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
     useVisibility();
 
   const sidebar = getElement("sidebar");
-
   const show = sidebar.isVisible;
   const toggleShow = () => sidebar.toggle();
+
+  const iconStyle = { width: rem(12), height: rem(12) };
 
   return (
     <>
@@ -33,54 +37,58 @@ const Sidebar: React.FC<SidebarProps> = ({ nodes, edges, onChangeFlow }) => {
           {show ? <FiChevronsRight /> : <FiChevronsLeft />}
         </ToggleIcon>
       </SidebarToggle>
-      <ButtonsContainer show={show}>
-        <div
-          className={`absolute flex flex-col space-y-3 ${show ? "z-50 opacity-100" : "pointer-events-none -z-50 opacity-0"} transition-all duration-300 ease-out`}
-        >
-          <ButtonRunAll
-            small
-            onClick={show ? runAllNodes : () => {}}
-            isRunning={currentNodesRunning?.length > 0}
-          />
-        </div>
+      <ButtonsContainer
+        show={show}
+        className={`absolute  flex flex-col space-y-3 bg-red-500 ${show ? "z-50 opacity-100" : "pointer-events-none -z-50 opacity-0"} transition-all duration-300 ease-out`}
+      >
+        <ButtonRunAll
+          small
+          onClick={show ? runAllNodes : () => {}}
+          isRunning={currentNodesRunning?.length > 0}
+        />
       </ButtonsContainer>
-      <SidebarContainer show={show}>
-        <HeaderContainer className="text-sm">
-          <TabButton
-            active={sidepaneActiveTab === "json"}
-            onClick={() => setSidepaneActiveTab("json")}
-            className="text-md px-1 py-2 hover:text-slate-50"
-          >
-            <Title>{t("JsonView")}</Title>
-          </TabButton>
-          <TabButton
-            active={sidepaneActiveTab === "current_node"}
-            onClick={() => setSidepaneActiveTab("current_node")}
-            className="text-md px-1 py-2 hover:text-slate-50"
-          >
-            <Title>{t("currentNodeView")}</Title>
-          </TabButton>
-        </HeaderContainer>
-        {show && sidepaneActiveTab === "json" && (
-          <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} />
-        )}
-        {show && sidepaneActiveTab === "current_node" && <CurrentNodeView />}
+
+      <SidebarContainer
+        show={show}
+        key={sidepaneActiveTab}
+        className="rounded-l-3xl"
+      >
+        <Tabs
+          defaultValue={sidepaneActiveTab}
+          color="cyan"
+          variant="pills"
+          keepMounted={false}
+        >
+          <Tabs.List grow>
+            <Tabs.Tab
+              value="json"
+              leftSection={<FaFile style={iconStyle} />}
+              onClick={() => setSidepaneActiveTab("json")}
+            >
+              {t("JsonView")}
+            </Tabs.Tab>
+            <Tabs.Tab
+              value="current_node"
+              leftSection={<MdCenterFocusStrong style={iconStyle} />}
+              onClick={() => setSidepaneActiveTab("current_node")}
+            >
+              {t("currentNodeView")}
+            </Tabs.Tab>
+          </Tabs.List>
+
+          <Tabs.Panel value="json">
+            <JSONView nodes={nodes} edges={edges} onChangeFlow={onChangeFlow} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="current_node">
+            <CurrentNodeView />
+          </Tabs.Panel>
+        </Tabs>
       </SidebarContainer>
       {!show && <div className="sidebar-overlay" onClick={toggleShow} />}
     </>
   );
 };
-
-const HeaderContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-`;
-
-const Title = styled.div`
-  font-weight: bold;
-  margin: 0 10px;
-`;
 
 const SidebarContainer = styled.div<{ show: boolean }>`
   position: fixed;
@@ -130,16 +138,15 @@ const SidebarToggle = styled.div<{ show: boolean }>`
 const ButtonsContainer = styled.div<{ show: boolean }>`
   position: fixed;
   right: 0;
-  top: 2%;
+  top: 3%;
   transform: translateY(-50%);
-  width: 5em;
   transition: width 0.2s ease-in-out;
   z-index: 1000000;
 
   ${({ show }) =>
     show &&
     css`
-      width: 33%;
+      right: 31%;
     `}
 
   @media screen and (max-width: 768px) {
