@@ -35,8 +35,8 @@ class StabilityAIGenericProcessor(
         re.compile(r"/engines/"),  # Contains 'engines'
         re.compile(r"/result/"),  # Contains 'result'
         re.compile(r"/v2alpha/"),  # Contains 'v2alpha'
+        re.compile(r"/result"),
         # Temporary
-        re.compile(r"/inpaint"),
         re.compile(r"/chat"),  # api returns 404 for now
     ]
 
@@ -121,7 +121,7 @@ class StabilityAIGenericProcessor(
             .set_options(path_options)
             .build()
         )
-        
+
         return (
             NodeConfigBuilder()
             .set_node_name("StabilityAI")
@@ -280,9 +280,15 @@ class StabilityAIGenericProcessor(
         files = {} if len(binaryFieldNames) > 0 else {"none": (None, "")}
 
         for field_name in binaryFieldNames:
+
+            if field_name not in data:
+                files[field_name] = None
+                continue
+
             url = data[field_name]
             data[field_name] = None
             del data[field_name]
+
             if url:
                 files[field_name] = stream_download_file_as_binary(url)
             else:
@@ -292,9 +298,6 @@ class StabilityAIGenericProcessor(
             api_token=api_key,
             base_url=self.api_host,
         )
-
-        if self.response_content_type == "application/json":
-            files = None
 
         response = client.post(
             path=self.path, data=data, files=files, accept=self.path_accept
