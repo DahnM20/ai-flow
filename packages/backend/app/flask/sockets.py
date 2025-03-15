@@ -1,4 +1,5 @@
 import eventlet
+from ..env_config import is_set_app_config_on_ui_enabled
 
 eventlet.monkey_patch(all=False, socket=True)
 
@@ -18,8 +19,6 @@ from ..processors.context.processor_context_flask_request import (
 )
 import traceback
 import os
-from .decorators import with_flow_data_validations
-from .validators import max_empty_output_data, max_url_input_nodes, max_nodes
 
 
 def populate_request_global_object(data):
@@ -58,7 +57,6 @@ def handle_connect():
 
 
 @socketio.on("process_file")
-@with_flow_data_validations(max_nodes, max_url_input_nodes)
 def handle_process_file(data):
     """
     This event handler is activated when a "process_file" event is received via Socket.IO. It allows to run every node in
@@ -91,7 +89,6 @@ def handle_process_file(data):
 
 
 @socketio.on("run_node")
-@with_flow_data_validations(max_empty_output_data, max_url_input_nodes)
 def handle_run_node(data):
     """
     This event handler is activated when a "run_node" event is received via Socket.IO. It facilitates the processing
@@ -131,3 +128,25 @@ def handle_run_node(data):
 @socketio.on("disconnect")
 def handle_disconnect():
     logging.info("Client disconnected")
+
+
+@socketio.on("update_app_config")
+def handle_update_app_config(data):
+    if not is_set_app_config_on_ui_enabled():
+        return
+
+    logging.info("Updating app config")
+    config_keys = [
+        "S3_BUCKET_NAME",
+        "S3_AWS_ACCESS_KEY_ID",
+        "S3_AWS_SECRET_ACCESS_KEY",
+        "S3_AWS_REGION_NAME",
+        "S3_ENDPOINT_URL",
+        "REPLICATE_API_KEY",
+    ]
+    for key in config_keys:
+        value = data.get(key)
+
+        if value is not None and str(value).strip():
+            logging.info(f"Setting {key}")
+            os.environ[key] = value

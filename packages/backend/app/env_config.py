@@ -66,3 +66,7 @@ def get_browser_tab_max_usage() -> int:
 
 def get_browser_tab_pool_size() -> int:
     return int(os.getenv("BROWSER_TAB_POOL_SIZE", "3"))
+
+
+def is_set_app_config_on_ui_enabled() -> bool:
+    return os.getenv("ENABLE_SET_APP_CONFIG_ON_UI", "true") == "true"

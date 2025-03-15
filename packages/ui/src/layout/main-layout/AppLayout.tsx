@@ -65,7 +65,7 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [showOnlyOutput, setShowOnlyOutput] = useState(false);
-  const { emitEvent } = useContext(SocketContext);
+  const { emitEvent, connect } = useContext(SocketContext);
   const [isRunning, setIsRunning] = useState(false);
   const [mode, setMode] = useState<ApplicationMode>("flow");
   const [selectedEdgeType, setSelectedEdgeType] = useState("default");
@@ -76,6 +76,10 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
 
   const currentTabRef = useRef(currentTab);
   const flowTabsRef = useRef(flowTabs);
+
+  useEffect(() => {
+    connect();
+  });
 
   useEffect(() => {
     currentTabRef.current = currentTab;

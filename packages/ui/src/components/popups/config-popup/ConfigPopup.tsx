@@ -5,6 +5,7 @@ import { Modal } from "@mantine/core";
 import { UserParameters } from "./UserParameters";
 import DisplayParameters from "./DisplayParameters";
 import { useVisibility } from "../../../providers/VisibilityProvider";
+import AppParameters from "./AppParameters";
 
 interface ConfigPopupProps {
   isOpen: boolean;
@@ -66,6 +67,12 @@ const ConfigPopup = ({ isOpen }: ConfigPopupProps) => {
             {t("userTabLabel")}
           </Tab>
           <Tab
+            isActive={configActiveTab === "app"}
+            onClick={() => setConfigActiveTab("app")}
+          >
+            {t("appParametersLabel")}
+          </Tab>
+          <Tab
             isActive={configActiveTab === "display"}
             onClick={() => setConfigActiveTab("display")}
           >
@@ -73,6 +80,7 @@ const ConfigPopup = ({ isOpen }: ConfigPopupProps) => {
           </Tab>
         </Tabs>
         {configActiveTab === "user" && <UserParameters />}
+        {configActiveTab === "app" && <AppParameters />}
         {configActiveTab === "display" && <DisplayParameters />}
         <Footer>
           <Message>{t("supportProjectPrompt")}</Message>

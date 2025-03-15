@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { FlowEventOut, FlowSocket } from "../sockets/flowSocket";
 
 import { FlowMetadata } from "../layout/main-layout/AppLayout";
+import { AppConfig } from "../components/popups/config-popup/configMetadata";
 
 export interface FlowEventData {
   jsonFile: string;
@@ -96,6 +97,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     if (configuration) setConfig(configuration);
 
     const newSocket = new FlowSocket(io(getWsUrl()));
+    const appConfig: Partial<AppConfig> = JSON.parse(
+      localStorage.getItem("appConfig") || "{}",
+    );
+
+    newSocket.emit("update_app_config", appConfig);
 
     setSocket(newSocket);
     return newSocket;
@@ -123,23 +129,6 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   function disconnect() {
     if (socket) {
       socket.disconnect();
-    }
-
-    return false;
-  }
-
-  function verifyConfiguration(): boolean {
-    const params = getConfigParametersFlat();
-    if (!params) {
-      return false;
-    }
-
-    if (
-      params.openai_api_key ||
-      params.stabilityai_api_key ||
-      params.replicate_api_key
-    ) {
-      return true;
     }
 
     return false;

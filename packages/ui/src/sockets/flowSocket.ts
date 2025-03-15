@@ -7,7 +7,7 @@ export type FlowEventIn =
   | "current_node_running"
   | "disconnect";
 
-export type FlowEventOut = "run_node" | "process_file";
+export type FlowEventOut = "run_node" | "process_file" | "update_app_config";
 
 export class FlowSocket {
   private socket: Socket;

@@ -13,17 +13,23 @@ import mimetypes
 class S3StorageStrategy(CloudStorageStrategy):
     """S3 storage strategy. For the cloud version, every generated image is saved in an S3 bucket for 12H."""
 
-    BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
     HOURS_BEFORE_EXPIRATION = int(os.getenv("S3_LINK_HOURS_BEFORE_EXPIRATION", "12"))
     EXPIRATION = timedelta(hours=12)
     MAX_UPLOAD_SIZE_BYTES = int(os.getenv("MAX_UPLOAD_SIZE_MB", "300")) * 1024 * 1024
 
     def __init__(self):
+        self.BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
+        endpoint_url = os.getenv("S3_ENDPOINT_URL")
+
+        if not endpoint_url:
+            endpoint_url = None
+
         self.s3_client = boto3.client(
             "s3",
-            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-            region_name=os.getenv("AWS_REGION_NAME"),
+            endpoint_url=endpoint_url,
+            aws_access_key_id=os.getenv("S3_AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("S3_AWS_SECRET_ACCESS_KEY"),
+            region_name=os.getenv("S3_AWS_REGION_NAME"),
         )
 
     def save(self, filename: str, data: Any) -> str:
