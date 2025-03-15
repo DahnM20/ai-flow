@@ -145,5 +145,11 @@
   },
   "deepseek-processor": {
     "description": "Le nœud DeepSeek est conçu pour interagir avec l'API DeepSeek, vous permettant d'accéder à différents modèles tels que V3 et R1."
+  },
+  "openrouter-processor": {
+    "description": "OpenRouter donne accès à plusieurs LLMs et providers. Ce noeud nécessite de fournir une clé API."
+  },
+  "generate-number-processor": {
+    "description": "Le nœud « Générer un nombre » est conçu pour générer un nombre aléatoire dans une plage spécifiée."
   }
 }

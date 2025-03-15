@@ -131,5 +131,8 @@
   "replaceTextNodeHelp": "Utilisez ce nœud pour rechercher et remplacer un texte spécifique ou des motifs dans l'entrée.",
   "openaio1Help": "Des modèles de langage avancés formés pour le raisonnement complexe, excellant dans les défis scientifiques, mathématiques et de programmation.",
   "ContextPlaceholder": "Contexte additionnel qui sera utilisé pour répondre au prompt",
-  "deepSeekHelp": "Accédez aux LLMs DeepSeek via ce noeud."
+  "deepSeekHelp": "Accédez aux LLMs DeepSeek via ce noeud.",
+  "openRouterHelp": "OpenRouter donne accès à plusieurs LLMs et providers. Ce noeud nécessite de fournir une clé API.",
+  "Generate Number": "Générer un nombre",
+  "generateNumberHelp": "Génère un nombre aléatoire"
 }

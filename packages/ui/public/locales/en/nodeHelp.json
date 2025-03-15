@@ -145,5 +145,11 @@
   },
   "deepseek-processor": {
     "description": "The DeepSeek node is designed to interact with the DeepSeek API, enabling you to access various V3 and R1 models."
+  },
+  "generate-number-processor": {
+    "description": "The Generate Number node is designed to generate a random number within a specified range."
+  },
+  "openrouter-processor": {
+    "description": "OpenRouter provides an OpenAI-compatible completion API to multiple models & providers. \n\nThis node is provided as a User Integration, to use it, please provide your OpenRouter API Key in the Secure Store."
   }
 }
