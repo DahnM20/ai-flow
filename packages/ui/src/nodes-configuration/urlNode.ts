@@ -37,13 +37,6 @@ export const urlNodeConfig: NodeConfig = {
       placeholder: "div .article #id",
       defaultValue: ["meta", "link", "script"],
     },
-    {
-      name: "cookies_consent_label",
-      type: "input",
-      label: "cookies_consent_label",
-      placeholder: "cookiesConsentLabelPlaceholder",
-      description: "cookiesConsentLabelHelp",
-    },
   ],
   outputType: "text",
   defaultHideOutput: true,

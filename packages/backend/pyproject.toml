@@ -43,6 +43,8 @@ openapi-spec-validator = "^0.7.1"
 anthropic = "^0.28.0"
 pymupdf = "^1.24.7"
 pydub = "^0.25.1"
+markdownify = "^1.1.0"
+beautifulsoup4 = "^4.13.3"
 
 
 [tool.poetry.group.dev.dependencies]
