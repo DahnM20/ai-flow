@@ -15,6 +15,7 @@ import {
   getPublicModels,
 } from "../../../api/replicateModels";
 import { Modal } from "@mantine/core";
+import { toastErrorMessage } from "../../../utils/toastUtils";
 
 interface SelectModelPopupProps {
   show: boolean;
@@ -39,15 +40,22 @@ export default function SelectModelPopup({
 
   useEffect(() => {
     async function loadAllData() {
-      const collections = await withCache(getCollections);
-      const { models, cursor: newCursor } = await withCache(getPublicModels);
-      const highlightedModels = await withCache(getHighlightedModels);
-      const extractedData = extractModelsData(models);
-      const extractedHighlightedModels = extractModelsData(highlightedModels);
-      setCursor(newCursor);
-      setModels(extractedData);
-      setHighlightedModels(extractedHighlightedModels);
-      setCollections(collections);
+      try {
+        const collections = await withCache(getCollections);
+        const { models, cursor: newCursor } = await withCache(getPublicModels);
+        const highlightedModels = await withCache(getHighlightedModels);
+        const extractedData = extractModelsData(models);
+        const extractedHighlightedModels = extractModelsData(highlightedModels);
+        setCursor(newCursor);
+        setModels(extractedData);
+        setHighlightedModels(extractedHighlightedModels);
+        setCollections(collections);
+      } catch (e) {
+        toastErrorMessage(
+          "Error while fetching Replicate models. Please check that REPLICATE_API_KEY is set in the app environnement or in the App parameters tab.",
+        );
+        throw e;
+      }
     }
 
     async function configurePopup() {
