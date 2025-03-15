@@ -4,7 +4,7 @@ export const llmPromptNodeConfig: NodeConfig = {
   nodeName: "LLMPrompt",
   processorType: "llm-prompt",
   icon: "OpenAILogo",
-  inputNames: ["initData"],
+  inputNames: ["prompt", "context"],
   fields: [
     {
       name: "model",
@@ -23,14 +23,24 @@ export const llmPromptNodeConfig: NodeConfig = {
       ],
     },
     {
+      name: "context",
+      label: "context",
+      type: "textfield",
+      hasHandle: true,
+      placeholder: "ContextPlaceholder",
+    },
+    {
       name: "prompt",
+      label: "prompt",
       type: "textarea",
       required: true,
+      hasHandle: true,
       placeholder: "PromptPlaceholder",
     },
   ],
   outputType: "markdown",
-  hasInputHandle: true,
+  showHandlesNames: true,
+  // hasInputHandle: true,
   section: "models",
   helpMessage: "llmPromptHelp",
 };

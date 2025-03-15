@@ -42,6 +42,7 @@ llama-index = "v0.10.56"
 openapi-spec-validator = "^0.7.1"
 anthropic = "^0.28.0"
 pymupdf = "^1.24.7"
+pydub = "^0.25.1"
 
 
 [tool.poetry.group.dev.dependencies]

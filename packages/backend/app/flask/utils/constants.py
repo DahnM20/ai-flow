@@ -8,4 +8,10 @@ SESSION_USER_ID_KEY = "user_id"
 
 PARAMETERS_FIELD_NAME = "parameters"
 
-ENV_API_KEYS = ["openai_api_key", "stabilityai_api_key", "replicate_api_key"]
+ENV_API_KEYS = [
+    "openai_api_key",
+    "stabilityai_api_key",
+    "replicate_api_key",
+    "anthropic_api_key",
+    "openrouter_api_key",
+]

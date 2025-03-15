@@ -1,10 +1,11 @@
+import logging
 from ...launcher.processor_event import ProcessorEvent
 from ...launcher.event_type import EventType
 from ....llms.utils.max_token_for_model import max_token_for_model, nb_token_for_input
 from ....llms.prompt_engine.simple_prompt_engine import SimplePromptEngine
-from ....llms.prompt_engine.vector_index_prompt_engine import VectorIndexPromptEngine
 from ...context.processor_context import ProcessorContext
 from ..processor import ContextAwareProcessor
+from openai import OpenAI
 
 from .processor_type_name_utils import ProcessorType
 from llama_index.core.base.llms.base import ChatMessage
@@ -13,16 +14,37 @@ from llama_index.core.base.llms.base import ChatMessage
 class LLMPromptProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.LLM_PROMPT
     DEFAULT_MODEL = "gpt-4o"
+    streaming = True
 
     def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)
 
         self.model = config.get("model", LLMPromptProcessor.DEFAULT_MODEL)
-        self.prompt = config["prompt"]
+        self.prompt = config.get("prompt", None)
 
     def handle_stream_awnser(self, awnser):
         event = ProcessorEvent(self, awnser)
         self.notify(EventType.STREAMING, event)
+
+    def nb_tokens_from_messages(self, messages, model):
+        """
+        Calculates the total number of tokens in a list of messages using nb_token_for_input.
+        """
+        total_tokens = 0
+        token_overhead = 3
+        for message in messages:
+            content_tokens = nb_token_for_input(message.content, model)
+            total_tokens += content_tokens + token_overhead
+        total_tokens += token_overhead
+        return total_tokens
+
+    def check_for_html_tags(self, text):
+        """
+        Checks if the given text contains HTML tags or attributes.
+        """
+        if "<html" in text or "<body" in text:
+            return True
+        return False
 
     def process(self):
         api_key = self._processor_context.get_value("openai_api_key")
@@ -30,37 +52,58 @@ class LLMPromptProcessor(ContextAwareProcessor):
         if api_key is None:
             raise Exception("No OpenAI API key found")
 
-        input_data = None
-        if self.get_input_processor() is not None:
-            input_data = self.get_input_processor().get_output(
-                self.get_input_node_output_key()
-            )
+        af_node_version = self.get_input_by_name("af_node_version", 1)
 
-        if input_data is not None and nb_token_for_input(
-            input_data, self.model
-        ) > max_token_for_model(self.model):
-            prompt_engine = VectorIndexPromptEngine(
-                model=self.model, api_key=api_key, init_data=input_data
-            )
-            awnser = prompt_engine.prompt(self.prompt)
+        context = None
+        if af_node_version > 1:
+            context = self.get_input_by_name("context", None)
+            self.prompt = self.get_input_by_name("prompt", None)
         else:
-            self.init_context(input_data)
-            prompt_engine = SimplePromptEngine(model=self.model, api_key=api_key)
-            stream_chat_response = prompt_engine.prompt_stream(self.messages)
-            awnser = ""
-            for r in stream_chat_response:
-                awnser += r.delta
-                self.handle_stream_awnser(awnser)
+            if self.get_input_processor() is not None:
+                context = self.get_input_processor().get_output(
+                    self.get_input_node_output_key()
+                )
+
+        if self.prompt is None:
+            raise Exception("No prompt provided")
+
+        self.init_context(context)
+        total_tokens = self.nb_tokens_from_messages(self.messages, self.model)
+        model_max_tokens = max_token_for_model(self.model)
+
+        if total_tokens > model_max_tokens:
+            logging.warning("Messages size: " + str(total_tokens))
+            logging.warning("Model capacity: " + str(model_max_tokens))
+            message = (
+                "The text size exceeds the model's capacity. "
+                "Consider using a model with greater context handling capabilities or utilize the 'Find Similar Text' node to create a cohesive, condensed version of the context."
+            )
+            if (
+                context and self.check_for_html_tags(context)
+            ) or self.check_for_html_tags(self.prompt):
+                message += (
+                    "\n\n"
+                    "Note: HTML tags or attributes are detected within the data provided. If they are unnecessary for this task, removing them could significantly reduce the context size."
+                )
+            raise Exception(message)
+
+        prompt_engine = SimplePromptEngine(model=self.model, api_key=api_key)
+        stream_chat_response = prompt_engine.prompt_stream(self.messages)
+        awnser = ""
+        for r in stream_chat_response:
+            awnser += r.delta
+            self.handle_stream_awnser(awnser)
+
         return awnser
 
-    def init_context(self, input_data: str) -> None:
+    def init_context(self, context: str) -> None:
         """
         Initialise the context for the LLM model with a standard set of messages.
         Additional user input data can be provided, which will be added to the messages.
 
-        :param input_data: additional information to be used by the assistant.
+        :param context: additional information to be used by the assistant.
         """
-        if input_data is None:
+        if context is None:
             system_msg = "You are a helpful assistant. "
             user_msg_content = self.prompt
         else:
@@ -71,7 +114,7 @@ class LLMPromptProcessor(ContextAwareProcessor):
                 "Your response should feel natural and seamless, as if you've internalized the context "
                 "and are answering the request without needing to directly point back to the information provided"
             )
-            user_msg_content = f"#Context: {input_data} \n\n#Request: {self.prompt}"
+            user_msg_content = f"#Context: {context} \n\n#Request: {self.prompt}"
 
         self.messages = [
             ChatMessage(role="system", content=system_msg),

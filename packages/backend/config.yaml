@@ -19,3 +19,7 @@ extension:
   deepseek_api_key:
     tag: "core"
     description: "API key for accessing DeepSeek services."
+
+  openrouter_api_key:
+    tag: "core"
+    description: "API key for accessing OpenRouter services."
