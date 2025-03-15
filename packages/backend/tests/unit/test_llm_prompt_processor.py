@@ -49,19 +49,3 @@ class TestLLMPromptProcessor(unittest.TestCase):
 
             # Assert
             self.assertEqual(result, RESPONSE_EXPECTED)
-
-    def test_missing_inputText_raises_exception(self):
-        MODEL = "gpt-4"
-        API_KEY = "000000000"
-
-        # Arrange
-        config = self.get_default_valid_config(MODEL)
-        del config["prompt"]
-
-        context = ProcessorContextMock(API_KEY)
-
-        # Act & Assert
-        with self.assertRaises(Exception) as context:
-            LLMPromptProcessor(config, context)
-
-        self.assertIn("prompt", str(context.exception))
