@@ -22,9 +22,11 @@
 ---
 
 <div align="center">
-  🎉🚀 Latest Release: v0.9.0 🚀🎉
+  🎉🚀 Latest Release: v0.10.0 🚀🎉
   <br>
-  New Nodes: Deepseek, OpenAI o3, StabilityAI API update
+  New Nodes: Claude 3.7, OpenRouter, Generate Random Number
+  <br>
+  Configuration can now be done entirely in the UI
 </div>
 
 ---
@@ -46,8 +48,8 @@
 ## Supported Models
 
 - **Replicate:** LLaMa, Mistral, FaceSwap, InstantMesh, MusicGen, and more.
-- **OpenAI:** GPT-4, GPT-4 Vision, GPT-3.5, TTS, o1, o3.
-- **StabilityAI:** Stable Diffusion 3, SDXL, Stable Video Diffusion, plus additional tools.
+- **OpenAI:** GPT-4o, TTS, o1, o3.
+- **StabilityAI:** Stable Diffusion 3.5, SDXL, Stable Video Diffusion, plus additional tools.
 - **Others:** Claude, Deepseek.
 
 ![Scenario Example](assets/flow-example-2.png)
