@@ -14,6 +14,9 @@ function FilterGrid({
   selectedFilter,
   onSelectFilter,
 }: FilterGridProps) {
+  function getUpperCaseFirstCharString(value: string) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
   return (
     <div className="grid w-full grid-cols-1 gap-4 px-4">
       {filters &&
@@ -28,7 +31,7 @@ function FilterGrid({
               className="w-full overflow-hidden whitespace-nowrap px-4 text-center text-sm"
               onClick={() => onSelectFilter(filter.slug)}
             >
-              {filter.name}
+              {getUpperCaseFirstCharString(filter.name)}
             </p>
           </div>
         ))}

@@ -177,17 +177,19 @@ export default function SelectModelPopup({
         background: "linear-gradient(135deg, #101113, #1a1b1e)",
       }}
     >
-      <div className="flex h-full">
-        <div className="flex w-full flex-col rounded-xl   text-slate-200 lg:flex-row">
-          <div className="flex h-fit w-full lg:w-fit">
-            <FilterGrid
-              filters={collections}
-              selectedFilter={selectedCollection}
-              onSelectFilter={handleSelectCollection}
-            />
-          </div>
+      <div className="flex h-full w-full" data-test-id="select-model-popup">
+        <div className="flex w-full flex-col rounded-xl text-slate-200 lg:flex-row">
+          {collections && collections.length > 0 && (
+            <div className="flex h-fit w-full lg:w-auto lg:flex-shrink-0">
+              <FilterGrid
+                filters={collections}
+                selectedFilter={selectedCollection}
+                onSelectFilter={handleSelectCollection}
+              />
+            </div>
+          )}
 
-          <div className="flex flex-col gap-2 lg:w-3/4">
+          <div className="flex flex-col gap-2 lg:w-full">
             {renderModelSections()}
 
             <LoadMoreButton
