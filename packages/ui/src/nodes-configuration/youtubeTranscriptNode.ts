@@ -11,6 +11,7 @@ export const youtubeTranscriptNodeConfig: NodeConfig = {
       type: "input",
       required: true,
       placeholder: "URLPlaceholder",
+      hasHandle: true,
     },
     {
       name: "language",
@@ -75,4 +76,5 @@ export const youtubeTranscriptNodeConfig: NodeConfig = {
   defaultHideOutput: true,
   section: "input",
   helpMessage: "youtubeTranscriptHelp",
+  showHandlesNames: true,
 };

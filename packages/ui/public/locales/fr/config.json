@@ -25,5 +25,5 @@
   "models": "Modèles",
   "tools": "Outils",
   "parameters.extension.deepseek_api_key": "Clé API DeepSeek",
-  "parameters.user_integrations.openrouter_api_key": "Clé API OpenRouter"
+  "parameters.extension.openrouter_api_key": "Clé API OpenRouter"
 }

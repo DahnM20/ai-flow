@@ -102,5 +102,14 @@ export function convertOpenAPISchemaToNodeConfig(schema: any, config?: Config) {
 
       return field;
     })
+    .sort((a, b) => {
+      if (a.required && !b.required) {
+        return -1;
+      }
+      if (!a.required && b.required) {
+        return 1;
+      }
+      return 0;
+    })
     .filter((field) => !!field.name);
 }
