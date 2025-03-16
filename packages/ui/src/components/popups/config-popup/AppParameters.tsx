@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Field, Input, Label, Section } from "./ParametersFields";
 import { AppConfig, configMetadata } from "./configMetadata";
 import { SocketContext } from "../../../providers/SocketProvider";
+import { Button } from "@mantine/core";
 
 export default function AppParameters() {
   const { t } = useTranslation("flow");
@@ -68,12 +69,9 @@ export default function AppParameters() {
         </Section>
       ))}
 
-      <button
-        onClick={handleSubmit}
-        className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
-      >
+      <Button onClick={handleSubmit} color="teal">
         Save Configuration
-      </button>
+      </Button>
     </div>
   );
 }

@@ -95,7 +95,7 @@
   "documentToTextHelp": "Convertir un fichier .pdf, .txt, .csv, .json, .html en texte simple",
   "TextToSpeech": "Texte vers Audio",
   "textToSpeechHelp": "Convertir un texte en fichier audio en utilisant le modèle tts d'OpenAI",
-  "error.upload_failed": "Echec de l'upload",
+  "error.upload_failed": "Echec de l'upload. Vérifiez votre configuration pour pouvoir activer l'upload.",
   "InputTextPlaceholder": "Entrez votre texte ici",
   "DownloadFile": "Télécharger le fichier",
   "FileUploaded": "Fichier hébergé",

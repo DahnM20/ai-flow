@@ -12,12 +12,13 @@ from .processors.observer.observer import Observer
 from .storage.local_storage_strategy import LocalStorageStrategy
 from .storage.s3_storage_strategy import S3StorageStrategy
 from .storage.storage_strategy import StorageStrategy
-from .env_config import is_cloud_env, is_mock_env
+from .env_config import is_cloud_env, is_mock_env, is_s3_enabled
 from .processors.factory.processor_factory import ProcessorFactory
 from .processors.factory.processor_factory_iter_modules import (
     ProcessorFactoryIterModules,
 )
 from .processors.launcher.processor_launcher import ProcessorLauncher
+import logging
 
 
 class ProcessorFactoryModule(Module):
@@ -31,9 +32,11 @@ class ProcessorFactoryModule(Module):
 
 class StorageModule(Module):
     def configure(self, binder: Binder):
-        if is_cloud_env():
+        if is_s3_enabled():
+            logging.info("Using S3 storage strategy")
             binder.bind(StorageStrategy, to=S3StorageStrategy)
         else:
+            logging.info("Using local storage strategy")
             binder.bind(StorageStrategy, to=LocalStorageStrategy)
 
 
@@ -69,4 +72,13 @@ def create_application_injector() -> Injector:
     return injector
 
 
-root_injector: Injector = create_application_injector()
+_current_injector: Injector = create_application_injector()
+
+
+def get_root_injector() -> Injector:
+    return _current_injector
+
+
+def refresh_root_injector() -> None:
+    global _current_injector
+    _current_injector = create_application_injector()

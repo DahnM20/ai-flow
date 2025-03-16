@@ -13,7 +13,7 @@ from llama_index.legacy.indices.postprocessor import SimilarityPostprocessor
 
 from llama_index.legacy.node_parser import SimpleNodeParser
 
-from ...root_injector import root_injector
+from ...root_injector import get_root_injector
 from ..factory.llm_factory import LLMFactory
 from .prompt_engine import PromptEngine
 
@@ -29,7 +29,7 @@ class VectorIndexPromptEngine(PromptEngine):
 
     @staticmethod
     def _get_default_llm_factory():
-        return root_injector.get(LLMFactory)
+        return get_root_injector().get(LLMFactory)
 
     @staticmethod
     def _hash_init_data(init_data):

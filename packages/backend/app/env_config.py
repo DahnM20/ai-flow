@@ -70,3 +70,7 @@ def get_browser_tab_pool_size() -> int:
 
 def is_set_app_config_on_ui_enabled() -> bool:
     return os.getenv("ENABLE_SET_APP_CONFIG_ON_UI", "true") == "true"
+
+
+def is_s3_enabled() -> bool:
+    return os.getenv("S3_AWS_ACCESS_KEY_ID") is not None

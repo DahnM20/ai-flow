@@ -2,7 +2,7 @@ import logging
 from flask import Blueprint
 from ...storage.storage_strategy import StorageStrategy
 
-from ...root_injector import root_injector
+from ...root_injector import get_root_injector
 from flask import request
 
 upload_blueprint = Blueprint("upload_blueprint", __name__)
@@ -15,7 +15,7 @@ def upload_file():
     """
 
     logging.info("Uploading file")
-    storage_strategy = root_injector.get(StorageStrategy)
+    storage_strategy = get_root_injector().get(StorageStrategy)
 
     filename = request.args.get("filename")
     try:

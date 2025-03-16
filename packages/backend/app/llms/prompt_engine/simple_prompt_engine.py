@@ -1,6 +1,6 @@
 from ..factory.llm_factory import LLMFactory
 from .prompt_engine import PromptEngine
-from ...root_injector import root_injector
+from ...root_injector import get_root_injector
 
 
 class SimplePromptEngine(PromptEngine):
@@ -16,7 +16,7 @@ class SimplePromptEngine(PromptEngine):
 
     @staticmethod
     def _get_default_llm_factory():
-        return root_injector.get(LLMFactory)
+        return get_root_injector().get(LLMFactory)
 
     def prompt(self, messages):
         llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)

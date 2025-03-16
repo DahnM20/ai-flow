@@ -56,9 +56,6 @@ const ConfigPopup = ({ isOpen }: ConfigPopupProps) => {
       }}
     >
       <Content>
-        <h2 className="mb-5 text-center text-2xl font-bold">
-          {t("configurationTitle")}
-        </h2>
         <Tabs className="sm:text-md text-base">
           <Tab
             isActive={configActiveTab === "user"}

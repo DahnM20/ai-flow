@@ -10,7 +10,10 @@ import json
 
 from flask import g, request, session
 from flask_socketio import emit
-from ..root_injector import root_injector
+from ..root_injector import (
+    get_root_injector,
+    refresh_root_injector,
+)
 from .utils.constants import PARAMETERS_FIELD_NAME, ENV_API_KEYS
 
 from ..processors.launcher.processor_launcher import ProcessorLauncher
@@ -70,7 +73,7 @@ def handle_process_file(data):
     try:
         populate_request_global_object(data)
         flow_data = json.loads(data.get("jsonFile"))
-        launcher = root_injector.get(ProcessorLauncher)
+        launcher = get_root_injector().get(ProcessorLauncher)
         launcher.set_context(ProcessorContextFlaskRequest(g, session, request.sid))
 
         if flow_data:
@@ -105,7 +108,7 @@ def handle_run_node(data):
         flow_data = json.loads(data.get("jsonFile"))
         node_name = data.get("nodeName")
 
-        launcher = root_injector.get(ProcessorLauncher)
+        launcher = get_root_injector().get(ProcessorLauncher)
         launcher.set_context(ProcessorContextFlaskRequest(g, session, request.sid))
 
         if flow_data and node_name:
@@ -150,3 +153,5 @@ def handle_update_app_config(data):
         if value is not None and str(value).strip():
             logging.info(f"Setting {key}")
             os.environ[key] = value
+
+    refresh_root_injector()

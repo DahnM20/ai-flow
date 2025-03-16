@@ -2,7 +2,7 @@ import logging
 from ...context.processor_context import ProcessorContext
 from ..processor import ContextAwareProcessor
 from ....llms.factory.llm_factory import LLMFactory
-from ....root_injector import root_injector
+from ....root_injector import get_root_injector
 
 from llama_index.core.base.llms.base import ChatMessage
 
@@ -38,7 +38,7 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
 
     @staticmethod
     def _get_default_llm_factory():
-        return root_injector.get(LLMFactory)
+        return get_root_injector().get(LLMFactory)
 
     def process(self):
         if self.get_input_processor() is None:
