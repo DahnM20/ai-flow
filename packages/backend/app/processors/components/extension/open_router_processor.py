@@ -39,13 +39,6 @@ def get_models():
     Fetches the list of available models from OpenRouter API.
     Caches the result to avoid redundant API calls.
     """
-
-    if is_local_environment():
-        logging.warning(
-            "Running in local environment - Loading OpenRouter models from file"
-        )
-        return load_models_from_file()
-
     url = "https://openrouter.ai/api/v1/models"
     try:
         response = requests.get(url, timeout=10)
@@ -54,7 +47,7 @@ def get_models():
         return models.get("data", [])
     except Exception as e:
         logging.warning(
-            f"Failed to fetch OpenRouter models - Loading from file instead : {e}"
+            f"Failed to fetch OpenRouter models - Loading from file instead: {e}"
         )
         return load_models_from_file()
 

@@ -1,4 +1,5 @@
 import importlib
+import logging
 import os
 import pkgutil
 from cachetools import TTLCache, cached
@@ -47,14 +48,20 @@ def _load_all_extension_schemas():
         module = importlib.import_module(module_name)
 
         for attribute_name in dir(module):
-            attribute = getattr(module, attribute_name)
-            if isinstance(attribute, type) and issubclass(
-                attribute, ExtensionProcessor
-            ):
-                if hasattr(attribute, "get_node_config"):
-                    schema = attribute.get_node_config(attribute)
-                    if schema is not None:
-                        schemas.append(schema)
+            try:
+                attribute = getattr(module, attribute_name)
+                if isinstance(attribute, type) and issubclass(
+                    attribute, ExtensionProcessor
+                ):
+                    if hasattr(attribute, "get_node_config"):
+                        schema = attribute.get_node_config(attribute)
+                        if schema is not None:
+                            schemas.append(schema)
+            except Exception as e:
+                logging.warning(
+                    f"Error loading extension {module_name}.{attribute_name}"
+                )
+                continue
     return schemas
 
 
