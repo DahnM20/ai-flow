@@ -54,7 +54,6 @@ export interface ConditionGroup {
 
 export type FieldCondition = Condition | ConditionGroup;
 
-
 export interface Field {
   name: string;
   type: FieldType;
@@ -74,6 +73,8 @@ export interface Field {
   isBinary?: boolean;
   withModalEdit?: boolean;
   condition?: FieldCondition;
+  canAddChildrenFields?: boolean;
+  isChild?: boolean;
 }
 
 export interface NodeConfig {

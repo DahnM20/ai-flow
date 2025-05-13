@@ -39,7 +39,7 @@
   "AiAction": "Action IA",
   "LLMPrompt": "GPT",
   "AiDataSplitter": "Data Splitter",
-  "MergerNode": "Merge",
+  "MergerNode": "Fusion de Texte",
   "ReplicateModel": "Replicate",
   "inputHelp": "Ce noeud sert à saisir du texte.",
   "inputImageHelp": "Ce noeud permet de visualiser une image via une URL.",

@@ -3,8 +3,13 @@ import { Field } from "../nodes-configuration/types";
 import { getConfigViaType } from "../nodes-configuration/nodeConfig";
 import { NodeData } from "../components/nodes/types/node";
 import { FlowTab } from "../layout/main-layout/AppLayout";
+import { evaluateCondition } from "./evaluateConditions";
 
-export type BasicNode = Pick<Node, "id" | "data" | "position" | "type">;
+export type BasicNode = Pick<
+  Node,
+  "id" | "data" | "position" | "type" | "width" | "height"
+>;
+
 export type BasicEdge = Pick<
   Edge,
   "id" | "source" | "sourceHandle" | "target" | "targetHandle" | "type"
@@ -161,9 +166,23 @@ export function convertFlowToJson(
     if (withCoordinates) {
       nodeJson = { ...nodeJson, x: position.x, y: position.y };
     }
-
     return nodeJson;
   });
+}
+
+export function getInputNamesWithValidCondition(node: BasicNode) {
+  const inputNamesWithValidCondition = !!node?.data?.config?.inputNames
+    ? node.data.config.inputNames.filter((inputName: string, index: number) => {
+        const condition = node.data.config.fields[index]?.condition;
+        if (!!condition) {
+          return evaluateCondition(condition, node.data);
+        }
+
+        return true;
+      })
+    : undefined;
+
+  return inputNamesWithValidCondition;
 }
 
 export function convertEdgeToNodeInput(
@@ -183,13 +202,41 @@ export function convertEdgeToNodeInput(
 
   const targetHandleKey = getTargetHandleKey(edge);
 
+  const inputNamesWithValidCondition = !!node.data.config?.inputNames
+    ? node.data.config.inputNames.filter((inputName: string, index: number) => {
+        const condition = node.data.config.fields[index]?.condition;
+        if (!!condition) {
+          return evaluateCondition(condition, node.data);
+        }
+
+        return true;
+      })
+    : undefined;
+
   return {
-    inputName: !!node.data.config?.inputNames
-      ? node.data.config.inputNames[targetHandleKey]
+    inputName: !!inputNamesWithValidCondition
+      ? inputNamesWithValidCondition[targetHandleKey]
       : undefined,
     inputNode,
     inputNodeOutputKey,
   };
+}
+
+export function getFieldsWithValidCondition(
+  node: BasicNode,
+): Field[] | undefined {
+  const fieldsWithValidCondition = !!node?.data?.config?.fields
+    ? node.data.config.fields.filter((field: Field) => {
+        const condition = field.condition;
+        if (!!condition) {
+          return evaluateCondition(condition, node.data);
+        }
+
+        return true;
+      })
+    : undefined;
+
+  return fieldsWithValidCondition;
 }
 
 export function convertJsonToFlow(json: any): {
@@ -221,9 +268,22 @@ export function convertJsonToFlow(json: any): {
     if (node.inputs) {
       node.inputs.forEach((input: any, index: number) => {
         let targetHandleIndex = index;
+
         const fields: Field[] = node.config?.fields;
-        if (!!fields) {
-          targetHandleIndex = fields.findIndex(
+
+        const fieldsWithValidCondition = !!fields
+          ? fields.filter((field: Field) => {
+              const condition = field.condition;
+              if (!!condition) {
+                return evaluateCondition(condition, node);
+              }
+
+              return true;
+            })
+          : undefined;
+
+        if (!!fieldsWithValidCondition) {
+          targetHandleIndex = fieldsWithValidCondition.findIndex(
             (field) => field.name === input.inputName,
           );
           if (targetHandleIndex === -1) {

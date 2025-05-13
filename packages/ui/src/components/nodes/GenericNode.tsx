@@ -38,6 +38,7 @@ import {
   getNbOutputs,
   hasDiscriminatorChanged,
 } from "../../utils/nodeConfigurationUtils";
+import { evaluateCondition } from "../../utils/evaluateConditions";
 
 interface GenericNodeProps extends NodeProps {
   data: GenericNodeData;
@@ -99,8 +100,16 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         getTargetHandleKey(edge),
       );
 
+      const fieldsWithValidCondition = fields.filter((field) => {
+        if (field?.condition) {
+          const condition = field.condition;
+          return evaluateCondition(condition, data);
+        }
+        return true;
+      });
+
       edgesKeys?.forEach((key) => {
-        fieldsToNullify[fields[key]?.name] = undefined;
+        fieldsToNullify[fieldsWithValidCondition[key]?.name] = undefined;
       });
 
       const fieldsUpdated = fields.map((field) => {
@@ -121,7 +130,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
           config: {
             ...currentNodeData.config,
             fields: fieldsUpdated,
-            inputNames: fields.map((field) => field.name),
+            inputNames: fieldsWithValidCondition.map((field) => field.name),
           },
         });
       }

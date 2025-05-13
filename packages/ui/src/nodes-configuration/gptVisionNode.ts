@@ -6,25 +6,6 @@ export const gptVisionNodeConfig: NodeConfig = {
   icon: "OpenAILogo",
   inputNames: ["image_url", "prompt"],
   fields: [
-    // {
-    //   name: "model",
-    //   type: "option",
-    //   options: [
-    //     {
-    //       label: "GPT4-Turbo Vision",
-    //       value: "gpt-4-vision-preview",
-    //       default: true,
-    //     },
-    //   ],
-    // },
-    {
-      name: "image_url",
-      label: "Image URL",
-      type: "input",
-      hasHandle: true,
-      required: true,
-      placeholder: "VisionImageURLPlaceholder",
-    },
     {
       name: "prompt",
       label: "Prompt",
@@ -32,6 +13,15 @@ export const gptVisionNodeConfig: NodeConfig = {
       required: true,
       hasHandle: true,
       placeholder: "VisionPromptPlaceholder",
+    },
+    {
+      name: "image_url",
+      label: "Image URL",
+      type: "input",
+      hasHandle: true,
+      required: true,
+      placeholder: "VisionImageURLPlaceholder",
+      canAddChildrenFields: true,
     },
   ],
   outputType: "markdown",

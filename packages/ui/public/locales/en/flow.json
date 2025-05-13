@@ -40,7 +40,7 @@
   "AiAction": "AI Action",
   "LLMPrompt": "GPT",
   "AiDataSplitter": "Data Splitter",
-  "MergerNode": "Merge",
+  "MergerNode": "Merge Text",
   "inputHelp": "This node is used to input text.",
   "inputImageHelp": "This node is used to input an image URL.",
   "urlInputHelp": "Enter a valid URL and the node will retrieve the data from this URL.",
