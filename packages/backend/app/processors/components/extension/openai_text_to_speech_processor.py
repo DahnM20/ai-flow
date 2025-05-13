@@ -1,6 +1,7 @@
+import logging
 import re
 from ...context.processor_context import ProcessorContext
-from ..model import Field, NodeConfig, Option
+from ..model import Field, NodeConfig, Option, Condition
 from .extension_processor import ContextAwareExtensionProcessor
 from openai import OpenAI
 from datetime import datetime
@@ -33,6 +34,21 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
             ),
             Option(
                 default=False,
+                value="ash",
+                label="ash",
+            ),
+            Option(
+                default=False,
+                value="ballad",
+                label="ballad",
+            ),
+            Option(
+                default=False,
+                value="coral",
+                label="coral",
+            ),
+            Option(
+                default=False,
                 value="echo",
                 label="echo",
             ),
@@ -53,6 +69,11 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
             ),
             Option(
                 default=False,
+                value="sage",
+                label="sage",
+            ),
+            Option(
+                default=False,
                 value="shimmer",
                 label="shimmer",
             ),
@@ -69,6 +90,11 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
         model_options = [
             Option(
                 default=True,
+                value="gpt-4o-mini-tts",
+                label="gpt-4o-mini-tts",
+            ),
+            Option(
+                default=False,
                 value="tts-1",
                 label="tts-1",
             ),
@@ -87,7 +113,22 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
             required=True,
         )
 
-        fields = [text, model, voice]
+        instructions_enabled_condition = Condition(
+            field="model", operator="equals", value="gpt-4o-mini-tts"
+        )
+
+        instructions = Field(
+            name="instruction",
+            label="instruction",
+            type="textfield",
+            required=False,
+            placeholder="TTSInstructionPlaceholder",
+            description="TTSInstructionDescription",
+            hasHandle=True,
+            condition=instructions_enabled_condition,
+        )
+
+        fields = [text, model, voice, instructions]
 
         config = NodeConfig(
             nodeName="TextToSpeech",
@@ -156,6 +197,7 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
         text = self.get_input_by_name("text")
         voice = self.get_input_by_name("voice")
         model = self.get_input_by_name("model")
+        instruction = self.get_input_by_name("instruction", None)
 
         if text is None:
             return None
@@ -172,11 +214,16 @@ class OpenAITextToSpeechProcessor(ContextAwareExtensionProcessor):
         pool = eventlet.GreenPool(2)
 
         def create_audio_segment(chunk):
-            response = client.audio.speech.create(
-                model=model,
-                voice=voice,
-                input=chunk,
-            )
+            kwargs = {
+                "model": model,
+                "voice": voice,
+                "input": chunk,
+            }
+
+            if instruction is not None:
+                kwargs["instructions"] = instruction
+
+            response = client.audio.speech.create(**kwargs)
             if response is None:
                 return None
             # Convert the response content (mp3 bytes) into an AudioSegment.

@@ -2,13 +2,11 @@ import logging
 from ...launcher.processor_event import ProcessorEvent
 from ...launcher.event_type import EventType
 from ....llms.utils.max_token_for_model import max_token_for_model, nb_token_for_input
-from ....llms.prompt_engine.simple_prompt_engine import SimplePromptEngine
 from ...context.processor_context import ProcessorContext
 from ..processor import ContextAwareProcessor
 from openai import OpenAI
 
 from .processor_type_name_utils import ProcessorType
-from llama_index.core.base.llms.base import ChatMessage
 
 
 class LLMPromptProcessor(ContextAwareProcessor):
@@ -33,7 +31,7 @@ class LLMPromptProcessor(ContextAwareProcessor):
         total_tokens = 0
         token_overhead = 3
         for message in messages:
-            content_tokens = nb_token_for_input(message.content, model)
+            content_tokens = nb_token_for_input(message["content"], model)
             total_tokens += content_tokens + token_overhead
         total_tokens += token_overhead
         return total_tokens
@@ -87,14 +85,23 @@ class LLMPromptProcessor(ContextAwareProcessor):
                 )
             raise Exception(message)
 
-        prompt_engine = SimplePromptEngine(model=self.model, api_key=api_key)
-        stream_chat_response = prompt_engine.prompt_stream(self.messages)
-        awnser = ""
-        for r in stream_chat_response:
-            awnser += r.delta
-            self.handle_stream_awnser(awnser)
+        client = OpenAI(api_key=api_key)
 
-        return awnser
+        response = client.chat.completions.create(
+            model=self.model,
+            messages=self.messages,
+            stream=self.streaming,
+        )
+
+        final_response = ""
+        for chunk in response:
+            if hasattr(chunk, "choices") and chunk.choices:
+                content = chunk.choices[0].delta.content
+                if content is not None:
+                    final_response += content
+                    self.handle_stream_awnser(final_response)
+
+        return final_response
 
     def init_context(self, context: str) -> None:
         """
@@ -117,8 +124,8 @@ class LLMPromptProcessor(ContextAwareProcessor):
             user_msg_content = f"#Context: {context} \n\n#Request: {self.prompt}"
 
         self.messages = [
-            ChatMessage(role="system", content=system_msg),
-            ChatMessage(role="user", content=user_msg_content),
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_msg_content},
         ]
 
     def cancel(self):

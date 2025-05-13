@@ -4,9 +4,17 @@ DEFAULT_MAX_TOKEN = 4097
 
 
 def max_token_for_model(model_name: str) -> int:
+    if "gpt-4o" in model_name:
+        return 128000
     token_data = {
+        # GPT-4.1 models
+        "gpt-4.1": 1047576,
+        "gpt-4.1-mini": 1047576,
+        "gpt-4.1-nano": 1047576,
         # GPT-4 models
         "gpt-4o": 128000,
+        "gpt-4o-2024-11-20": 128000,
+        "gpt-4o-mini": 128000,
         "gpt-4-turbo": 128000,
         "gpt-4-turbo-preview": 128000,
         "gpt-4-1106-preview": 128000,
@@ -34,4 +42,8 @@ def max_token_for_model(model_name: str) -> int:
 
 
 def nb_token_for_input(input: str, model_name: str) -> int:
-    return len(tiktoken.encoding_for_model(model_name).encode(input))
+    try:
+        return len(tiktoken.encoding_for_model(model_name).encode(input))
+    except Exception as e:
+        default_model_for_token = "gpt-4o"
+        return len(tiktoken.encoding_for_model(default_model_for_token).encode(input))

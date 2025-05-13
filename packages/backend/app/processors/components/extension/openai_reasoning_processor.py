@@ -9,6 +9,7 @@ from openai import OpenAI
 class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
     processor_type = "openai-reasoning-processor"
     streaming = True
+    models_with_reasoning_effort = ["o3-mini", "o4-mini", "o3"]
 
     def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)
@@ -35,18 +36,28 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
         model_options = [
             Option(
                 default=True,
+                value="o4-mini",
+                label="o4-mini",
+            ),
+            Option(
+                default=False,
                 value="o3-mini",
                 label="o3-mini",
             ),
             Option(
                 default=False,
-                value="o1-mini",
-                label="o1-mini",
+                value="o3",
+                label="o3",
             ),
             Option(
                 default=False,
-                value="o1-preview",
-                label="o1-preview",
+                value="o1-pro",
+                label="o1-pro",
+            ),
+            Option(
+                default=False,
+                value="o1",
+                label="o1",
             ),
         ]
 
@@ -82,12 +93,12 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
             options=reasoning_effort_options,
             condition=FieldCondition(
                 field="model",
-                operator="equals",
-                value="o3-mini",
+                operator="in",
+                value=OpenAIReasoningProcessor.models_with_reasoning_effort,
             ),
         )
 
-        fields = [model, reasoning_effort, context, text]
+        fields = [model, context, text, reasoning_effort]
 
         config = NodeConfig(
             nodeName="OpenAI o-series",
@@ -118,7 +129,7 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
 
         client = OpenAI(api_key=api_key)
 
-        if "o3" in model:
+        if model in OpenAIReasoningProcessor.models_with_reasoning_effort:
             response = client.chat.completions.create(
                 model=model,
                 reasoning_effort=reasoning_effort,
@@ -145,11 +156,12 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
         if self.streaming:
             final_response = ""
             for chunk in response:
-                if not chunk.choices[0].delta.content:
-                    continue
-                final_response += chunk.choices[0].delta.content
-                event = ProcessorEvent(self, final_response)
-                self.notify(EventType.STREAMING, event)
+                if hasattr(chunk, "choices") and chunk.choices:
+                    content = chunk.choices[0].delta.content
+                    if content is not None:
+                        final_response += content
+                        event = ProcessorEvent(self, final_response)
+                        self.notify(EventType.STREAMING, event)
 
             return final_response
 

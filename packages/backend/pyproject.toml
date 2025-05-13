@@ -10,7 +10,7 @@ packages = [{ include = "app" }]
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
 python-dotenv = "^1.0.0"
-openai = "1.29.0"
+openai = "1.76.0"
 flask = "^2.2.3"
 flask-socketio = "^5.3.3"
 flask-cors = "^3.0.10"
