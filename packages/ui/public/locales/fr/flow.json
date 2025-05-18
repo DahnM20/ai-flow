@@ -134,5 +134,13 @@
   "deepSeekHelp": "Accédez aux LLMs DeepSeek via ce noeud.",
   "openRouterHelp": "OpenRouter donne accès à plusieurs LLMs et providers. Ce noeud nécessite de fournir une clé API.",
   "Generate Number": "Générer un nombre",
-  "generateNumberHelp": "Génère un nombre aléatoire"
+  "generateNumberHelp": "Génère un nombre aléatoire",
+  "httpGetProcessorURLPlaceholder": "Enter the URL to request",
+  "httpGetProcessorURLDescription": "The URL that the HTTP GET request will be sent to.",
+  "httpGetProcessorHeadersPlaceholder": "Enter headers in JSON format",
+  "httpGetProcessorHeadersDescription": "The headers to include in the HTTP GET request.",
+  "httpGetProcessorHelp": "Send an HTTP GET request with the specified headers.",
+  "gptImageHelp": "Generate or Edit an image using GPT Image",
+  "gptImageMaskDescription": "You can provide a mask to indicate where the image should be edited. You can use the prompt to describe the full new image, not just the erased area. If you provide multiple input images, the mask will be applied to the first image.",
+  "dallEDeprecated": "Most recent OpenAI models are now available via the new GPT Image node and are superior to DALL-E. DALL-E remains available if needed."
 }

@@ -151,5 +151,11 @@
   },
   "openrouter-processor": {
     "description": "OpenRouter provides an OpenAI-compatible completion API to multiple models & providers. \n\nThis node is provided as a User Integration, to use it, please provide your OpenRouter API Key in the Secure Store."
+  },
+  "http-get-processor": {
+    "description": "Send a HTTP GET request with the specified headers."
+  },
+  "gpt-image-processor": {
+    "description": "The GPT Image node is designed to interact with the GPT Image API, enabling you to generate and edit images based on a prompt and reference images."
   }
 }

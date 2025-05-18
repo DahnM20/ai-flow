@@ -151,5 +151,11 @@
   },
   "generate-number-processor": {
     "description": "Le nœud « Générer un nombre » est conçu pour générer un nombre aléatoire dans une plage spécifiée."
+  },
+  "http-get-processor": {
+    "description": "Ce noeud permet d'envoyer une requête HTTP GET sur l'URL spécifiée, avec les headers souhaités."
+  },
+  "gpt-image-processor": {
+    "description": "Le noeud GPT Image vous permet de générer et de modifier des images à partir d'une instruction et d'images de référence. "
   }
 }
