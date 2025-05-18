@@ -97,11 +97,17 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     if (configuration) setConfig(configuration);
 
     const newSocket = new FlowSocket(io(getWsUrl()));
-    const appConfig: Partial<AppConfig> = JSON.parse(
-      localStorage.getItem("appConfig") || "{}",
-    );
 
-    newSocket.emit("update_app_config", appConfig);
+    const sendAppConfig = () => {
+      const appConfig: Partial<AppConfig> = JSON.parse(
+        localStorage.getItem("appConfig") || "{}",
+      );
+
+      newSocket.emit("update_app_config", appConfig);
+    };
+
+    //Fire on the very first connection and on every reconnection
+    newSocket.on("connect", sendAppConfig);
 
     setSocket(newSocket);
     return newSocket;

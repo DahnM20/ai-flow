@@ -1,10 +1,12 @@
 import { Socket } from "socket.io-client";
 
 export type FlowEventIn =
+  | "connect"
   | "progress"
   | "error"
   | "run_end"
   | "current_node_running"
+  | "reconnect_error"
   | "disconnect";
 
 export type FlowEventOut = "run_node" | "process_file" | "update_app_config";
