@@ -19,7 +19,9 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import { isDev } from "../../config/config";
 import { Button, Group, Switch } from "@mantine/core";
 import { MdCopyAll } from "react-icons/md";
-import styled from "styled-components";
+import "react18-json-view/src/style.css";
+import "react18-json-view/src/dark.css";
+import JsonViewLib from "react18-json-view";
 
 interface JSONViewProps {
   nodes: Node[];
@@ -153,19 +155,29 @@ const JSONView: React.FC<JSONViewProps> = ({ nodes, edges, onChangeFlow }) => {
           </div>
         </div>
 
-        <JSONViewContent className="mt-5">
-          {JSON.stringify(data, null, 2)}
-        </JSONViewContent>
+        {/* JSON Viewer */}
+        <div className="relative w-full">
+          {isDev() && (
+            <div className="text-af-text-element-3 absolute right-3 top-3 text-lg transition-all duration-150 ease-in-out hover:text-slate-100">
+              <MdCopyAll
+                onClick={() =>
+                  navigator.clipboard.writeText(JSON.stringify(data, null, 2))
+                }
+              />
+            </div>
+          )}
+          <JsonViewLib
+            src={data}
+            className="mt-5 rounded-xl bg-[#1E1E1E] p-2"
+            theme="vscode"
+            collapsed={isDev() ? 2 : 1}
+            dark={true}
+            enableClipboard={false}
+          />
+        </div>
       </div>
     </>
   );
 };
-
-const JSONViewContent = styled.pre`
-  white-space: pre-wrap;
-  font-family: monospace;
-  padding: 10px;
-  background-color: ${({ theme }) => theme.nodeInputBg};
-`;
 
 export default memo(JSONView);
