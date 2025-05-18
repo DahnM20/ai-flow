@@ -89,7 +89,7 @@ function NodeField<
       {onAddNewField && (
         <div className="mt-3 flex w-full justify-end space-x-3">
           <button
-            className="flex items-center justify-center rounded-md bg-sky-600 px-5 py-2 text-sm font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-400/50"
+            className="flex items-center justify-center rounded-md bg-sky-700 px-5 py-2 text-sm font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-400/50"
             onClick={onAddNewField}
           >
             <FiPlus className="mr-2 h-4 w-4" />
@@ -97,7 +97,7 @@ function NodeField<
           </button>
           {onDeleteField && (
             <button
-              className="flex items-center justify-center rounded-md bg-red-600 px-5 py-2 text-sm font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400/50"
+              className="flex items-center justify-center rounded-md bg-red-700 px-5 py-2 text-sm font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400/50"
               onClick={onDeleteField}
             >
               <FiTrash className="mr-2 h-4 w-4" />
