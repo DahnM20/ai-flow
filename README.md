@@ -22,9 +22,11 @@
 ---
 
 <div align="center">
-  🎉🚀 Latest Release: v0.10.0 🚀🎉
+  🎉🚀 Latest Release: v0.11.0 🚀🎉
   <br>
-  New Nodes: Claude 3.7, OpenRouter, Generate Random Number
+  New Nodes: GPT Image, HTTP Get 
+  <br>
+  Updated Nodes: GPT Vision, OpenAI TTS
   <br>
   Configuration can now be done entirely in the UI
 </div>
