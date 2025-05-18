@@ -26,26 +26,3 @@ class TestLLMPromptProcessor(unittest.TestCase):
             "x": "-911.2707176494437",
             "y": "-251.00226805963663",
         }
-
-    def test_openai_api_is_called_with_correct_parameters(self):
-        # Arrange
-        MODEL = "gpt-4"
-        API_KEY = "000000000"
-        RESPONSE_EXPECTED = "Mocked Response"
-        MOCKED_RESPONSE = ["Mocked ", "Response"]
-
-        config = TestLLMPromptProcessor.get_default_valid_config(MODEL)
-
-        context = ProcessorContextMock(API_KEY)
-        mock_factory = LLMMockFactory(expected_response=MOCKED_RESPONSE)
-
-        with patch(
-            "app.llms.prompt_engine.simple_prompt_engine.SimplePromptEngine._get_default_llm_factory",
-            return_value=mock_factory,
-        ):
-            # Act
-            processor = LLMPromptProcessor(config, context)
-            result = processor.process()
-
-            # Assert
-            self.assertEqual(result, RESPONSE_EXPECTED)

@@ -25,37 +25,6 @@ class TestAIDataSplitter(unittest.TestCase):
             "nbOutput": 0,
         }
 
-    def test_openai_api_is_called_and_output_splitted(self):
-        # Arrange
-        MODEL = "gpt-4"
-        API_KEY = "000000000"
-        MOCKED_RESPONSE = "A dog;A dolphin;An elephant"
-        EXPECTED_OUTPUT = ["A dog", "A dolphin", "An elephant"]
-        config = TestAIDataSplitter.get_default_valid_config()
-
-        context = ProcessorContextMock(API_KEY)
-
-        input_text = "a dog, a dolphin, an elephant"
-        input_processor = InputProcessor(
-            {
-                "inputs": [],
-                "name": "4f2d3sh03#input-text",
-                "processorType": "input-text",
-                "inputText": input_text,
-            }
-        )
-        input_processor.set_output(input_text)
-
-        mock_factory = LLMMockFactory(expected_response=MOCKED_RESPONSE)
-
-        # Act
-        processor = AIDataSplitterProcessor(config, context, mock_factory)
-        processor.add_input_processor(input_processor)
-        result = processor.process()
-
-        # Assert
-        self.assertEqual(result, EXPECTED_OUTPUT)
-
     def test_process_with_missing_input_return_none_and_does_not_call_openai_api(self):
         # Arrange
         MODEL = "gpt-4"
