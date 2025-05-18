@@ -17,7 +17,7 @@ export const gptVisionNodeConfig: NodeConfig = {
     {
       name: "image_url",
       label: "Image URL",
-      type: "input",
+      type: "fileUpload",
       hasHandle: true,
       required: true,
       placeholder: "VisionImageURLPlaceholder",

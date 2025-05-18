@@ -147,8 +147,6 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     );
 
     useEffect(() => {
-      if (data.processorType !== "merger-prompt") return;
-
       const incomingEdges = getIncomingEdges(id) || [];
       const incomingEdgeKeys = incomingEdges.map((edge) =>
         getKeyFromHandleName(edge.targetHandle ?? ""),
@@ -176,7 +174,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
     const formFields = useFormFields(
       data,
       id,
-      handleNodeDataChange,
+      handleNodeFieldChange,
       setDefaultOptions,
       hasParent,
       {
@@ -184,6 +182,7 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
         showLabels: data.config.showHandlesNames,
         showOnlyConnectedFields: collapsed,
       },
+      handleNodeDataChange,
     );
 
     const { allInputHandleIds, allHandlePositions } = useHandlePositions(
@@ -200,28 +199,19 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
       setIsPlaying(true);
     };
 
-    function updateConfigWithDiscriminator(nodeData: NodeData) {
-      const newConfig = getAdequateConfigFromDiscriminators(nodeData)?.config;
-      if (!newConfig) return;
-
-      // const defaultOptions: any = getDefaultOptions(newConfig.fields, nodeData);
-
-      if (!!newConfig) {
-        overrideConfigForNode(id, newConfig, nodeData);
-        // onUpdateNodeData(id, {
-        //   ...nodeData,
-        //   ...defaultOptions,
-        //   config: {
-        //     ...newConfig,
-        //     isDynamicallyGenerated: false,
-        //   },
-        // });
-
-        setFields(newConfig.fields);
+    function handleNodeDataChange(data: GenericNodeData) {
+      onUpdateNodeData(id, data);
+      updateNodeInternals(id);
+      if (data.config.fields) {
+        setFields(data.config.fields);
       }
     }
 
-    function handleNodeDataChange(fieldName: string, value: any, target?: any) {
+    function handleNodeFieldChange(
+      fieldName: string,
+      value: any,
+      target?: any,
+    ) {
       const selectionStart = target?.selectionStart;
       const selectionEnd = target?.selectionEnd;
 
@@ -245,6 +235,16 @@ const GenericNode: React.FC<GenericNodeProps> = React.memo(
 
       if (fieldName === "config") {
         updateNodeInternals(id);
+      }
+    }
+
+    function updateConfigWithDiscriminator(nodeData: NodeData) {
+      const newConfig = getAdequateConfigFromDiscriminators(nodeData)?.config;
+      if (!newConfig) return;
+
+      if (!!newConfig) {
+        overrideConfigForNode(id, newConfig, nodeData);
+        setFields(newConfig.fields);
       }
     }
 

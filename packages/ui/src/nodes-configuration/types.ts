@@ -12,7 +12,12 @@ export type FieldType =
   | "numericfield"
   | "switch"
   | "textToDisplay"
-  | "list";
+  | "list"
+  | "json"
+  | "nonRendered"
+  | "dictionnary"
+  | "fileUpload"
+  | "imageMaskCreator";
 
 export type OutputType =
   | "imageUrl"
@@ -62,6 +67,8 @@ export interface Field {
   defaultValue?: string | number | string[] | number[];
   max?: number;
   min?: number;
+  step?: number;
+  allowDecimal?: boolean;
   options?: Option[];
   hideIfParent?: boolean;
   required?: boolean;

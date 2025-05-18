@@ -14,9 +14,16 @@ import ThreeDimensionalUrlOutput from "./ThreeDimensionalUrlOutput";
 
 interface OutputDisplayProps {
   data: NodeData;
+  getOutputComponentOverride?: (
+    data: NodeData,
+    outputType: OutputType,
+  ) => JSX.Element | null;
 }
 
-export default function OutputDisplay({ data }: OutputDisplayProps) {
+export default function OutputDisplay({
+  data,
+  getOutputComponentOverride,
+}: OutputDisplayProps) {
   const { t } = useTranslation("flow");
 
   const [indexDisplayed, setIndexDisplayed] = useState(0);
@@ -27,6 +34,13 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
       : 1;
 
   const getOutputComponent = () => {
+    if (getOutputComponentOverride) {
+      const override = getOutputComponentOverride(data, getOutputType());
+      if (override) {
+        return override;
+      }
+    }
+
     if (!data.outputData) return <></>;
 
     let output = data.outputData;
@@ -98,18 +112,16 @@ export default function OutputDisplay({ data }: OutputDisplayProps) {
   }
 
   return (
-    <div
-      className="flex h-full w-full flex-col"
-      onClick={(e) => e.stopPropagation()}
-      onMouseDown={(e) => e.stopPropagation()}
-    >
+    <div className="flex h-full w-full flex-col">
       {nbOutput > 1 && typeof data.outputData !== "string" && (
-        <div className="mt-2 flex flex-row items-center justify-center space-x-4 p-1">
+        <div className="mt-2 flex flex-row items-center justify-center gap-1 overflow-x-auto p-1">
           {data?.outputData?.map((output, index) => (
             <button
               key={index}
-              className={`rounded-full ${index === indexDisplayed ? "bg-orange-400" : "bg-slate-200 hover:bg-orange-200"} p-1.5`}
+              className={`rounded-full ${index === indexDisplayed ? "bg-orange-400" : "bg-gray-500 hover:bg-orange-200"} whitespace-nowrap p-1.5 focus:outline-none focus:ring-2 focus:ring-orange-400`}
               onClick={() => setIndexDisplayed(index)}
+              aria-label={`View output ${index + 1}`}
+              title={`Output ${index + 1}`}
             />
           ))}
         </div>

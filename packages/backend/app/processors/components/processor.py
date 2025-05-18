@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import json
 import logging
 from typing import Any, List, Optional, TypedDict, Union, Dict
 
@@ -74,6 +75,13 @@ class Processor(ABC):
         self.is_finished = False
         self._has_dynamic_behavior = False
         self._config = config
+        if (
+            config.get("config") is not None
+            and config.get("config").get("fields") is not None
+            and config.get("config").get("fields") != []
+        ):
+            self.fields = config.get("config").get("fields")
+            self.fields_names = [field["name"] for field in self.fields]
         if config.get("inputs") is not None and config.get("inputs") != []:
             self.inputs = config.get("inputs")
 
@@ -133,6 +141,9 @@ class Processor(ABC):
             raise TypeError("Value should be either a list or a string.")
         self.is_finished = True
 
+    def get_inputs(self) -> Optional[List[InputItem]]:
+        return self.inputs
+
     def get_input_processor(self) -> Optional["Processor"]:
         if self.input_processors is None or len(self.input_processors) == 0:
             return None
@@ -148,6 +159,15 @@ class Processor(ABC):
             return 0
         return self.inputs[0].get("inputNodeOutputKey")
 
+    def get_input_node_output_key_by_node_name(
+        self, input_node_name: str
+    ) -> Optional[int]:
+        keys = []
+        for input in self.inputs:
+            if input.get("inputNode") == input_node_name:
+                keys.append(input.get("inputNodeOutputKey"))
+        return keys
+
     def get_input_node_output_keys(self) -> Optional[List[int]]:
         if self.inputs is None or len(self.inputs) == 0:
             return None
@@ -157,11 +177,13 @@ class Processor(ABC):
         if self.inputs is None or len(self.inputs) == 0:
             return None
         return [input.get("inputName") for input in self.inputs]
-    
+
     def get_input_names_from_config(self) -> Optional[List[str]]:
         return self._config.get("config").get("inputNames")
 
-    def get_input_by_name(self, name: str, default=None) -> Optional[InputItem]:
+    def get_input_by_name(
+        self, name: str, default=None, accept_object=False
+    ) -> Optional[InputItem]:
         input = self._config.get(name, default)
 
         input_processors = self.get_input_processors()
@@ -173,7 +195,14 @@ class Processor(ABC):
                 input_processors, input_names, input_output_keys
             ):
                 if input_name == name:
-                    return processor.get_output(key)
+                    input_processor_output = processor.get_output(key)
+                    if (
+                        isinstance(input_processor_output, dict)
+                        or isinstance(input_processor_output, list)
+                        and not accept_object
+                    ):
+                        input_processor_output = json.dumps(input_processor_output)
+                    return input_processor_output
 
         return input
 

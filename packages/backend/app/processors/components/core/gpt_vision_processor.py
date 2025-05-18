@@ -1,3 +1,6 @@
+import re
+from typing import Any, List
+
 from ...launcher.event_type import EventType
 from ...launcher.processor_event import ProcessorEvent
 from ...context.processor_context import ProcessorContext
@@ -14,46 +17,74 @@ class GPTVisionProcessor(ContextAwareProcessor):
     def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)
 
+    def _gather_image_url_values(self) -> List[Any]:
+        """
+        Pull the value of `element` plus every `element_<n>` child field
+        in the order they appear in self.fields_names.
+        """
+        # Match element_0, element_1, … whatever the UI generates
+        child_pattern = re.compile(r"^image_url_\d+$")
+
+        # Preserve original order: parent first, then the children
+        ordered_field_names = [
+            fname
+            for fname in self.fields_names
+            if fname == "image_url" or child_pattern.match(fname)
+        ]
+
+        values = [self.get_input_by_name(fname, None) for fname in ordered_field_names]
+        return [v for v in values if v is not None]
+
     def process(self):
         self.vision_inputs = {
             "prompt": self.get_input_by_name("prompt"),
-            "image_url": self.get_input_by_name("image_url"),
         }
+
+        images_urls = self._gather_image_url_values()
 
         if (
             self.vision_inputs["prompt"] is None
             or len(self.vision_inputs["prompt"]) == 0
         ):
-            return "No prompt provided."
+            raise ValueError("No prompt provided.")
 
-        if self.vision_inputs["image_url"] is None:
-            return "No image provided."
+        if len(images_urls) == 0:
+            raise ValueError("No image provided.")
 
-        if not self.is_valid_url(self.vision_inputs["image_url"]):
-            return "Invalid URL provided."
+        for url in images_urls:
+            if not self.is_valid_url(url):
+                raise ValueError(f"Invalid URL provided. \n {url}")
 
         api_key = self._processor_context.get_value("openai_api_key")
         client = OpenAI(
             api_key=api_key,
         )
+        content = []
+
+        for image in images_urls:
+            content.append(
+                {
+                    "type": "image_url",
+                    "image_url": {"url": image},
+                }
+            )
+
+        content.append(
+            {
+                "type": "text",
+                "text": self.vision_inputs["prompt"],
+            }
+        )
+
         response = client.chat.completions.create(
             model=GPTVisionProcessor.DEFAULT_MODEL,
             messages=[
                 {
                     "role": "user",
-                    "content": [
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": self.vision_inputs["image_url"]},
-                        },
-                        {
-                            "type": "text",
-                            "text": self.vision_inputs["prompt"],
-                        },
-                    ],
+                    "content": content,
                 }
             ],
-            max_tokens=300,
+            max_tokens=4096,
             stream=True,
         )
 
