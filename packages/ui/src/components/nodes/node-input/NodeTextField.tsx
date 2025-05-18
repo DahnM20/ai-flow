@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ChangeEvent } from "react";
+import { ChangeEvent, RefObject, useState } from "react";
 import TextAreaPopupWrapper from "./TextAreaPopupWrapper";
 
 interface NodeTextFieldProps {
@@ -11,6 +11,7 @@ interface NodeTextFieldProps {
   isTouchDevice?: boolean;
   fieldName?: string;
   withEditPopup?: boolean;
+  ref?: RefObject<HTMLInputElement>;
 }
 
 export default function NodeTextField({
@@ -22,20 +23,36 @@ export default function NodeTextField({
   isTouchDevice,
   fieldName,
   withEditPopup,
+  ref,
 }: NodeTextFieldProps) {
+  const [isTextareaSelected, setIsTextareaSelected] = useState(false);
+
   function handleChangeValue(value: string) {
     if (onChangeValue) {
       onChangeValue(value);
     }
   }
 
+  const handleFocus = () => {
+    setIsTextareaSelected(true);
+  };
+
+  const handleBlur = () => {
+    setIsTextareaSelected(false);
+  };
+
+  const isControlled = !isTextareaSelected;
+
   if (!withEditPopup) {
     return (
       <NodeInput
-        value={value}
+        value={isControlled ? value : undefined}
+        defaultValue={!isControlled ? value : undefined}
         className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}
         onChange={(event) => onChange(event)}
         placeholder={placeholder}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
     );
   }
@@ -47,10 +64,14 @@ export default function NodeTextField({
       fieldName={fieldName}
     >
       <NodeInput
-        value={value}
+        value={isControlled ? value : undefined}
+        defaultValue={!isControlled ? value : undefined}
         className={`nowheel ${!isTouchDevice ? "nodrag" : ""}`}
         onChange={(event) => onChange(event)}
         placeholder={placeholder}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        ref={ref}
       />
     </TextAreaPopupWrapper>
   );
