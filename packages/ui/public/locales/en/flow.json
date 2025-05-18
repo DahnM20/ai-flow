@@ -142,5 +142,7 @@
   "httpGetProcessorHelp": "Send an HTTP GET request with the specified headers.",
   "gptImageHelp": "Generate or Edit an image using GPT Image",
   "gptImageMaskDescription": "You can provide a mask to indicate where the image should be edited. You can use the prompt to describe the full new image, not just the erased area. If you provide multiple input images, the mask will be applied to the first image.",
-  "dallEDeprecated": "Most recent OpenAI models are now available via the new GPT Image node and are superior to DALL-E. DALL-E remains available if needed."
+  "dallEDeprecated": "Most recent OpenAI models are now available via the new GPT Image node and are superior to DALL-E. DALL-E remains available if needed.",
+  "TTSInstructionPlaceholder": "Ex : Speak in a cheerful and positive tone.",
+  "TTSInstructionDescription": " Prompt the model to control aspects of speech (accent, emotional range, intonation, speed, tone, ...)"
 }
