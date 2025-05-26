@@ -1,4 +1,5 @@
 import logging
+
 from ...launcher.processor_event import ProcessorEvent
 from ...launcher.event_type import EventType
 from ....llms.utils.max_token_for_model import max_token_for_model, nb_token_for_input
@@ -13,6 +14,12 @@ class LLMPromptProcessor(ContextAwareProcessor):
     processor_type = ProcessorType.LLM_PROMPT
     DEFAULT_MODEL = "gpt-4o"
     streaming = True
+    models_with_web_search = [
+        "gpt-4o",
+        "gpt-4o-mini",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+    ]
 
     def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)
@@ -20,7 +27,7 @@ class LLMPromptProcessor(ContextAwareProcessor):
         self.model = config.get("model", LLMPromptProcessor.DEFAULT_MODEL)
         self.prompt = config.get("prompt", None)
 
-    def handle_stream_awnser(self, awnser):
+    def handle_stream_answer(self, awnser):
         event = ProcessorEvent(self, awnser)
         self.notify(EventType.STREAMING, event)
 
@@ -46,6 +53,11 @@ class LLMPromptProcessor(ContextAwareProcessor):
 
     def process(self):
         api_key = self._processor_context.get_value("openai_api_key")
+
+        search_enabled = False
+        if self.model in self.models_with_web_search:
+            search_enabled = self.get_input_by_name("web_search", False)
+            search_context_size = self.get_input_by_name("search_context_size", None)
 
         if api_key is None:
             raise Exception("No OpenAI API key found")
@@ -87,19 +99,39 @@ class LLMPromptProcessor(ContextAwareProcessor):
 
         client = OpenAI(api_key=api_key)
 
-        response = client.chat.completions.create(
-            model=self.model,
-            messages=self.messages,
-            stream=self.streaming,
-        )
+        kwargs = {"model": self.model, "input": self.messages, "stream": self.streaming}
+
+        if search_enabled:
+            kwargs["tools"] = [
+                {
+                    "type": "web_search_preview",
+                    "search_context_size": search_context_size,
+                }
+            ]
+
+        stream = client.responses.create(**kwargs)
 
         final_response = ""
-        for chunk in response:
-            if hasattr(chunk, "choices") and chunk.choices:
-                content = chunk.choices[0].delta.content
-                if content is not None:
-                    final_response += content
-                    self.handle_stream_awnser(final_response)
+
+        for event in stream:
+            type = event.type
+            if type == "response.output_text.delta":
+                final_response += event.delta
+                self.handle_stream_answer(final_response)
+            if type == "response.completed":
+                response_data = event.response
+                final_response = response_data.output_text
+            if type == "response.failed":
+                response_data = event.response
+                if not hasattr(response_data, "error"):
+                    logging.warning(f"Error from OpenAI with no data: {response_data}")
+                    continue
+
+                raise LightException(
+                    f"Error from OpenAI : {response_data.error.message}"
+                )
+            if type == "error":
+                raise LightException(f"Error from OpenAI : {event.message}")
 
         return final_response
 

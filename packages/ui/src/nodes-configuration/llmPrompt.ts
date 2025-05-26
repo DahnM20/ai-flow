@@ -14,7 +14,6 @@ export const llmPromptNodeConfig: NodeConfig = {
         {
           label: "GPT-4o-mini",
           value: "gpt-4o-mini",
-          default: true,
         },
         {
           label: "GPT-4o",
@@ -27,6 +26,7 @@ export const llmPromptNodeConfig: NodeConfig = {
         {
           label: "GPT-4.1-mini",
           value: "gpt-4.1-mini",
+          default: true,
         },
         {
           label: "GPT-4.1",
@@ -48,6 +48,59 @@ export const llmPromptNodeConfig: NodeConfig = {
       required: true,
       hasHandle: true,
       placeholder: "PromptPlaceholder",
+    },
+    {
+      name: "web_search",
+      label: "web_search",
+      type: "boolean",
+      defaultValue: false,
+      condition: {
+        field: "model",
+        operator: "in",
+        value: ["gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini"],
+      },
+    },
+    {
+      name: "search_context_size",
+      label: "search_context_size",
+      type: "select",
+      placeholder: "SearchContextSizePlaceholder",
+      options: [
+        {
+          label: "Low",
+          value: "low",
+        },
+        {
+          label: "Medium",
+          value: "medium",
+          default: true,
+        },
+        {
+          label: "High",
+          value: "high",
+        },
+      ],
+      condition: {
+        logic: "AND",
+        conditions: [
+          {
+            field: "model",
+            operator: "in",
+            value: ["gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini"],
+          },
+          {
+            field: "web_search",
+            operator: "equals",
+            value: true,
+          },
+        ],
+      },
+    },
+    {
+      name: "af_node_version",
+      type: "nonRendered",
+      hidden: true,
+      defaultValue: 2,
     },
   ],
   outputType: "markdown",

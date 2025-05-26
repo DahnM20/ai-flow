@@ -64,7 +64,7 @@ export interface Field {
   type: FieldType;
   label?: string;
   placeholder?: string;
-  defaultValue?: string | number | string[] | number[];
+  defaultValue?: any;
   max?: number;
   min?: number;
   step?: number;
