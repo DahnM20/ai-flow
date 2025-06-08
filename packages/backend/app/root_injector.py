@@ -1,7 +1,5 @@
 from typing import List
 from injector import Injector, Binder, Module
-from app.providers.template.template_provider import TemplateProvider
-from app.providers.template.static_template_provider import StaticTemplateProvider
 from tests.utils.processor_factory_mock import ProcessorFactoryMock
 from app.processors.launcher.async_processor_launcher import AsyncProcessorLauncher
 
@@ -38,11 +36,6 @@ class StorageModule(Module):
             binder.bind(StorageStrategy, to=LocalStorageStrategy)
 
 
-class ProviderModule(Module):
-    def configure(self, binder: Binder):
-        binder.bind(TemplateProvider, to=StaticTemplateProvider)
-
-
 class ProcessorLauncherModule(Module):
     def configure(self, binder: Binder):
         binder.bind(ProcessorLauncher, to=AsyncProcessorLauncher)
@@ -57,7 +50,6 @@ def create_application_injector() -> Injector:
             ProcessorFactoryModule(),
             StorageModule(),
             ProcessorLauncherModule(),
-            ProviderModule(),
         ],
         auto_bind=True,
     )
