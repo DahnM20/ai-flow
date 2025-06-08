@@ -1,5 +1,7 @@
 import logging
 
+from app.processors.exceptions import LightException
+
 from ...launcher.processor_event import ProcessorEvent
 from ...launcher.event_type import EventType
 from ....llms.utils.max_token_for_model import max_token_for_model, nb_token_for_input

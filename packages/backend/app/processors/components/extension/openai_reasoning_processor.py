@@ -1,3 +1,6 @@
+import logging
+
+from app.processors.exceptions import LightException
 from ...launcher.event_type import EventType
 from ...launcher.processor_event import ProcessorEvent
 from ...context.processor_context import ProcessorContext
@@ -113,6 +116,10 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
 
         return config
 
+    def handle_stream_answer(self, awnser):
+        event = ProcessorEvent(self, awnser)
+        self.notify(EventType.STREAMING, event)
+
     def process(self):
         prompt = self.get_input_by_name("prompt")
         context = self.get_input_by_name("context", "")
@@ -129,43 +136,38 @@ class OpenAIReasoningProcessor(ContextAwareExtensionProcessor):
 
         client = OpenAI(api_key=api_key)
 
+        kwargs = {
+            "model": model,
+            "input": [{"role": "user", "content": f"{context} {prompt}"}],
+            "stream": self.streaming,
+        }
+
         if model in OpenAIReasoningProcessor.models_with_reasoning_effort:
-            response = client.chat.completions.create(
-                model=model,
-                reasoning_effort=reasoning_effort,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": f"{context} {prompt}",
-                    }
-                ],
-                stream=self.streaming,
-            )
-        else:
-            response = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": f"{context} {prompt}",
-                    }
-                ],
-                stream=self.streaming,
-            )
+            kwargs["reasoning"] = {"effort": reasoning_effort}
 
-        if self.streaming:
-            final_response = ""
-            for chunk in response:
-                if hasattr(chunk, "choices") and chunk.choices:
-                    content = chunk.choices[0].delta.content
-                    if content is not None:
-                        final_response += content
-                        event = ProcessorEvent(self, final_response)
-                        self.notify(EventType.STREAMING, event)
+        stream = client.responses.create(**kwargs)
+        final_response = ""
+        for event in stream:
+            type = event.type
+            if type == "response.output_text.delta":
+                final_response += event.delta
+                self.handle_stream_answer(final_response)
+            if type == "response.completed":
+                response_data = event.response
+                final_response = response_data.output_text
+            if type == "response.failed":
+                response_data = event.response
+                if not hasattr(response_data, "error"):
+                    logging.warning(f"Error from OpenAI with no data: {response_data}")
+                    continue
 
-            return final_response
+                raise LightException(
+                    f"Error from OpenAI : {response_data.error.message}"
+                )
+            if type == "error":
+                raise LightException(f"Error from OpenAI : {event.message}")
 
-        return response.choices[0].message.content
+        return final_response
 
     def cancel(self):
         pass
