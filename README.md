@@ -22,13 +22,11 @@
 ---
 
 <div align="center">
-  🎉🚀 Latest Release: v0.11.0 🚀🎉
+  🎉🚀 Latest Release: v0.11.1 🚀🎉
   <br>
-  New Nodes: GPT Image, HTTP Get 
+  Web search can be enabled on GPT node, Claude 4 available
   <br>
-  Updated Nodes: GPT Vision, OpenAI TTS
-  <br>
-  Configuration can now be done entirely in the UI
+  Flux Kontext, Veo 3, Lyria 2, Imagen 4 available through the Replicate Node
 </div>
 
 ---
@@ -49,10 +47,10 @@
 
 ## Supported Models
 
-- **Replicate:** LLaMa, Mistral, FaceSwap, InstantMesh, MusicGen, and more.
-- **OpenAI:** GPT-4o, TTS, o1, o3.
+- **Replicate:** All models available through the Replicate API (FLUX.1, FLUX.1 Kontext, Imagen 4, Veo 3, Lyria 2, and many more)
+- **OpenAI:** GPT-4o, GPT-4.1, TTS, o1, o3, o4.
 - **StabilityAI:** Stable Diffusion 3.5, SDXL, Stable Video Diffusion, plus additional tools.
-- **Others:** Claude, Deepseek.
+- **Others:** Claude, Deepseek, OpenRouter.
 
 ![Scenario Example](assets/flow-example-2.png)
 
@@ -75,7 +73,16 @@ The cloud version builds upon the foundation of the open-source project, giving 
 
 > **Note:** To unlock full functionality, AI-Flow requires S3-compatible storage (with proper CORS settings) to host resources. Without it, features like File Upload or nodes that rely on external providers (e.g., StabilityAI) may not work as expected. Also, set `REPLICATE_API_KEY` in your environment to use the Replicate node.
 
-### Local Installation (Without Docker)
+### Method 1: Using the Executable (Windows Only)
+
+> **Note:** This method is only available for Windows users.
+
+1. Download the latest Windows version of AI-Flow from the official releases page: [AI-Flow Releases](https://ai-flow.net/release/)
+2. Once downloaded, run the `.exe` file.
+
+This will start a local server and open AI-Flow in a standalone window, giving you direct access to its user interface without needing to install anything else.
+
+### Method 2 : Local Installation (Without Docker)
 
 1. **Clone the Repository:**
 
@@ -116,7 +123,7 @@ The cloud version builds upon the foundation of the open-source project, giving 
      ```
    - Open your browser and navigate to [http://localhost:3000](http://localhost:3000).
 
-### Docker Installation
+### Method 3 : Docker Installation
 
 1. **Prepare Docker Compose:**
 
