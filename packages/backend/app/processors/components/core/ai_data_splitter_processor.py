@@ -1,12 +1,10 @@
 import logging
 from ...context.processor_context import ProcessorContext
 from ..processor import ContextAwareProcessor
-from ....llms.factory.llm_factory import LLMFactory
-from ....root_injector import get_root_injector
 
-from llama_index.core.base.llms.base import ChatMessage
 
 from .processor_type_name_utils import ProcessorType
+from openai import OpenAI
 
 
 def interpret_escape_sequences(separator):
@@ -24,21 +22,19 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
     AI_MODE = "ai"
     MANUAL_MODE = "manual"
 
-    def __init__(self, config, context: ProcessorContext, custom_llm_factory=None):
+    def __init__(self, config, context: ProcessorContext):
         super().__init__(config, context)
 
         self.nb_output = 0
         self.model = "gpt-4o"
         self.api_key = context.get_value("openai_api_key")
 
-        if custom_llm_factory is None:
-            custom_llm_factory = self._get_default_llm_factory()
+    def get_llm_response(self, messages):
+        client = OpenAI(api_key=self.api_key)
 
-        self.llm_factory = custom_llm_factory
-
-    @staticmethod
-    def _get_default_llm_factory():
-        return get_root_injector().get(LLMFactory)
+        kwargs = {"model": self.model, "input": messages}
+        response = client.responses.create(**kwargs)
+        return response.output_text
 
     def process(self):
         if self.get_input_processor() is None:
@@ -53,9 +49,7 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
         if mode == self.AI_MODE:
             self.init_context(input_data)
 
-            llm = self.llm_factory.create_llm(self.model, api_key=self.api_key)
-            chat_response = llm.chat(self.messages)
-            answer = chat_response.message.content
+            answer = self.get_llm_response(self.messages)
 
             data_to_split = answer.encode("utf-8").decode("utf8")
             self.set_output(
@@ -106,8 +100,8 @@ class AIDataSplitterProcessor(ContextAwareProcessor):
             system_msg += f"\nThe estimated number of outputs for the next message is {user_nb_output}."
 
         self.messages = [
-            ChatMessage(role="system", content=system_msg),
-            ChatMessage(role="user", content=input_data),
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": input_data},
         ]
 
     def cancel(self):
