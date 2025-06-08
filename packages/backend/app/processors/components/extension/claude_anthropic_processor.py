@@ -38,6 +38,14 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
             "max_tokens": 8192,
             "max_tokens_thinking": 8192,
         },
+        "claude-opus-4-0": {
+            "max_tokens": 32000,
+            "max_tokens_thinking": 32000,
+        },
+        "claude-sonnet-4-0": {
+            "max_tokens": 64000,
+            "max_tokens_thinking": 64000,
+        },
     }
 
     def __init__(self, config, context: ProcessorContext):
@@ -47,8 +55,10 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
     def get_node_config(self):
 
         # Conditions
-        claude_3_7_condition = Condition(
-            field="model", operator="in", value=["claude-3-7-sonnet-latest"]
+        claude_thinking_condition = Condition(
+            field="model",
+            operator="in",
+            value=["claude-3-7-sonnet-latest", "claude-opus-4-0", "claude-sonnet-4-0"],
         )
 
         thinking_enabled_condition = Condition(
@@ -56,7 +66,8 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
         )
 
         budget_token_condition = ConditionGroup(
-            conditions=[claude_3_7_condition, thinking_enabled_condition], logic="AND"
+            conditions=[claude_thinking_condition, thinking_enabled_condition],
+            logic="AND",
         )
 
         # Fields
@@ -105,12 +116,12 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
 
         model_options = [
             Option(
-                default=True,
+                default=False,
                 value="claude-3-7-sonnet-latest",
                 label="Claude 3.7 Sonnet",
             ),
             Option(
-                default=True,
+                default=False,
                 value="claude-3-5-haiku-latest",
                 label="Claude 3.5 Haiku",
             ),
@@ -129,6 +140,16 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
                 value="claude-3-haiku-20240307",
                 label="Claude 3 Haiku",
             ),
+            Option(
+                default=False,
+                value="claude-opus-4-0",
+                label="Claude 4 Opus",
+            ),
+            Option(
+                default=True,
+                value="claude-sonnet-4-0",
+                label="Claude 4 Sonnet",
+            ),
         ]
 
         model = Field(
@@ -143,7 +164,7 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
             name="thinking",
             label="thinking",
             type="boolean",
-            condition=claude_3_7_condition,
+            condition=claude_thinking_condition,
         )
 
         fields = [
@@ -173,13 +194,18 @@ class ClaudeAnthropicProcessor(ContextAwareExtensionProcessor):
         self.notify(EventType.STREAMING, event)
 
     def process(self):
+        """
+        Retrieve max_tokens from a map instead of the node config.
+        If 'thinking' is enabled and the model supports it, we choose a different max_tokens.
+        """
+
         prompt = self.get_input_by_name("prompt")
         prompt_context = self.get_input_by_name("context", None)
         model = self.get_input_by_name("model", "claude-3-5-sonnet-20240620")
         temperature = self.get_input_by_name("temperature", 1)
         thinking = self.get_input_by_name("thinking", False)
 
-        if "3-7" not in model:
+        if "3-7" not in model and "4-0" not in model:
             thinking = False
 
         budget_tokens = None
