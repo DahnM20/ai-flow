@@ -10,10 +10,8 @@ def healthcheck():
 
 
 from .app_routes.node_routes import node_blueprint
-from .app_routes.template_routes import template_blueprint
 
 flask_app.register_blueprint(node_blueprint)
-flask_app.register_blueprint(template_blueprint)
 
 from .app_routes.upload_routes import upload_blueprint
 
