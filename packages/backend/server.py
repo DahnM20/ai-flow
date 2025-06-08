@@ -25,17 +25,5 @@ if __name__ == "__main__":
             sys._MEIPASS, "ms-playwright"
         )
 
-    if os.getenv("USE_HTTPS", "false").lower() == "true":
-        root_logger.info("Protocol set to HTTPS")
-        keyfile_path = os.getenv("KEYFILE_PATH", "default/key/path")
-        certfile_path = os.getenv("CERTFILE_PATH", "default/cert/path")
-        socketio.run(
-            flask_app,
-            host=host,
-            port=port,
-            keyfile=keyfile_path,
-            certfile=certfile_path,
-        )
-    else:
-        root_logger.warning("Protocol set to HTTP")
-        socketio.run(flask_app, port=port, host=host)
+    root_logger.warning("Protocol set to HTTP")
+    socketio.run(flask_app, port=port, host=host)

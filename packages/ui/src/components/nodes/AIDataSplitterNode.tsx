@@ -144,7 +144,7 @@ const AIDataSplitterNode: React.FC<AIDataSplitterNodeProps> = React.memo(
               <div className="flex w-5/6 flex-col  space-y-2">
                 <SelectAutocomplete
                   values={modeOptions}
-                  selectedValue={data?.mode ?? "manual"}
+                  selectedValue={data?.mode ?? "ai"}
                   onChange={(value) => handleChangeField("mode", value)}
                 />
                 {data["mode"] === "manual" && (

@@ -31,11 +31,6 @@ html, body{
   --scrollbar-thumb-hover-color: #888;
 }
 
-:root .smart-view {
-  --separator-border: #ffffff00;
-  --sash-size: 8px;
-}
-
 body.dark-theme {
   --scrollbar-track-color: #2A2A2A;
   --scrollbar-thumb-color: rgba(85, 85, 85, 0.431);
@@ -71,11 +66,6 @@ body.dark-theme {
   top: initial;
   left: initial;
   transform: initial;
-}
-
-
-.react-grid-placeholder {
-  background-color: #21FEE5 !important;
 }
 
 .markdown-body {
