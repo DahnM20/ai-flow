@@ -74,7 +74,6 @@ class S3StorageStrategy(CloudStorageStrategy):
             content_type = mime_type
 
         try:
-            logging.info(self.BUCKET_NAME)
             upload_data = self.s3_client.generate_presigned_post(
                 Bucket=self.BUCKET_NAME,
                 Key=file_key,
@@ -105,7 +104,6 @@ class S3StorageStrategy(CloudStorageStrategy):
     def get_url(self, filename: str, bucket_name: str = None) -> str:
         """Get presigned URL based on filename (URI)"""
         if bucket_name is None:
-            logging.info(self.BUCKET_NAME)
             bucket_name = self.BUCKET_NAME
         try:
             url = self.s3_client.generate_presigned_url(
