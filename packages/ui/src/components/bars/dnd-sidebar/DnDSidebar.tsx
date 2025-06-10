@@ -15,10 +15,10 @@ import {
 import { useVisibility } from "../../../providers/VisibilityProvider";
 import useIsTouchDevice from "../../../hooks/useIsTouchDevice";
 import Section from "./Section";
-import DraggableNodeWithSubnodes from "./DraggableNodeWithSubnodes";
 import { DraggableNodeAdditionnalData } from "./types";
 import { TextInput, Chip, Group } from "@mantine/core";
 import { SubnodeData } from "../../../nodes-configuration/types";
+import DraggableNodeWithSubnodes from "./DraggableNodeWithSubnodes";
 
 const HIDE_SIDEBAR_ANIMATION_DURATION = 300;
 
