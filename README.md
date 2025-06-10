@@ -22,7 +22,7 @@
 ---
 
 <div align="center">
-  🎉🚀 Latest Release: v0.11.2 🚀🎉
+  🎉🚀 Latest Release: v0.11.3 🚀🎉
 
   <br>
   Nodes Updated : Web search can be enabled on GPT node, Claude 4 available
