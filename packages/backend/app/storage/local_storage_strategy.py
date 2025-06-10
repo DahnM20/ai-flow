@@ -29,3 +29,6 @@ class LocalStorageStrategy(StorageStrategy):
     def get_url(self, filename: str) -> str:
         port = os.getenv("PORT")
         return f"http://localhost:{port}/image/{filename}"
+
+    def get_file(self, filename: str) -> bytes:
+        pass
