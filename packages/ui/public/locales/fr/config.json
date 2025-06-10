@@ -25,5 +25,6 @@
   "models": "Modèles",
   "tools": "Outils",
   "parameters.extension.deepseek_api_key": "Clé API DeepSeek",
-  "parameters.extension.openrouter_api_key": "Clé API OpenRouter"
+  "parameters.extension.openrouter_api_key": "Clé API OpenRouter",
+  "incompleteLoadingPleaseRestart": "L’application n’a pas pu charger toutes les données. Veuillez redémarrer l’application."
 }

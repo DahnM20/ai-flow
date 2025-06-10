@@ -13,6 +13,8 @@ import { loadParameters } from "./components/popups/config-popup/parameters";
 import { SocketProvider } from "./providers/SocketProvider";
 import { getAllTabs } from "./services/tabStorage";
 import { convertJsonToFlow } from "./utils/flowUtils";
+import { UserMessage } from "./components/popups/UserMessagePopup";
+import { useTranslation } from "react-i18next";
 
 interface AppProps {
   onLoadingComplete: () => void;
@@ -23,6 +25,8 @@ const App = ({ onLoadingComplete }: AppProps) => {
   const [configLoaded, setConfigLoaded] = useState(false);
   const [showApp, setShowApp] = useState(false);
   const [allTabs, setAllTabs] = useState<FlowTab[]>([]);
+  const [fixedAlert, setFixedAlert] = useState<UserMessage | null>(null);
+  const { t } = useTranslation("config");
 
   const [appMounted, setComponentsMounted] = useState(false);
 
@@ -81,6 +85,9 @@ const App = ({ onLoadingComplete }: AppProps) => {
     } catch (error) {
       console.error("Failed to load app data:", error);
       console.error("Default parameters will be loaded");
+      setFixedAlert({
+        content: t("incompleteLoadingPleaseRestart"),
+      });
     } finally {
       loadAllNodesTypes();
       setConfigLoaded(true);
@@ -97,6 +104,13 @@ const App = ({ onLoadingComplete }: AppProps) => {
           id="main-content"
         >
           <VisibilityProvider>
+            {fixedAlert && (
+              <div className="absolute bottom-0 mb-5 flex w-full justify-center">
+                <div className="rounded border-l-4 border-yellow-500 bg-yellow-100 px-4 py-2 text-yellow-800">
+                  {fixedAlert.content}
+                </div>
+              </div>
+            )}
             <DndProvider backend={MultiBackend} options={HTML5toTouch}>
               <SocketProvider>
                 <FlowTabs tabs={allTabs} />

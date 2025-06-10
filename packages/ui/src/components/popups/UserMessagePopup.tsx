@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 export enum MessageType {
   Error,
   Info,
+  Warning,
 }
 
 export interface UserMessage {
