@@ -62,6 +62,12 @@ export function getNonGenericNodeConfig() {
       type: "ai-data-splitter",
       helpMessage: "dataSplitterHelp",
       section: "tools",
+      additionnalData: {
+        additionnalData: {
+          mode: "manual",
+          separator: ";",
+        },
+      },
     },
     {
       label: "ReplicateModel",
