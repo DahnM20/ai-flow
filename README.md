@@ -22,16 +22,20 @@
 ---
 
 <div align="center">
-  🎉🚀 Latest Release: v0.11.1 🚀🎉
+  🎉🚀 Latest Release: v0.11.2 🚀🎉
+
   <br>
-  Web search can be enabled on GPT node, Claude 4 available
+  Nodes Updated : Web search can be enabled on GPT node, Claude 4 available
   <br>
-  Flux Kontext, Veo 3, Lyria 2, Imagen 4 available through the Replicate Node
+  UI : Node Search Bar, Shortcut for Popular Replicate Models
+  
+  <br>
+  New Models available : Flux Kontext, Veo 3, Lyria 2, Imagen 4 available through the Replicate Node
 </div>
 
 ---
 
-![AI-Flow Intro](assets/flow-example.png)
+![AI-Flow Intro](assets/flow-example-3.png)
 
 ## Overview
 
@@ -71,7 +75,7 @@ The cloud version builds upon the foundation of the open-source project, giving 
 
 ## Installation
 
-> **Note:** To unlock full functionality, AI-Flow requires S3-compatible storage (with proper CORS settings) to host resources. Without it, features like File Upload or nodes that rely on external providers (e.g., StabilityAI) may not work as expected. Also, set `REPLICATE_API_KEY` in your environment to use the Replicate node.
+> **Note:** To unlock full functionality, AI-Flow requires S3-compatible storage (with proper CORS settings) to host resources. Without it, features like File Upload or nodes that rely on external providers (e.g., StabilityAI) may not work as expected. Also, set `REPLICATE_API_KEY` in the App Parameters or in your environment to use the Replicate node.
 
 ### Method 1: Using the Executable (Windows Only)
 
@@ -82,7 +86,27 @@ The cloud version builds upon the foundation of the open-source project, giving 
 
 This will start a local server and open AI-Flow in a standalone window, giving you direct access to its user interface without needing to install anything else.
 
-### Method 2 : Local Installation (Without Docker)
+### Method 2 : Docker Installation
+
+1. **Prepare Docker Compose:**
+
+   - Navigate to the `docker` directory:
+     ```bash
+     cd docker
+     ```
+
+2. **Launch with Docker Compose:**
+   ```bash
+   docker-compose up -d
+   ```
+3. **Access the Application:**
+   - Open [http://localhost:80](http://localhost:80) in your browser.
+   - To stop, run:
+     ```bash
+     docker-compose stop
+     ```
+
+### Method 3 : Local Installation
 
 1. **Clone the Repository:**
 
@@ -122,27 +146,6 @@ This will start a local server and open AI-Flow in a standalone window, giving y
      npm start
      ```
    - Open your browser and navigate to [http://localhost:3000](http://localhost:3000).
-
-### Method 3 : Docker Installation
-
-1. **Prepare Docker Compose:**
-
-   - Navigate to the `docker` directory:
-     ```bash
-     cd docker
-     ```
-   - Update the `REPLICATE_API_KEY` in the YAML file.
-
-2. **Launch with Docker Compose:**
-   ```bash
-   docker-compose up -d
-   ```
-3. **Access the Application:**
-   - Open [http://localhost:80](http://localhost:80) in your browser.
-   - To stop, run:
-     ```bash
-     docker-compose stop
-     ```
 
 ## Contributing
 
