@@ -291,7 +291,7 @@ const FlowTabs = ({ tabs }: FlowTabsProps) => {
               showOnlyOutput={showOnlyOutput}
               isRunning={isRunning}
               onRunChange={handleChangeRun}
-              selectedEdgeType={selectedEdgeType}
+              onLoaded={() => {}}
             />
           )}
         </FlowWrapper>
