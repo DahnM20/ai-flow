@@ -1,4 +1,13 @@
-import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  Ref,
+  forwardRef,
+} from "react";
 import {
   Node,
   Edge,
@@ -19,12 +28,11 @@ import UserMessagePopup, {
   MessageType,
   UserMessage,
 } from "./popups/UserMessagePopup";
-import { getConfigViaType } from "../nodes-configuration/nodeConfig";
 import { getAllNodeWithEaseOut } from "../utils/mappings";
 import { useDrop } from "react-dnd";
 import { useSocketListeners } from "../hooks/useFlowSocketListeners";
 import ButtonEdge from "./edges/buttonEdge";
-import { createUniqNodeId } from "../utils/nodeUtils";
+import { createNewNode } from "../utils/nodeUtils";
 import {
   FlowOnCurrentNodeRunningEventData,
   FlowOnErrorEventData,
@@ -42,10 +50,10 @@ export interface FlowProps {
   showOnlyOutput?: boolean;
   isRunning: boolean;
   onRunChange: (isRunning: boolean) => void;
-  selectedEdgeType?: string;
+  onLoaded: () => void;
 }
 
-function Flow(props: FlowProps) {
+const Flow = forwardRef((props: FlowProps, ref) => {
   const reactFlowWrapper = useRef(null);
 
   function getAllEdgeTypes() {
@@ -90,6 +98,37 @@ function Flow(props: FlowProps) {
   const onInit = (reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(reactFlowInstance);
   };
+
+  const addNode = (type: string, data?: any) => {
+    const reactFlowBounds = (
+      reactFlowWrapper.current as any
+    ).getBoundingClientRect();
+
+    const additionnalData = data?.additionnalData;
+    const additionnalConfig = data?.additionnalConfig;
+
+    if (typeof type === "undefined" || !type) {
+      return;
+    }
+
+    const position = (reactFlowInstance as any).project({
+      x: reactFlowBounds.width / 2 - 100,
+      y: reactFlowBounds.height / 2 - 100,
+    });
+
+    const newNode = createNewNode(
+      type,
+      position,
+      additionnalData,
+      additionnalConfig,
+    );
+
+    setNodes((nds) => nds.concat(newNode));
+  };
+
+  useImperativeHandle(ref, () => ({
+    addNode,
+  }));
 
   useSocketListeners<
     FlowOnProgressEventData,
@@ -173,12 +212,11 @@ function Flow(props: FlowProps) {
             ...connection,
             type: "buttonedge",
             markerEnd: "arrowClosed",
-            data: { pathType: props.selectedEdgeType },
           },
           eds,
         );
       }),
-    [setEdges, props.selectedEdgeType],
+    [setEdges],
   );
 
   const onDragOver = useCallback((event: any) => {
@@ -199,6 +237,8 @@ function Flow(props: FlowProps) {
           reactFlowWrapper.current as any
         ).getBoundingClientRect();
         const type = item.nodeType;
+        const additionnalData = item.additionnalData;
+        const additionnalConfig = item.additionnalConfig;
 
         // check if the dropped element is valid
         if (typeof type === "undefined" || !type) {
@@ -212,18 +252,12 @@ function Flow(props: FlowProps) {
           y: y - reactFlowBounds.top,
         });
 
-        const id = createUniqNodeId(type);
-        const newNode: Node = {
-          id,
+        const newNode = createNewNode(
           type,
-          data: {
-            name: id,
-            processorType: type,
-            config: getConfigViaType(type),
-          },
           position,
-        };
-
+          additionnalData,
+          additionnalConfig,
+        );
         setNodes((nds) => nds.concat(newNode));
       }
     },
@@ -249,18 +283,6 @@ function Flow(props: FlowProps) {
     }
     return false;
   };
-
-  const handleNodesClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      // Check if clicked on an existing node
-      if (event.target !== event.currentTarget) {
-        return;
-      }
-
-      setIsPopupOpen(true);
-    },
-    [],
-  );
 
   const handlePopupClose = useCallback(() => {
     setIsPopupOpen(false);
@@ -298,7 +320,7 @@ function Flow(props: FlowProps) {
       onUpdateNodeData={handleUpdateNodeData}
       onUpdateNodes={handleUpdateNodes}
     >
-      <div className="h-full w-full" onClick={handleNodesClick} ref={dropRef}>
+      <div className="h-full w-full" ref={dropRef}>
         <div className="reactflow-wrapper h-full w-full" ref={reactFlowWrapper}>
           <ReactFlowStyled
             nodes={nodes}
@@ -313,8 +335,12 @@ function Flow(props: FlowProps) {
             onTouchEnd={onDragOver}
             onInit={onInit}
             fitView
+            fitViewOptions={{
+              maxZoom: 0.5,
+            }}
             minZoom={0.2}
             maxZoom={1.5}
+            onLoad={props.onLoaded}
           >
             {minimap.isVisible && <MiniMapStyled style={{ right: "4vw" }} />}
           </ReactFlowStyled>
@@ -328,6 +354,6 @@ function Flow(props: FlowProps) {
       </div>
     </NodeProvider>
   );
-}
+});
 
 export default Flow;

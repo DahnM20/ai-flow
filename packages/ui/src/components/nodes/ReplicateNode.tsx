@@ -2,12 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NodeProps } from "reactflow";
 import { Field } from "../../nodes-configuration/types";
-import SelectModelPopup from "../popups/select-model-popup/SelectModelPopup";
-import { NodeContainer } from "./Node.styles";
-import {
-  convertOpenAPISchemaToNodeConfig,
-  getSchemaFromConfig,
-} from "../../utils/openAPIUtils";
+import { LoadingSpinner, NodeContainer } from "./Node.styles";
 import { NodeData } from "./types/node";
 import InputWithButton from "../inputs/InputWithButton";
 import { getModelConfig } from "../../api/replicateModels";
@@ -16,6 +11,11 @@ import { toastErrorMessage } from "../../utils/toastUtils";
 import GenericNode from "./GenericNode";
 import { NodeContext } from "../../providers/NodeProvider";
 import { getIconComponent } from "./utils/NodeIcons";
+import SelectModelPopup from "../popups/select-model-popup/SelectModelPopup";
+import {
+  getSchemaFromConfig,
+  convertOpenAPISchemaToNodeConfig,
+} from "../../utils/openAPIUtils";
 
 interface ReplicateNodeData extends NodeData {
   schema: any;
@@ -37,16 +37,18 @@ export default function ReplicateNode({
 }: DynamicFieldsProps) {
   const { t } = useTranslation("flow");
   const [modelInput, setModelInput] = useState<string>("");
-  const [model, setModel] = useState<string | undefined>(
+
+  const modelRef = useRef<string | undefined>(
     !!data.config?.nodeName ? data.config.nodeName : undefined,
   );
-  const [fields, setFields] = useState<Field[]>(
+
+  const fieldsRef = useRef<Field[]>(
     !!data.config?.fields ? data.config.fields : [],
   );
 
   const [showPopup, setShowPopup] = useState(false);
 
-  const { onUpdateNodeData } = useContext(NodeContext);
+  const { onUpdateNodeData, findNode } = useContext(NodeContext);
 
   function arrangeOldConfig() {
     onUpdateNodeData(id, {
@@ -73,36 +75,42 @@ export default function ReplicateNode({
 
   useEffect(() => {
     async function configureNode() {
-      if (!model) return;
-      let config;
+      if (!modelRef.current) return;
+      let response;
       let fields: Field[] = [];
       try {
-        config = await withCache(getModelConfig, model, data.processorType);
-        const inputSchema = getSchemaFromConfig(config, "Input");
-        fields = convertOpenAPISchemaToNodeConfig(inputSchema, config);
+        response = await withCache(
+          getModelConfig,
+          modelRef.current,
+          data.processorType,
+        );
+        const inputSchema = getSchemaFromConfig(response, "Input");
+        fields = convertOpenAPISchemaToNodeConfig(inputSchema, response);
       } catch (error) {
         toastErrorMessage(
-          `Error fetching configuration for following model : "${model}". \n\n Here's a valid model name as an example : fofr/become-image `,
+          `Error fetching configuration for following model : "${modelRef.current}". \n\n Here's a valid model name as an example : fofr/become-image `,
         );
       }
-      if (!config) return;
-      const modelId = config.modelId;
-      setModel(model + ":" + modelId);
-      setFields(fields);
+      if (!response) return;
 
-      const modelNameToDisplay = model?.includes(":")
-        ? model.split(":")[0]
-        : model;
+      const modelId = response.modelId;
+      modelRef.current = modelRef.current + ":" + modelId;
 
-      const newFieldData: any = getNewFieldData(fields);
+      fieldsRef.current = fields;
+
+      const modelNameToDisplay = modelRef.current?.includes(":")
+        ? modelRef.current.split(":")[0]
+        : modelRef.current;
+
+      const newFieldData: any = getNewFieldData(fieldsRef.current);
 
       onUpdateNodeData(id, {
         ...data,
         ...newFieldData,
-        model: model + ":" + modelId,
+        model: modelRef.current,
         config: {
           ...data.config,
-          fields,
+          fields: fieldsRef.current,
           inputNames: fields.map((field) => field.name),
           showHandlesNames: true,
           nodeName: modelNameToDisplay,
@@ -111,24 +119,28 @@ export default function ReplicateNode({
       });
     }
 
-    if (fields.length > 0 || !model) return;
+    if (fieldsRef.current.length > 0 || !modelRef.current) return;
 
     configureNode();
-  }, [model]);
+  }, [modelRef.current]);
 
   useEffect(() => {
-    const newFieldData: any = getNewFieldData(fields);
+    if (!fieldsRef.current || fieldsRef.current.length === 0) return;
+
+    const newFieldData: any = getNewFieldData(fieldsRef.current);
+
+    const currentNodeData = findNode(id)?.data;
 
     onUpdateNodeData(id, {
-      ...data,
+      ...currentNodeData,
       ...newFieldData,
       config: {
-        ...data.config,
-        inputNames: fields.map((field) => field.name),
-        fields: fields,
+        ...currentNodeData.config,
+        inputNames: fieldsRef.current.map((field) => field.name),
+        fields: fieldsRef.current,
       },
     });
-  }, [fields]);
+  }, [fieldsRef.current]);
 
   function getNewFieldData(fields: Field[]) {
     const newFieldData: any = {};
@@ -152,12 +164,12 @@ export default function ReplicateNode({
   };
 
   const handleValidate = (model: any) => {
-    setModel(model);
+    modelRef.current = model;
     setShowPopup(!showPopup);
   };
 
   function handleLoadModel() {
-    setModel(modelInput);
+    modelRef.current = modelInput;
   }
 
   const NodeIconComponent = getIconComponent("ReplicateLogo");
@@ -167,35 +179,41 @@ export default function ReplicateNode({
       key={id}
       className={`flex h-full w-full flex-col items-center justify-center px-4 py-5 text-slate-100`}
     >
-      <div className="flex w-full flex-col items-center justify-center space-y-3">
-        <div className="flex w-full flex-row items-center">
-          <button
-            className="w-full rounded-2xl bg-slate-600 px-3 py-3 hover:bg-slate-400"
-            onClick={handleButtonClick}
-          >
-            {t("ClickToSelectModel")}
-          </button>
-          {showPopup && (
-            <SelectModelPopup
-              show={showPopup}
-              onClose={handleClosePopup}
-              onValidate={handleValidate}
+      {!modelRef.current ? (
+        <div className="flex w-full flex-col items-center justify-center space-y-3">
+          <div className="flex w-full flex-row items-center">
+            <button
+              className="w-full rounded-2xl bg-slate-600 px-3 py-3 hover:bg-slate-400"
+              onClick={handleButtonClick}
+            >
+              {t("ClickToSelectModel")}
+            </button>
+            {showPopup && (
+              <SelectModelPopup
+                show={showPopup}
+                onClose={handleClosePopup}
+                onValidate={handleValidate}
+              />
+            )}
+          </div>
+          <p> {t("Or")} </p>
+          <div className="w-full text-slate-200">
+            <InputWithButton
+              buttonText={t("Load") ?? ""}
+              inputPlaceholder={t("EnterModelNameDirectly") ?? ""}
+              value={modelInput}
+              onInputChange={setModelInput}
+              onButtonClick={handleLoadModel}
+              inputClassName="text-center"
+              buttonClassName="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"
             />
-          )}
+          </div>
         </div>
-        <p> {t("Or")} </p>
-        <div className="w-full text-slate-200">
-          <InputWithButton
-            buttonText={t("Load") ?? ""}
-            inputPlaceholder={t("EnterModelNameDirectly") ?? ""}
-            value={modelInput}
-            onInputChange={setModelInput}
-            onButtonClick={handleLoadModel}
-            inputClassName="text-center"
-            buttonClassName="rounded-lg bg-sky-500 p-2 hover:bg-sky-400"
-          />
-        </div>
-      </div>
+      ) : (
+        <>
+          <LoadingSpinner />
+        </>
+      )}
     </NodeContainer>
   ) : (
     <GenericNode
@@ -208,7 +226,7 @@ export default function ReplicateNode({
       xPos={xPos}
       yPos={yPos}
       dragging={false}
-      nodeFields={fields}
+      nodeFields={fieldsRef.current}
       iconComponent={NodeIconComponent}
     />
   );

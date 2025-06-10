@@ -144,5 +144,22 @@
   "gptImageMaskDescription": "You can provide a mask to indicate where the image should be edited. You can use the prompt to describe the full new image, not just the erased area. If you provide multiple input images, the mask will be applied to the first image.",
   "dallEDeprecated": "Most recent OpenAI models are now available via the new GPT Image node and are superior to DALL-E. DALL-E remains available if needed.",
   "TTSInstructionPlaceholder": "Ex : Parlez avec un ton joyeux et positif.",
-  "TTSInstructionDescription": "Invitez le modèle à contrôler les aspects de la parole (accent, émotion, intonation, vitesse, ton, ...)"
+  "TTSInstructionDescription": "Invitez le modèle à contrôler les aspects de la parole (accent, émotion, intonation, vitesse, ton, ...)",
+  "PopularModels": "Modèles Populaires",
+  "removeBackgroundDescription": "Supprimez l'arrière-plan d'une image en utilisant l'API StabilityAI.",
+  "upscaleFastDescription": "Augmenter la résolution d'une image avec l'API StabilityAI",
+  "fluxDescription": "Générez une image en utilisant le modèle FLUX.",
+  "fluxKontextDescription": "Un modèle d’édition d’image basé sur le texte à la pointe de la technologie, offrant des résultats de haute qualité, respectant fidèlement les instructions des prompts et garantissant une transformation cohérente des images via le langage naturel.",
+  "faceswapDescription": "Échangez des visages entre des images de manière transparente, permettant des remplacements faciaux réalistes et précis.",
+  "removeBgDescription": "Supprimez le fond d'une image avec le modèle lucataco/remove-bg sur Replicate",
+  "upscaleDescription": "Modèle Real-ESRGAN pour augmenter la résolution d'une image",
+  "moondreamDescription": "Moondream est un modèle de vision qui répond aux commandes concernant une image donnée.",
+  "llamaDescription": "Le modèle de langage phare de Meta, doté de 405 milliards de paramètres, affiné pour la complétion des discussions.",
+  "imagenDescription": "Google Imagen produit des images époustouflantes, détaillées et précises.",
+  "recraftSVGDescription": "Recraft SVG propose une génération d'images vectorielles avancée.",
+  "recraftDescription": "Recraft V3  produit des images époustouflantes, détaillées et précises.",
+  "video01Description": "Video-01 offre une génération dynamique de vidéos.",
+  "video01LiveDescription": "Video-01-Live offre une génération dynamique de vidéos, idéale pour l'animation 2D.",
+  "klingDescription": "Kling propose des solutions robustes de génération vidéo et d'animation, disponibles en versions professionnelle et standard.",
+  "veo3Description": "Modèle phare de Google, Veo 3, de texte à vidéo, avec audio"
 }

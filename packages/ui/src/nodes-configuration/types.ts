@@ -84,6 +84,19 @@ export interface Field {
   isChild?: boolean;
 }
 
+export interface SubnodeData {
+  label: string;
+  keywords?: string[];
+  data?: any;
+  configData?: any;
+  isBeta?: boolean;
+  isNew?: boolean;
+  description?: string;
+}
+export interface SubnodeShortcutStyle {
+  title: string;
+}
+
 export interface NodeConfig {
   processorType?: string;
   nodeName: string;

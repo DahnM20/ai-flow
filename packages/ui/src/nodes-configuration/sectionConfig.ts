@@ -1,13 +1,19 @@
 import { AiOutlineRobot } from "react-icons/ai";
 import { BsInputCursorText } from "react-icons/bs";
 import { FaToolbox } from "react-icons/fa";
-import { NodeConfig, SectionType } from "./types";
+import {
+  NodeConfig,
+  SectionType,
+  SubnodeData,
+  SubnodeShortcutStyle,
+} from "./types";
 import { nodeConfigs } from "./nodeConfig";
 import { getNodesHiddenList } from "../components/popups/config-popup/parameters";
 import {
   getHighPriorityNodePrefixes,
   getLowPriorityNodePrefixes,
 } from "../config/config";
+import { DraggableNodeAdditionnalData } from "../components/bars/dnd-sidebar/types";
 
 export type NodeSection = {
   label: string;
@@ -19,11 +25,16 @@ export type NodeSection = {
 export type DnDNode = {
   label: string;
   type: string;
+  keywords?: string[];
   helpMessage?: string;
   section: SectionType;
   isBeta?: boolean;
+  isNew?: boolean;
+  color?: string;
+  subnodesShortcutConfig?: SubnodeData[];
+  subnodesShortcutStyle?: SubnodeShortcutStyle;
+  additionnalData?: DraggableNodeAdditionnalData;
 };
-
 export function transformNodeConfigsToDndNode(configs: {
   [key: string]: NodeConfig | undefined;
 }): DnDNode[] {
@@ -57,6 +68,245 @@ export function getNonGenericNodeConfig() {
       type: "replicate",
       helpMessage: "replicateHelp",
       section: "models",
+      subnodesShortcutConfig: [
+        {
+          label: "Imagen 4",
+          configData: {
+            nodeName: "google/imagen-4",
+          },
+          description: "imagenDescription",
+          keywords: [
+            "Image Generation",
+            "Generate Image",
+            "Image",
+            "Google Imagen",
+          ],
+        },
+
+        {
+          label: "FLUX Kontext Pro",
+          configData: {
+            nodeName: "black-forest-labs/flux-kontext-pro",
+          },
+          description: "fluxKontextDescription",
+          keywords: [
+            "Image Generation",
+            "Generate Image",
+            "Image",
+            "Edit Image",
+          ],
+        },
+        {
+          label: "FLUX 1.1 Pro",
+          configData: {
+            nodeName: "black-forest-labs/flux-1.1-pro",
+          },
+          description: "fluxDescription",
+          keywords: ["Image Generation", "Generate Image", "Image"],
+        },
+        {
+          label: "Recraft V3",
+          configData: {
+            nodeName: "recraft-ai/recraft-v3",
+          },
+          description: "recraftDescription",
+          keywords: ["Image Generation", "Generate Image", "Image", "SVG"],
+        },
+        {
+          label: "FLUX Kontext Max",
+          configData: {
+            nodeName: "black-forest-labs/flux-kontext-max",
+          },
+          description: "fluxKontextDescription",
+          keywords: [
+            "Image Generation",
+            "Generate Image",
+            "Image",
+            "Edit Image",
+          ],
+        },
+
+        {
+          label: "Imagen 3",
+          configData: {
+            nodeName: "google/imagen-3",
+          },
+          description: "imagenDescription",
+          keywords: [
+            "Image Generation",
+            "Generate Image",
+            "Image",
+            "Google Imagen",
+          ],
+        },
+
+        {
+          label: "Remove BG",
+          configData: {
+            nodeName: "lucataco/remove-bg",
+          },
+          description: "removeBgDescription",
+          keywords: ["Image Edit", "Background", "Background removal"],
+        },
+        {
+          label: "Recraft V3 SVG",
+          configData: {
+            nodeName: "recraft-ai/recraft-v3-svg",
+          },
+          description: "recraftSVGDescription",
+          keywords: ["Image Generation", "Generate Image", "Image", "SVG"],
+        },
+        {
+          label: "Google Upscaler",
+          configData: {
+            nodeName: "google/upscaler",
+          },
+          description: "GoogleUpscaleDescription",
+          keywords: ["Image Edit", "Edit Image"],
+        },
+        {
+          label: "Upscale Image",
+          configData: {
+            nodeName: "nightmareai/real-esrgan",
+          },
+          description: "upscaleDescription",
+          keywords: ["Image Edit", "Edit Image"],
+        },
+
+        {
+          label: "Face Swap",
+          configData: {
+            nodeName: "lucataco/faceswap",
+          },
+          description: "faceswapDescription",
+          keywords: ["Image Edit", "Edit Image"],
+        },
+        {
+          label: "FLUX 1.1 Pro Ultra",
+          configData: {
+            nodeName: "black-forest-labs/flux-1.1-pro-ultra",
+          },
+          description: "fluxDescription",
+          keywords: ["Image Generation", "Generate Image", "Image"],
+        },
+
+        {
+          label: "Imagen 3 Fast",
+          configData: {
+            nodeName: "google/imagen-3-fast",
+          },
+          description: "imagenDescription",
+          keywords: [
+            "Image Generation",
+            "Generate Image",
+            "Image",
+            "Google Imagen",
+          ],
+        },
+        {
+          label: "FLUX Dev",
+          configData: {
+            nodeName: "black-forest-labs/flux-dev",
+          },
+          description: "fluxDescription",
+          keywords: ["Image Generation", "Generate Image", "Image"],
+        },
+        {
+          label: "FLUX Schnell",
+          configData: {
+            nodeName: "black-forest-labs/flux-schnell",
+          },
+          description: "fluxDescription",
+          keywords: ["Image Generation", "Generate Image", "Image"],
+        },
+        {
+          label: "Google Veo 3",
+          configData: {
+            nodeName: "google/veo-3",
+          },
+          description: "veo3Description",
+          keywords: ["Video", "Generate Video"],
+        },
+        {
+          label: "Video-01",
+          configData: {
+            nodeName: "minimax/video-01",
+          },
+          description: "video01Description",
+          keywords: ["Video", "Hailuo", "Minimax", "Generate Video", "Animate"],
+        },
+        {
+          label: "Video-01-Live",
+          configData: {
+            nodeName: "minimax/video-01-live",
+          },
+          description: "video01LiveDescription",
+          keywords: [
+            "Video",
+            "Hailuo",
+            "Minimax",
+            "Generate Video",
+            "Animate",
+            "Animation",
+          ],
+        },
+        {
+          label: "Kling v1.6 Pro",
+          configData: {
+            nodeName: "kwaivgi/kling-v1.6-pro",
+          },
+          description: "klingDescription",
+          keywords: ["Video", "Generate Video", "Animate"],
+        },
+        {
+          label: "Kling v1.6",
+          configData: {
+            nodeName: "kwaivgi/kling-v1.6-standard",
+          },
+          description: "klingDescription",
+          keywords: ["Video", "Generate Video", "Animate"],
+        },
+        {
+          label: "Play-Dialog",
+          configData: {
+            nodeName: "playht/play-dialog",
+          },
+          description: "playDialogDescription",
+          keywords: ["Audio", "Generate Audio", "Voice", "TTS", "Conversation"],
+        },
+        {
+          label: "Music-01",
+          configData: {
+            nodeName: "minimax/music-01",
+          },
+          description: "music01Description",
+          keywords: ["Audio", "Generate Audio", "Music", "Song", "Sound"],
+        },
+        {
+          label: "Speech-02 HD",
+          configData: {
+            nodeName: "minimax/speech-02-hd",
+          },
+          description: "music01Description",
+          keywords: ["Audio", "Generate Speech", "Voice", "Sound"],
+        },
+        {
+          label: "Speech-02 Turbo",
+          configData: {
+            nodeName: "minimax/speech-02-turbo",
+          },
+          description: "music01Description",
+          keywords: ["Audio", "Generate Speech", "Voice", "Sound"],
+        },
+        {
+          label: "Face Expression Edit",
+          configData: {
+            nodeName: "fofr/expression-editor",
+          },
+          description: "expressionEditorDescription",
+          keywords: ["Image Edit", "Edit Image", "Face"],
+        },
+      ],
     },
     {
       label: "Transition",
