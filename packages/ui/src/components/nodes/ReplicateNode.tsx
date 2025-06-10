@@ -50,6 +50,16 @@ export default function ReplicateNode({
 
   const { onUpdateNodeData, findNode } = useContext(NodeContext);
 
+  function formatName(name: string) {
+    return name
+      .replace(/([A-Z])/g, " $1")
+      .replace(/[_\-]+/g, " ")
+      .trim()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
   function arrangeOldConfig() {
     onUpdateNodeData(id, {
       ...data,
@@ -98,9 +108,7 @@ export default function ReplicateNode({
 
       fieldsRef.current = fields;
 
-      const modelNameToDisplay = modelRef.current?.includes(":")
-        ? modelRef.current.split(":")[0]
-        : modelRef.current;
+      let modelNameToDisplay = getModelNameToDisplay();
 
       const newFieldData: any = getNewFieldData(fieldsRef.current);
 
@@ -141,6 +149,20 @@ export default function ReplicateNode({
       },
     });
   }, [fieldsRef.current]);
+
+  function getModelNameToDisplay() {
+    let modelNameToDisplay = modelRef.current?.includes(":")
+      ? modelRef.current.split(":")[0]
+      : modelRef.current;
+
+    if (!modelNameToDisplay) return;
+
+    modelNameToDisplay = modelNameToDisplay.includes("/")
+      ? formatName(modelNameToDisplay.split("/")[1])
+      : modelNameToDisplay;
+
+    return modelNameToDisplay;
+  }
 
   function getNewFieldData(fields: Field[]) {
     const newFieldData: any = {};
